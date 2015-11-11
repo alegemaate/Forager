@@ -39,23 +39,23 @@ void tile_map::load_images(){
   }
 
   // Static
-  tile_images[AIR][0] = load_bitmap("images/tiles/air.bmp", NULL);
-  tile_images[GRASS][0] = load_bitmap("images/tiles/grass.bmp", NULL);
-  tile_images[ROCK][0] = load_bitmap("images/tiles/rock.bmp", NULL);
-  tile_images[STONE][0] = load_bitmap("images/tiles/stone.png", NULL);
-  tile_images[SAND][0] = load_bitmap("images/tiles/sand.png", NULL);
-  tile_images[SNOW][0] = load_bitmap("images/tiles/snow.png", NULL);
-  tile_images[ICE][0] = load_bitmap("images/tiles/ice.png", NULL);
-  tile_images[CACTUS][0] = load_bitmap("images/tiles/cactus.png", NULL);
-  tile_images[LAVA][0] = load_bitmap("images/tiles/lava.png", NULL);
-  tile_images[TALLGRASS][0] = load_bitmap("images/tiles/tallgrass.png", NULL);
+  tile_images[TILE_AIR][0] = load_bitmap("images/tiles/air.bmp", NULL);
+  tile_images[TILE_GRASS][0] = load_bitmap("images/tiles/grass.bmp", NULL);
+  tile_images[TILE_ROCK][0] = load_bitmap("images/tiles/rock.bmp", NULL);
+  tile_images[TILE_STONE][0] = load_bitmap("images/tiles/stone.png", NULL);
+  tile_images[TILE_SAND][0] = load_bitmap("images/tiles/sand.png", NULL);
+  tile_images[TILE_SNOW][0] = load_bitmap("images/tiles/snow.png", NULL);
+  tile_images[TILE_ICE][0] = load_bitmap("images/tiles/ice.png", NULL);
+  tile_images[TILE_CACTUS][0] = load_bitmap("images/tiles/cactus.png", NULL);
+  tile_images[TILE_LAVA][0] = load_bitmap("images/tiles/lava.png", NULL);
+  tile_images[TILE_TALLGRASS][0] = load_bitmap("images/tiles/tallgrass.png", NULL);
 
   // Animated
-  tile_images[TREE][0] = load_bitmap("images/tiles/tree1.bmp", NULL);
-  tile_images[TREE][1] = load_bitmap("images/tiles/tree2.bmp", NULL);
+  tile_images[TILE_TREE][0] = load_bitmap("images/tiles/tree1.bmp", NULL);
+  tile_images[TILE_TREE][1] = load_bitmap("images/tiles/tree2.bmp", NULL);
 
-  tile_images[WATER][0] = load_bitmap("images/tiles/water1.bmp", NULL);
-  tile_images[WATER][1] = load_bitmap("images/tiles/water2.bmp", NULL);
+  tile_images[TILE_WATER][0] = load_bitmap("images/tiles/water1.bmp", NULL);
+  tile_images[TILE_WATER][1] = load_bitmap("images/tiles/water2.bmp", NULL);
 
   // Sets all the tiles images
   refreshTileImages();
@@ -116,7 +116,7 @@ void tile_map::generateMap(std::string newType){
   for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
     for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
       for(int u = 0; u <  DEFAULT_MAP_HEIGHT; u++){
-        map_tiles[i][t][u] -> setType(AIR);
+        map_tiles[i][t][u] -> setType(TILE_AIR);
         map_tiles[i][t][u] -> setBiome(BIOME_NONE);
       }
     }
@@ -128,7 +128,7 @@ void tile_map::generateMap(std::string newType){
   for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
     for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
       for(int u = 0; u <  DEFAULT_MAP_HEIGHT - 1; u++){
-        map_tiles[i][t][u] -> setType(GRASS);
+        map_tiles[i][t][u] -> setType(TILE_GRASS);
       }
     }
   }
@@ -139,7 +139,7 @@ void tile_map::generateMap(std::string newType){
   for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
     for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
       for(int u = 0; u <  DEFAULT_MAP_HEIGHT - 1; u++){
-        map_tiles[i][t][u] -> setType(GRASS);
+        map_tiles[i][t][u] -> setType(TILE_GRASS);
       }
     }
   }
@@ -165,9 +165,9 @@ void tile_map::generateMap(std::string newType){
     for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
       // Put some water down
       if( findSlope(i, river_start_y, t, river_start_x) == slope && !forks || abs(findSlope(i, river_start_y, t, river_start_x)) == abs(slope))
-        map_tiles[i][t][1] -> setType(WATER);
+        map_tiles[i][t][1] -> setType(TILE_WATER);
       if( findSlope(i, river_end_y, t, river_end_x) == slope && !forks || abs(findSlope(i, river_end_y, t, river_end_x)) == abs(slope))
-        map_tiles[i][t][1] -> setType(WATER);
+        map_tiles[i][t][1] -> setType(TILE_WATER);
     }
   }
 
@@ -180,6 +180,8 @@ void tile_map::generateMap(std::string newType){
   map_tiles[random( 0, DEFAULT_MAP_WIDTH - 1)][random( 0, DEFAULT_MAP_LENGTH - 1)][0] -> setBiome( BIOME_GRASSLAND);
   map_tiles[random( 0, DEFAULT_MAP_WIDTH - 1)][random( 0, DEFAULT_MAP_LENGTH - 1)][0] -> setBiome( BIOME_TUNDRA);
   map_tiles[random( 0, DEFAULT_MAP_WIDTH - 1)][random( 0, DEFAULT_MAP_LENGTH - 1)][0] -> setBiome( BIOME_DESERT);
+  map_tiles[random( 0, DEFAULT_MAP_WIDTH - 1)][random( 0, DEFAULT_MAP_LENGTH - 1)][0] -> setBiome( BIOME_FOREST);
+  map_tiles[random( 0, DEFAULT_MAP_WIDTH - 1)][random( 0, DEFAULT_MAP_LENGTH - 1)][0] -> setBiome( BIOME_LAKE);
 
   // Spread thoe biomes
   while( checkBiomeless() > 0){
@@ -226,23 +228,23 @@ void tile_map::generateMap(std::string newType){
     for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
       for(int u = 0; u <  DEFAULT_MAP_HEIGHT; u++){
         // Water, to ice or lava or none
-        if( map_tiles[i][t][u] -> getType() == WATER){
+        if( map_tiles[i][t][u] -> getType() == TILE_WATER){
           if( map_tiles[i][t][u] -> getBiome() == BIOME_TUNDRA)
-            map_tiles[i][t][u] -> setType( ICE);
+            map_tiles[i][t][u] -> setType( TILE_ICE);
           else if( map_tiles[i][t][u] -> getBiome() == BIOME_BARREN)
-            map_tiles[i][t][u] -> setType( LAVA);
-          else if( map_tiles[i][t][u] -> getBiome() == BIOME_DESERT)
-            map_tiles[i][t][u] -> setType( AIR);
+            map_tiles[i][t][u] -> setType( TILE_LAVA);
         }
 
         // Dirt, to sand or rock or snow
-        if( map_tiles[i][t][u] -> getType() == GRASS){
+        if( map_tiles[i][t][u] -> getType() == TILE_GRASS){
           if( map_tiles[i][t][u] -> getBiome() == BIOME_TUNDRA)
-            map_tiles[i][t][u] -> setType( SNOW);
+            map_tiles[i][t][u] -> setType( TILE_SNOW);
           else if( map_tiles[i][t][u] -> getBiome() == BIOME_BARREN)
-            map_tiles[i][t][u] -> setType( STONE);
+            map_tiles[i][t][u] -> setType( TILE_STONE);
+          else if( map_tiles[i][t][u] -> getBiome() == BIOME_LAKE)
+            map_tiles[i][t][u] -> setType( TILE_WATER);
           else if( map_tiles[i][t][u] -> getBiome() == BIOME_DESERT)
-            map_tiles[i][t][u] -> setType( SAND);
+            map_tiles[i][t][u] -> setType( TILE_SAND);
         }
       }
     }
@@ -255,19 +257,21 @@ void tile_map::generateMap(std::string newType){
   int rock_frequency = 0;
   int cactus_frequency = 0;
   int tallgrass_frequency = 0;
+  int nothing_frequency = 0;
 
-  int numberObjects = 4;
+  int numberObjects = 5;
 
   // Place objects
   for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
     for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
-      if( map_tiles[i][t][1] -> getType() != WATER && map_tiles[i][t][1] -> getType() != AIR && map_tiles[i][t][1] -> getType() != LAVA){
+      if( map_tiles[i][t][1] -> getType() != TILE_WATER && map_tiles[i][t][1] -> getType() != TILE_AIR && map_tiles[i][t][1] -> getType() != TILE_LAVA){
         // Grassland
         if( map_tiles[i][t][2] -> getBiome() == BIOME_GRASSLAND){
           tree_frequency = 60;
           rock_frequency = 80;
           cactus_frequency = 0;
-          tallgrass_frequency = 5;
+          tallgrass_frequency = 3;
+          nothing_frequency = 90;
         }
         // Desert
         else if( map_tiles[i][t][2] -> getBiome() == BIOME_DESERT){
@@ -275,6 +279,7 @@ void tile_map::generateMap(std::string newType){
           rock_frequency = 20;
           cactus_frequency = 10;
           tallgrass_frequency = 0;
+          nothing_frequency = 2;
         }
         // Barren
         else if( map_tiles[i][t][2] -> getBiome() == BIOME_BARREN){
@@ -282,6 +287,7 @@ void tile_map::generateMap(std::string newType){
           rock_frequency = 10;
           cactus_frequency = 0;
           tallgrass_frequency = 80;
+          nothing_frequency = 2;
         }
         // Tundra
         else if( map_tiles[i][t][2] -> getBiome() == BIOME_TUNDRA){
@@ -289,21 +295,54 @@ void tile_map::generateMap(std::string newType){
           rock_frequency = 80;
           cactus_frequency = 0;
           tallgrass_frequency = 0;
+          nothing_frequency = 2;
+        }
+        // Forest
+        else if( map_tiles[i][t][2] -> getBiome() == BIOME_FOREST){
+          tree_frequency = 2;
+          rock_frequency = 80;
+          cactus_frequency = 0;
+          tallgrass_frequency = 60;
+          nothing_frequency = 40;
+        }
+        // Lake
+        else if( map_tiles[i][t][2] -> getBiome() == BIOME_LAKE){
+          tree_frequency = 0;
+          rock_frequency = 0;
+          cactus_frequency = 0;
+          tallgrass_frequency = 0;
+          nothing_frequency = 0;
         }
 
         // Place some stuff
-        int randomGenerateSpawn = random(1, numberObjects);
-        if(randomGenerateSpawn == 1 && random(1,rock_frequency) == 1){
-          map_tiles[i][t][2] -> setType(ROCK);
-        }
-        else if(randomGenerateSpawn == 2 && random(1,tree_frequency) == 1){
-          map_tiles[i][t][2] -> setType(TREE);
-        }
-        else if(randomGenerateSpawn == 3 && random(1,cactus_frequency) == 1){
-          map_tiles[i][t][2] -> setType(CACTUS);
-        }
-        else if(randomGenerateSpawn == 4 && random(1,tallgrass_frequency) == 1){
-          map_tiles[i][t][2] -> setType(TALLGRASS);
+        bool objectPlaced = false;
+        int randomGenerateSpawn = 0;
+        while( !objectPlaced){
+          randomGenerateSpawn = random(1, numberObjects);
+          // Rock
+          if(randomGenerateSpawn == 1 && random(1, rock_frequency) == 1){
+            map_tiles[i][t][2] -> setType(TILE_ROCK);
+            objectPlaced = true;
+          }
+          // Tree
+          else if(randomGenerateSpawn == 2 && random(1, tree_frequency) == 1){
+            map_tiles[i][t][2] -> setType(TILE_TREE);
+            objectPlaced = true;
+          }
+          // Cactus
+          else if(randomGenerateSpawn == 3 && random(1, cactus_frequency) == 1){
+            map_tiles[i][t][2] -> setType(TILE_CACTUS);
+            objectPlaced = true;
+          }
+          // Tallgrass
+          else if(randomGenerateSpawn == 4 && random(1, tallgrass_frequency) == 1){
+            map_tiles[i][t][2] -> setType(TILE_TALLGRASS);
+            objectPlaced = true;
+          }
+          // Clear space
+          else if(randomGenerateSpawn == 5 && random(1, nothing_frequency) == 1){
+            objectPlaced = true;
+          }
         }
       }
     }

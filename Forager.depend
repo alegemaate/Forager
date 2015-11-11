@@ -17,7 +17,7 @@
 	<allegro.h>
 	"ids.h"
 
-1447277472 source:c:\users\allan\documents\games indev\forager\src\tile_map.cpp
+1447278498 source:c:\users\allan\documents\games indev\forager\src\tile_map.cpp
 	"tile_map.h"
 
 1447275140 c:\users\allan\documents\games indev\forager\include\tile_map.h
@@ -44,7 +44,7 @@
 	"tile_map.h"
 	"tools.h"
 
-1447277157 c:\users\allan\documents\games indev\forager\include\ids.h
+1447278056 c:\users\allan\documents\games indev\forager\include\ids.h
 
 1430682228 source:c:\users\allan\documents\games indev\forager\src\globals.cpp
 	"globals.h"
