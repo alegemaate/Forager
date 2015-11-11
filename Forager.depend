@@ -1,0 +1,67 @@
+# depslib dependency file v1.0
+1447267097 source:c:\users\allan\documents\games indev\forager\main.cpp
+	<allegro.h>
+	<string>
+	<time.h>
+	<fstream>
+	<sstream>
+	<math.h>
+	"fmod/fmod.h"
+	"fmod/fmod_errors.h"
+	"ids.h"
+	"tile.h"
+
+1447268671 c:\users\allan\documents\games indev\forager\ids.h
+
+1447275119 c:\users\allan\documents\games indev\forager\include\tile.h
+	<allegro.h>
+	"ids.h"
+
+1447276530 source:c:\users\allan\documents\games indev\forager\src\tile_map.cpp
+	"tile_map.h"
+
+1447275140 c:\users\allan\documents\games indev\forager\include\tile_map.h
+	<allegro.h>
+	<string>
+	"tile.h"
+	"ids.h"
+	"tools.h"
+
+1447276624 source:c:\users\allan\documents\games indev\forager\src\tile.cpp
+	"tile.h"
+
+1447276033 source:c:\users\allan\documents\games indev\forager\src\main.cpp
+	<allegro.h>
+	<string>
+	<time.h>
+	<fstream>
+	<sstream>
+	<math.h>
+	"fmod/fmod.h"
+	"fmod/fmod_errors.h"
+	"ids.h"
+	"tile.h"
+	"tile_map.h"
+	"tools.h"
+
+1447273950 c:\users\allan\documents\games indev\forager\include\ids.h
+
+1430682228 source:c:\users\allan\documents\games indev\forager\src\globals.cpp
+	"globals.h"
+
+1430682228 c:\users\allan\documents\games indev\forager\include\globals.h
+	<allegro.h>
+	<string>
+
+1447270207 c:\users\allan\documents\games indev\forager\include\tools.h
+	<allegro.h>
+	<alpng.h>
+	<string>
+	<iostream>
+	<sstream>
+	<fstream>
+
+1447270281 source:c:\users\allan\documents\games indev\forager\src\tools.cpp
+	"tools.h"
+	"globals.h"
+
