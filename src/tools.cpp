@@ -56,7 +56,7 @@ bool fexists(const char *filename){
 
 //Random number generator. Use int random(lowest,highest);
 int random(int newLowest, int newHighest){
-  if( highest < lowest)
+  if( newHighest < newLowest)
     return -1;
 
   int lowest = newLowest, highest = newHighest;

@@ -41,13 +41,14 @@ void tile_map::load_images(){
   // Static
   tile_images[AIR][0] = load_bitmap("images/tiles/air.bmp", NULL);
   tile_images[GRASS][0] = load_bitmap("images/tiles/grass.bmp", NULL);
-  tile_images[ROCK][0] = load_bitmap("images/tiles/rock.png", NULL);
+  tile_images[ROCK][0] = load_bitmap("images/tiles/rock.bmp", NULL);
   tile_images[STONE][0] = load_bitmap("images/tiles/stone.png", NULL);
   tile_images[SAND][0] = load_bitmap("images/tiles/sand.png", NULL);
   tile_images[SNOW][0] = load_bitmap("images/tiles/snow.png", NULL);
   tile_images[ICE][0] = load_bitmap("images/tiles/ice.png", NULL);
   tile_images[CACTUS][0] = load_bitmap("images/tiles/cactus.png", NULL);
   tile_images[LAVA][0] = load_bitmap("images/tiles/lava.png", NULL);
+  tile_images[TALLGRASS][0] = load_bitmap("images/tiles/tallgrass.png", NULL);
 
   // Animated
   tile_images[TREE][0] = load_bitmap("images/tiles/tree1.bmp", NULL);
@@ -260,7 +261,7 @@ void tile_map::generateMap(std::string newType){
   // Place objects
   for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
     for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
-      if( map_tiles[i][t][1] -> getType() != WATER){
+      if( map_tiles[i][t][1] -> getType() != WATER && map_tiles[i][t][1] -> getType() != AIR && map_tiles[i][t][1] -> getType() != LAVA){
         // Grassland
         if( map_tiles[i][t][2] -> getBiome() == BIOME_GRASSLAND){
           tree_frequency = 60;
@@ -269,7 +270,7 @@ void tile_map::generateMap(std::string newType){
           tallgrass_frequency = 5;
         }
         // Desert
-        else if( map_tiles[i][t][2] -> getBiome() == BIOME_GRASSLAND){
+        else if( map_tiles[i][t][2] -> getBiome() == BIOME_DESERT){
           tree_frequency = 0;
           rock_frequency = 20;
           cactus_frequency = 10;
