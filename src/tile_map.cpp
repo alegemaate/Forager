@@ -68,47 +68,35 @@ void tile_map::load_images(){
 void tile_map::update(){
   //Up
   if(key[KEY_UP]){
-    x += 64;
-    y += 32;
-    rest(40);
+    y += 10;
   }
   //Down
   if(key[KEY_DOWN]){
-    x -= 64;
-    y -= 32;
-    rest(40);
+    y -= 10;
   }
   //Left
   if(key[KEY_LEFT]){
-    x += 64;
-    y -= 32;
-    rest(40);
+    x += 10;
   }
   //Right
   if(key[KEY_RIGHT]){
-    x -= 64;
-    y += 32;
-    rest(40);
+    x -= 10;
   }
   //Zoom in
   if(key[KEY_Q]){
     zoom ++;
-    while(key[KEY_Q]){
-    }
+    rest(40);
   }
   //Zoom out
   if(key[KEY_A]){
     if(zoom > 1){
       zoom --;
-    }
-    while(key[KEY_A]){
+      rest(40);
     }
   }
   //Gen
   if(key[KEY_R]){
     generateMap("normal");
-    //while(key[KEY_R]){
-    //}
   }
 }
 
@@ -133,7 +121,7 @@ void tile_map::generateMap(std::string newType){
 
   for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
     for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
-      for(int u = 0; u <  DEFAULT_MAP_HEIGHT - 1; u++){
+      for(int u = 0; u <  2; u++){
         map_tiles[i][t][u] -> setType(TILE_GRASS);
       }
     }
@@ -201,40 +189,10 @@ void tile_map::generateMap(std::string newType){
   }
 
   // STEP 5:
-  // Set biome tiles
-  quickPeek( "Setting corresponding biome images");
-
-  for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
-    for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
-      for(int u = 0; u <  DEFAULT_MAP_HEIGHT; u++){
-        // Water, to ice or lava or none
-        if( map_tiles[i][t][u] -> getType() == TILE_WATER){
-          if( map_tiles[i][t][u] -> getBiome() == BIOME_TUNDRA)
-            map_tiles[i][t][u] -> setType( TILE_ICE);
-          else if( map_tiles[i][t][u] -> getBiome() == BIOME_BARREN)
-            map_tiles[i][t][u] -> setType( TILE_LAVA);
-        }
-
-        // Dirt, to sand or rock or snow
-        if( map_tiles[i][t][u] -> getType() == TILE_GRASS){
-          if( map_tiles[i][t][u] -> getBiome() == BIOME_TUNDRA)
-            map_tiles[i][t][u] -> setType( TILE_SNOW);
-          else if( map_tiles[i][t][u] -> getBiome() == BIOME_BARREN)
-            map_tiles[i][t][u] -> setType( TILE_STONE);
-          else if( map_tiles[i][t][u] -> getBiome() == BIOME_LAKE)
-            map_tiles[i][t][u] -> setType( TILE_WATER);
-          else if( map_tiles[i][t][u] -> getBiome() == BIOME_DESERT)
-            map_tiles[i][t][u] -> setType( TILE_SAND);
-        }
-      }
-    }
-  }
-
-  // STEP 6:
   // Make Rivers
   quickPeek( "Carving rivers");
 
-  // Small Rivers
+  // Rivers
   int numberRivers = DEFAULT_MAP_WIDTH/20;
 
   for( int r = 0; r < numberRivers; r++){
@@ -257,7 +215,7 @@ void tile_map::generateMap(std::string newType){
       random_x = random( 0, DEFAULT_MAP_WIDTH - 1);
       random_y = random( 0, DEFAULT_MAP_WIDTH - 1);
 
-      if( map_tiles[random_x][random_y][1] -> getType() == TILE_WATER){
+      if( map_tiles[random_x][random_y][1] -> getBiome() == BIOME_LAKE){
         if( river_x == -1){
           river_x = random_x;
           river_y = random_y;
@@ -272,8 +230,9 @@ void tile_map::generateMap(std::string newType){
 
     // Carve river
     while( river_x != river_end_x || river_y != river_end_y){
-      if( river_y < DEFAULT_MAP_LENGTH && river_x < DEFAULT_MAP_WIDTH && river_x >= 0 && river_y >= 0)
+      if( river_y < DEFAULT_MAP_LENGTH && river_x < DEFAULT_MAP_WIDTH && river_x >= 0 && river_y >= 0){
         map_tiles[river_x][river_y][1] -> setType(TILE_TEMP_WATER);
+      }
 
       // Shift river
       // Zero in on final destiantion
@@ -320,6 +279,98 @@ void tile_map::generateMap(std::string newType){
     }
   }
 
+  // STEP 6:
+  // Raise land
+  quickPeek( "Creating height");
+
+  int mountain_frequency = 0;
+  int mountain_height = 0;
+  int mountain_radius = 0;
+
+  for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
+    for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
+      for(int u = 2; u <  DEFAULT_MAP_HEIGHT; u++){
+        // Grassland
+        if( map_tiles[i][t][u] -> getBiome() == BIOME_GRASSLAND){
+          mountain_frequency = 80;
+          mountain_height = 2;
+          mountain_radius = 4;
+        }
+        // Desert
+        else if( map_tiles[i][t][u] -> getBiome() == BIOME_DESERT){
+          mountain_frequency = 200;
+          mountain_height = 2;
+          mountain_radius = 7;
+        }
+        // Barren
+        else if( map_tiles[i][t][u] -> getBiome() == BIOME_BARREN){
+          mountain_frequency = 40;
+          mountain_height = 10;
+          mountain_radius = 5;
+        }
+        // Tundra
+        else if( map_tiles[i][t][u] -> getBiome() == BIOME_TUNDRA){
+          mountain_frequency = 300;
+          mountain_height = 1;
+          mountain_radius = 1;
+        }
+        // Forest
+        else if( map_tiles[i][t][u] -> getBiome() == BIOME_FOREST){
+          mountain_frequency = 40;
+          mountain_height = 4;
+          mountain_radius = 5;
+        }
+        // Lake
+        else if( map_tiles[i][t][u] -> getBiome() == BIOME_LAKE){
+          mountain_frequency = 0;
+          mountain_height = 0;
+          mountain_radius = 0;
+        }
+        // Other?
+        else{
+          mountain_frequency = 80;
+          mountain_height = 2;
+          mountain_radius = 5;
+        }
+
+        // Make those mountains
+        if(random(0, mountain_frequency) == 1 && map_tiles[i][t][u-1] -> getType() == TILE_GRASS){
+          int mountainRaduis = random(2,mountain_radius);
+          int mountainHeight = mountain_height;
+
+          for(int w = 0; w < mountainHeight; w++){
+            if(mountainRaduis > 0){
+              mountainRaduis -= 1;
+            }
+            if(u + w < DEFAULT_MAP_HEIGHT){
+              for(int q = -mountainRaduis; q < mountainRaduis; q++){
+                for(int r = -mountainRaduis; r < mountainRaduis; r++){
+                  if(i + q < DEFAULT_MAP_WIDTH && i + q >= 0 && t + r < DEFAULT_MAP_LENGTH && t + r >= 0){
+                    map_tiles[i + q][t + r][u + w] -> setType(TILE_GRASS);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // STEP6b:
+  // Fill in holes
+  quickPeek( "Filling holes");
+
+  for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
+    for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
+      for(int u = DEFAULT_MAP_HEIGHT - 1; u > 1; u--){
+        if( map_tiles[i][t][u] -> getType() == TILE_GRASS && map_tiles[i][t][u-1] -> getType() == TILE_AIR){
+          map_tiles[i][t][u-1] -> setType( TILE_GRASS);
+        }
+      }
+    }
+  }
+
   // STEP 7:
   // Create biome resources
   quickPeek( "Creating biome resources");
@@ -336,89 +387,154 @@ void tile_map::generateMap(std::string newType){
   // Place objects
   for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
     for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
-      if( map_tiles[i][t][1] -> getType() != TILE_WATER && map_tiles[i][t][1] -> getType() != TILE_AIR && map_tiles[i][t][1] -> getType() != TILE_LAVA){
-        // Grassland
-        if( map_tiles[i][t][2] -> getBiome() == BIOME_GRASSLAND){
-          tree_frequency = 60;
-          rock_frequency = 80;
-          cactus_frequency = 0;
-          tallgrass_frequency = 3;
-          nothing_frequency = 90;
-        }
-        // Desert
-        else if( map_tiles[i][t][2] -> getBiome() == BIOME_DESERT){
-          tree_frequency = 0;
-          rock_frequency = 50;
-          cactus_frequency = 60;
-          tallgrass_frequency = 0;
-          nothing_frequency = 2;
-        }
-        // Barren
-        else if( map_tiles[i][t][2] -> getBiome() == BIOME_BARREN){
-          tree_frequency = 0;
-          rock_frequency = 10;
-          cactus_frequency = 0;
-          tallgrass_frequency = 80;
-          nothing_frequency = 2;
-        }
-        // Tundra
-        else if( map_tiles[i][t][2] -> getBiome() == BIOME_TUNDRA){
-          tree_frequency = 0;
-          rock_frequency = 80;
-          cactus_frequency = 0;
-          tallgrass_frequency = 0;
-          nothing_frequency = 2;
-        }
-        // Forest
-        else if( map_tiles[i][t][2] -> getBiome() == BIOME_FOREST){
-          tree_frequency = 2;
-          rock_frequency = 80;
-          cactus_frequency = 0;
-          tallgrass_frequency = 20;
-          nothing_frequency = 30;
-        }
-        // Lake
-        else if( map_tiles[i][t][2] -> getBiome() == BIOME_LAKE){
-          tree_frequency = 0;
-          rock_frequency = 0;
-          cactus_frequency = 0;
-          tallgrass_frequency = 0;
-          nothing_frequency = 1;
-        }
+      for(int u = 1; u <  DEFAULT_MAP_HEIGHT - 1; u++){
+        if( map_tiles[i][t][u-1] -> getType() == TILE_GRASS && map_tiles[i][t][u] -> getType() == TILE_AIR){
+          // Grassland
+          if( map_tiles[i][t][u] -> getBiome() == BIOME_GRASSLAND){
+            tree_frequency = 60;
+            rock_frequency = 80;
+            cactus_frequency = 0;
+            tallgrass_frequency = 3;
+            nothing_frequency = 90;
+          }
+          // Desert
+          else if( map_tiles[i][t][u] -> getBiome() == BIOME_DESERT){
+            tree_frequency = 0;
+            rock_frequency = 50;
+            cactus_frequency = 60;
+            tallgrass_frequency = 0;
+            nothing_frequency = 2;
+          }
+          // Barren
+          else if( map_tiles[i][t][u] -> getBiome() == BIOME_BARREN){
+            tree_frequency = 0;
+            rock_frequency = 10;
+            cactus_frequency = 0;
+            tallgrass_frequency = 80;
+            nothing_frequency = 2;
+          }
+          // Tundra
+          else if( map_tiles[i][t][u] -> getBiome() == BIOME_TUNDRA){
+            tree_frequency = 0;
+            rock_frequency = 80;
+            cactus_frequency = 0;
+            tallgrass_frequency = 0;
+            nothing_frequency = 2;
+          }
+          // Forest
+          else if( map_tiles[i][t][u] -> getBiome() == BIOME_FOREST){
+            tree_frequency = 2;
+            rock_frequency = 80;
+            cactus_frequency = 0;
+            tallgrass_frequency = 20;
+            nothing_frequency = 30;
+          }
+          // Lake
+          else if( map_tiles[i][t][u] -> getBiome() == BIOME_LAKE){
+            tree_frequency = 0;
+            rock_frequency = 0;
+            cactus_frequency = 0;
+            tallgrass_frequency = 0;
+            nothing_frequency = 1;
+          }
+          // Other?
+          else{
+            tree_frequency = 0;
+            rock_frequency = 0;
+            cactus_frequency = 0;
+            tallgrass_frequency = 0;
+            nothing_frequency = 1;
+          }
 
-        // Place some stuff
-        bool objectPlaced = false;
-        int randomGenerateSpawn = 0;
-        while( !objectPlaced){
-          randomGenerateSpawn = random(1, numberObjects);
-          // Rock
-          if(randomGenerateSpawn == 1 && random(1, rock_frequency) == 1){
-            map_tiles[i][t][2] -> setType(TILE_ROCK);
-            objectPlaced = true;
-          }
-          // Tree
-          else if(randomGenerateSpawn == 2 && random(1, tree_frequency) == 1){
-            map_tiles[i][t][2] -> setType(TILE_TREE);
-            objectPlaced = true;
-          }
-          // Cactus
-          else if(randomGenerateSpawn == 3 && random(1, cactus_frequency) == 1){
-            map_tiles[i][t][2] -> setType(TILE_CACTUS);
-            objectPlaced = true;
-          }
-          // Tallgrass
-          else if(randomGenerateSpawn == 4 && random(1, tallgrass_frequency) == 1){
-            map_tiles[i][t][2] -> setType(TILE_TALLGRASS);
-            objectPlaced = true;
-          }
-          // Clear space
-          else if(randomGenerateSpawn == 5 && random(1, nothing_frequency) == 1){
-            objectPlaced = true;
+          // Place some stuff
+          bool objectPlaced = false;
+          int randomGenerateSpawn = 0;
+          while( !objectPlaced){
+            randomGenerateSpawn = random(1, numberObjects);
+            // Rock
+            if(randomGenerateSpawn == 1 && random(1, rock_frequency) == 1){
+              map_tiles[i][t][u] -> setType(TILE_ROCK);
+              objectPlaced = true;
+            }
+            // Tree
+            else if(randomGenerateSpawn == 2 && random(1, tree_frequency) == 1){
+              map_tiles[i][t][u] -> setType(TILE_TREE);
+              objectPlaced = true;
+            }
+            // Cactus
+            else if(randomGenerateSpawn == 3 && random(1, cactus_frequency) == 1){
+              map_tiles[i][t][u] -> setType(TILE_CACTUS);
+              objectPlaced = true;
+            }
+            // Tallgrass
+            else if(randomGenerateSpawn == 4 && random(1, tallgrass_frequency) == 1){
+              map_tiles[i][t][u] -> setType(TILE_TALLGRASS);
+              objectPlaced = true;
+            }
+            // Clear space
+            else if(randomGenerateSpawn == 5 && random(1, nothing_frequency) == 1){
+              objectPlaced = true;
+            }
           }
         }
       }
     }
   }
+
+  // STEP 8:
+  // Change water depending on biome
+  quickPeek( "Changing water up");
+
+  for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
+    for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
+      for(int u = 0; u <  DEFAULT_MAP_HEIGHT; u++){
+        // Water, to ice or lava or none
+        if( map_tiles[i][t][u] -> getType() == TILE_WATER){
+          if( map_tiles[i][t][u] -> getBiome() == BIOME_TUNDRA)
+            map_tiles[i][t][u] -> setType( TILE_ICE);
+          else if( map_tiles[i][t][u] -> getBiome() == BIOME_BARREN)
+            map_tiles[i][t][u] -> setType( TILE_LAVA);
+        }
+      }
+    }
+  }
+
+  // STEP 9:
+  // Set biome tiles
+  quickPeek( "Setting corresponding biome images");
+
+  for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
+    for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
+      for(int u = 0; u <  DEFAULT_MAP_HEIGHT; u++){
+        // Dirt, to sand or rock or snow
+        if( map_tiles[i][t][u] -> getType() == TILE_GRASS){
+          if( map_tiles[i][t][u] -> getBiome() == BIOME_TUNDRA)
+            map_tiles[i][t][u] -> setType( TILE_SNOW);
+          else if( map_tiles[i][t][u] -> getBiome() == BIOME_BARREN)
+            map_tiles[i][t][u] -> setType( TILE_STONE);
+          else if( map_tiles[i][t][u] -> getBiome() == BIOME_LAKE)
+            map_tiles[i][t][u] -> setType( TILE_WATER);
+          else if( map_tiles[i][t][u] -> getBiome() == BIOME_DESERT)
+            map_tiles[i][t][u] -> setType( TILE_SAND);
+        }
+      }
+    }
+  }
+
+  // STEP 10:
+  // Removing "Water Mountains"
+  quickPeek( "Carving mountains");
+
+  for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
+    for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
+      if( map_tiles[i][t][1] -> getType() == TILE_WATER || map_tiles[i][t][1] -> getType() == TILE_LAVA || map_tiles[i][t][1] -> getType() == TILE_ICE){
+        for(int u = 2; u < DEFAULT_MAP_HEIGHT; u++){
+          map_tiles[i][t][u] -> setType( TILE_AIR);
+        }
+      }
+    }
+  }
+
 
   // Done!
   quickPeek( "Done!");

@@ -27,6 +27,7 @@
 #define BIOME_BARREN 4
 #define BIOME_DESERT 5
 #define BIOME_FOREST 6
+#define BIOME_RIVER 7
 
 //Define all of the possible game screens
 #define SPLASH 0
@@ -35,7 +36,7 @@
 #define LEVELSELECT 3
 #define INGAME 4
 
-#define DEFAULT_MAP_HEIGHT 3
+#define DEFAULT_MAP_HEIGHT 10
 #define DEFAULT_MAP_WIDTH 400
 #define DEFAULT_MAP_LENGTH 400
 
