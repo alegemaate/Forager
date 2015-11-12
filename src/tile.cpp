@@ -7,6 +7,7 @@ tile::tile(int newX, int newY, int newZ, int newType, BITMAP *defaultImage){
   z = newZ;
   type = newType;
   biome = 0;
+  biome_done = false;
 
   image[0] = defaultImage;
   image[1] = defaultImage;

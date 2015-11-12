@@ -10,7 +10,7 @@
 
 class tile_map{
   public:
-    tile_map( std::string newType);
+    tile_map( std::string newType, BITMAP *tempBuffer);
     virtual ~tile_map();
 
     int Getx() { return x; }
@@ -27,18 +27,19 @@ class tile_map{
     void load_images();
     void update();
     void generateMap(std::string newType);
-    void draw( BITMAP *tempBuffer);
+    void draw( int newAnimationFrame);
   protected:
 
   private:
     int zoom;
 
-    int checkBiomeless();
-
+    void quickPeek();
+    long checkBiomeless();
     void refreshTileImages();
 
     BITMAP *errorTile;
     BITMAP *tile_images[100][2];
+    BITMAP *buffPoint;
 };
 
 #endif // TILE_MAP_H

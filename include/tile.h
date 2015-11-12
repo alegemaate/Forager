@@ -4,6 +4,7 @@
 #include <allegro.h>
 
 #include "ids.h"
+#include "tools.h"
 
 class tile{
   public:
@@ -12,6 +13,9 @@ class tile{
 
     int getType() { return type; }
     void setType(int val) { type = val; }
+
+    bool getBiomeType() { return biome_done; }
+    void setBiomeType(int val) { biome_done = val; }
 
     int getBiome();
     void setBiome( int newBiome);
@@ -28,8 +32,7 @@ class tile{
     int z;
     int type;
     int biome;
-
-
+    int biome_done;
 };
 
 #endif // TILE_H

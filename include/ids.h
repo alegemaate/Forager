@@ -12,20 +12,21 @@
 #define TILE_LAVA 10
 #define TILE_TALLGRASS 11
 
+#define TILE_TEMP_WATER 100
+
 // Types
-#define TYPE_GAS
-#define TYPE_LIQUID
-#define TYPE_SOLID
+#define TYPE_GAS 0
+#define TYPE_LIQUID 1
+#define TYPE_SOLID 2
 
 // Biomes
 #define BIOME_NONE 0
 #define BIOME_GRASSLAND 1
 #define BIOME_TUNDRA 2
-#define BIOME_GRASSLAND 3
+#define BIOME_LAKE 3
 #define BIOME_BARREN 4
 #define BIOME_DESERT 5
 #define BIOME_FOREST 6
-#define BIOME_LAKE 7
 
 //Define all of the possible game screens
 #define SPLASH 0
@@ -35,8 +36,8 @@
 #define INGAME 4
 
 #define DEFAULT_MAP_HEIGHT 3
-#define DEFAULT_MAP_WIDTH 50
-#define DEFAULT_MAP_LENGTH 50
+#define DEFAULT_MAP_WIDTH 400
+#define DEFAULT_MAP_LENGTH 400
 
 #define TILE_WIDTH 128
 #define TILE_HEIGHT 64

@@ -218,8 +218,9 @@ void setup(bool first){
     }
 
     //normal map
-    farmTiles = new tile_map("normal");
+    farmTiles = new tile_map("normal", buffer);
     farmTiles -> load_images();
+    farmTiles -> generateMap( "normal");
 
     //Sets Font
     f1 = load_font("images/fonts/arial_black.pcx", NULL, NULL);
@@ -272,7 +273,7 @@ void draw(){
     rectfill(buffer, 0, 0, 1280, 960, makecol(122,122,122));
 
     // Draw map
-    farmTiles -> draw( buffer);
+    farmTiles -> draw( animationFrame);
 
     //Display customer info
     //if( key[KEY_T])

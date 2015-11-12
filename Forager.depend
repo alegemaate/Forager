@@ -13,24 +13,25 @@
 
 1447268671 c:\users\allan\documents\games indev\forager\ids.h
 
-1447275119 c:\users\allan\documents\games indev\forager\include\tile.h
+1447285737 c:\users\allan\documents\games indev\forager\include\tile.h
 	<allegro.h>
 	"ids.h"
+	"tools.h"
 
-1447278498 source:c:\users\allan\documents\games indev\forager\src\tile_map.cpp
+1447286126 source:c:\users\allan\documents\games indev\forager\src\tile_map.cpp
 	"tile_map.h"
 
-1447275140 c:\users\allan\documents\games indev\forager\include\tile_map.h
+1447286547 c:\users\allan\documents\games indev\forager\include\tile_map.h
 	<allegro.h>
 	<string>
 	"tile.h"
 	"ids.h"
 	"tools.h"
 
-1447276624 source:c:\users\allan\documents\games indev\forager\src\tile.cpp
+1447285614 source:c:\users\allan\documents\games indev\forager\src\tile.cpp
 	"tile.h"
 
-1447276033 source:c:\users\allan\documents\games indev\forager\src\main.cpp
+1447285077 source:c:\users\allan\documents\games indev\forager\src\main.cpp
 	<allegro.h>
 	<string>
 	<time.h>
@@ -44,7 +45,7 @@
 	"tile_map.h"
 	"tools.h"
 
-1447278056 c:\users\allan\documents\games indev\forager\include\ids.h
+1447286916 c:\users\allan\documents\games indev\forager\include\ids.h
 
 1430682228 source:c:\users\allan\documents\games indev\forager\src\globals.cpp
 	"globals.h"
