@@ -68,19 +68,19 @@ void tile_map::load_images(){
 void tile_map::update(){
   //Up
   if(key[KEY_UP]){
-    y += 10;
+    y += 5;
   }
   //Down
   if(key[KEY_DOWN]){
-    y -= 10;
+    y -= 5;
   }
   //Left
   if(key[KEY_LEFT]){
-    x += 10;
+    x += 5;
   }
   //Right
   if(key[KEY_RIGHT]){
-    x -= 10;
+    x -= 5;
   }
   //Zoom in
   if(key[KEY_Q]){
@@ -132,7 +132,7 @@ void tile_map::generateMap(std::string newType){
   quickPeek( "Placing Random Biome Spawns");
 
   //Biome spawn tiles
-  for( int i = 0; i < (DEFAULT_MAP_WIDTH * DEFAULT_MAP_LENGTH)/5000; i++){
+  for( int i = 0; i < ((DEFAULT_MAP_WIDTH * DEFAULT_MAP_LENGTH)/6000) + 1; i++){
     map_tiles[random( 0, DEFAULT_MAP_WIDTH - 1)][random( 0, DEFAULT_MAP_LENGTH - 1)][0] -> setBiome( BIOME_BARREN);
     map_tiles[random( 0, DEFAULT_MAP_WIDTH - 1)][random( 0, DEFAULT_MAP_LENGTH - 1)][0] -> setBiome( BIOME_TUNDRA);
     map_tiles[random( 0, DEFAULT_MAP_WIDTH - 1)][random( 0, DEFAULT_MAP_LENGTH - 1)][0] -> setBiome( BIOME_GRASSLAND);
@@ -286,6 +286,7 @@ void tile_map::generateMap(std::string newType){
   int mountain_frequency = 0;
   int mountain_height = 0;
   int mountain_radius = 0;
+  int mountain_steepness = 0;
 
   for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
     for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
@@ -295,53 +296,57 @@ void tile_map::generateMap(std::string newType){
           mountain_frequency = 80;
           mountain_height = 2;
           mountain_radius = 4;
+          mountain_steepness = 5;
         }
         // Desert
         else if( map_tiles[i][t][u] -> getBiome() == BIOME_DESERT){
-          mountain_frequency = 200;
-          mountain_height = 2;
-          mountain_radius = 7;
+          mountain_frequency = 90;
+          mountain_height = 1;
+          mountain_radius = 10;
+          mountain_steepness = 5;
         }
         // Barren
         else if( map_tiles[i][t][u] -> getBiome() == BIOME_BARREN){
-          mountain_frequency = 40;
-          mountain_height = 10;
-          mountain_radius = 5;
+          mountain_frequency = 100;
+          mountain_height = 8;
+          mountain_radius = 4;
+          mountain_steepness = 0;
         }
         // Tundra
         else if( map_tiles[i][t][u] -> getBiome() == BIOME_TUNDRA){
-          mountain_frequency = 300;
+          mountain_frequency = 500;
           mountain_height = 1;
-          mountain_radius = 1;
+          mountain_radius = 5;
+          mountain_steepness = 5;
         }
         // Forest
         else if( map_tiles[i][t][u] -> getBiome() == BIOME_FOREST){
           mountain_frequency = 40;
-          mountain_height = 4;
+          mountain_height = 3;
           mountain_radius = 5;
+          mountain_steepness = 2;
         }
         // Lake
         else if( map_tiles[i][t][u] -> getBiome() == BIOME_LAKE){
           mountain_frequency = 0;
           mountain_height = 0;
           mountain_radius = 0;
+          mountain_steepness = 0;
         }
         // Other?
         else{
-          mountain_frequency = 80;
-          mountain_height = 2;
-          mountain_radius = 5;
+          mountain_frequency = 0;
+          mountain_height = 0;
+          mountain_radius = 0;
+          mountain_steepness = 0;
         }
 
         // Make those mountains
         if(random(0, mountain_frequency) == 1 && map_tiles[i][t][u-1] -> getType() == TILE_GRASS){
-          int mountainRaduis = random(2,mountain_radius);
-          int mountainHeight = mountain_height;
+          int mountainRaduis = random(0, mountain_radius);
+          int mountainHeight = random(0, mountain_height);
 
-          for(int w = 0; w < mountainHeight; w++){
-            if(mountainRaduis > 0){
-              mountainRaduis -= 1;
-            }
+          for(int w = 0; w < mountainHeight; w ++){
             if(u + w < DEFAULT_MAP_HEIGHT){
               for(int q = -mountainRaduis; q < mountainRaduis; q++){
                 for(int r = -mountainRaduis; r < mountainRaduis; r++){
@@ -350,6 +355,7 @@ void tile_map::generateMap(std::string newType){
                   }
                 }
               }
+              mountainRaduis -= mountain_steepness;
             }
           }
         }
