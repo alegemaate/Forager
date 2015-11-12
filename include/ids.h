@@ -11,6 +11,7 @@
 #define TILE_CACTUS 9
 #define TILE_LAVA 10
 #define TILE_TALLGRASS 11
+#define TILE_GRASS_SNOW 12
 
 #define TILE_TEMP_WATER 100
 

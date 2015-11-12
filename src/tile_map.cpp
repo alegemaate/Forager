@@ -52,6 +52,7 @@ void tile_map::load_images(){
   tile_images[TILE_CACTUS][0] = load_bitmap("images/tiles/cactus.png", NULL);
   tile_images[TILE_LAVA][0] = load_bitmap("images/tiles/lava.png", NULL);
   tile_images[TILE_TALLGRASS][0] = load_bitmap("images/tiles/tallgrass.png", NULL);
+  tile_images[TILE_GRASS_SNOW][0] = load_bitmap("images/tiles/grass_snow.bmp", NULL);
 
   // Animated
   tile_images[TILE_TREE][0] = load_bitmap("images/tiles/tree1.bmp", NULL);
@@ -387,68 +388,57 @@ void tile_map::generateMap(std::string newType){
   int cactus_frequency = 0;
   int tallgrass_frequency = 0;
   int nothing_frequency = 0;
+  int snow_frequency = 0;
 
-  int numberObjects = 5;
+  int numberObjects = 6;
 
   // Place objects
   for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
     for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
       for(int u = 1; u <  DEFAULT_MAP_HEIGHT - 1; u++){
         if( map_tiles[i][t][u-1] -> getType() == TILE_GRASS && map_tiles[i][t][u] -> getType() == TILE_AIR){
+          // Reset Frequencies
+          tree_frequency = 0;
+          rock_frequency = 0;
+          cactus_frequency = 0;
+          tallgrass_frequency = 0;
+          nothing_frequency = 0;
+          snow_frequency = 0;
+
           // Grassland
           if( map_tiles[i][t][u] -> getBiome() == BIOME_GRASSLAND){
             tree_frequency = 60;
             rock_frequency = 80;
-            cactus_frequency = 0;
             tallgrass_frequency = 3;
             nothing_frequency = 90;
           }
           // Desert
           else if( map_tiles[i][t][u] -> getBiome() == BIOME_DESERT){
-            tree_frequency = 0;
             rock_frequency = 50;
             cactus_frequency = 60;
-            tallgrass_frequency = 0;
             nothing_frequency = 2;
           }
           // Barren
           else if( map_tiles[i][t][u] -> getBiome() == BIOME_BARREN){
-            tree_frequency = 0;
             rock_frequency = 10;
-            cactus_frequency = 0;
             tallgrass_frequency = 80;
             nothing_frequency = 2;
           }
           // Tundra
           else if( map_tiles[i][t][u] -> getBiome() == BIOME_TUNDRA){
-            tree_frequency = 0;
             rock_frequency = 80;
-            cactus_frequency = 0;
-            tallgrass_frequency = 0;
-            nothing_frequency = 2;
+            snow_frequency = 2;
+            nothing_frequency = 50;
           }
           // Forest
           else if( map_tiles[i][t][u] -> getBiome() == BIOME_FOREST){
             tree_frequency = 2;
             rock_frequency = 80;
-            cactus_frequency = 0;
             tallgrass_frequency = 20;
             nothing_frequency = 30;
           }
           // Lake
           else if( map_tiles[i][t][u] -> getBiome() == BIOME_LAKE){
-            tree_frequency = 0;
-            rock_frequency = 0;
-            cactus_frequency = 0;
-            tallgrass_frequency = 0;
-            nothing_frequency = 1;
-          }
-          // Other?
-          else{
-            tree_frequency = 0;
-            rock_frequency = 0;
-            cactus_frequency = 0;
-            tallgrass_frequency = 0;
             nothing_frequency = 1;
           }
 
@@ -477,8 +467,13 @@ void tile_map::generateMap(std::string newType){
               map_tiles[i][t][u] -> setType(TILE_TALLGRASS);
               objectPlaced = true;
             }
+            // Snow
+            else if(randomGenerateSpawn == 5 && random(1, snow_frequency) == 1){
+              map_tiles[i][t][u] -> setType(TILE_SNOW);
+              objectPlaced = true;
+            }
             // Clear space
-            else if(randomGenerateSpawn == 5 && random(1, nothing_frequency) == 1){
+            else if(randomGenerateSpawn == 6 && random(1, nothing_frequency) == 1){
               objectPlaced = true;
             }
           }
@@ -515,7 +510,7 @@ void tile_map::generateMap(std::string newType){
         // Dirt, to sand or rock or snow
         if( map_tiles[i][t][u] -> getType() == TILE_GRASS){
           if( map_tiles[i][t][u] -> getBiome() == BIOME_TUNDRA)
-            map_tiles[i][t][u] -> setType( TILE_SNOW);
+            map_tiles[i][t][u] -> setType( TILE_GRASS_SNOW);
           else if( map_tiles[i][t][u] -> getBiome() == BIOME_BARREN)
             map_tiles[i][t][u] -> setType( TILE_STONE);
           else if( map_tiles[i][t][u] -> getBiome() == BIOME_LAKE)
