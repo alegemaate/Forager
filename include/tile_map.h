@@ -33,7 +33,7 @@ class tile_map{
   private:
     int zoom;
 
-    void quickPeek();
+    void quickPeek( std::string currentPhase);
     long checkBiomeless();
     void refreshTileImages();
 

@@ -116,6 +116,8 @@ void tile_map::update(){
 void tile_map::generateMap(std::string newType){
   // STEP 1:
   // Start with air
+  quickPeek( "Filling with Air");
+
   for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
     for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
       for(int u = 0; u <  DEFAULT_MAP_HEIGHT; u++){
@@ -127,6 +129,8 @@ void tile_map::generateMap(std::string newType){
 
   // STEP 2:
   // Fill with dirt
+  quickPeek( "Placing dirt");
+
   for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
     for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
       for(int u = 0; u <  DEFAULT_MAP_HEIGHT - 1; u++){
@@ -135,79 +139,9 @@ void tile_map::generateMap(std::string newType){
     }
   }
 
-  // Quick Peek
-  quickPeek();
-
   // STEP 3:
-  // Make River
-  int numberRivers = 1; //random( 0, 2);
-
-  for( int r = 0; r < numberRivers; r++){
-    int river_x = random( 0, int(DEFAULT_MAP_WIDTH * DEFAULT_MAP_HEIGHT)/1600);
-    int river_y = 0;
-
-    // Carve river
-    while( river_y < DEFAULT_MAP_LENGTH){
-      if( river_x < DEFAULT_MAP_WIDTH && river_y < DEFAULT_MAP_LENGTH && river_x >= 0 && river_y >= 0){
-        map_tiles[river_x][river_y][1] -> setType(TILE_WATER);
-      }
-
-      // Shift river
-      if( random( 1, 10) == 1){
-        river_x += 1;
-      }
-      if( random( 1, 10) == 1){
-        river_x -= 1;
-      }
-      river_y ++;
-    }
-
-    // Widen river
-    int river_width = random( 1, 10);
-
-    for( int q = 0; q < river_width; q++){
-      int wideningDirection = random( 0, 3);
-      for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
-        for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
-          if( map_tiles[i][t][1] -> getType() == TILE_WATER){
-            switch( wideningDirection){
-              case 0:
-                if( i > 0)
-                  map_tiles[i - 1][t][1] -> setType( TILE_TEMP_WATER);
-                break;
-              case 1:
-                if( t > 0)
-                  map_tiles[i][t - 1][1] -> setType( TILE_TEMP_WATER);
-                break;
-              case 2:
-                if( i < DEFAULT_MAP_WIDTH - 1)
-                  map_tiles[i + 1][t][1] -> setType( TILE_TEMP_WATER);
-                break;
-              case 3:
-                if( t < DEFAULT_MAP_LENGTH - 1)
-                  map_tiles[i][t + 1][1] -> setType( TILE_TEMP_WATER);
-                break;
-            }
-          }
-        }
-      }
-    }
-
-    // Temp water to water
-    for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
-      for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
-        if( map_tiles[i][t][1] -> getType() == TILE_TEMP_WATER){
-          map_tiles[i][t][1] -> setType( TILE_WATER);
-        }
-      }
-    }
-  }
-
-  // Quick Peek
-  quickPeek();
-
-  // STEP 4:
   // Random Biomes
+  quickPeek( "Placing Random Biome Spawns");
 
   //Biome spawn tiles
   for( int i = 0; i < (DEFAULT_MAP_WIDTH * DEFAULT_MAP_LENGTH)/5000; i++){
@@ -219,6 +153,9 @@ void tile_map::generateMap(std::string newType){
     map_tiles[random( 0, DEFAULT_MAP_WIDTH - 1)][random( 0, DEFAULT_MAP_LENGTH - 1)][0] -> setBiome( BIOME_FOREST);
     map_tiles[random( 0, DEFAULT_MAP_WIDTH - 1)][random( 0, DEFAULT_MAP_LENGTH - 1)][0] -> setBiome( BIOME_LAKE);
   }
+
+  // Quick Peek
+  quickPeek( "Filling Biomes");
 
   // Spread thoe biomes
   while( checkBiomeless() > 0){
@@ -248,11 +185,11 @@ void tile_map::generateMap(std::string newType){
         }
       }
     }
-    textprintf_ex( screen,font, 0, 0,makecol(0,0,0),makecol(255,255,255),"%i", checkBiomeless());
+    textprintf_ex( screen,font, 0, 20,makecol(0,0,0),makecol(255,255,255),"Tiles Remaining: %10d", checkBiomeless());
   }
 
   // Quick Peek
-  quickPeek();
+  quickPeek( "Raising biomes");
 
   // Extend through all tiles
   for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
@@ -263,11 +200,10 @@ void tile_map::generateMap(std::string newType){
     }
   }
 
-  // Quick Peek
-  quickPeek();
-
   // STEP 5:
   // Set biome tiles
+  quickPeek( "Setting corresponding biome images");
+
   for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
     for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
       for(int u = 0; u <  DEFAULT_MAP_HEIGHT; u++){
@@ -294,11 +230,100 @@ void tile_map::generateMap(std::string newType){
     }
   }
 
-  // Quick Peek
-  quickPeek();
-
   // STEP 6:
+  // Make Rivers
+  quickPeek( "Carving rivers");
+
+  // Small Rivers
+  int numberRivers = DEFAULT_MAP_WIDTH/20;
+
+  for( int r = 0; r < numberRivers; r++){
+    // Rivers Remaining
+    textprintf_ex( screen,font, 0, 20,makecol(0,0,0),makecol(255,255,255),"Small Rivers Remaining: %10d", numberRivers-r);
+
+    // Temp Variables
+    int river_x = -1;
+    int river_y = -1;
+    int river_end_x = -1;
+    int river_end_y = -1;
+
+    bool pathFound = false;
+
+    int random_x = 0;
+    int random_y = 0;
+
+    // Find current rivers and make path
+    while( !pathFound){
+      random_x = random( 0, DEFAULT_MAP_WIDTH - 1);
+      random_y = random( 0, DEFAULT_MAP_WIDTH - 1);
+
+      if( map_tiles[random_x][random_y][1] -> getType() == TILE_WATER){
+        if( river_x == -1){
+          river_x = random_x;
+          river_y = random_y;
+        }
+        else{
+          river_end_x = random_x;
+          river_end_y = random_y;
+          pathFound = true;
+        }
+      }
+    }
+
+    // Carve river
+    while( river_x != river_end_x || river_y != river_end_y){
+      if( river_y < DEFAULT_MAP_LENGTH && river_x < DEFAULT_MAP_WIDTH && river_x >= 0 && river_y >= 0)
+        map_tiles[river_x][river_y][1] -> setType(TILE_TEMP_WATER);
+
+      // Shift river
+      // Zero in on final destiantion
+      if( random( 1, 10) == 1 || random( 1, 2) == 1 && river_x < river_end_x){
+        river_x += 1;
+      }
+      if( random( 1, 10) == 1 || random( 1, 2) == 1 && river_x > river_end_x){
+        river_x -= 1;
+      }
+      if( random( 1, 10) == 1 || random( 1, 2) == 1 && river_y < river_end_y){
+        river_y += 1;
+      }
+      if( random( 1, 5) == 1 || random( 1, 2) == 1 && river_y > river_end_y){
+        river_y -= 1;
+      }
+    }
+
+    // Widen river
+    int river_width = random( 1, 3);
+
+    for( int q = 0; q < river_width; q++){
+      int wideningDir = random( 0, 1);
+      for(int i = 1; i < DEFAULT_MAP_WIDTH; i++){
+        for(int t = 1; t < DEFAULT_MAP_LENGTH; t++){
+          if( map_tiles[i][t][1] -> getType() == TILE_TEMP_WATER){
+            if( wideningDir == 1){
+              map_tiles[i - 1][t][1] -> setType( TILE_TEMP_WATER);
+            }
+            else{
+              map_tiles[i][t - 1][1] -> setType( TILE_TEMP_WATER);
+            }
+          }
+        }
+      }
+    }
+
+    // Temp water to water
+    for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
+      for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
+        if( map_tiles[i][t][1] -> getType() == TILE_TEMP_WATER){
+          map_tiles[i][t][1] -> setType( TILE_WATER);
+        }
+      }
+    }
+  }
+
+  // STEP 7:
   // Create biome resources
+  quickPeek( "Creating biome resources");
+
   // Frequencies per biome
   int tree_frequency = 0;
   int rock_frequency = 0;
@@ -395,6 +420,9 @@ void tile_map::generateMap(std::string newType){
     }
   }
 
+  // Done!
+  quickPeek( "Done!");
+
   // Sets all the tiles images
   refreshTileImages();
 }
@@ -410,9 +438,11 @@ long tile_map::checkBiomeless(){
 }
 
 // Quick Peek
-void tile_map::quickPeek(){
+void tile_map::quickPeek( std::string currentPhase){
   refreshTileImages();
+  rectfill( buffPoint, 0, 0, SCREEN_W, SCREEN_H, makecol( 0, 0, 0));
   draw( 0);
+  textprintf_ex( buffPoint,font, 0, 0,makecol(0,0,0),makecol(255,255,255),"%s", currentPhase.c_str());
   draw_sprite( screen, buffPoint, 0, 0);
 }
 
