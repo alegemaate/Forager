@@ -197,7 +197,7 @@ void tile_map::generateMap(std::string newType){
 
   for( int r = 0; r < numberRivers; r++){
     // Rivers Remaining
-    textprintf_ex( screen,font, 0, 20,makecol(0,0,0),makecol(255,255,255),"Small Rivers Remaining: %10d", numberRivers-r);
+    textprintf_ex( screen,font, 0, 20,makecol(0,0,0),makecol(255,255,255),"Rivers Remaining: %10d", numberRivers-r);
 
     // Temp Variables
     int river_x = -1;
@@ -213,7 +213,7 @@ void tile_map::generateMap(std::string newType){
     // Find current rivers and make path
     while( !pathFound){
       random_x = random( 0, DEFAULT_MAP_WIDTH - 1);
-      random_y = random( 0, DEFAULT_MAP_WIDTH - 1);
+      random_y = random( 0, DEFAULT_MAP_LENGTH - 1);
 
       if( map_tiles[random_x][random_y][1] -> getBiome() == BIOME_LAKE){
         if( river_x == -1){
