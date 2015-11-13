@@ -43,3 +43,11 @@
 
 #define TILE_WIDTH 128
 #define TILE_HEIGHT 64
+
+// Overlays
+#define OVERLAY_NONE 0
+#define OVERLAY_FOG_10 1
+#define OVERLAY_FOG_25 2
+#define OVERLAY_FOG_50 3
+#define OVERLAY_FOG_75 4
+#define OVERLAY_FOG_100 5

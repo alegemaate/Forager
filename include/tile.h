@@ -14,13 +14,17 @@ class tile{
     int getType() { return type; }
     void setType(int val) { type = val; }
 
-    bool getBiomeType() { return biome_done; }
-    void setBiomeType(int val) { biome_done = val; }
+    int getX() { return x; }
+    int getY() { return y; }
+    int getZ() { return z; }
+
+    bool getTemperature() { return temperature; }
+    void setTemperature(int val) { temperature = val; }
 
     int getBiome();
     void setBiome( int newBiome);
 
-    void draw( BITMAP *tempBuffer, int newTick, int zoom, int offsetX, int offsetY);
+    void draw( BITMAP *tempBuffer, int newTick, int zoom, int offsetX, int offsetY, BITMAP *overlayImage);
     void logic();
     void setImages(BITMAP* image1, BITMAP* image2);
 
@@ -32,7 +36,7 @@ class tile{
     int z;
     int type;
     int biome;
-    int biome_done;
+    int temperature;
 };
 
 #endif // TILE_H

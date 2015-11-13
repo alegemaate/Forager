@@ -32,6 +32,7 @@ FONT *f1, *f2, *f3, *f4, *f5;
 
 //Create images
 BITMAP* buffer;
+BITMAP* cursor;
 
 //Resolution X
 int resDiv;
@@ -212,6 +213,8 @@ void setup(bool first){
     //Creates a buffer
     buffer = create_bitmap( 1280, 960);
 
+    cursor = load_bitmap( "images/cursor.png", NULL);
+
     //Customers
     for(int i = 0; i < 10; i++){
       farmCustomers[i]  = new customers;
@@ -285,6 +288,9 @@ void draw(){
   if(showFPS){
     textprintf_ex(buffer,font,0,0,makecol(0,0,0),makecol(255,255,255),"FPS-%i", fps);
   }
+
+  // Cursor
+  draw_sprite( buffer, cursor, mouse_x, mouse_y);
 
   //Draws buffer
   stretch_sprite( screen, buffer, 0, 0, SCREEN_W, SCREEN_H);

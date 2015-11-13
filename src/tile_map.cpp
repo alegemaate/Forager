@@ -41,6 +41,11 @@ void tile_map::load_images(){
     }
   }
 
+  // In case of error
+  for( int i = 0; i < 20; i ++){
+    overlay_images[i] = errorTile;
+  }
+
   // Static
   tile_images[TILE_AIR][0] = load_bitmap("images/tiles/air.bmp", NULL);
   tile_images[TILE_GRASS][0] = load_bitmap("images/tiles/grass.bmp", NULL);
@@ -60,6 +65,14 @@ void tile_map::load_images(){
 
   tile_images[TILE_WATER][0] = load_bitmap("images/tiles/water1.bmp", NULL);
   tile_images[TILE_WATER][1] = load_bitmap("images/tiles/water2.bmp", NULL);
+
+  // Overlays
+  overlay_images[OVERLAY_NONE] = NULL;
+  overlay_images[OVERLAY_FOG_10] = load_bitmap("images/tiles/OVERLAY_FOG_10.png", NULL);
+  overlay_images[OVERLAY_FOG_25] = load_bitmap("images/tiles/OVERLAY_FOG_25.png", NULL);
+  overlay_images[OVERLAY_FOG_50] = load_bitmap("images/tiles/OVERLAY_FOG_50.png", NULL);
+  overlay_images[OVERLAY_FOG_75] = load_bitmap("images/tiles/OVERLAY_FOG_75.png", NULL);
+  overlay_images[OVERLAY_FOG_100] = load_bitmap("images/tiles/OVERLAY_FOG_100.png", NULL);
 
   // Sets all the tiles images
   refreshTileImages();
@@ -95,9 +108,43 @@ void tile_map::update(){
       rest(40);
     }
   }
+
+  // Change z slice DOWN
+  if(( key[KEY_LSHIFT] && key[KEY_COMMA] || key[KEY_MINUS_PAD]) && z > 0){
+    z--;
+    rest(100);
+  }
+  // Change z slice UP
+  if(( key[KEY_LSHIFT] && key[KEY_STOP] || key[KEY_PLUS_PAD]) && z < DEFAULT_MAP_HEIGHT - 1){
+    z++;
+    rest(100);
+  }
+
   //Gen
   if(key[KEY_R]){
     generateMap("normal");
+  }
+
+  // Select a tile
+  if( mouse_b & 1){
+    for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
+      for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
+        if( collisionAny( mouse_x, mouse_x,
+                         (map_tiles[i][t][z] -> getX() + map_tiles[i][t][z] -> getZ()) * 64/zoom + x,
+                         (map_tiles[i][t][z] -> getX() + map_tiles[i][t][z] -> getZ()) * 64/zoom + x + 128/zoom,
+                         mouse_y, mouse_y,
+                         ((map_tiles[i][t][z] -> getX() - map_tiles[i][t][z] -> getZ()) * 64/zoom)/2 - map_tiles[i][t][z] -> getY() + y,
+                         ((map_tiles[i][t][z] -> getX() - map_tiles[i][t][z] -> getZ()) * 64/zoom)/2 - map_tiles[i][t][z] -> getY() + y + 128/zoom)){
+          map_tiles[i][t][z] -> setType( TILE_AIR);
+
+
+          /*int z_x = x * (64 /zoom);
+          int z_y = y * (64 /zoom);
+          int z_z = z * (64 /zoom);
+          stretch_sprite( tempBuffer, image[newTick], (z_x + z_z) + offsetX, (z_x - z_z)/2 - z_y + offsetY, 128/zoom, 128/zoom);*/
+        }
+      }
+    }
   }
 }
 
@@ -585,9 +632,14 @@ void tile_map::refreshTileImages(){
 void tile_map::draw( int newAnimationFrame){
   for(int i = 0; i < DEFAULT_MAP_WIDTH; i++){
     for(int t = DEFAULT_MAP_LENGTH - 1; t >= 0; t--){
-      for(int u = 0; u <  DEFAULT_MAP_HEIGHT; u++){
-        map_tiles[i][t][u] -> draw( buffPoint, newAnimationFrame, zoom, x, y);
-      }
+      // Draw tiles underneith with an overlay
+      if(z > 1)
+        map_tiles[i][t][z - 2] -> draw( buffPoint, newAnimationFrame, zoom, x, y, overlay_images[OVERLAY_FOG_50]);
+      if(z > 0)
+        map_tiles[i][t][z - 1] -> draw( buffPoint, newAnimationFrame, zoom, x, y, overlay_images[OVERLAY_NONE]);
+
+      // Draw tiles on current level
+      map_tiles[i][t][z] -> draw( buffPoint, newAnimationFrame, zoom, x, y, overlay_images[OVERLAY_NONE]);
     }
   }
 }

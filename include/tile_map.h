@@ -39,6 +39,7 @@ class tile_map{
 
     BITMAP *errorTile;
     BITMAP *tile_images[100][2];
+    BITMAP *overlay_images[20];
     BITMAP *buffPoint;
 };
 
