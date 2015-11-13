@@ -51,3 +51,4 @@
 #define OVERLAY_FOG_50 3
 #define OVERLAY_FOG_75 4
 #define OVERLAY_FOG_100 5
+#define OVERLAY_SELECTED 6

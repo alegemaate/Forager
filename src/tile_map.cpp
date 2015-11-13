@@ -5,7 +5,7 @@ tile_map::tile_map( std::string newType, BITMAP *tempBuffer){
   // Starting position and zoom
   x = 40;
   y = 600;
-  z = 0;
+  z = 2;
   zoom = 5;
 
   // Make a mapful of tiles
@@ -22,6 +22,8 @@ tile_map::tile_map( std::string newType, BITMAP *tempBuffer){
 
   // Randomly generate terrain
   //generateMap(newType);
+
+  sel_x = sel_y = sel_z = 0;
 }
 
 // Deconstruct
@@ -73,6 +75,7 @@ void tile_map::load_images(){
   overlay_images[OVERLAY_FOG_50] = load_bitmap("images/tiles/OVERLAY_FOG_50.png", NULL);
   overlay_images[OVERLAY_FOG_75] = load_bitmap("images/tiles/OVERLAY_FOG_75.png", NULL);
   overlay_images[OVERLAY_FOG_100] = load_bitmap("images/tiles/OVERLAY_FOG_100.png", NULL);
+  overlay_images[OVERLAY_SELECTED] = load_bitmap("images/tiles/selected_overlay.png", NULL);
 
   // Sets all the tiles images
   refreshTileImages();
@@ -82,31 +85,43 @@ void tile_map::load_images(){
 void tile_map::update(){
   //Up
   if(key[KEY_UP]){
-    y += 5;
+    y += 5 * zoom;
   }
   //Down
   if(key[KEY_DOWN]){
-    y -= 5;
+    y -= 5 * zoom;
   }
   //Left
   if(key[KEY_LEFT]){
-    x += 5;
+    x += 5 * zoom;
   }
   //Right
   if(key[KEY_RIGHT]){
-    x -= 5;
-  }
-  //Zoom in
-  if(key[KEY_Q]){
-    zoom ++;
-    rest(40);
+    x -= 5 * zoom;
   }
   //Zoom out
-  if(key[KEY_A]){
-    if(zoom > 1){
-      zoom --;
+  if(key[KEY_Q] || mouse_z > 0){
+    if(zoom < 10){
+      zoom *=2;
       rest(40);
+
+      // Center zoom
+      x += (SCREEN_W * zoom)/4;
+      y += (SCREEN_H * zoom)/4;
     }
+    position_mouse_z( 0);
+  }
+  //Zoom in
+  if(key[KEY_A] || mouse_z < 0){
+    if(zoom > 1){
+      zoom /=2;
+      rest(40);
+
+      // Center zoom
+      x -= (SCREEN_W * zoom)/2;
+      y -= (SCREEN_H * zoom)/2;
+    }
+    position_mouse_z( 0);
   }
 
   // Change z slice DOWN
@@ -125,27 +140,9 @@ void tile_map::update(){
     generateMap("normal");
   }
 
-  // Select a tile
-  if( mouse_b & 1){
-    for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
-      for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
-        if( collisionAny( mouse_x, mouse_x,
-                         (map_tiles[i][t][z] -> getX() + map_tiles[i][t][z] -> getZ()) * 64/zoom + x,
-                         (map_tiles[i][t][z] -> getX() + map_tiles[i][t][z] -> getZ()) * 64/zoom + x + 128/zoom,
-                         mouse_y, mouse_y,
-                         ((map_tiles[i][t][z] -> getX() - map_tiles[i][t][z] -> getZ()) * 64/zoom)/2 - map_tiles[i][t][z] -> getY() + y,
-                         ((map_tiles[i][t][z] -> getX() - map_tiles[i][t][z] -> getZ()) * 64/zoom)/2 - map_tiles[i][t][z] -> getY() + y + 128/zoom)){
-          map_tiles[i][t][z] -> setType( TILE_AIR);
-
-
-          /*int z_x = x * (64 /zoom);
-          int z_y = y * (64 /zoom);
-          int z_z = z * (64 /zoom);
-          stretch_sprite( tempBuffer, image[newTick], (z_x + z_z) + offsetX, (z_x - z_z)/2 - z_y + offsetY, 128/zoom, 128/zoom);*/
-        }
-      }
-    }
-  }
+  // Erase tile
+  if( mouse_b & 1)
+    map_tiles[sel_x][sel_y][sel_z] -> setType( TILE_AIR, "Air");
 }
 
 // Procedural Generation of map
@@ -157,8 +154,8 @@ void tile_map::generateMap(std::string newType){
   for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
     for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
       for(int u = 0; u <  DEFAULT_MAP_HEIGHT; u++){
-        map_tiles[i][t][u] -> setType(TILE_AIR);
-        map_tiles[i][t][u] -> setBiome(BIOME_NONE);
+        map_tiles[i][t][u] -> setType(TILE_AIR, "Air");
+        map_tiles[i][t][u] -> setBiome(BIOME_NONE, "None");
       }
     }
   }
@@ -170,7 +167,7 @@ void tile_map::generateMap(std::string newType){
   for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
     for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
       for(int u = 0; u <  2; u++){
-        map_tiles[i][t][u] -> setType(TILE_GRASS);
+        map_tiles[i][t][u] -> setType(TILE_GRASS, "Grass");
       }
     }
   }
@@ -181,13 +178,12 @@ void tile_map::generateMap(std::string newType){
 
   //Biome spawn tiles
   for( int i = 0; i < ((DEFAULT_MAP_WIDTH * DEFAULT_MAP_LENGTH)/6000) + 1; i++){
-    map_tiles[random( 0, DEFAULT_MAP_WIDTH - 1)][random( 0, DEFAULT_MAP_LENGTH - 1)][0] -> setBiome( BIOME_BARREN);
-    map_tiles[random( 0, DEFAULT_MAP_WIDTH - 1)][random( 0, DEFAULT_MAP_LENGTH - 1)][0] -> setBiome( BIOME_TUNDRA);
-    map_tiles[random( 0, DEFAULT_MAP_WIDTH - 1)][random( 0, DEFAULT_MAP_LENGTH - 1)][0] -> setBiome( BIOME_GRASSLAND);
-    map_tiles[random( 0, DEFAULT_MAP_WIDTH - 1)][random( 0, DEFAULT_MAP_LENGTH - 1)][0] -> setBiome( BIOME_TUNDRA);
-    map_tiles[random( 0, DEFAULT_MAP_WIDTH - 1)][random( 0, DEFAULT_MAP_LENGTH - 1)][0] -> setBiome( BIOME_DESERT);
-    map_tiles[random( 0, DEFAULT_MAP_WIDTH - 1)][random( 0, DEFAULT_MAP_LENGTH - 1)][0] -> setBiome( BIOME_FOREST);
-    map_tiles[random( 0, DEFAULT_MAP_WIDTH - 1)][random( 0, DEFAULT_MAP_LENGTH - 1)][0] -> setBiome( BIOME_LAKE);
+    map_tiles[random( 0, DEFAULT_MAP_WIDTH - 1)][random( 0, DEFAULT_MAP_LENGTH - 1)][0] -> setBiome( BIOME_BARREN, "Barren");
+    map_tiles[random( 0, DEFAULT_MAP_WIDTH - 1)][random( 0, DEFAULT_MAP_LENGTH - 1)][0] -> setBiome( BIOME_TUNDRA, "Tundra");
+    map_tiles[random( 0, DEFAULT_MAP_WIDTH - 1)][random( 0, DEFAULT_MAP_LENGTH - 1)][0] -> setBiome( BIOME_GRASSLAND, "Grassland");
+    map_tiles[random( 0, DEFAULT_MAP_WIDTH - 1)][random( 0, DEFAULT_MAP_LENGTH - 1)][0] -> setBiome( BIOME_DESERT, "Desert");
+    map_tiles[random( 0, DEFAULT_MAP_WIDTH - 1)][random( 0, DEFAULT_MAP_LENGTH - 1)][0] -> setBiome( BIOME_FOREST, "Forest");
+    map_tiles[random( 0, DEFAULT_MAP_WIDTH - 1)][random( 0, DEFAULT_MAP_LENGTH - 1)][0] -> setBiome( BIOME_LAKE, "Lake");
   }
 
   // Quick Peek
@@ -201,19 +197,19 @@ void tile_map::generateMap(std::string newType){
           switch( random( 0, 3)){
             case 0:
               if( i > 0 && map_tiles[i - 1][t][0] -> getBiome() == BIOME_NONE)
-                map_tiles[i - 1][t][0] -> setBiome( map_tiles[i][t][0] -> getBiome());
+                map_tiles[i - 1][t][0] -> setBiome( map_tiles[i][t][0] -> getBiome(), map_tiles[i][t][0] -> getBiomeName());
               break;
             case 1:
               if( t > 0 && map_tiles[i][t - 1][0] -> getBiome() == BIOME_NONE)
-                map_tiles[i][t - 1][0] -> setBiome( map_tiles[i][t][0] -> getBiome());
+                map_tiles[i][t - 1][0] -> setBiome( map_tiles[i][t][0] -> getBiome(), map_tiles[i][t][0] -> getBiomeName());
               break;
             case 2:
               if( i < DEFAULT_MAP_WIDTH - 1 && map_tiles[i + 1][t][0] -> getBiome() == BIOME_NONE)
-                map_tiles[i + 1][t][0] -> setBiome( map_tiles[i][t][0] -> getBiome());
+                map_tiles[i + 1][t][0] -> setBiome( map_tiles[i][t][0] -> getBiome(), map_tiles[i][t][0] -> getBiomeName());
               break;
             case 3:
               if( t < DEFAULT_MAP_LENGTH - 1 && map_tiles[i][t + 1][0] -> getBiome() == BIOME_NONE)
-                map_tiles[i][t + 1][0] -> setBiome( map_tiles[i][t][0] -> getBiome());
+                map_tiles[i][t + 1][0] -> setBiome( map_tiles[i][t][0] -> getBiome(), map_tiles[i][t][0] -> getBiomeName());
               break;
             default:
               break;
@@ -231,7 +227,7 @@ void tile_map::generateMap(std::string newType){
   for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
     for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
       for(int u = 0; u <  DEFAULT_MAP_HEIGHT; u++){
-        map_tiles[i][t][u] -> setBiome( map_tiles[i][t][0] -> getBiome());
+        map_tiles[i][t][u] -> setBiome( map_tiles[i][t][0] -> getBiome(), map_tiles[i][t][0] -> getBiomeName());
       }
     }
   }
@@ -279,7 +275,7 @@ void tile_map::generateMap(std::string newType){
     // Carve river
     while( river_x != river_end_x || river_y != river_end_y){
       if( river_y < DEFAULT_MAP_LENGTH && river_x < DEFAULT_MAP_WIDTH && river_x >= 0 && river_y >= 0){
-        map_tiles[river_x][river_y][1] -> setType(TILE_TEMP_WATER);
+        map_tiles[river_x][river_y][1] -> setType(TILE_TEMP_WATER, "TEMP_WATER");
       }
 
       // Shift river
@@ -307,10 +303,10 @@ void tile_map::generateMap(std::string newType){
         for(int t = 1; t < DEFAULT_MAP_LENGTH; t++){
           if( map_tiles[i][t][1] -> getType() == TILE_TEMP_WATER){
             if( wideningDir == 1){
-              map_tiles[i - 1][t][1] -> setType( TILE_TEMP_WATER);
+              map_tiles[i - 1][t][1] -> setType( TILE_TEMP_WATER, "TEMP_WATER");
             }
             else{
-              map_tiles[i][t - 1][1] -> setType( TILE_TEMP_WATER);
+              map_tiles[i][t - 1][1] -> setType( TILE_TEMP_WATER, "TEMP_WATER");
             }
           }
         }
@@ -321,7 +317,7 @@ void tile_map::generateMap(std::string newType){
     for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
       for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
         if( map_tiles[i][t][1] -> getType() == TILE_TEMP_WATER){
-          map_tiles[i][t][1] -> setType( TILE_WATER);
+          map_tiles[i][t][1] -> setType( TILE_WATER, "Water");
         }
       }
     }
@@ -399,7 +395,7 @@ void tile_map::generateMap(std::string newType){
               for(int q = -mountainRaduis; q < mountainRaduis; q++){
                 for(int r = -mountainRaduis; r < mountainRaduis; r++){
                   if(i + q < DEFAULT_MAP_WIDTH && i + q >= 0 && t + r < DEFAULT_MAP_LENGTH && t + r >= 0){
-                    map_tiles[i + q][t + r][u + w] -> setType(TILE_GRASS);
+                    map_tiles[i + q][t + r][u + w] -> setType(TILE_GRASS, "Grass");
                   }
                 }
               }
@@ -419,7 +415,7 @@ void tile_map::generateMap(std::string newType){
     for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
       for(int u = DEFAULT_MAP_HEIGHT - 1; u > 1; u--){
         if( map_tiles[i][t][u] -> getType() == TILE_GRASS && map_tiles[i][t][u-1] -> getType() == TILE_AIR){
-          map_tiles[i][t][u-1] -> setType( TILE_GRASS);
+          map_tiles[i][t][u-1] -> setType( TILE_GRASS, "Grass");
         }
       }
     }
@@ -496,27 +492,27 @@ void tile_map::generateMap(std::string newType){
             randomGenerateSpawn = random(1, numberObjects);
             // Rock
             if(randomGenerateSpawn == 1 && random(1, rock_frequency) == 1){
-              map_tiles[i][t][u] -> setType(TILE_ROCK);
+              map_tiles[i][t][u] -> setType(TILE_ROCK, "Rock");
               objectPlaced = true;
             }
             // Tree
             else if(randomGenerateSpawn == 2 && random(1, tree_frequency) == 1){
-              map_tiles[i][t][u] -> setType(TILE_TREE);
+              map_tiles[i][t][u] -> setType(TILE_TREE, "Tree");
               objectPlaced = true;
             }
             // Cactus
             else if(randomGenerateSpawn == 3 && random(1, cactus_frequency) == 1){
-              map_tiles[i][t][u] -> setType(TILE_CACTUS);
+              map_tiles[i][t][u] -> setType(TILE_CACTUS, "Cactus");
               objectPlaced = true;
             }
             // Tallgrass
             else if(randomGenerateSpawn == 4 && random(1, tallgrass_frequency) == 1){
-              map_tiles[i][t][u] -> setType(TILE_TALLGRASS);
+              map_tiles[i][t][u] -> setType(TILE_TALLGRASS, "Tall Grass");
               objectPlaced = true;
             }
             // Snow
             else if(randomGenerateSpawn == 5 && random(1, snow_frequency) == 1){
-              map_tiles[i][t][u] -> setType(TILE_SNOW);
+              map_tiles[i][t][u] -> setType(TILE_SNOW, "Snow");
               objectPlaced = true;
             }
             // Clear space
@@ -539,9 +535,9 @@ void tile_map::generateMap(std::string newType){
         // Water, to ice or lava or none
         if( map_tiles[i][t][u] -> getType() == TILE_WATER){
           if( map_tiles[i][t][u] -> getBiome() == BIOME_TUNDRA)
-            map_tiles[i][t][u] -> setType( TILE_ICE);
+            map_tiles[i][t][u] -> setType( TILE_ICE, "Ice");
           else if( map_tiles[i][t][u] -> getBiome() == BIOME_BARREN)
-            map_tiles[i][t][u] -> setType( TILE_LAVA);
+            map_tiles[i][t][u] -> setType( TILE_LAVA, "Lava");
         }
       }
     }
@@ -557,13 +553,13 @@ void tile_map::generateMap(std::string newType){
         // Dirt, to sand or rock or snow
         if( map_tiles[i][t][u] -> getType() == TILE_GRASS){
           if( map_tiles[i][t][u] -> getBiome() == BIOME_TUNDRA)
-            map_tiles[i][t][u] -> setType( TILE_GRASS_SNOW);
+            map_tiles[i][t][u] -> setType( TILE_GRASS_SNOW, "Snowy Grass");
           else if( map_tiles[i][t][u] -> getBiome() == BIOME_BARREN)
-            map_tiles[i][t][u] -> setType( TILE_STONE);
+            map_tiles[i][t][u] -> setType( TILE_STONE, "Stone");
           else if( map_tiles[i][t][u] -> getBiome() == BIOME_LAKE)
-            map_tiles[i][t][u] -> setType( TILE_WATER);
+            map_tiles[i][t][u] -> setType( TILE_WATER, "Water");
           else if( map_tiles[i][t][u] -> getBiome() == BIOME_DESERT)
-            map_tiles[i][t][u] -> setType( TILE_SAND);
+            map_tiles[i][t][u] -> setType( TILE_SAND, "Sand");
         }
       }
     }
@@ -577,7 +573,7 @@ void tile_map::generateMap(std::string newType){
     for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
       if( map_tiles[i][t][1] -> getType() == TILE_WATER || map_tiles[i][t][1] -> getType() == TILE_LAVA || map_tiles[i][t][1] -> getType() == TILE_ICE){
         for(int u = 2; u < DEFAULT_MAP_HEIGHT; u++){
-          map_tiles[i][t][u] -> setType( TILE_AIR);
+          map_tiles[i][t][u] -> setType( TILE_AIR, "Air");
         }
       }
     }
@@ -639,7 +635,29 @@ void tile_map::draw( int newAnimationFrame){
         map_tiles[i][t][z - 1] -> draw( buffPoint, newAnimationFrame, zoom, x, y, overlay_images[OVERLAY_NONE]);
 
       // Draw tiles on current level
-      map_tiles[i][t][z] -> draw( buffPoint, newAnimationFrame, zoom, x, y, overlay_images[OVERLAY_NONE]);
+      if( collisionAny(  mouse_x, mouse_x,
+                      (( map_tiles[i][t][z] -> getX() + map_tiles[i][t][z] -> getZ()) * 64)/zoom + x/zoom,
+                      (( map_tiles[i][t][z] -> getX() + map_tiles[i][t][z] -> getZ()) * 64)/zoom + x/zoom + 64/zoom,
+                         mouse_y, mouse_y,
+                      (( map_tiles[i][t][z] -> getX() - map_tiles[i][t][z] -> getZ()) * 64)/zoom/2 - (map_tiles[i][t][z] -> getY() * 64/zoom) + y/zoom,
+                      (( map_tiles[i][t][z] -> getX() - map_tiles[i][t][z] -> getZ()) * 64)/zoom/2 - (map_tiles[i][t][z] -> getY() * 64/zoom) + y/zoom + 64/zoom)){
+        map_tiles[i][t][z] -> draw( buffPoint, newAnimationFrame, zoom, x, y, overlay_images[OVERLAY_SELECTED]);
+        sel_x = i;
+        sel_y = t;
+        sel_z = z;
+      }
+      else{
+        map_tiles[i][t][z] -> draw( buffPoint, newAnimationFrame, zoom, x, y, overlay_images[OVERLAY_NONE]);
+      }
     }
   }
+
+  // Quick Info
+  textprintf_ex( buffPoint,font,0, 100,makecol(0,0,0),makecol(255,255,255),"X:%i Y:%i Z:%i Zoom:%i", x, y, z, zoom);
+
+  // Tile info
+  textprintf_ex( buffPoint,font,0, 140,makecol(0,0,0),makecol(255,255,255),"TILE INFO- Type:%s Biome:%s Temp:%i",
+                map_tiles[sel_x][sel_y][sel_z] -> getName().c_str(),
+                map_tiles[sel_x][sel_y][sel_z] -> getBiomeName().c_str(),
+                map_tiles[sel_x][sel_y][sel_z] -> getTemperature());
 }

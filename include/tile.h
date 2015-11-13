@@ -12,17 +12,20 @@ class tile{
     virtual ~tile();
 
     int getType() { return type; }
-    void setType(int val) { type = val; }
+    void setType(int val, string val2) { type = val; name = val2;}
+
+    string getName() { return name;}
+    string getBiomeName() { return biome_name;}
 
     int getX() { return x; }
     int getY() { return y; }
     int getZ() { return z; }
 
-    bool getTemperature() { return temperature; }
+    int getTemperature() { return temperature; }
     void setTemperature(int val) { temperature = val; }
 
     int getBiome();
-    void setBiome( int newBiome);
+    void setBiome( int newBiome, string newBiomeName);
 
     void draw( BITMAP *tempBuffer, int newTick, int zoom, int offsetX, int offsetY, BITMAP *overlayImage);
     void logic();
@@ -37,6 +40,9 @@ class tile{
     int type;
     int biome;
     int temperature;
+
+    string name;
+    string biome_name;
 };
 
 #endif // TILE_H

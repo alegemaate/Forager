@@ -37,6 +37,8 @@ class tile_map{
     long checkBiomeless();
     void refreshTileImages();
 
+    int sel_x, sel_y, sel_z;
+
     BITMAP *errorTile;
     BITMAP *tile_images[100][2];
     BITMAP *overlay_images[20];
