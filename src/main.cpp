@@ -273,7 +273,7 @@ void draw(){
   }
   else if(gameScreen == INGAME){
     //Background
-    rectfill(buffer, 0, 0, 1280, 960, makecol(122,122,122));
+    rectfill(buffer, 0, 0, 1280, 960, makecol(0,228,255));
 
     // Draw map
     farmTiles -> draw( animationFrame);

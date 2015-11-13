@@ -3,10 +3,10 @@
 // Construct
 tile_map::tile_map( std::string newType, BITMAP *tempBuffer){
   // Starting position and zoom
-  x = 40;
-  y = 600;
+  x = -1380;
+  y = 4760;
   z = 2;
-  zoom = 5;
+  zoom = 12;
 
   // Make a mapful of tiles
   for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
@@ -101,7 +101,7 @@ void tile_map::update(){
   }
   //Zoom out
   if(key[KEY_Q] || mouse_z > 0){
-    if(zoom < 10){
+    if(zoom < 16){
       zoom *=2;
       rest(40);
 
@@ -109,6 +109,8 @@ void tile_map::update(){
       x += (SCREEN_W * zoom)/4;
       y += (SCREEN_H * zoom)/4;
     }
+    else
+      zoom = 16;
     position_mouse_z( 0);
   }
   //Zoom in
