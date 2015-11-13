@@ -100,7 +100,7 @@ void tile_map::update(){
     x -= 5 * zoom;
   }
   //Zoom out
-  if(key[KEY_Q] || mouse_z > 0){
+  if(key[KEY_Q] || mouse_z < 0){
     if(zoom < 16){
       zoom *=2;
       rest(40);
@@ -114,7 +114,7 @@ void tile_map::update(){
     position_mouse_z( 0);
   }
   //Zoom in
-  if(key[KEY_A] || mouse_z < 0){
+  if(key[KEY_A] || mouse_z > 0){
     if(zoom > 1){
       zoom /=2;
       rest(40);
