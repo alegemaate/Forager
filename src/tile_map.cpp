@@ -427,101 +427,13 @@ void tile_map::generateMap(std::string newType){
   // Create biome resources
   quickPeek( "Creating biome resources");
 
-  // Frequencies per biome
-  int tree_frequency = 0;
-  int rock_frequency = 0;
-  int cactus_frequency = 0;
-  int tallgrass_frequency = 0;
-  int nothing_frequency = 0;
-  int snow_frequency = 0;
-
-  int numberObjects = 6;
-
   // Place objects
   for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
     for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
       for(int u = 1; u <  DEFAULT_MAP_HEIGHT - 1; u++){
         if( map_tiles[i][t][u-1] -> getType() == TILE_GRASS && map_tiles[i][t][u] -> getType() == TILE_AIR){
-          // Reset Frequencies
-          tree_frequency = 0;
-          rock_frequency = 0;
-          cactus_frequency = 0;
-          tallgrass_frequency = 0;
-          nothing_frequency = 0;
-          snow_frequency = 0;
-
-          // Grassland
-          if( map_tiles[i][t][u] -> getBiome() == BIOME_GRASSLAND){
-            tree_frequency = 60;
-            rock_frequency = 80;
-            tallgrass_frequency = 3;
-            nothing_frequency = 90;
-          }
-          // Desert
-          else if( map_tiles[i][t][u] -> getBiome() == BIOME_DESERT){
-            rock_frequency = 50;
-            cactus_frequency = 60;
-            nothing_frequency = 2;
-          }
-          // Barren
-          else if( map_tiles[i][t][u] -> getBiome() == BIOME_BARREN){
-            rock_frequency = 10;
-            tallgrass_frequency = 80;
-            nothing_frequency = 2;
-          }
-          // Tundra
-          else if( map_tiles[i][t][u] -> getBiome() == BIOME_TUNDRA){
-            rock_frequency = 80;
-            snow_frequency = 2;
-            nothing_frequency = 50;
-          }
-          // Forest
-          else if( map_tiles[i][t][u] -> getBiome() == BIOME_FOREST){
-            tree_frequency = 2;
-            rock_frequency = 80;
-            tallgrass_frequency = 20;
-            nothing_frequency = 30;
-          }
-          // Lake
-          else if( map_tiles[i][t][u] -> getBiome() == BIOME_LAKE){
-            nothing_frequency = 1;
-          }
-
-          // Place some stuff
-          bool objectPlaced = false;
-          int randomGenerateSpawn = 0;
-          while( !objectPlaced){
-            randomGenerateSpawn = random(1, numberObjects);
-            // Rock
-            if(randomGenerateSpawn == 1 && random(1, rock_frequency) == 1){
-              map_tiles[i][t][u] -> setType(TILE_ROCK, "Rock");
-              objectPlaced = true;
-            }
-            // Tree
-            else if(randomGenerateSpawn == 2 && random(1, tree_frequency) == 1){
-              map_tiles[i][t][u] -> setType(TILE_TREE, "Tree");
-              objectPlaced = true;
-            }
-            // Cactus
-            else if(randomGenerateSpawn == 3 && random(1, cactus_frequency) == 1){
-              map_tiles[i][t][u] -> setType(TILE_CACTUS, "Cactus");
-              objectPlaced = true;
-            }
-            // Tallgrass
-            else if(randomGenerateSpawn == 4 && random(1, tallgrass_frequency) == 1){
-              map_tiles[i][t][u] -> setType(TILE_TALLGRASS, "Tall Grass");
-              objectPlaced = true;
-            }
-            // Snow
-            else if(randomGenerateSpawn == 5 && random(1, snow_frequency) == 1){
-              map_tiles[i][t][u] -> setType(TILE_SNOW, "Snow");
-              objectPlaced = true;
-            }
-            // Clear space
-            else if(randomGenerateSpawn == 6 && random(1, nothing_frequency) == 1){
-              objectPlaced = true;
-            }
-          }
+          // Spawn tile
+          map_tiles[i][t][u] -> setType(biomes.getBiome(map_tiles[i][t][u] -> getBiome()).spawnResource(), "SPAWNEDRESOURCE");
         }
       }
     }

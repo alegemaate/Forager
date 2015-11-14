@@ -3,6 +3,10 @@
 
 #include <string>
 
+#include "tools.h"
+
+#define NUMBER_TILE_IDS 100
+
 class biome{
   public:
     biome(std::string newName, int newID);
@@ -28,12 +32,20 @@ class biome{
 
     // Adds tile (by id) to the creation list
     void addTileFrequency( int tileID, int frequency);
+
+    // Get random resource spawn
+    int spawnResource();
+
+    // Finishing biome calculations
+    void finish();
   protected:
   private:
     std::string name;
     int ID;
 
-    int tileSpawnRates[100];
+    int tileSpawnRates[NUMBER_TILE_IDS];
+    int tilesSpawnable[NUMBER_TILE_IDS];
+    int numberSpawnableResources;
 
     int mountain_frequency;
     int mountain_height;

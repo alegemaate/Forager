@@ -1,5 +1,4 @@
 // Tiles
-#define TILE_NOTHING -1
 #define TILE_AIR 0
 #define TILE_GRASS 1
 #define TILE_SAND 2

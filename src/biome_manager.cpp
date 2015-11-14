@@ -60,7 +60,15 @@ void biome_manager::load( std::string newFile){
       //textprintf_centre_ex(screen,font,640,760,makecol(0,0,0),makecol(255,255,255),"%s %i %i", name.c_str(), atoi(cResource -> first_attribute("id") -> value()), atoi(cResource -> value()));
     }
 
+    // Calc spawn stuff
+    newBiome.finish();
+
     // Add the biome
     biomes.push_back( newBiome);
+
   }
+}
+
+biome biome_manager::getBiome( int biomeID){
+  return biomes.at( biomeID);
 }

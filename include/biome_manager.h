@@ -23,7 +23,7 @@ class biome_manager{
 
     // Allows communication
     int getNumberBiomes(){ return biomes.size();};
-    biome getBiome( int ID){ return biomes.at( ID);};
+    biome getBiome( int biomeID);
 
   protected:
   private:

@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <biomes>
+	<!--None-->
+	<biome id="0">
+		<name>NONE</name>
+		<mountain>
+			<frequency>0</frequency>
+			<height>0</height>
+			<radius>0</radius>
+			<steepness>0</steepness>
+		</mountain>
+		<resources>
+			<resource tileID="0">0</resource>
+		</resources>
+	</biome>
 	<!--Grassland-->
 	<biome id="1">
 		<name>Grassland</name>
@@ -11,10 +24,8 @@
 		</mountain>
 		<resources>
 			<resource tileID="0">90</resource>
-			<resource tileID="3">0</resource>
 			<resource tileID="5">60</resource>
 			<resource tileID="6">80</resource>
-			<resource tileID="9">0</resource>
 			<resource tileID="11">3</resource>
 		</resources>
 	</biome>
@@ -29,11 +40,8 @@
 		</mountain>
 		<resources>
 			<resource tileID="0">2</resource>
-			<resource tileID="3">0</resource>
-			<resource tileID="5">0</resource>
 			<resource tileID="6">50</resource>
 			<resource tileID="9">60</resource>
-			<resource tileID="11">3</resource>
 		</resources>
 	</biome>
 	<!--Barren-->
@@ -47,10 +55,7 @@
 		</mountain>
 		<resources>
 			<resource tileID="0">2</resource>
-			<resource tileID="3">0</resource>
-			<resource tileID="5">0</resource>
 			<resource tileID="6">10</resource>
-			<resource tileID="9">0</resource>
 			<resource tileID="11">80</resource>
 		</resources>
 	</biome>
@@ -65,11 +70,8 @@
 		</mountain>
 		<resources>
 			<resource tileID="0">50</resource>
-			<resource tileID="3">0</resource>
-			<resource tileID="5">2</resource>
-			<resource tileID="6">0</resource>
-			<resource tileID="9">0</resource>
-			<resource tileID="11">20</resource>
+			<resource tileID="3">2</resource>
+			<resource tileID="6">20</resource>
 		</resources>
 	</biome>
 	<!--Forest-->
@@ -83,10 +85,8 @@
 		</mountain>
 		<resources>
 			<resource tileID="0">30</resource>
-			<resource tileID="3">0</resource>
 			<resource tileID="5">2</resource>
 			<resource tileID="6">80</resource>
-			<resource tileID="9">0</resource>
 			<resource tileID="11">20</resource>
 		</resources>
 	</biome>
@@ -101,11 +101,6 @@
 		</mountain>
 		<resources>
 			<resource tileID="0">0</resource>
-			<resource tileID="3">0</resource>
-			<resource tileID="5">0</resource>
-			<resource tileID="6">0</resource>
-			<resource tileID="9">0</resource>
-			<resource tileID="11">0</resource>
 		</resources>
 	</biome>
 </biomes>
