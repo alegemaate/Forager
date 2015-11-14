@@ -182,9 +182,11 @@ void tile_map::generateMap(std::string newType){
   quickPeek( "Placing Random Biome Spawns");
 
   //Biome spawn tiles
-  for( int i = 0; i < ((DEFAULT_MAP_WIDTH * DEFAULT_MAP_LENGTH)/6000) + 1; i++){
+  for( int i = 0; i < ((DEFAULT_MAP_WIDTH * DEFAULT_MAP_LENGTH)/5000) + 1; i++){
     for( int k = 0; k < biomes.getNumberBiomes(); k++){
-      map_tiles[random( 0, DEFAULT_MAP_WIDTH - 1)][random( 0, DEFAULT_MAP_LENGTH - 1)][0] -> setBiome( biomes.getBiome(k).getID(), biomes.getBiome(k).getName());
+      if( random(0, biomes.getBiome(k).getChance()) == 1){
+        map_tiles[random( 0, DEFAULT_MAP_WIDTH - 1)][random( 0, DEFAULT_MAP_LENGTH - 1)][0] -> setBiome( biomes.getBiome(k).getID(), biomes.getBiome(k).getName());
+      }
     }
   }
 
@@ -192,7 +194,7 @@ void tile_map::generateMap(std::string newType){
   quickPeek( "Filling Biomes");
 
   // Spread thoe biomes
-  while( checkBiomeless() > 0){
+  while( checkBiomeNumber( BIOME_NONE) > 0){
     for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
       for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
         if( map_tiles[i][t][0] -> getBiome() != BIOME_NONE){
@@ -219,7 +221,7 @@ void tile_map::generateMap(std::string newType){
         }
       }
     }
-    textprintf_ex( screen,font, 0, 20,makecol(0,0,0),makecol(255,255,255),"Tiles Remaining: %10d", checkBiomeless());
+    textprintf_ex( screen,font, 0, 20,makecol(0,0,0),makecol(255,255,255),"Tiles Remaining: %10d", checkBiomeNumber( BIOME_NONE));
   }
 
   // Quick Peek
@@ -257,7 +259,7 @@ void tile_map::generateMap(std::string newType){
     int random_y = 0;
 
     // Find current rivers and make path
-    while( !pathFound){
+    while( !pathFound && checkBiomeNumber( BIOME_LAKE) > 0){
       random_x = random( 0, DEFAULT_MAP_WIDTH - 1);
       random_y = random( 0, DEFAULT_MAP_LENGTH - 1);
 
@@ -458,13 +460,13 @@ void tile_map::generateMap(std::string newType){
 }
 
 // Checks how many tiles dont have a biome
-long tile_map::checkBiomeless(){
-  long noBiome = 0;
+long tile_map::checkBiomeNumber( int biomeToCheck){
+  long numberOfBiome = 0;
   for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++)
     for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++)
-      if( map_tiles[i][t][0] -> getBiome() == BIOME_NONE)
-        noBiome++;
-  return noBiome;
+      if( map_tiles[i][t][0] -> getBiome() == biomeToCheck)
+        numberOfBiome++;
+  return numberOfBiome;
 }
 
 // Quick Peek

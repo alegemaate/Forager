@@ -17,6 +17,8 @@ biome::biome(std::string newName, int newID){
   int mountian_steepness = 0;
 
   numberSpawnableResources = 0;
+
+  spawnChance = 0;
 }
 
 biome::~biome(){

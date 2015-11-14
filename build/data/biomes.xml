@@ -3,6 +3,7 @@
 	<!--None-->
 	<biome id="0">
 		<name>NONE</name>
+		<chance>0</chance>
 		<mountain>
 			<frequency>0</frequency>
 			<height>0</height>
@@ -10,12 +11,14 @@
 			<steepness>0</steepness>
 		</mountain>
 		<resources>
-			<resource tileID="0">0</resource>
 		</resources>
+		<swapping>
+		</swapping>
 	</biome>
 	<!--Grassland-->
 	<biome id="1">
 		<name>Grassland</name>
+		<chance>2</chance>
 		<mountain>
 			<frequency>80</frequency>
 			<height>2</height>
@@ -28,10 +31,13 @@
 			<resource tileID="6">80</resource>
 			<resource tileID="11">3</resource>
 		</resources>
+		<swapping>
+		</swapping>
 	</biome>
 	<!--Desert-->
 	<biome id="2">
 		<name>Desert</name>
+		<chance>4</chance>
 		<mountain>
 			<frequency>90</frequency>
 			<height>1</height>
@@ -43,25 +49,43 @@
 			<resource tileID="6">50</resource>
 			<resource tileID="9">60</resource>
 		</resources>
+		<swapping>
+			<swap>
+				<id1>1</id1>
+				<id2>2</id2>
+			</swap>
+		</swapping>
 	</biome>
 	<!--Barren-->
 	<biome id="3">
 		<name>Barren</name>
+		<chance>6</chance>
 		<mountain>
-			<frequency>100</frequency>
-			<height>8</height>
+			<frequency>20</frequency>
+			<height>2</height>
 			<radius>4</radius>
-			<steepness>0</steepness>
+			<steepness>1</steepness>
 		</mountain>
 		<resources>
 			<resource tileID="0">2</resource>
 			<resource tileID="6">10</resource>
 			<resource tileID="11">80</resource>
 		</resources>
+		<swapping>
+			<swap>
+				<id1>1</id1>
+				<id2>4</id2>
+			</swap>
+			<swap>
+				<id1>7</id1>
+				<id2>10</id2>
+			</swap>
+		</swapping>
 	</biome>
 	<!--Tundra-->
 	<biome id="4">
 		<name>Tundra</name>
+		<chance>4</chance>
 		<mountain>
 			<frequency>500</frequency>
 			<height>1</height>
@@ -73,10 +97,21 @@
 			<resource tileID="3">2</resource>
 			<resource tileID="6">20</resource>
 		</resources>
+		<swapping>
+			<swap>
+				<id1>1</id1>
+				<id2>12</id2>
+			</swap>
+			<swap>
+				<id1>7</id1>
+				<id2>8</id2>
+			</swap>
+		</swapping>
 	</biome>
 	<!--Forest-->
 	<biome id="5">
 		<name>Forest</name>
+		<chance>2</chance>
 		<mountain>
 			<frequency>40</frequency>
 			<height>3</height>
@@ -89,10 +124,13 @@
 			<resource tileID="6">80</resource>
 			<resource tileID="11">20</resource>
 		</resources>
+		<swapping>
+		</swapping>
 	</biome>
 	<!--Lake-->
 	<biome id="6">
 		<name>Lake</name>
+		<chance>2</chance>
 		<mountain>
 			<frequency>0</frequency>
 			<height>0</height>
@@ -100,7 +138,12 @@
 			<steepness>0</steepness>
 		</mountain>
 		<resources>
-			<resource tileID="0">0</resource>
 		</resources>
+		<swapping>
+			<swap>
+				<id1>1</id1>
+				<id2>7</id2>
+			</swap>
+		</swapping>
 	</biome>
 </biomes>

@@ -38,6 +38,9 @@ void biome_manager::load( std::string newFile){
     int biomeID = atoi(cBiome-> first_attribute("id") -> value());
     string name = cBiome-> first_node("name") -> value();
 
+    // Spawn chacne
+    int chance = atoi(cBiome-> first_node("chance") -> value());
+
     // Mountains
     int mountain_frequency = atoi(cBiome-> first_node("mountain") -> first_node("frequency") -> value());
     int mountain_height = atoi(cBiome-> first_node("mountain") -> first_node("height") -> value());
@@ -50,6 +53,9 @@ void biome_manager::load( std::string newFile){
 
     // Create biome, set variables and add it to the biome list
     biome newBiome( name, biomeID);
+
+    // Chance of spawn
+    newBiome.setChance( chance);
 
     // Mountains
     newBiome.setMountainRates( mountain_frequency, mountain_height, mountain_radius, mountain_steepness);

@@ -36,7 +36,7 @@ class tile_map{
     int zoom;
 
     void quickPeek( std::string currentPhase);
-    long checkBiomeless();
+    long checkBiomeNumber( int biomeToCheck);
     void refreshTileImages();
 
     int sel_x, sel_y, sel_z;

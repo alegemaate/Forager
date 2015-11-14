@@ -27,6 +27,10 @@ class biome{
     // Get ID
     int getID(){ return ID; }
 
+    // Get/Set spawn chance
+    void setChance( int newChance){ spawnChance = newChance; }
+    int getChance(){ return spawnChance; }
+
     // Mountain info
     void setMountainRates( int newFrequency, int newHeight, int newRadius, int newSteepness);
 
@@ -51,6 +55,8 @@ class biome{
     int mountain_height;
     int mountain_radius;
     int mountian_steepness;
+
+    int spawnChance;
 };
 
 #endif // BIOME_H
