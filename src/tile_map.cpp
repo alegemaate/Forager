@@ -337,55 +337,11 @@ void tile_map::generateMap(std::string newType){
   for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
     for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
       for(int u = 2; u <  DEFAULT_MAP_HEIGHT; u++){
-        // Grassland
-        if( map_tiles[i][t][u] -> getBiome() == BIOME_GRASSLAND){
-          mountain_frequency = 80;
-          mountain_height = 2;
-          mountain_radius = 4;
-          mountain_steepness = 5;
-        }
-        // Desert
-        else if( map_tiles[i][t][u] -> getBiome() == BIOME_DESERT){
-          mountain_frequency = 90;
-          mountain_height = 1;
-          mountain_radius = 10;
-          mountain_steepness = 5;
-        }
-        // Barren
-        else if( map_tiles[i][t][u] -> getBiome() == BIOME_BARREN){
-          mountain_frequency = 100;
-          mountain_height = 8;
-          mountain_radius = 4;
-          mountain_steepness = 0;
-        }
-        // Tundra
-        else if( map_tiles[i][t][u] -> getBiome() == BIOME_TUNDRA){
-          mountain_frequency = 500;
-          mountain_height = 1;
-          mountain_radius = 5;
-          mountain_steepness = 5;
-        }
-        // Forest
-        else if( map_tiles[i][t][u] -> getBiome() == BIOME_FOREST){
-          mountain_frequency = 40;
-          mountain_height = 3;
-          mountain_radius = 5;
-          mountain_steepness = 2;
-        }
-        // Lake
-        else if( map_tiles[i][t][u] -> getBiome() == BIOME_LAKE){
-          mountain_frequency = 0;
-          mountain_height = 0;
-          mountain_radius = 0;
-          mountain_steepness = 0;
-        }
-        // Other?
-        else{
-          mountain_frequency = 0;
-          mountain_height = 0;
-          mountain_radius = 0;
-          mountain_steepness = 0;
-        }
+        // Spawning mountains
+        mountain_frequency = biomes.getBiome(map_tiles[i][t][u-1] -> getBiome()).getMountainFrequency();
+        mountain_height = biomes.getBiome(map_tiles[i][t][u-1] -> getBiome()).getMountainHeight();
+        mountain_radius = biomes.getBiome(map_tiles[i][t][u-1] -> getBiome()).getMountainRadius();
+        mountain_steepness = biomes.getBiome(map_tiles[i][t][u-1] -> getBiome()).getMountainSteepness();
 
         // Make those mountains
         if(random(0, mountain_frequency) == 1 && map_tiles[i][t][u-1] -> getType() == TILE_GRASS){
