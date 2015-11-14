@@ -1,4 +1,5 @@
 // Tiles
+#define TILE_NOTHING -1
 #define TILE_AIR 0
 #define TILE_GRASS 1
 #define TILE_SAND 2
@@ -23,11 +24,11 @@
 // Biomes
 #define BIOME_NONE 0
 #define BIOME_GRASSLAND 1
-#define BIOME_TUNDRA 2
-#define BIOME_LAKE 3
-#define BIOME_BARREN 4
-#define BIOME_DESERT 5
-#define BIOME_FOREST 6
+#define BIOME_DESERT 2
+#define BIOME_BARREN 3
+#define BIOME_TUNDRA 4
+#define BIOME_FOREST 5
+#define BIOME_LAKE 6
 #define BIOME_RIVER 7
 
 //Define all of the possible game screens

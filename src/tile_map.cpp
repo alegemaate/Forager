@@ -24,6 +24,9 @@ tile_map::tile_map( std::string newType, BITMAP *tempBuffer){
   //generateMap(newType);
 
   sel_x = sel_y = sel_z = 0;
+
+  // Load biomes
+  biomes.load( "data/biomes.xml");
 }
 
 // Deconstruct
@@ -106,8 +109,8 @@ void tile_map::update(){
       rest(40);
 
       // Center zoom
-      x += (SCREEN_W * zoom)/4;
-      y += (SCREEN_H * zoom)/4;
+      x += ((SCREEN_W) * zoom)/4;
+      y += ((SCREEN_H) * zoom)/4;
     }
     else
       zoom = 16;
@@ -120,8 +123,8 @@ void tile_map::update(){
       rest(40);
 
       // Center zoom
-      x -= (SCREEN_W * zoom)/2;
-      y -= (SCREEN_H * zoom)/2;
+      x -= ((SCREEN_W) * zoom)/2;
+      y -= ((SCREEN_H) * zoom)/2;
     }
     position_mouse_z( 0);
   }
@@ -180,12 +183,9 @@ void tile_map::generateMap(std::string newType){
 
   //Biome spawn tiles
   for( int i = 0; i < ((DEFAULT_MAP_WIDTH * DEFAULT_MAP_LENGTH)/6000) + 1; i++){
-    map_tiles[random( 0, DEFAULT_MAP_WIDTH - 1)][random( 0, DEFAULT_MAP_LENGTH - 1)][0] -> setBiome( BIOME_BARREN, "Barren");
-    map_tiles[random( 0, DEFAULT_MAP_WIDTH - 1)][random( 0, DEFAULT_MAP_LENGTH - 1)][0] -> setBiome( BIOME_TUNDRA, "Tundra");
-    map_tiles[random( 0, DEFAULT_MAP_WIDTH - 1)][random( 0, DEFAULT_MAP_LENGTH - 1)][0] -> setBiome( BIOME_GRASSLAND, "Grassland");
-    map_tiles[random( 0, DEFAULT_MAP_WIDTH - 1)][random( 0, DEFAULT_MAP_LENGTH - 1)][0] -> setBiome( BIOME_DESERT, "Desert");
-    map_tiles[random( 0, DEFAULT_MAP_WIDTH - 1)][random( 0, DEFAULT_MAP_LENGTH - 1)][0] -> setBiome( BIOME_FOREST, "Forest");
-    map_tiles[random( 0, DEFAULT_MAP_WIDTH - 1)][random( 0, DEFAULT_MAP_LENGTH - 1)][0] -> setBiome( BIOME_LAKE, "Lake");
+    for( int k = 0; k < biomes.getNumberBiomes(); k++){
+      map_tiles[random( 0, DEFAULT_MAP_WIDTH - 1)][random( 0, DEFAULT_MAP_LENGTH - 1)][0] -> setBiome( biomes.getBiome(k).getID(), biomes.getBiome(k).getName());
+    }
   }
 
   // Quick Peek
@@ -630,12 +630,13 @@ void tile_map::refreshTileImages(){
 void tile_map::draw( int newAnimationFrame){
   for(int i = 0; i < DEFAULT_MAP_WIDTH; i++){
     for(int t = DEFAULT_MAP_LENGTH - 1; t >= 0; t--){
+      for(int n = 0; n < DEFAULT_MAP_HEIGHT; n++){
       // Draw tiles underneith with an overlay
-      if(z > 1)
+      /*if(z > 1)
         map_tiles[i][t][z - 2] -> draw( buffPoint, newAnimationFrame, zoom, x, y, overlay_images[OVERLAY_FOG_50]);
       if(z > 0)
         map_tiles[i][t][z - 1] -> draw( buffPoint, newAnimationFrame, zoom, x, y, overlay_images[OVERLAY_NONE]);
-
+*/
       // Draw tiles on current level
       if( collisionAny(  mouse_x, mouse_x,
                       (( map_tiles[i][t][z] -> getX() + map_tiles[i][t][z] -> getZ()) * 64)/zoom + x/zoom,
@@ -649,7 +650,7 @@ void tile_map::draw( int newAnimationFrame){
         sel_z = z;
       }
       else{
-        map_tiles[i][t][z] -> draw( buffPoint, newAnimationFrame, zoom, x, y, overlay_images[OVERLAY_NONE]);
+        map_tiles[i][t][n] -> draw( buffPoint, newAnimationFrame, zoom, x, y, overlay_images[OVERLAY_NONE]);
       }
     }
   }
@@ -658,8 +659,10 @@ void tile_map::draw( int newAnimationFrame){
   textprintf_ex( buffPoint,font,0, 100,makecol(0,0,0),makecol(255,255,255),"X:%i Y:%i Z:%i Zoom:%i", x, y, z, zoom);
 
   // Tile info
-  textprintf_ex( buffPoint,font,0, 140,makecol(0,0,0),makecol(255,255,255),"TILE INFO- Type:%s Biome:%s Temp:%i",
+  textprintf_ex( buffPoint,font,0, 140,makecol(0,0,0),makecol(255,255,255),"TILE INFO- Type:%s Biome:%s BiomeID:%i Temp:%i",
                 map_tiles[sel_x][sel_y][sel_z] -> getName().c_str(),
                 map_tiles[sel_x][sel_y][sel_z] -> getBiomeName().c_str(),
+                map_tiles[sel_x][sel_y][sel_z] -> getBiome(),
                 map_tiles[sel_x][sel_y][sel_z] -> getTemperature());
+  }
 }

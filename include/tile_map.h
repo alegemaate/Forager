@@ -7,6 +7,8 @@
 #include "tile.h"
 #include "ids.h"
 #include "tools.h"
+#include "biome_manager.h"
+#include "biome.h"
 
 class tile_map{
   public:
@@ -43,6 +45,8 @@ class tile_map{
     BITMAP *tile_images[100][2];
     BITMAP *overlay_images[20];
     BITMAP *buffPoint;
+
+    biome_manager biomes;
 };
 
 #endif // TILE_MAP_H
