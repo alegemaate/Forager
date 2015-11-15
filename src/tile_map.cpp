@@ -3,10 +3,10 @@
 // Construct
 tile_map::tile_map( std::string newType, BITMAP *tempBuffer){
   // Starting position and zoom
-  x = -1380;
-  y = 4760;
+  x = 620;
+  y = 7880;
   z = 2;
-  zoom = 12;
+  zoom = 16;
 
   // Make a mapful of tiles
   for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
@@ -105,12 +105,12 @@ void tile_map::update(){
   //Zoom out
   if(key[KEY_Q] || mouse_z < 0){
     if(zoom < 16){
+      // Center zoom
+      x += ((SCREEN_W) * zoom)/2 + (mouse_x - SCREEN_W/2) * zoom;
+      y += ((SCREEN_H) * zoom)/2 + (mouse_y - SCREEN_H/2) * zoom;
+
       zoom *=2;
       rest(40);
-
-      // Center zoom
-      x += ((SCREEN_W) * zoom)/4;
-      y += ((SCREEN_H) * zoom)/4;
     }
     else
       zoom = 16;
@@ -123,19 +123,19 @@ void tile_map::update(){
       rest(40);
 
       // Center zoom
-      x -= ((SCREEN_W) * zoom)/2;
-      y -= ((SCREEN_H) * zoom)/2;
+      x -= ((SCREEN_W) * zoom)/2 + (mouse_x - SCREEN_W/2) * zoom;
+      y -= ((SCREEN_H) * zoom)/2 + (mouse_y - SCREEN_H/2) * zoom;
     }
     position_mouse_z( 0);
   }
 
   // Change z slice DOWN
-  if(( key[KEY_LSHIFT] && key[KEY_COMMA] || key[KEY_MINUS_PAD]) && z > 0){
+  if(( key[KEY_LSHIFT] && key[KEY_STOP] || key[KEY_MINUS_PAD]) && z > 0){
     z--;
     rest(100);
   }
   // Change z slice UP
-  if(( key[KEY_LSHIFT] && key[KEY_STOP] || key[KEY_PLUS_PAD]) && z < DEFAULT_MAP_HEIGHT - 1){
+  if(( key[KEY_LSHIFT] && key[KEY_COMMA] || key[KEY_PLUS_PAD]) && z < DEFAULT_MAP_HEIGHT - 1){
     z++;
     rest(100);
   }

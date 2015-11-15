@@ -93,9 +93,9 @@
 			<steepness>5</steepness>
 		</mountain>
 		<resources>
-			<resource tileID="0">50</resource>
+			<resource tileID="0">80</resource>
 			<resource tileID="3">2</resource>
-			<resource tileID="6">20</resource>
+			<resource tileID="6">140</resource>
 		</resources>
 		<swapping>
 			<swap>
