@@ -86,49 +86,49 @@ void tile_map::load_images(){
 
 // Update map
 void tile_map::update(){
-  // Up
-  if(key[KEY_W] || key[KEY_UP]){
+  // Right
+  if(key[KEY_D] || key[KEY_RIGHT]){
     if( gameMode){
-      if( test_y + 52 < DEFAULT_MAP_LENGTH && test_x > 0){
+      if( test_y + 52 < DEFAULT_MAP_LENGTH){
         test_y += 1;
-        test_x -= 1;
-        y += 64;
+        x -= 64;
+        y += 32;
       }
     }
     else
       y += 5 * zoom;
   }
-  //Down
-  if(key[KEY_S] || key[KEY_DOWN]){
+  // Left
+  if(key[KEY_A] || key[KEY_LEFT]){
     if( gameMode){
-      if( test_y > 0 && test_x + 52 < DEFAULT_MAP_WIDTH){
+      if( test_y > 0){
         test_y -= 1;
-        test_x += 1;
-        y -= 64;
+        x += 64;
+        y -= 32;
       }
     }
     else
       y -= 5 * zoom;
   }
-  //Right
-  if(key[KEY_D] || key[KEY_RIGHT]){
+  // Down
+  if(key[KEY_S] || key[KEY_DOWN]){
     if( gameMode){
-      if( test_y + 52 < DEFAULT_MAP_LENGTH && test_x + 52 < DEFAULT_MAP_WIDTH){
-        test_y += 1;
+      if( test_x + 52 < DEFAULT_MAP_WIDTH){
         test_x += 1;
-        x -= 128;
+        x -= 64;
+        y -= 32;
       }
     }
     else
       x -= 5 * zoom;
   }
-  //Left
-  if(key[KEY_A] || key[KEY_LEFT]){
+  // Up
+  if(key[KEY_W] || key[KEY_UP]){
     if( gameMode){
-      if( test_y > 0 && test_x > 0){
-        test_y -= 1;
+      if( test_x > 0){
         test_x -= 1;
-        x += 128;
+        x += 64;
+        y += 32;
       }
     }
     else

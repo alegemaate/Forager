@@ -33,7 +33,7 @@
 1447807846 source:c:\users\allan\documents\games indev\forager\src\tile.cpp
 	"tile.h"
 
-1447732996 source:c:\users\allan\documents\games indev\forager\src\main.cpp
+1447811539 source:c:\users\allan\documents\games indev\forager\src\main.cpp
 	<allegro.h>
 	<string>
 	<time.h>
@@ -47,7 +47,7 @@
 	"tile_map.h"
 	"tools.h"
 
-1447811332 c:\users\allan\documents\games indev\forager\include\ids.h
+1447814224 c:\users\allan\documents\games indev\forager\include\ids.h
 
 1430682228 source:c:\users\allan\documents\games indev\forager\src\globals.cpp
 	"globals.h"
