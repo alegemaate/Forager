@@ -38,23 +38,28 @@ BITMAP* cursor;
 int resDiv;
 
 //FPS System
-volatile int ticks = 0;
-int updates_per_second = 100;
-volatile int game_time = 0;
-
 int fps;
 int frames_done;
 int old_time;
 
+// An array to store the number of frames we did during the last 10 tenths of a second
+int frames_array[10];
+int frame_index = 0;
+
+volatile int ticks = 0;
 void ticker(){
     ticks++;
 }
 END_OF_FUNCTION(ticker)
 
+volatile int game_time = 0;
 void game_time_ticker(){
     game_time++;
 }
 END_OF_FUNCTION(ticker)
+
+const int updates_per_second = 60;
+
 
 //Animations
 void animationTicker(){
@@ -67,94 +72,7 @@ void animationTicker(){
 }
 END_OF_FUNCTION(ticker)
 
-void draw();
-
-//Particles
-struct particles{
-  int x;
-  int y;
-  bool onScreen;
-  int red;
-  int blue;
-  int green;
-};
-
 tile_map* farmTiles;
-
-//Customers
-struct customers{
-  std::string name;
-  int age;
-  int preference;
-  int speed;
-  int experience;
-  int gender;
-
-  BITMAP* images[2];
-
-  customers(){
-    generate();
-  }
-
-  ~customers(){
-    delete [] images;
-  }
-
-  void generate(){
-    std::string firstName;
-    std::string lastName;
-
-    switch (random(1,10)){
-      case 1 : firstName = "White";
-      break;
-      case 2 : firstName = "Dog";
-      break;
-      case 3 : firstName = "Wolf";
-      break;
-      case 4 : firstName = "Witch's";
-      break;
-      case 5 : firstName = "Fox";
-      break;
-      case 6 : firstName = "Green";
-      break;
-      case 7 : firstName = "Black";
-      break;
-      case 8 : firstName = "Yellow";
-      break;
-      case 9 : firstName = "Crab";
-      break;
-      case 10 : firstName = "Winter";
-      break;
-    }
-    switch (random(1,10)){
-      case 1 : lastName = "Broom";
-      break;
-      case 2 : lastName = "Plant";
-      break;
-      case 3 : lastName = "Bane";
-      break;
-      case 4 : lastName = "Wort";
-      break;
-      case 5 : lastName = "Shade";
-      break;
-      case 6 : lastName = "Weed";
-      break;
-      case 7 : lastName = "Cress";
-      break;
-      case 8 : lastName = "Grass";
-      break;
-      case 9 : lastName = "Flower";
-      break;
-      case 10 : lastName = "Rocket";
-      break;
-    }
-    name = firstName + " " + lastName;
-    age = random(10,100);
-    experience = random(0, 10) * age;
-    speed = (experience/random(16, 20)) + 2;
-  }
-};
-customers *farmCustomers[10];
 
 //Load all ingame content
 void setup(bool first){
@@ -210,15 +128,17 @@ void setup(bool first){
     LOCK_FUNCTION(animationTicker);
     install_int_ex(animationTicker, SECS_TO_TIMER(1));
 
+    fps = 0;
+    frames_done = 0;
+    old_time = 0;
+
+    for(int ii = 0; ii < 10; ii++)
+      frames_array[ii] = 0;//initialize the array to 0
+
     //Creates a buffer
     buffer = create_bitmap( 1280, 960);
 
     cursor = load_bitmap( "images/cursor.png", NULL);
-
-    //Customers
-    for(int i = 0; i < 10; i++){
-      farmCustomers[i]  = new customers;
-    }
 
     //normal map
     farmTiles = new tile_map("normal", buffer);
@@ -248,7 +168,8 @@ void game(){
 
   }
   else if(gameScreen == INGAME){
-    farmTiles -> update();
+    if( !key[KEY_TILDE])
+      farmTiles -> update();
   }
 
   //Exit game
@@ -273,15 +194,11 @@ void draw(){
   }
   else if(gameScreen == INGAME){
     //Background
-    rectfill(buffer, 0, 0, 1280, 960, makecol(0,228,255));
+    rectfill(buffer, 0, 0, 1280, 960, makecol(0,127,255));
 
     // Draw map
-    farmTiles -> draw( animationFrame);
-
-    //Display customer info
-    //if( key[KEY_T])
-    //  for(int i=0; i<10; i++)
-    //    textprintf_ex(buffer,font,0,100 + i*40,makecol(0,0,0),-1,"Age-%i Gender-%i Name-%s Expierience-%i Speed-%i", farmCustomers[i] -> age, farmCustomers[i] -> gender, farmCustomers[i] -> name.c_str(), farmCustomers[i] -> experience, farmCustomers[i] -> speed);
+    if( !key[KEY_TILDE])
+      farmTiles -> draw( animationFrame);
   }
 
   //FPS counter
@@ -298,7 +215,7 @@ void draw(){
 
 int main(){
   //Initializing
-  allegro_init();
+  allegro_init();frames_done++;
   alpng_init();
   install_keyboard();
   install_timer();
@@ -308,6 +225,9 @@ int main(){
 
   set_window_title("Forager");
 
+  // Let it run in background
+  //set_display_switch_mode(SWITCH_BACKGROUND);
+
   //Setup game
   setup(true);
 
@@ -316,24 +236,29 @@ int main(){
   while(!closeGame){
     //Runs FPS system
     while(ticks == 0){
-      rest(1);
+      //rest(1);
     }
     while(ticks > 0){
       int old_ticks = ticks;
       //Update always
       game();
       ticks--;
-      if(old_ticks <= ticks){
+      if(old_ticks <= ticks)
         break;
-      }
     }
-    if(game_time - old_time >= 10){
-      fps = frames_done;
-      frames_done = 0;
-      old_time = game_time;
+    if(game_time >= old_time + 1){
+      fps -= frames_array[frame_index];//decrement the fps by the frames done a second ago
+			frames_array[frame_index] = frames_done;//store the number of frames done this 0.1 second
+			fps += frames_done;//increment the fps by the newly done frames
+
+			frame_index = (frame_index + 1) % 10;//increment the frame index and snap it to 10
+
+			frames_done = 0;
+			old_time += 1;
     }
     //Update every set amount of frames
     draw();
+    frames_done++;
   }
 
   allegro_exit();

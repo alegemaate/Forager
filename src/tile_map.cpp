@@ -86,47 +86,83 @@ void tile_map::load_images(){
 
 // Update map
 void tile_map::update(){
-  //Up
-  if(key[KEY_UP]){
-    y += 5 * zoom;
-  }
-  //Down
-  if(key[KEY_DOWN]){
-    y -= 5 * zoom;
-  }
-  //Left
-  if(key[KEY_LEFT]){
-    x += 5 * zoom;
-  }
-  //Right
-  if(key[KEY_RIGHT]){
-    x -= 5 * zoom;
-  }
-  //Zoom out
-  if(key[KEY_Q] || mouse_z < 0){
-    if(zoom < 16){
-      // Center zoom
-      x += ((SCREEN_W) * zoom)/2 + (mouse_x - SCREEN_W/2) * zoom;
-      y += ((SCREEN_H) * zoom)/2 + (mouse_y - SCREEN_H/2) * zoom;
-
-      zoom *=2;
-      rest(40);
+  // Up
+  if(key[KEY_W] || key[KEY_UP]){
+    if( gameMode){
+      if( test_y + 52 < DEFAULT_MAP_LENGTH && test_x > 0){
+        test_y += 1;
+        test_x -= 1;
+        y += 64;
+      }
     }
     else
-      zoom = 16;
-    position_mouse_z( 0);
+      y += 5 * zoom;
   }
-  //Zoom in
-  if(key[KEY_A] || mouse_z > 0){
-    if(zoom > 1){
-      zoom /=2;
-      rest(40);
-
-      // Center zoom
-      x -= ((SCREEN_W) * zoom)/2 + (mouse_x - SCREEN_W/2) * zoom;
-      y -= ((SCREEN_H) * zoom)/2 + (mouse_y - SCREEN_H/2) * zoom;
+  //Down
+  if(key[KEY_S] || key[KEY_DOWN]){
+    if( gameMode){
+      if( test_y > 0 && test_x + 52 < DEFAULT_MAP_WIDTH){
+        test_y -= 1;
+        test_x += 1;
+        y -= 64;
+      }
     }
-    position_mouse_z( 0);
+    else
+      y -= 5 * zoom;
+  }
+  //Right
+  if(key[KEY_D] || key[KEY_RIGHT]){
+    if( gameMode){
+      if( test_y + 52 < DEFAULT_MAP_LENGTH && test_x + 52 < DEFAULT_MAP_WIDTH){
+        test_y += 1;
+        test_x += 1;
+        x -= 128;
+      }
+    }
+    else
+      x -= 5 * zoom;
+  }
+  //Left
+  if(key[KEY_A] || key[KEY_LEFT]){
+    if( gameMode){
+      if( test_y > 0 && test_x > 0){
+        test_y -= 1;
+        test_x -= 1;
+        x += 128;
+      }
+    }
+    else
+      x += 5 * zoom;
+  }
+
+  // Zooming
+  if( !gameMode){
+    //Zoom out
+    if(mouse_z < 0){
+      if(zoom < 16){
+        // Center zoom
+        x += ((SCREEN_W) * zoom)/2 + (mouse_x - SCREEN_W/2) * zoom;
+        y += ((SCREEN_H) * zoom)/2 + (mouse_y - SCREEN_H/2) * zoom;
+
+        zoom *=2;
+        rest(40);
+      }
+      else
+        zoom = 16;
+      position_mouse_z( 0);
+    }
+    //Zoom in
+    if(mouse_z > 0){
+      if(zoom > 1){
+        zoom /=2;
+        rest(40);
+
+        // Center zoom
+        x -= ((SCREEN_W) * zoom)/2 + (mouse_x - SCREEN_W/2) * zoom;
+        y -= ((SCREEN_H) * zoom)/2 + (mouse_y - SCREEN_H/2) * zoom;
+      }
+      position_mouse_z( 0);
+    }
   }
 
   // Change z slice DOWN
@@ -143,6 +179,18 @@ void tile_map::update(){
   //Gen
   if(key[KEY_R]){
     generateMap("normal");
+  }
+
+  // Game mode
+  if( key[KEY_G]){
+    if( !gameMode){
+      x = -2200;
+      y = 1000;
+      z = 2;
+      zoom = 2;
+    }
+    gameMode = !gameMode;
+    rest( 300);
   }
 
   // Erase tile
@@ -189,6 +237,11 @@ void tile_map::generateMap(std::string newType){
       }
     }
   }
+
+  // STEP 3b:
+  // Place biome if there is none!
+  if( checkBiomeNumber(BIOME_NONE) == DEFAULT_MAP_LENGTH * DEFAULT_MAP_WIDTH)
+    map_tiles[0][0][0] -> setBiome( biomes.getBiome(1).getID(), biomes.getBiome(1).getName());
 
   // Quick Peek
   quickPeek( "Filling Biomes");
@@ -498,41 +551,60 @@ void tile_map::refreshTileImages(){
 
 //Draw map
 void tile_map::draw( int newAnimationFrame){
-  for(int i = 0; i < DEFAULT_MAP_WIDTH; i++){
-    for(int t = DEFAULT_MAP_LENGTH - 1; t >= 0; t--){
+  // Number of tiles to iterate (changes for game mode)
+  int iterate_x_start = 0;
+  int iterate_x_end = DEFAULT_MAP_WIDTH;
+  int iterate_y_start = DEFAULT_MAP_LENGTH - 1;
+  int iterate_y_end = 1;
+
+  if( gameMode){
+    iterate_x_start = test_x;
+    iterate_x_end = test_x + 52;
+    iterate_y_start = test_y + 52 - 1;
+    iterate_y_end = test_y;
+  }
+
+  for(int i = iterate_x_start; i < iterate_x_end; i++){
+    for(int t = iterate_y_start; t >= iterate_y_end; t--){
       for(int n = 0; n < DEFAULT_MAP_HEIGHT; n++){
-      // Draw tiles underneith with an overlay
-      /*if(z > 1)
-        map_tiles[i][t][z - 2] -> draw( buffPoint, newAnimationFrame, zoom, x, y, overlay_images[OVERLAY_FOG_50]);
-      if(z > 0)
-        map_tiles[i][t][z - 1] -> draw( buffPoint, newAnimationFrame, zoom, x, y, overlay_images[OVERLAY_NONE]);
+        // Draw tiles underneith with an overlay
+        /*if(z > 1)
+          map_tiles[i][t][z - 2] -> draw( buffPoint, newAnimationFrame, zoom, x, y, overlay_images[OVERLAY_FOG_50]);
+        if(z > 0)
+          map_tiles[i][t][z - 1] -> draw( buffPoint, newAnimationFrame, zoom, x, y, overlay_images[OVERLAY_NONE]);
 */
-      // Draw tiles on current level
-      if( collisionAny(  mouse_x, mouse_x,
-                      (( map_tiles[i][t][z] -> getX() + map_tiles[i][t][z] -> getZ()) * 64)/zoom + x/zoom,
-                      (( map_tiles[i][t][z] -> getX() + map_tiles[i][t][z] -> getZ()) * 64)/zoom + x/zoom + 64/zoom,
-                         mouse_y, mouse_y,
-                      (( map_tiles[i][t][z] -> getX() - map_tiles[i][t][z] -> getZ()) * 64)/zoom/2 - (map_tiles[i][t][z] -> getY() * 64/zoom) + y/zoom,
-                      (( map_tiles[i][t][z] -> getX() - map_tiles[i][t][z] -> getZ()) * 64)/zoom/2 - (map_tiles[i][t][z] -> getY() * 64/zoom) + y/zoom + 64/zoom)){
-        map_tiles[i][t][z] -> draw( buffPoint, newAnimationFrame, zoom, x, y, overlay_images[OVERLAY_SELECTED]);
-        sel_x = i;
-        sel_y = t;
-        sel_z = z;
-      }
-      else{
-        map_tiles[i][t][n] -> draw( buffPoint, newAnimationFrame, zoom, x, y, overlay_images[OVERLAY_NONE]);
+
+        // Draw tiles on current level (if onscreen)
+        if( map_tiles[i][t][n] -> onScreen( zoom, x, y)){
+          if( collisionAny(  mouse_x, mouse_x,
+                          (( map_tiles[i][t][z] -> getX() + map_tiles[i][t][z] -> getZ()) * 64)/zoom + x/zoom,
+                          (( map_tiles[i][t][z] -> getX() + map_tiles[i][t][z] -> getZ()) * 64)/zoom + x/zoom + 64/zoom,
+                             mouse_y, mouse_y,
+                          (( map_tiles[i][t][z] -> getX() - map_tiles[i][t][z] -> getZ()) * 64)/zoom/2 - (map_tiles[i][t][z] -> getY() * 64/zoom) + y/zoom,
+                          (( map_tiles[i][t][z] -> getX() - map_tiles[i][t][z] -> getZ()) * 64)/zoom/2 - (map_tiles[i][t][z] -> getY() * 64/zoom) + y/zoom + 64/zoom)){
+            map_tiles[i][t][z] -> draw( buffPoint, newAnimationFrame, zoom, x, y, overlay_images[OVERLAY_SELECTED]);
+            sel_x = i;
+            sel_y = t;
+            sel_z = z;
+          }
+          else{
+            map_tiles[i][t][n] -> draw( buffPoint, newAnimationFrame, zoom, x, y, overlay_images[OVERLAY_NONE]);
+          }
+        }
       }
     }
   }
 
-  // Quick Info
-  textprintf_ex( buffPoint,font,0, 100,makecol(0,0,0),makecol(255,255,255),"X:%i Y:%i Z:%i Zoom:%i", x, y, z, zoom);
+  if( !gameMode){
+    // Quick Info
+    textprintf_ex( buffPoint,font,0, 80,makecol(0,0,0),makecol(255,255,255),"X:%i Y:%i Z:%i Zoom:%i", x, y, z, zoom);
+    textprintf_ex( buffPoint,font,0, 120,makecol(0,0,0),makecol(255,255,255),"TX:%i TY:%i TZ:%i GameMode:%s", test_x, test_y, test_z, convertBoolToString(gameMode).c_str());
 
-  // Tile info
-  textprintf_ex( buffPoint,font,0, 140,makecol(0,0,0),makecol(255,255,255),"TILE INFO- Type:%s Biome:%s BiomeID:%i Temp:%i",
-                map_tiles[sel_x][sel_y][sel_z] -> getName().c_str(),
-                map_tiles[sel_x][sel_y][sel_z] -> getBiomeName().c_str(),
-                map_tiles[sel_x][sel_y][sel_z] -> getBiome(),
-                map_tiles[sel_x][sel_y][sel_z] -> getTemperature());
+    // Tile info
+    textprintf_ex( buffPoint,font,0, 160,makecol(0,0,0),makecol(255,255,255),"TILE INFO- Type:%s Biome:%s BiomeID:%i Temp:%i",
+                  map_tiles[sel_x][sel_y][sel_z] -> getName().c_str(),
+                  map_tiles[sel_x][sel_y][sel_z] -> getBiomeName().c_str(),
+                  map_tiles[sel_x][sel_y][sel_z] -> getBiome(),
+                  map_tiles[sel_x][sel_y][sel_z] -> getTemperature());
   }
 }

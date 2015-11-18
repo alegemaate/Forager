@@ -21,6 +21,8 @@ class tile{
     int getY() { return y; }
     int getZ() { return z; }
 
+    bool onScreen( int zoom, int offsetX, int offsetY);
+
     int getTemperature() { return temperature; }
     void setTemperature(int val) { temperature = val; }
 

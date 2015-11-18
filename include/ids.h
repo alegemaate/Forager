@@ -1,3 +1,10 @@
+/*
+  ID's
+  Allan Legemaate
+  11/11/15
+  Stores ID's for blocks, biomes and more. Probably should be replaced :D
+*/
+
 // Tiles
 #define TILE_AIR 0
 #define TILE_GRASS 1
@@ -37,11 +44,13 @@
 #define LEVELSELECT 3
 #define INGAME 4
 
-#define DEFAULT_MAP_HEIGHT 20
-#define DEFAULT_MAP_WIDTH 200
-#define DEFAULT_MAP_LENGTH 100
+// 20 200 100
+#define DEFAULT_MAP_HEIGHT 10
+#define DEFAULT_MAP_WIDTH 400
+#define DEFAULT_MAP_LENGTH 400
 
 #define TILE_WIDTH 128
+#define TILE_LENGTH 128
 #define TILE_HEIGHT 64
 
 // Overlays

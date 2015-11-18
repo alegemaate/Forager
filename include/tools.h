@@ -1,3 +1,10 @@
+/*
+  Tools
+  Allan Legemaate
+  11/11/15
+  Holds all the quick access functions for the project
+*/
+
 #ifndef TOOLS_H
 #define TOOLS_H
 

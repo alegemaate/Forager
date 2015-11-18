@@ -1,3 +1,10 @@
+/*
+  Biome
+  Allan Legemaate
+  14/11/15
+  Class for the biome data for quick access by tiles
+*/
+
 #ifndef BIOME_H
 #define BIOME_H
 

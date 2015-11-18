@@ -1,3 +1,10 @@
+/*
+  Biome Manager
+  Allan Legemaate
+  11/11/15
+  This loads the biomes from xml and loads them into its biomes vector for reference
+*/
+
 #ifndef BIOME_MANAGER_H
 #define BIOME_MANAGER_H
 

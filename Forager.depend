@@ -13,15 +13,15 @@
 
 1447268671 c:\users\allan\documents\games indev\forager\ids.h
 
-1447389845 c:\users\allan\documents\games indev\forager\include\tile.h
+1447724007 c:\users\allan\documents\games indev\forager\include\tile.h
 	<allegro.h>
 	"ids.h"
 	"tools.h"
 
-1447555986 source:c:\users\allan\documents\games indev\forager\src\tile_map.cpp
+1447811258 source:c:\users\allan\documents\games indev\forager\src\tile_map.cpp
 	"tile_map.h"
 
-1447540831 c:\users\allan\documents\games indev\forager\include\tile_map.h
+1447810425 c:\users\allan\documents\games indev\forager\include\tile_map.h
 	<allegro.h>
 	<string>
 	"tile.h"
@@ -30,10 +30,10 @@
 	"biome_manager.h"
 	"biome.h"
 
-1447391158 source:c:\users\allan\documents\games indev\forager\src\tile.cpp
+1447807846 source:c:\users\allan\documents\games indev\forager\src\tile.cpp
 	"tile.h"
 
-1447393310 source:c:\users\allan\documents\games indev\forager\src\main.cpp
+1447732996 source:c:\users\allan\documents\games indev\forager\src\main.cpp
 	<allegro.h>
 	<string>
 	<time.h>
@@ -47,7 +47,7 @@
 	"tile_map.h"
 	"tools.h"
 
-1447539454 c:\users\allan\documents\games indev\forager\include\ids.h
+1447811332 c:\users\allan\documents\games indev\forager\include\ids.h
 
 1430682228 source:c:\users\allan\documents\games indev\forager\src\globals.cpp
 	"globals.h"
@@ -56,7 +56,7 @@
 	<allegro.h>
 	<string>
 
-1447270207 c:\users\allan\documents\games indev\forager\include\tools.h
+1447723990 c:\users\allan\documents\games indev\forager\include\tools.h
 	<allegro.h>
 	<alpng.h>
 	<string>
@@ -68,17 +68,17 @@
 	"tools.h"
 	"globals.h"
 
-1447540394 source:c:\users\allan\documents\games indev\forager\src\biome.cpp
+1447724035 source:c:\users\allan\documents\games indev\forager\src\biome.cpp
 	"biome.h"
 
-1447540589 c:\users\allan\documents\games indev\forager\include\biome.h
+1447724039 c:\users\allan\documents\games indev\forager\include\biome.h
 	<string>
 	"tools.h"
 
-1447540691 source:c:\users\allan\documents\games indev\forager\src\biome_manager.cpp
+1447724026 source:c:\users\allan\documents\games indev\forager\src\biome_manager.cpp
 	"biome_manager.h"
 
-1447539033 c:\users\allan\documents\games indev\forager\include\biome_manager.h
+1447724028 c:\users\allan\documents\games indev\forager\include\biome_manager.h
 	<vector>
 	<string>
 	<iostream>
@@ -88,4 +88,15 @@
 	"rapidxml_print.hpp"
 	"tools.h"
 	"biome.h"
+
+1447723637 source:c:\users\allan\documents\games indev\forager\src\image_manager.cpp
+	"image_manager.h"
+
+1447729155 c:\users\allan\documents\games indev\forager\include\image_manager.h
+	<allegro.h>
+
+1447734200 c:\users\allan\documents\games indev\forager\include\coordinate.h
+
+1447733328 source:c:\users\allan\documents\games indev\forager\src\coordinate.cpp
+	"coordinate.h"
 

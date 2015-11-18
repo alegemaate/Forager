@@ -1,3 +1,10 @@
+/*
+  Tile Map
+  Allan Legemaate
+  11/11/15
+  Manages all the tiles
+*/
+
 #ifndef TILE_MAP_H
 #define TILE_MAP_H
 
@@ -40,6 +47,10 @@ class tile_map{
     void refreshTileImages();
 
     int sel_x, sel_y, sel_z;
+
+    int test_x, test_y, test_z = 0;
+
+    bool gameMode = false;
 
     BITMAP *errorTile;
     BITMAP *tile_images[100][2];
