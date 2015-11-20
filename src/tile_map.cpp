@@ -96,7 +96,7 @@ void tile_map::update(){
       }
     }
     else
-      y += 5 * zoom;
+      x -= 5 * zoom;
   }
   // Left
   if(key[KEY_A] || key[KEY_LEFT]){
@@ -108,7 +108,7 @@ void tile_map::update(){
       }
     }
     else
-      y -= 5 * zoom;
+      x += 5 * zoom;
   }
   // Down
   if(key[KEY_S] || key[KEY_DOWN]){
@@ -120,7 +120,7 @@ void tile_map::update(){
       }
     }
     else
-      x -= 5 * zoom;
+      y -= 5 * zoom;
   }
   // Up
   if(key[KEY_W] || key[KEY_UP]){
@@ -132,7 +132,7 @@ void tile_map::update(){
       }
     }
     else
-      x += 5 * zoom;
+      y += 5 * zoom;
   }
 
   // Zooming
