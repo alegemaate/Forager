@@ -587,6 +587,17 @@ void tile_map::draw( int newAnimationFrame){
             sel_y = t;
             sel_z = z;
           }
+          else if( gameMode && map_tiles[i][t][n] -> getType() != TILE_AIR){
+            if( distanceTo2D(sel_x, sel_y, i, t) > 20 )
+              map_tiles[i][t][n] -> draw( buffPoint, newAnimationFrame, zoom, x, y, overlay_images[OVERLAY_FOG_50]);
+            else if( distanceTo2D(sel_x, sel_y, i, t) > 15 )
+              map_tiles[i][t][n] -> draw( buffPoint, newAnimationFrame, zoom, x, y, overlay_images[OVERLAY_FOG_25]);
+            else if( distanceTo2D(sel_x, sel_y, i, t) > 10 )
+              map_tiles[i][t][n] -> draw( buffPoint, newAnimationFrame, zoom, x, y, overlay_images[OVERLAY_FOG_10]);
+            else{
+              map_tiles[i][t][n] -> draw( buffPoint, newAnimationFrame, zoom, x, y, overlay_images[OVERLAY_NONE]);
+            }
+          }
           else{
             map_tiles[i][t][n] -> draw( buffPoint, newAnimationFrame, zoom, x, y, overlay_images[OVERLAY_NONE]);
           }

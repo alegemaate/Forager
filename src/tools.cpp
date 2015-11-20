@@ -1,21 +1,20 @@
 #include "tools.h"
-#include "globals.h"
 
 //Iterates through the number of buttons in a joystick and returns true if any keys are pressed
-bool keyboard_keypressed(){
+/*bool keyboard_keypressed(){
     bool keypressed=false;
     for(int i=0; i<125; i++)
         if(key[i])keypressed=true;
     return keypressed;
 
-}
+}*/
 //Iterates through the number of buttons in a joystick and returns true if any buttons are pressed
-bool joy_buttonpressed(){
+/*bool joy_buttonpressed(){
     bool buttonpressed=false;
     for(int i=0; i<joy[0].num_buttons; i++)
         if(joy[0].button[i].b)buttonpressed=true;
     return buttonpressed;
-}
+}*/
 //Collision
 bool collisionAny(int xMin1, int xMax1, int xMin2, int xMax2, int yMin1, int yMax1, int yMin2, int yMax2){
   if (xMin1 < xMax2 && yMin1 < yMax2 && xMin2 < xMax1 && yMin2 < yMax1){
@@ -23,7 +22,7 @@ bool collisionAny(int xMin1, int xMax1, int xMin2, int xMax2, int yMin1, int yMa
   }
   return false;
 }
-bool collisionBottom(int yMin1, int yMax1, int yMin2, int yMax2){
+/*bool collisionBottom(int yMin1, int yMax1, int yMin2, int yMax2){
   if(yMin1 < yMax2 && yMax1 > yMax2){
     return true;
   }
@@ -46,7 +45,7 @@ bool collisionLeft(int xMin1, int xMax1, int xMin2, int xMax2){
     return true;
   }
   return false;
-}
+}*/
 
 //Checks if file exists
 bool fexists(const char *filename){
@@ -100,8 +99,19 @@ bool closeTo( double val1, double val2, double maxDifference){
   return true;
 }
 
+// Returns distance 1D
+int distanceTo1D( int x1, int x2){
+  return abs(x1 - x2);
+}
+
+// Returns distance 2D
+int distanceTo2D(int x1, int y1, int x2, int y2){
+    return sqrt((x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1));
+}
+
+
 // Fade in
-void highcolor_fade_in(BITMAP* bmp_orig, int speed){
+/*void highcolor_fade_in(BITMAP* bmp_orig, int speed){
   BITMAP* bmp_buff = create_bitmap(SCREEN_W,SCREEN_H);
   BITMAP* str_orig = create_bitmap( SCREEN_W, SCREEN_H);
   stretch_sprite( str_orig, bmp_orig, 0, 0, SCREEN_W, SCREEN_H);
@@ -137,7 +147,7 @@ void highcolor_fade_out(int speed){
   }
   destroy_bitmap( bmp_orig);
   rectfill( screen, 0, 0,  SCREEN_W, SCREEN_H, makecol(0,0,0));
-}
+}*/
 
 /*
  *  ERROR REPORTING
