@@ -389,7 +389,7 @@ void tile_map::generateMap(std::string newType){
   int mountain_frequency = 0;
   int mountain_height = 0;
   int mountain_radius = 0;
-  int mountain_steepness = 0;
+  int mountain_steepness = 10;
 
   for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
     for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
@@ -402,19 +402,21 @@ void tile_map::generateMap(std::string newType){
 
         // Make those mountains
         if(random(0, mountain_frequency) == 1 && map_tiles[i][t][u-1] -> getType() == TILE_GRASS){
-          int mountainRaduis = random(0, mountain_radius);
-          int mountainHeight = random(0, mountain_height);
+          int mountainRaduis = random(1, mountain_radius);
+          int mountainHeight = random(1, mountain_height);
 
           for(int w = 0; w < mountainHeight; w ++){
             if(u + w < DEFAULT_MAP_HEIGHT){
               for(int q = -mountainRaduis; q < mountainRaduis; q++){
                 for(int r = -mountainRaduis; r < mountainRaduis; r++){
                   if(i + q < DEFAULT_MAP_WIDTH && i + q >= 0 && t + r < DEFAULT_MAP_LENGTH && t + r >= 0){
-                    map_tiles[i + q][t + r][u + w] -> setType(TILE_GRASS, "Grass");
+                    // Round mountains!
+                    if( distanceTo2D(i, t, i + q, t + r) < (mountainRaduis - ceil(pow(double(mountain_steepness)/10, w)))){
+                      map_tiles[i + q][t + r][u + w] -> setType(TILE_GRASS, "Grass");
+                    }
                   }
                 }
               }
-              mountainRaduis -= mountain_steepness;
             }
           }
         }

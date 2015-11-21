@@ -8,7 +8,7 @@
 			<frequency>0</frequency>
 			<height>0</height>
 			<radius>0</radius>
-			<steepness>0</steepness>
+			<steepness>10</steepness>
 		</mountain>
 		<resources>
 		</resources>
@@ -20,10 +20,10 @@
 		<name>Grassland</name>
 		<chance>2</chance>
 		<mountain>
-			<frequency>80</frequency>
-			<height>2</height>
-			<radius>4</radius>
-			<steepness>5</steepness>
+			<frequency>200</frequency>
+			<height>4</height>
+			<radius>12</radius>
+			<steepness>16</steepness>
 		</mountain>
 		<resources>
 			<resource tileID="0">90</resource>
@@ -40,9 +40,9 @@
 		<chance>4</chance>
 		<mountain>
 			<frequency>90</frequency>
-			<height>1</height>
+			<height>3</height>
 			<radius>10</radius>
-			<steepness>5</steepness>
+			<steepness>100</steepness>
 		</mountain>
 		<resources>
 			<resource tileID="0">2</resource>
@@ -61,10 +61,10 @@
 		<name>Barren</name>
 		<chance>6</chance>
 		<mountain>
-			<frequency>20</frequency>
-			<height>2</height>
-			<radius>4</radius>
-			<steepness>1</steepness>
+			<frequency>400</frequency>
+			<height>8</height>
+			<radius>15</radius>
+			<steepness>11</steepness>
 		</mountain>
 		<resources>
 			<resource tileID="0">2</resource>
@@ -90,7 +90,7 @@
 			<frequency>500</frequency>
 			<height>1</height>
 			<radius>5</radius>
-			<steepness>5</steepness>
+			<steepness>11</steepness>
 		</mountain>
 		<resources>
 			<resource tileID="0">80</resource>
@@ -115,9 +115,9 @@
 		<chance>2</chance>
 		<mountain>
 			<frequency>40</frequency>
-			<height>3</height>
-			<radius>5</radius>
-			<steepness>2</steepness>
+			<height>4</height>
+			<radius>6</radius>
+			<steepness>12</steepness>
 		</mountain>
 		<resources>
 			<resource tileID="0">30</resource>
@@ -136,7 +136,7 @@
 			<frequency>0</frequency>
 			<height>0</height>
 			<radius>0</radius>
-			<steepness>0</steepness>
+			<steepness>10</steepness>
 		</mountain>
 		<resources>
 		</resources>

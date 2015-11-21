@@ -109,6 +109,13 @@ int distanceTo2D(int x1, int y1, int x2, int y2){
     return sqrt((x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1));
 }
 
+// Divide catch 0
+int divideCatchZero( int number1, int number2){
+  if( number2 != 0)
+    return number1/number2;
+  return 0;
+}
+
 
 // Fade in
 /*void highcolor_fade_in(BITMAP* bmp_orig, int speed){
