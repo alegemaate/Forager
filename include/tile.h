@@ -1,10 +1,17 @@
+/*
+  Tile
+  Allan Legemaate
+  11/11/15
+  Class for the tile data (for images see image_manager.h)
+*/
+
 #ifndef TILE_H
 #define TILE_H
 
 #include <allegro.h>
+#include <string>
 
 #include "ids.h"
-#include "tools.h"
 
 class tile{
   public:
@@ -12,10 +19,10 @@ class tile{
     virtual ~tile();
 
     int getType() { return type; }
-    void setType(int val, string val2) { type = val; name = val2;}
+    void setType(int val, std::string val2) { type = val; name = val2;}
 
-    string getName() { return name;}
-    string getBiomeName() { return biome_name;}
+    std::string getName() { return name;}
+    std::string getBiomeName() { return biome_name;}
 
     int getX() { return x; }
     int getY() { return y; }
@@ -27,7 +34,7 @@ class tile{
     void setTemperature(int val) { temperature = val; }
 
     int getBiome();
-    void setBiome( int newBiome, string newBiomeName);
+    void setBiome( int newBiome, std::string newBiomeName);
 
     void draw( BITMAP *tempBuffer, int newTick, int zoom, int offsetX, int offsetY, BITMAP *overlayImage);
     void logic();
@@ -43,8 +50,8 @@ class tile{
     int biome;
     int temperature;
 
-    string name;
-    string biome_name;
+    std::string name;
+    std::string biome_name;
 };
 
 #endif // TILE_H

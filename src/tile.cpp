@@ -1,10 +1,3 @@
-/*
-  Tile
-  Allan Legemaate
-  11/11/15
-  Class for the tile data (for images see image_manager.h)
-*/
-
 #include "tile.h"
 
 // Constructor
@@ -38,11 +31,11 @@ void tile::draw( BITMAP *tempBuffer, int newTick, int zoom, int offsetX, int off
 
     // Draw that image if it is onscreen
     if(image[newTick] != NULL){
-      stretch_sprite( tempBuffer, image[newTick], (z_x + z_z) + offsetX/zoom, (z_x - z_z)/2 - z_y + offsetY/zoom, 128/zoom, 128/zoom);
+      stretch_sprite( tempBuffer, image[newTick], (z_x + z_z) + offsetX/zoom - (image[newTick] -> w / 2 - 64)/zoom, (z_x - z_z)/2 - z_y + offsetY/zoom - (image[newTick] -> h - 128)/zoom, image[newTick]->w/zoom, image[newTick]->h/zoom);
 
       // Overlay if needed
       if(overlayImage != NULL){
-        stretch_sprite( tempBuffer, overlayImage, (z_x + z_z) + offsetX/zoom, (z_x - z_z)/2 - z_y + offsetY/zoom, 128/zoom, 128/zoom);
+        stretch_sprite( tempBuffer, overlayImage, (z_x + z_z) + offsetX/zoom - (image[newTick] -> w / 2 - 64)/zoom, (z_x - z_z)/2 - z_y + offsetY/zoom- (image[newTick] -> h - 128)/zoom, image[newTick]->w/zoom, image[newTick]->h/zoom);
       }
 
       //line( tempBuffer, (z_x + z_z) + offsetX/zoom, (z_x - z_z)/2 - z_y + (offsetY + 32)/zoom, (z_x + z_z) + (offsetX + 64)/zoom, (z_x - z_z)/2 - z_y + offsetY/zoom, makecol( 50, 50, 50));
@@ -71,7 +64,7 @@ bool tile::onScreen( int zoom, int offsetX, int offsetY){
 }
 
 // Set biome
-void tile::setBiome( int newBiome, string newBiomeName){
+void tile::setBiome( int newBiome, std::string newBiomeName){
   biome = newBiome;
   biome_name = newBiomeName;
 }

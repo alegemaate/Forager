@@ -63,6 +63,8 @@ void tile_map::load_images(){
   tile_images[TILE_LAVA][0] = load_bitmap("images/tiles/lava.png", NULL);
   tile_images[TILE_TALLGRASS][0] = load_bitmap("images/tiles/tallgrass.png", NULL);
   tile_images[TILE_GRASS_SNOW][0] = load_bitmap("images/tiles/grass_snow.bmp", NULL);
+  tile_images[TILE_TREE_PINE][0] = load_bitmap("images/tiles/tree_pine_1.bmp", NULL);
+  tile_images[TILE_JOHNNY][0] = load_bitmap("images/tiles/johnny_small.bmp", NULL);
 
   // Animated
   tile_images[TILE_TREE][0] = load_bitmap("images/tiles/tree1.bmp", NULL);

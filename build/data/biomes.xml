@@ -96,6 +96,7 @@
 			<resource tileID="0">80</resource>
 			<resource tileID="3">2</resource>
 			<resource tileID="6">140</resource>
+			<resource tileID="13">20</resource>
 		</resources>
 		<swapping>
 			<swap>

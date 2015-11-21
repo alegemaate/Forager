@@ -19,6 +19,8 @@
 #define TILE_LAVA 10
 #define TILE_TALLGRASS 11
 #define TILE_GRASS_SNOW 12
+#define TILE_TREE_PINE 13
+#define TILE_JOHNNY 14
 
 #define TILE_TEMP_WATER 100
 
