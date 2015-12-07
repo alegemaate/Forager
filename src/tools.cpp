@@ -49,7 +49,7 @@ bool collisionLeft(int xMin1, int xMax1, int xMin2, int xMax2){
 
 //Checks if file exists
 bool fexists(const char *filename){
-  ifstream ifile(filename);
+  std::ifstream ifile(filename);
   return ifile;
 }
 
@@ -65,22 +65,22 @@ int random(int newLowest, int newHighest){
 }
 
 //Convert int to string
-string convertIntToString(int number){
-  stringstream ss;
+std::string convertIntToString(int number){
+  std::stringstream ss;
   ss << number;
   return ss.str();
 }
 
 //Convert double to string
-string convertDoubleToString(double number){
-  stringstream ss;
+std::string convertDoubleToString(double number){
+  std::stringstream ss;
   ss << number;
   return ss.str();
 }
 
 //Convert bool to string
-string convertBoolToString(bool boolean){
-  stringstream ss;
+std::string convertBoolToString(bool boolean){
+  std::stringstream ss;
   ss << boolean;
   return ss.str();
 }

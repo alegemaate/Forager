@@ -16,48 +16,47 @@
 #include "tools.h"
 #include "biome_manager.h"
 #include "biome.h"
+#include "tile_type_manager.h"
 
 class tile_map{
   public:
-    tile_map( std::string newType, BITMAP *tempBuffer);
+    tile_map( BITMAP *tempBuffer);
     virtual ~tile_map();
 
-    int Getx() { return x; }
-    void Setx(int val) { x = val; }
-    int Gety() { return y; }
-    void Sety(int val) { y = val; }
+    bool onScreen( int tile_x, int tile_y, int tile_z);
 
-    int x;
-    int y;
-    int z;
+    int getX() { return x; }
+    int getY() { return y; }
+    char getZoom() { return zoom; }
 
-    tile *map_tiles[DEFAULT_MAP_WIDTH][DEFAULT_MAP_LENGTH][DEFAULT_MAP_HEIGHT];
+    double x, y, z;
 
     void load_images();
     void update();
-    void generateMap(std::string newType);
+    void generateMap();
     void draw( int newAnimationFrame);
   protected:
 
   private:
-    int zoom;
+    char zoom;
 
     void quickPeek( std::string currentPhase);
-    long checkBiomeNumber( int biomeToCheck);
+    long checkBiomeNumber( char biomeToCheck);
     void refreshTileImages();
 
     int sel_x, sel_y, sel_z;
 
-    int test_x, test_y, test_z = 0;
+    int test_x, test_y, test_z;
 
-    bool gameMode = false;
+    bool gameMode;
 
-    BITMAP *errorTile;
-    BITMAP *tile_images[100][2];
     BITMAP *overlay_images[20];
     BITMAP *buffPoint;
 
+    tile_type_manager tile_defs;
     biome_manager biomes;
+
+    tile *map_tiles[DEFAULT_MAP_WIDTH][DEFAULT_MAP_LENGTH][DEFAULT_MAP_HEIGHT];
 };
 
 #endif // TILE_MAP_H

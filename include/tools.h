@@ -9,14 +9,11 @@
 #define TOOLS_H
 
 #include <allegro.h>
-#include <alpng.h>
 #include <string>
 #include <iostream>
 #include <sstream>
 #include <fstream>
 #include <cmath>
-
-using namespace std;
 
 extern bool keyboard_keypressed();
 extern bool joy_buttonpressed();
@@ -38,13 +35,13 @@ extern bool fexists(const char *filename);
 extern int random(int newLowest, int newHighest);
 
 //Convert int to string
-extern string convertIntToString(int number);
+extern std::string convertIntToString(int number);
 
 //Convert double to string
-extern string convertDoubleToString(double number);
+extern std::string convertDoubleToString(double number);
 
 //Convert bool to string
-extern string convertBoolToString(bool boolean);
+extern std::string convertBoolToString(bool boolean);
 
 // Slope of line
 double findSlope( int y_1, int y_2, int x_1, int x_2);

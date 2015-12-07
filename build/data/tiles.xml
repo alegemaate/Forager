@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tiles>
+	<!--Air-->
+	<tile id="0">
+		<name>Air</name>
+		<images>
+			<image>NULL</image>
+		</images>
+	</tile>
+	<!--Grass-->
+	<tile id="1">
+		<name>Grass</name>
+		<images>
+			<image>images/tiles/grass.png</image>
+		</images>
+	</tile>
+	<!--Sand-->
+	<tile id="2">
+		<name>Sand</name>
+		<images>
+			<image>images/tiles/sand.png</image>
+		</images>
+	</tile>
+	<!--Snow-->
+	<tile id="3">
+		<name>Snow</name>
+		<images>
+			<image>images/tiles/snow.png</image>
+		</images>
+	</tile>
+	<!--Stone-->
+	<tile id="4">
+		<name>Stone</name>
+		<images>
+			<image>images/tiles/stone.png</image>
+		</images>
+	</tile>
+	<!--Tree-->
+	<tile id="5">
+		<name>Tree</name>
+		<images>
+			<image>images/tiles/tree1.png</image>
+			<image>images/tiles/tree2.png</image>
+		</images>
+	</tile>
+	<!--Rock-->
+	<tile id="6">
+		<name>Rock</name>
+		<images>
+			<image>images/tiles/rock.png</image>
+		</images>
+	</tile>
+	<!--Water-->
+	<tile id="7">
+		<name>Water</name>
+		<images>
+			<image>images/tiles/water1.png</image>
+			<image>images/tiles/water2.png</image>
+		</images>
+	</tile>
+	<!--Ice-->
+	<tile id="8">
+		<name>Ice</name>
+		<images>
+			<image>images/tiles/ice.png</image>
+		</images>
+	</tile>
+	<!--Cactus-->
+	<tile id="9">
+		<name>Cactus</name>
+		<images>
+			<image>images/tiles/cactus.png</image>
+		</images>
+	</tile>
+	<!--Lava-->
+	<tile id="10">
+		<name>Lava</name>
+		<images>
+			<image>images/tiles/lava.png</image>
+		</images>
+	</tile>
+	<!--Tall Grass-->
+	<tile id="11">
+		<name>Tall Grass</name>
+		<images>
+			<image>images/tiles/tallgrass.png</image>
+		</images>
+	</tile>
+	<!--Grass Snow-->
+	<tile id="12">
+		<name>Grass Snow</name>
+		<images>
+			<image>images/tiles/grass_snow.png</image>
+		</images>
+	</tile>
+	<!--Tree Pine-->
+	<tile id="13">
+		<name>Pine Tree</name>
+		<images>
+			<image>images/tiles/tree_pine_1.png</image>
+		</images>
+	</tile>
+	<!--Temp Water-->
+	<tile id="14">
+		<name>Temp Water</name>
+		<images>
+			<image>NULL</image>
+		</images>
+	</tile>
+</tiles>

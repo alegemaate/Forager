@@ -9,49 +9,36 @@
 #define TILE_H
 
 #include <allegro.h>
-#include <string>
 
 #include "ids.h"
+#include "tile_type.h"
 
 class tile{
   public:
-    tile(int newX, int newY, int newZ, int newType, BITMAP *defaultImage);
+    tile(int newX, int newY, int newZ, tile_type *newType);
     virtual ~tile();
 
-    int getType() { return type; }
-    void setType(int val, std::string val2) { type = val; name = val2;}
-
-    std::string getName() { return name;}
-    std::string getBiomeName() { return biome_name;}
-
-    int getX() { return x; }
-    int getY() { return y; }
-    int getZ() { return z; }
-
-    bool onScreen( int zoom, int offsetX, int offsetY);
-
-    int getTemperature() { return temperature; }
-    void setTemperature(int val) { temperature = val; }
-
-    int getBiome();
-    void setBiome( int newBiome, std::string newBiomeName);
+    unsigned short getType() { return tileImpl -> getType(); }
+    void setType(tile_type *val);
 
     void draw( BITMAP *tempBuffer, int newTick, int zoom, int offsetX, int offsetY, BITMAP *overlayImage);
-    void logic();
-    void setImages(BITMAP* image1, BITMAP* image2);
 
-    BITMAP* image[2];
+    // Get X value
+    unsigned short getX() { return x; }
+    unsigned short getY() { return y; }
+    unsigned short getZ() { return z; }
+
+    // Set/Get biome
+    void setBiome( int newBiomeID){ biome = newBiomeID; }
+    unsigned char getBiome(){ return biome;}
   protected:
   private:
-    int x;
-    int y;
-    int z;
-    int type;
-    int biome;
-    int temperature;
+    unsigned short x;
+    unsigned short y;
+    unsigned short z;
+    unsigned char biome;
 
-    std::string name;
-    std::string biome_name;
+    tile_type *tileImpl;
 };
 
 #endif // TILE_H

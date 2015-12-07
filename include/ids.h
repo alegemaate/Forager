@@ -20,9 +20,8 @@
 #define TILE_TALLGRASS 11
 #define TILE_GRASS_SNOW 12
 #define TILE_TREE_PINE 13
-#define TILE_JOHNNY 14
-
-#define TILE_TEMP_WATER 100
+#define TILE_TEMP_WATER 14
+#define TILE_JOHNNY 15
 
 // Types
 #define TYPE_GAS 0
@@ -48,12 +47,12 @@
 
 // 20 200 100
 #define DEFAULT_MAP_HEIGHT 20
-#define DEFAULT_MAP_WIDTH 200
-#define DEFAULT_MAP_LENGTH 200
+#define DEFAULT_MAP_WIDTH 20
+#define DEFAULT_MAP_LENGTH 20
 
-#define TILE_WIDTH 128
-#define TILE_LENGTH 128
-#define TILE_HEIGHT 64
+#define TILE_WIDTH 64
+#define TILE_LENGTH 64
+#define TILE_HEIGHT 32
 
 // Overlays
 #define OVERLAY_NONE 0

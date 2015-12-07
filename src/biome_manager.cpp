@@ -4,8 +4,7 @@ biome_manager::biome_manager(){
 
 }
 
-biome_manager::~biome_manager()
-{
+biome_manager::~biome_manager(){
   //dtor
 }
 
@@ -29,14 +28,14 @@ void biome_manager::load( std::string newFile){
   std::string content(buffer.str());
   doc.parse<0>(&content[0]);
 
-  rapidxml::xml_node<> *allLevels = doc.first_node();
+  rapidxml::xml_node<> *allBiomes = doc.first_node();
 
   // Load levels
-  for(rapidxml::xml_node<> *cBiome=allLevels-> first_node("biome"); cBiome; cBiome=cBiome->next_sibling()){
+  for(rapidxml::xml_node<> *cBiome=allBiomes-> first_node("biome"); cBiome; cBiome=cBiome->next_sibling()){
     // Read xml variables
     // General
     int biomeID = atoi(cBiome-> first_attribute("id") -> value());
-    string name = cBiome-> first_node("name") -> value();
+    std::string name = cBiome-> first_node("name") -> value();
 
     // Spawn chacne
     int chance = atoi(cBiome-> first_node("chance") -> value());

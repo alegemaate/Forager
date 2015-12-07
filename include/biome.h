@@ -38,6 +38,9 @@ class biome{
     void setChance( int newChance){ spawnChance = newChance; }
     int getChance(){ return spawnChance; }
 
+    // Temperature info
+    int getTemperature(){ return 1; }
+
     // Mountain info
     void setMountainRates( int newFrequency, int newHeight, int newRadius, int newSteepness);
 
@@ -64,6 +67,8 @@ class biome{
     int mountian_steepness;
 
     int spawnChance;
+
+    int temperature;
 };
 
 #endif // BIOME_H

@@ -64,7 +64,7 @@
 			<frequency>400</frequency>
 			<height>8</height>
 			<radius>15</radius>
-			<steepness>11</steepness>
+			<steepness>12</steepness>
 		</mountain>
 		<resources>
 			<resource tileID="0">2</resource>
@@ -117,7 +117,7 @@
 			<frequency>40</frequency>
 			<height>4</height>
 			<radius>6</radius>
-			<steepness>12</steepness>
+			<steepness>13</steepness>
 		</mountain>
 		<resources>
 			<resource tileID="0">30</resource>
