@@ -11,14 +11,14 @@
 	<tile id="1">
 		<name>Grass</name>
 		<images>
-			<image>images/tiles/grass.png</image>
+			<image>images/textures/grass.png</image>
 		</images>
 	</tile>
 	<!--Sand-->
 	<tile id="2">
 		<name>Sand</name>
 		<images>
-			<image>images/tiles/sand.png</image>
+			<image>images/textures/sand.png</image>
 		</images>
 	</tile>
 	<!--Snow-->
@@ -32,7 +32,7 @@
 	<tile id="4">
 		<name>Stone</name>
 		<images>
-			<image>images/tiles/stone.png</image>
+			<image>images/textures/stone.png</image>
 		</images>
 	</tile>
 	<!--Tree-->
@@ -54,7 +54,7 @@
 	<tile id="7">
 		<name>Water</name>
 		<images>
-			<image>images/tiles/water1.png</image>
+			<image>images/textures/water1.png</image>
 			<image>images/tiles/water2.png</image>
 		</images>
 	</tile>
@@ -62,7 +62,7 @@
 	<tile id="8">
 		<name>Ice</name>
 		<images>
-			<image>images/tiles/ice.png</image>
+			<image>images/textures/ice.png</image>
 		</images>
 	</tile>
 	<!--Cactus-->
@@ -76,7 +76,7 @@
 	<tile id="10">
 		<name>Lava</name>
 		<images>
-			<image>images/tiles/lava.png</image>
+			<image>images/textures/lava.png</image>
 		</images>
 	</tile>
 	<!--Tall Grass-->

@@ -18,10 +18,10 @@
 	"ids.h"
 	"tile_type.h"
 
-1449530724 source:c:\users\allan\documents\games indev\forager\src\tile_map.cpp
+1449531876 source:c:\users\allan\documents\games indev\forager\src\tile_map.cpp
 	"tile_map.h"
 
-1449530336 c:\users\allan\documents\games indev\forager\include\tile_map.h
+1449531559 c:\users\allan\documents\games indev\forager\include\tile_map.h
 	<allegro.h>
 	<string>
 	"tile.h"
@@ -52,7 +52,7 @@
 	"tools.h"
 	"player.h"
 
-1449529399 c:\users\allan\documents\games indev\forager\include\ids.h
+1449531576 c:\users\allan\documents\games indev\forager\include\ids.h
 
 1430682228 source:c:\users\allan\documents\games indev\forager\src\globals.cpp
 	"globals.h"
@@ -110,10 +110,10 @@
 1448115475 source:c:\users\allan\documents\games indev\forager\src\player.cpp
 	"player.h"
 
-1449531018 source:c:\users\allan\documents\games indev\forager\src\tile_type.cpp
+1449531523 source:c:\users\allan\documents\games indev\forager\src\tile_type.cpp
 	"tile_type.h"
 
-1449530412 c:\users\allan\documents\games indev\forager\include\tile_type.h
+1449531239 c:\users\allan\documents\games indev\forager\include\tile_type.h
 	<allegro.h>
 	<string>
 	<alleggl.h>

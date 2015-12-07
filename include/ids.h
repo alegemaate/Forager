@@ -62,3 +62,5 @@
 #define OVERLAY_FOG_75 4
 #define OVERLAY_FOG_100 5
 #define OVERLAY_SELECTED 6
+
+#define VIEW_MODE 1
