@@ -25,11 +25,13 @@ class tile_map{
 
     bool onScreen( int tile_x, int tile_y, int tile_z);
 
-    int getX() { return x; }
-    int getY() { return y; }
-    char getZoom() { return zoom; }
+    double getX() { return x; }
+    double getY() { return y; }
+    double getZ() { return z; }
 
-    double x, y, z;
+    double getRotX() { return rot_x; }
+    double getRotY() { return rot_y; }
+    double getRotZ() { return rot_z; }
 
     void load_images();
     void update();
@@ -38,15 +40,17 @@ class tile_map{
   protected:
 
   private:
-    char zoom;
+    int zoom;
 
     void quickPeek( std::string currentPhase);
     long checkBiomeNumber( char biomeToCheck);
     void refreshTileImages();
 
     int sel_x, sel_y, sel_z;
-
     int test_x, test_y, test_z;
+
+    double x, y, z;
+    double rot_x, rot_y, rot_z;
 
     bool gameMode;
 

@@ -4,15 +4,21 @@
 tile_map::tile_map( BITMAP *tempBuffer){
   // Starting position and zoom
   if( VIEW_MODE == 1){
-    x = -40;
-    y = 65;
-    z = 2;
-    zoom = 50;
+    x = 0;
+    y = 15;
+    z = 0;
+    rot_x = 45;
+    rot_y = 135;
+    rot_z = 0;
+    zoom = 0;
   }
   else{
     x = 620;
     y = 7880;
     z = 2;
+    rot_x = 0;
+    rot_y = 0;
+    rot_z = 0;
     zoom = 16;
   }
 
@@ -111,7 +117,7 @@ void tile_map::update(){
   // Right
   if(key[KEY_D] || key[KEY_RIGHT]){
     if( VIEW_MODE == 1){
-      x += 0.5;
+      x -= 0.5;
     }
     else{
       if( gameMode){
@@ -128,7 +134,7 @@ void tile_map::update(){
   // Left
   if(key[KEY_A] || key[KEY_LEFT]){
     if( VIEW_MODE == 1){
-      x -= 0.5;
+      x += 0.5;
     }
     else{
       if( gameMode){
@@ -145,7 +151,7 @@ void tile_map::update(){
   // Down
   if(key[KEY_S] || key[KEY_DOWN]){
     if( VIEW_MODE == 1){
-      y -= 0.5;
+      z -= 0.5;
     }
     else{
       if( gameMode){
@@ -162,7 +168,7 @@ void tile_map::update(){
   // Up
   if(key[KEY_W] || key[KEY_UP]){
     if( VIEW_MODE == 1){
-      y += 0.5;
+      z += 0.5;
     }
     else{
       if( gameMode){
@@ -177,12 +183,23 @@ void tile_map::update(){
     }
   }
 
+  // Rotating
+  if( key[KEY_I])
+    rot_x += 0.5;
+  if( key[KEY_K])
+    rot_x -= 0.5;
+
+  if( key[KEY_J])
+    rot_y += 0.5;
+  if( key[KEY_L])
+    rot_y -= 0.5;
+
   // Zooming
   if( !gameMode){
     //Zoom out
     if(mouse_z < 0){
       if( VIEW_MODE == 1){
-        zoom += 1;
+        y += 1;
       }
       else{
         if(zoom < 16){
@@ -201,7 +218,7 @@ void tile_map::update(){
     //Zoom in
     if(mouse_z > 0){
       if( VIEW_MODE == 1){
-        zoom -= 1;
+        y -= 1;
       }
       else{
         if(zoom > 1){
@@ -629,7 +646,7 @@ void tile_map::draw( int newAnimationFrame){
 */
 
         // Draw tiles on current level (if onscreen)
-        if( gameMode == 1 || onScreen( map_tiles[i][t][n] -> getX(), map_tiles[i][t][n] -> getY(), map_tiles[i][t][n] -> getZ())){
+        if( VIEW_MODE == 1 || onScreen( map_tiles[i][t][n] -> getX(), map_tiles[i][t][n] -> getY(), map_tiles[i][t][n] -> getZ())){
           /*if( collisionAny(  mouse_x, mouse_x,
                           (( map_tiles[i][t][z] -> getX() + map_tiles[i][t][z] -> getZ()) * 64)/zoom + x/zoom,
                           (( map_tiles[i][t][z] -> getX() + map_tiles[i][t][z] -> getZ()) * 64)/zoom + x/zoom + 64/zoom,

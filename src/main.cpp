@@ -31,8 +31,6 @@ int animationFrame;
 bool closeGame;
 bool showFPS;
 
-double var1, var2;
-
 //Create fonts
 FONT *f1, *f2, *f3, *f4, *f5;
 
@@ -227,10 +225,6 @@ void setup(bool first){
 
     //Merge fonts
     //font = merge_fonts(f4, f5 = merge_fonts(f2, f3));
-
-    // Set rotation
-    var1 = 45;
-    var2 = 45;
   }
 }
 
@@ -254,16 +248,6 @@ void game(){
   if(key[KEY_ESC]){
     closeGame = true;
   }
-
-  if( key[KEY_I])
-    var1 += 0.5;
-  if( key[KEY_K])
-    var1 -= 0.5;
-
-  if( key[KEY_J])
-    var2 += 0.5;
-  if( key[KEY_L])
-    var2 -= 0.5;
 
   //Counter for FPS
   frames_done++;
@@ -292,7 +276,7 @@ void draw(){
   //draw_sprite( buffer, cursor, mouse_x, mouse_y);
 
   // Debug text
-  textprintf_ex( buffer, font, 0, 25, makecol(0,0,0), makecol(255,255,255), "VAR1-%f VAR2-%f", var1, var2);
+  textprintf_ex( buffer, font, 0, 15, makecol(0,0,0), makecol(255,255,255), "Camera X:%4.1f Y:%4.1f Z:%4.1f RotX:%4.1f RotY:%4.1f ", gameTiles -> getX(), gameTiles -> getY(), gameTiles -> getZ(), gameTiles -> getRotX(), gameTiles -> getRotY());
 
   //Draws buffer
   draw_sprite( screen, buffer, 0, 0);
@@ -307,13 +291,13 @@ void draw(){
   glLoadIdentity();
 
   // Rotate along x
-  glRotatef( var1, 1.0, 0.0, 0.0 );
+  glRotatef( gameTiles -> getRotX(), 1.0, 0.0, 0.0 );
 
   // Rotate along y
-  glRotatef( var2, 0.0, 1.0, 0.0 );
+  glRotatef( gameTiles -> getRotY(), 0.0, 1.0, 0.0 );
 
   // Zoom around
-  glTranslatef( 0, 0, -gameTiles -> getZoom() );
+  glTranslatef( 0, 0, -gameTiles -> getZ() );
 
   // Draw map
   if( !key[KEY_TILDE])
