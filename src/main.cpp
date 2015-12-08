@@ -262,19 +262,6 @@ void draw(){
   /*******************
    * OPEN GL DRAWING *
    *******************/
-
-  // Reset camera transforms
-  glLoadIdentity();
-
-  // Rotate along x
-  glRotatef( gameTiles -> getRotX(), 1.0, 0.0, 0.0 );
-
-  // Rotate along y
-  glRotatef( gameTiles -> getRotY(), 0.0, 1.0, 0.0 );
-
-  // Zoom around
-  glTranslatef( 0, 0, -gameTiles -> getZ() );
-
   // Draw map
   if( !key[KEY_TILDE])
     gameTiles -> draw( animationFrame);

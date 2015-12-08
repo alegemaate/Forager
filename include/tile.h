@@ -21,7 +21,7 @@ class tile{
     unsigned short getType() { return tileImpl -> getType(); }
     void setType(tile_type *val);
 
-    void draw( BITMAP *tempBuffer, int newTick, int zoom, int offsetX, int offsetY, BITMAP *overlayImage);
+    void draw( BITMAP *tempBuffer, int newTick, BITMAP *overlayImage);
 
     // Get X value
     unsigned short getX() { return x; }

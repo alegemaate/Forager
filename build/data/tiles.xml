@@ -5,6 +5,7 @@
 		<name>Air</name>
 		<images>
 			<image>NULL</image>
+			<image2>NULL</image2>
 		</images>
 		<model>MODEL_CUBE</model>
 	</tile>
@@ -13,6 +14,7 @@
 		<name>Grass</name>
 		<images>
 			<image>images/textures/grass.png</image>
+			<image2>NULL</image2>
 		</images>
 		<model>MODEL_CUBE</model>
 	</tile>
@@ -21,6 +23,7 @@
 		<name>Sand</name>
 		<images>
 			<image>images/textures/sand.png</image>
+			<image2>NULL</image2>
 		</images>
 		<model>MODEL_CUBE</model>
 	</tile>
@@ -29,6 +32,7 @@
 		<name>Snow</name>
 		<images>
 			<image>images/textures/snow.png</image>
+			<image2>NULL</image2>
 		</images>
 		<model>MODEL_FLAT</model>
 	</tile>
@@ -37,6 +41,7 @@
 		<name>Stone</name>
 		<images>
 			<image>images/textures/stone.png</image>
+			<image2>NULL</image2>
 		</images>
 		<model>MODEL_CUBE</model>
 	</tile>
@@ -45,7 +50,7 @@
 		<name>Tree</name>
 		<images>
 			<image>images/textures/tree1.png</image>
-			<image>images/textures/tree2.png</image>
+			<image2>images/textures/tree2.png</image2>
 		</images>
 		<model>MODEL_DOUBLE_PLANE_TALL</model>
 	</tile>
@@ -54,6 +59,7 @@
 		<name>Rock</name>
 		<images>
 			<image>images/textures/rock.png</image>
+			<image2>NULL</image2>
 		</images>
 		<model>MODEL_CUBE_SMALL</model>
 	</tile>
@@ -62,7 +68,7 @@
 		<name>Water</name>
 		<images>
 			<image>images/textures/water1.png</image>
-			<image>images/textures/water2.png</image>
+			<image2>images/textures/water2.png</image2>
 		</images>
 		<model>MODEL_CUBE</model>
 	</tile>
@@ -71,6 +77,7 @@
 		<name>Ice</name>
 		<images>
 			<image>images/textures/ice.png</image>
+			<image2>NULL</image2>
 		</images>
 		<model>MODEL_CUBE</model>
 	</tile>
@@ -79,6 +86,7 @@
 		<name>Cactus</name>
 		<images>
 			<image>images/textures/cactus.png</image>
+			<image2>NULL</image2>
 		</images>
 		<model>MODEL_CUBE_SMALL</model>
 	</tile>
@@ -87,6 +95,7 @@
 		<name>Lava</name>
 		<images>
 			<image>images/textures/lava.png</image>
+			<image2>NULL</image2>
 		</images>
 		<model>MODEL_CUBE</model>
 	</tile>
@@ -95,6 +104,7 @@
 		<name>Tall Grass</name>
 		<images>
 			<image>images/textures/tallgrass.png</image>
+			<image2>NULL</image2>
 		</images>
 		<model>MODEL_DOUBLE_PLANE</model>
 	</tile>
@@ -103,6 +113,7 @@
 		<name>Grass Snow</name>
 		<images>
 			<image>images/textures/grass_snow.png</image>
+			<image2>NULL</image2>
 		</images>
 		<model>MODEL_CUBE</model>
 	</tile>
@@ -111,6 +122,7 @@
 		<name>Pine Tree</name>
 		<images>
 			<image>images/textures/tree_pine_1.png</image>
+			<image2>NULL</image2>
 		</images>
 		<model>MODEL_DOUBLE_PLANE_TALL</model>
 	</tile>
@@ -119,6 +131,7 @@
 		<name>Temp Water</name>
 		<images>
 			<image>NULL</image>
+			<image2>NULL</image2>
 		</images>
 		<model>MODEL_CUBE</model>
 	</tile>

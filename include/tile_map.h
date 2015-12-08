@@ -44,7 +44,6 @@ class tile_map{
 
     void quickPeek( std::string currentPhase);
     long checkBiomeNumber( char biomeToCheck);
-    void refreshTileImages();
 
     int sel_x, sel_y, sel_z;
     int test_x, test_y, test_z;

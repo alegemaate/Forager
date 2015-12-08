@@ -4,7 +4,7 @@
 tile_map::tile_map( BITMAP *tempBuffer){
   // Starting position and zoom
   x = 0;
-  y = 15;
+  y = -15;
   z = 0;
   rot_x = 45;
   rot_y = 135;
@@ -64,28 +64,25 @@ void tile_map::load_images(){
   overlay_images[OVERLAY_FOG_75] = load_bitmap("images/tiles/OVERLAY_FOG_75.png", NULL);
   overlay_images[OVERLAY_FOG_100] = load_bitmap("images/tiles/OVERLAY_FOG_100.png", NULL);
   overlay_images[OVERLAY_SELECTED] = load_bitmap("images/tiles/selected_overlay.png", NULL);
-
-  // Sets all the tiles images
-  refreshTileImages();
 }
 
 // Update map
 void tile_map::update(){
   // Right
   if(key[KEY_D] || key[KEY_RIGHT]){
-    x -= 0.5;
+    x += 0.5;
   }
   // Left
   if(key[KEY_A] || key[KEY_LEFT]){
-    x += 0.5;
+    x -= 0.5;
   }
   // Down
   if(key[KEY_S] || key[KEY_DOWN]){
-    z -= 0.5;
+    z += 0.5;
   }
   // Up
   if(key[KEY_W] || key[KEY_UP]){
-    z += 0.5;
+    z -= 0.5;
   }
 
   // Rotating
@@ -100,28 +97,19 @@ void tile_map::update(){
     rot_y -= 0.5;
 
   // Zooming
-  if( !gameMode){
-    //Zoom out
-    if(mouse_z < 0){
-      y += 1;
-      position_mouse_z( 0);
-    }
-    //Zoom in
-    if(mouse_z > 0){
-      y -= 1;
-      position_mouse_z( 0);
-    }
+  //Zoom out
+  if(mouse_z < 0){
+    y -= 0.5;
+    if( !gameMode )
+      y -= 0.5;
+    position_mouse_z( 0);
   }
-
-  // Change z slice DOWN
-  if(( key[KEY_LSHIFT] && key[KEY_STOP] || key[KEY_MINUS_PAD]) && z > 0){
-    z--;
-    rest(100);
-  }
-  // Change z slice UP
-  if(( key[KEY_LSHIFT] && key[KEY_COMMA] || key[KEY_PLUS_PAD]) && z < DEFAULT_MAP_HEIGHT - 1){
-    z++;
-    rest(100);
+  //Zoom in
+  if(mouse_z > 0){
+    y += 0.5;
+    if( !gameMode )
+      y += 0.5;
+    position_mouse_z( 0);
   }
 
   //Gen
@@ -132,10 +120,20 @@ void tile_map::update(){
   // Game mode
   if( key[KEY_G]){
     if( !gameMode){
-      x = -1000;
-      y = 500;
-      z = 2;
-      zoom = 1;
+      x = -15;
+      y = -3;
+      z = -15;
+      rot_x = 15;
+      rot_y = 135;
+      rot_z = 0;
+    }
+    else{
+      x = 0;
+      y = -15;
+      z = 0;
+      rot_x = 45;
+      rot_y = 135;
+      rot_z = 0;
     }
     gameMode = !gameMode;
     rest( 300);
@@ -457,9 +455,6 @@ void tile_map::generateMap(){
 
   // Done!
   quickPeek( "Done!");
-
-  // Sets all the tiles images
-  refreshTileImages();
 }
 
 // Checks how many tiles dont have a biome
@@ -474,8 +469,6 @@ long tile_map::checkBiomeNumber( char biomeToCheck){
 
 // Quick Peek
 void tile_map::quickPeek( std::string currentPhase){
-  refreshTileImages();
-
   allegro_gl_set_allegro_mode();
   rectfill( buffPoint, 0, 0, SCREEN_W, SCREEN_H, makecol( 0, 0, 0));
   textprintf_ex( buffPoint,font, 0, 0,makecol(0,0,0),makecol(255,255,255),"%s", currentPhase.c_str());
@@ -485,34 +478,34 @@ void tile_map::quickPeek( std::string currentPhase){
   draw( 0);
 }
 
-// Sets all the tiles images
-void tile_map::refreshTileImages(){
-  // Set images
-  /*for(int i = 0; i < DEFAULT_MAP_WIDTH; i++){
-    for(int t = 0; t < DEFAULT_MAP_LENGTH; t++){
-      for(int u = 0; u <  DEFAULT_MAP_HEIGHT; u++){
-        // Set tile images
-        if( tile_images[map_tiles[i][t][u] -> getType()][0] != errorTile){
-          if( tile_images[map_tiles[i][t][u] -> getType()][1] != errorTile)
-            map_tiles[i][t][u] -> setImages(tile_images[map_tiles[i][t][u] -> getType()][0], tile_images[map_tiles[i][t][u] -> getType()][1]);
-          else
-            map_tiles[i][t][u] -> setImages(tile_images[map_tiles[i][t][u] -> getType()][0], tile_images[map_tiles[i][t][u] -> getType()][0]);
-        }
-      }
-    }
-  }*/
-}
-
 //Draw map
 void tile_map::draw( int newAnimationFrame){
+  // TRANSFORMS
+  // Reset camera transforms
+  glLoadIdentity();
+
+  // Rotate along x
+  glRotatef( rot_x, 1.0, 0.0, 0.0 );
+
+  // Rotate along y
+  glRotatef( rot_y, 0.0, 1.0, 0.0 );
+
+  // Rotate along z (unused)
+  glRotatef( rot_z, 0.0, 0.0, 1.0 );
+
+  // Translate map
+  glTranslatef( x, y, z);
+
+  // TEXTURING
   // Enable texturing and blending (all tiles use this so lets just call it once)
   glEnable(GL_TEXTURE_2D);
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
   // No blurr texture
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+  // Alpha blending
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
   // Go through all tiles and draw
   for(int i = 0; i < DEFAULT_MAP_WIDTH; i++){
@@ -520,7 +513,7 @@ void tile_map::draw( int newAnimationFrame){
       for(int n = 0; n < DEFAULT_MAP_HEIGHT; n++){
         // Draw tiles on current level (if onscreen)
         if( VIEW_MODE == 1 || onScreen( map_tiles[i][t][n] -> getX(), map_tiles[i][t][n] -> getY(), map_tiles[i][t][n] -> getZ())){
-          map_tiles[i][t][n] -> draw( buffPoint, newAnimationFrame, zoom, x, y, overlay_images[OVERLAY_NONE]);
+          map_tiles[i][t][n] -> draw( buffPoint, newAnimationFrame, overlay_images[OVERLAY_NONE]);
         }
       }
     }

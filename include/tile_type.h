@@ -28,18 +28,18 @@ class tile_type{
     std::string getName(){ return name; }
 
     // Draw
-    void draw( BITMAP *tempBuffer, unsigned short x, unsigned short y, unsigned short z, bool newTick, char zoom, int offsetX, int offsetY);
+    void draw( BITMAP *tempBuffer, unsigned short x, unsigned short y, unsigned short z, bool newTick);
 
     // Logic
     void logic();
-
-    int image_reference_number;
 
   protected:
   private:
     unsigned short type;
     std::string name;
     BITMAP *image[2];
+
+    int image_reference_number[2];
 
     std::string model;
 };

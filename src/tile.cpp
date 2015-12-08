@@ -2,9 +2,9 @@
 
 // Constructor
 tile::tile(int newX, int newY, int newZ, tile_type *newType){
-  x = newX * 32;
-  y = newY * 32;
-  z = newZ * 32;
+  x = newX;
+  y = newY;
+  z = newZ;
 
   biome = 0;
 
@@ -22,9 +22,9 @@ void tile::setType(tile_type *val) {
 }
 
 // Draw tile
-void tile::draw( BITMAP *tempBuffer, int newTick, int zoom, int offsetX, int offsetY, BITMAP *overlayImage){
+void tile::draw( BITMAP *tempBuffer, int newTick, BITMAP *overlayImage){
   // Temp xyz that calc zoom
-  tileImpl -> draw( tempBuffer, x/64, y/64, z/64, newTick, zoom, offsetX, offsetY);
+  tileImpl -> draw( tempBuffer, x, y, z, newTick);
 
   // Overlay if needed
   if(overlayImage != NULL){

@@ -35,7 +35,8 @@ void tile_type_manager::load( std::string newFile){
     // General
     int tileID = atoi(cTile-> first_attribute("id") -> value());
     std::string name = cTile-> first_node("name") -> value();
-    std::string image = cTile-> first_node("images") -> first_node("image") -> value();
+    std::string image1 = cTile-> first_node("images") -> first_node("image") -> value();
+    std::string image2 = cTile-> first_node("images") -> first_node("image2") -> value();
     std::string model = cTile-> first_node("model") -> value();
 
     // Draw to screen (debug)
@@ -45,7 +46,7 @@ void tile_type_manager::load( std::string newFile){
     tile_type newTileType( name, tileID, NULL, model);
 
     // Set images
-    newTileType.setImages( image, "NULL");
+    newTileType.setImages( image1, image2);
 
     // Add the tile
     tile_defs.push_back( newTileType);
