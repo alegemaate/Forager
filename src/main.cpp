@@ -39,7 +39,6 @@ FONT *f1, *f2, *f3, *f4, *f5;
 //Create images
 BITMAP* buffer;
 BITMAP* cursor;
-BITMAP* exTexture;
 
 //Resolution X
 int resDiv;
@@ -152,6 +151,14 @@ void setup(bool first){
     //Clearing the model-view matrix.
     glLoadIdentity();
 
+    // Viewport
+    glViewport(0, 0, SCREEN_W, SCREEN_H);
+
+    // Alpha (remove pixels less than 0.5)
+    glAlphaFunc(GL_GREATER, 0.5);
+    glEnable(GL_ALPHA_TEST);
+
+    // Lighting
     GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
     GLfloat mat_shininess[] = { 50.0 };
     glShadeModel (GL_SMOOTH);
@@ -204,10 +211,6 @@ void setup(bool first){
 
     cursor = load_bitmap( "images/cursor.png", NULL);
 
-    //Load a texture
-    exTexture = load_bitmap( "images/textures/sand.png", NULL);
-    texture_number = allegro_gl_make_texture( exTexture);
-
     //normal map
     gameTiles = new tile_map( buffer);
     gameTiles -> load_images();
@@ -223,7 +226,7 @@ void setup(bool first){
     f4 = extract_font_range(f1, 'Z'+1, 'z');
 
     //Merge fonts
-    font = merge_fonts(f4, f5 = merge_fonts(f2, f3));
+    //font = merge_fonts(f4, f5 = merge_fonts(f2, f3));
 
     // Set rotation
     var1 = 45;
@@ -268,44 +271,37 @@ void game(){
 
 //Draw images
 void draw(){
-  /*allegro_gl_set_allegro_mode();
+  // Clear screen
+  glClearColor(0.1f, 0.5f, 0.9f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  if(gameScreen == SPLASH){
+  /**********************
+   * ALLEGRO GL DRAWING *
+   **********************/
+  allegro_gl_set_allegro_mode();
 
-  }
-  else if(gameScreen == MENU){
-
-  }
-  else if(gameScreen == LEVELSELECT){
-
-  }
-  else if(gameScreen == INGAME){
-    //Background
-    rectfill(buffer, 0, 0, 1280, 960, makecol(0,127,255));
-
-    // Draw jimmy
-    //jimmy -> draw( buffer, gameTiles -> getX(), gameTiles -> getY(), gameTiles -> getZoom());
-  }
+  // Transparent buffer
+  rectfill( buffer, 0, 0, SCREEN_W, SCREEN_H, makecol( 255, 0, 255));
 
   //FPS counter
   if(showFPS){
-    textprintf_ex(buffer,font,0,0,makecol(0,0,0),makecol(255,255,255),"FPS-%i", fps);
+    textprintf_ex( buffer, font, 0, 0, makecol(0,0,0), makecol(255,255,255), "FPS-%i", fps);
   }
 
   // Cursor
-  draw_sprite( buffer, cursor, mouse_x, mouse_y);
+  //draw_sprite( buffer, cursor, mouse_x, mouse_y);
+
+  // Debug text
+  textprintf_ex( buffer, font, 0, 25, makecol(0,0,0), makecol(255,255,255), "VAR1-%f VAR2-%f", var1, var2);
 
   //Draws buffer
   draw_sprite( screen, buffer, 0, 0);
 
-  textprintf_ex(screen,font,0,0,makecol(0,0,0),makecol(255,255,255),"VAR1-%f VAR2-%f", var1, var2);
-
   allegro_gl_unset_allegro_mode();
-  allegro_gl_flip();*/
 
-  // Clear screen
-  glClearColor(0.1f, 0.5f, 0.9f, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  /*******************
+   * OPEN GL DRAWING *
+   *******************/
 
   // Reset camera transforms
   glLoadIdentity();
@@ -319,12 +315,11 @@ void draw(){
   // Zoom around
   glTranslatef( 0, 0, -gameTiles -> getZoom() );
 
-  //glLightfv(GL_LIGHT0, GL_POSITION, new_light_position);
-
   // Draw map
   if( !key[KEY_TILDE])
     gameTiles -> draw( animationFrame);
 
+  allegro_gl_flip();
   glFlush();
 }
 

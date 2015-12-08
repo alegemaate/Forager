@@ -23,13 +23,13 @@ void tile_type::setImages( std::string path1, std::string path2){
   // Load image 1
   if( path1 != "NULL"){
     image[0] = load_bitmap( path1.c_str(), NULL);
-    image_reference_number = allegro_gl_make_texture( image[0]);
+    image_reference_number = allegro_gl_make_texture_ex( AGL_TEXTURE_HAS_ALPHA | AGL_TEXTURE_FLIP, image[0], GL_RGBA);
   }
 
   // Load image 2
   if( path2 != "NULL"){
     image[1] = load_bitmap( path2.c_str(), NULL);
-    image_reference_number = allegro_gl_make_texture( image[1]);
+    image_reference_number = allegro_gl_make_texture_ex( AGL_TEXTURE_HAS_ALPHA | AGL_TEXTURE_FLIP, image[1], GL_RGBA);
   }
   else{
     image[1] = image[0];
