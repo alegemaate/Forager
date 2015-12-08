@@ -1,10 +1,11 @@
 #include "tile_type.h"
 
 // Init tile
-tile_type::tile_type( std::string newName, unsigned char newType, BITMAP *defaultImage){
+tile_type::tile_type( std::string newName, unsigned char newType, BITMAP *defaultImage, std::string newModel){
   // Set init variables
   type = newType;
   name = newName;
+  model = newModel;
 
   image[0] = defaultImage;
   image[1] = defaultImage;
@@ -45,11 +46,9 @@ void tile_type::draw( BITMAP *tempBuffer, unsigned short x, unsigned short y, un
   if( image_reference_number != 0){
     glPushMatrix();
 
-    // Enable texturing
+    // Enable texturing and blending
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
-
-    //Define how alpha blending will work and enable alpha blending.
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // No blurr texture
@@ -60,59 +59,214 @@ void tile_type::draw( BITMAP *tempBuffer, unsigned short x, unsigned short y, un
     // Translate in
     glTranslatef( x - offsetX, y - offsetY, z );
 
-    //Multi-colored side - FRONT
-    glBegin(GL_POLYGON);
-      glColor4ub(255, 255, 255, 255);
-      glNormal3f(0,0,-1); glTexCoord2f(0, 0); glVertex3f(  0.5, -0.5, -0.5 );      // P1 is red
-      glNormal3f(0,0,-1); glTexCoord2f(1, 0); glVertex3f(  0.5,  0.5, -0.5 );      // P2 is green
-      glNormal3f(0,0,-1); glTexCoord2f(1, 1); glVertex3f( -0.5,  0.5, -0.5 );      // P3 is blue
-      glNormal3f(0,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.5, -0.5, -0.5 );      // P4 is purple
-    glEnd();
+    // Cube
+    if( model == "MODEL_CUBE"){
+      // FRONT
+      glBegin(GL_POLYGON);
+        glColor4ub(255, 255, 255, 255);
+        glNormal3f(0,0,-1); glTexCoord2f(0, 0); glVertex3f(  0.5, -0.5, -0.5 );
+        glNormal3f(0,0,-1); glTexCoord2f(1, 0); glVertex3f(  0.5,  0.5, -0.5 );
+        glNormal3f(0,0,-1); glTexCoord2f(1, 1); glVertex3f( -0.5,  0.5, -0.5 );
+        glNormal3f(0,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.5, -0.5, -0.5 );
+      glEnd();
 
-    // White side - BACK
-    glBegin(GL_POLYGON);
-      glColor4ub(255, 255, 255, 255);
-      glNormal3f(0,0,1); glTexCoord2f(0, 0); glVertex3f(  0.5, -0.5, 0.5 );
-      glNormal3f(0,0,1); glTexCoord2f(1, 0); glVertex3f(  0.5,  0.5, 0.5 );
-      glNormal3f(0,0,1); glTexCoord2f(1, 1); glVertex3f( -0.5,  0.5, 0.5 );
-      glNormal3f(0,0,1); glTexCoord2f(0, 1); glVertex3f( -0.5, -0.5, 0.5 );
-    glEnd();
+      // BACK
+      glBegin(GL_POLYGON);
+        glColor4ub(255, 255, 255, 255);
+        glNormal3f(0,0,1); glTexCoord2f(0, 0); glVertex3f(  0.5, -0.5, 0.5 );
+        glNormal3f(0,0,1); glTexCoord2f(1, 0); glVertex3f(  0.5,  0.5, 0.5 );
+        glNormal3f(0,0,1); glTexCoord2f(1, 1); glVertex3f( -0.5,  0.5, 0.5 );
+        glNormal3f(0,0,1); glTexCoord2f(0, 1); glVertex3f( -0.5, -0.5, 0.5 );
+      glEnd();
 
-    // Purple side - RIGHT
-    glBegin(GL_POLYGON);
-      glColor4ub(255, 255, 255, 255);
-      glNormal3f(1,0,1); glTexCoord2f(0, 0); glVertex3f( 0.5, -0.5, -0.5 );
-      glNormal3f(1,0,1); glTexCoord2f(1, 0); glVertex3f( 0.5,  0.5, -0.5 );
-      glNormal3f(1,0,1); glTexCoord2f(1, 1); glVertex3f( 0.5,  0.5,  0.5 );
-      glNormal3f(1,0,1); glTexCoord2f(0, 1); glVertex3f( 0.5, -0.5,  0.5 );
-    glEnd();
+      // RIGHT
+      glBegin(GL_POLYGON);
+        glColor4ub(255, 255, 255, 255);
+        glNormal3f(1,0,1); glTexCoord2f(0, 0); glVertex3f( 0.5, -0.5, -0.5 );
+        glNormal3f(1,0,1); glTexCoord2f(1, 0); glVertex3f( 0.5,  0.5, -0.5 );
+        glNormal3f(1,0,1); glTexCoord2f(1, 1); glVertex3f( 0.5,  0.5,  0.5 );
+        glNormal3f(1,0,1); glTexCoord2f(0, 1); glVertex3f( 0.5, -0.5,  0.5 );
+      glEnd();
 
-    // Green side - LEFT
-    glBegin(GL_POLYGON);
-      glColor4ub(255, 255, 255, 255);
-      glNormal3f(-1,0,0); glTexCoord2f(0, 0); glVertex3f( -0.5, -0.5,  0.5 );
-      glNormal3f(-1,0,0); glTexCoord2f(1, 0); glVertex3f( -0.5,  0.5,  0.5 );
-      glNormal3f(-1,0,0); glTexCoord2f(1, 1); glVertex3f( -0.5,  0.5, -0.5 );
-      glNormal3f(-1,0,0); glTexCoord2f(0, 1); glVertex3f( -0.5, -0.5, -0.5 );
-    glEnd();
+      // LEFT
+      glBegin(GL_POLYGON);
+        glColor4ub(255, 255, 255, 255);
+        glNormal3f(-1,0,0); glTexCoord2f(0, 0); glVertex3f( -0.5, -0.5,  0.5 );
+        glNormal3f(-1,0,0); glTexCoord2f(1, 0); glVertex3f( -0.5,  0.5,  0.5 );
+        glNormal3f(-1,0,0); glTexCoord2f(1, 1); glVertex3f( -0.5,  0.5, -0.5 );
+        glNormal3f(-1,0,0); glTexCoord2f(0, 1); glVertex3f( -0.5, -0.5, -0.5 );
+      glEnd();
 
-    // Blue side - TOP
-    glBegin(GL_POLYGON);
-      glColor4ub(255, 255, 255, 255);
-      glNormal3f(0,1,0); glTexCoord2f(0, 0); glVertex3f(  0.5,  0.5,  0.5 );
-      glNormal3f(0,1,0); glTexCoord2f(1, 0); glVertex3f(  0.5,  0.5, -0.5 );
-      glNormal3f(0,1,0); glTexCoord2f(1, 1); glVertex3f( -0.5,  0.5, -0.5 );
-      glNormal3f(0,1,0); glTexCoord2f(0, 1); glVertex3f( -0.5,  0.5,  0.5 );
-    glEnd();
+      // TOP
+      glBegin(GL_POLYGON);
+        glColor4ub(255, 255, 255, 255);
+        glNormal3f(0,1,0); glTexCoord2f(0, 0); glVertex3f(  0.5,  0.5,  0.5 );
+        glNormal3f(0,1,0); glTexCoord2f(1, 0); glVertex3f(  0.5,  0.5, -0.5 );
+        glNormal3f(0,1,0); glTexCoord2f(1, 1); glVertex3f( -0.5,  0.5, -0.5 );
+        glNormal3f(0,1,0); glTexCoord2f(0, 1); glVertex3f( -0.5,  0.5,  0.5 );
+      glEnd();
 
-    // Red side - BOTTOM
-    glBegin(GL_POLYGON);
-      glColor4ub(255, 255, 255, 255);
-      glNormal3f(0,-1,0); glTexCoord2f(0, 0); glVertex3f(  0.5, -0.5, -0.5 );
-      glNormal3f(0,-1,0); glTexCoord2f(1, 0); glVertex3f(  0.5, -0.5,  0.5 );
-      glNormal3f(0,-1,0); glTexCoord2f(1, 1); glVertex3f( -0.5, -0.5,  0.5 );
-      glNormal3f(0,-1,0); glTexCoord2f(0, 1); glVertex3f( -0.5, -0.5, -0.5 );
-    glEnd();
+      // BOTTOM
+      glBegin(GL_POLYGON);
+        glColor4ub(255, 255, 255, 255);
+        glNormal3f(0,-1,0); glTexCoord2f(0, 0); glVertex3f(  0.5, -0.5, -0.5 );
+        glNormal3f(0,-1,0); glTexCoord2f(1, 0); glVertex3f(  0.5, -0.5,  0.5 );
+        glNormal3f(0,-1,0); glTexCoord2f(1, 1); glVertex3f( -0.5, -0.5,  0.5 );
+        glNormal3f(0,-1,0); glTexCoord2f(0, 1); glVertex3f( -0.5, -0.5, -0.5 );
+      glEnd();
+    }
+    // Small Cube
+    if( model == "MODEL_CUBE_SMALL"){
+      // FRONT
+      glBegin(GL_POLYGON);
+        glColor4ub(255, 255, 255, 255);
+        glNormal3f(0,0,-1); glTexCoord2f(0, 0); glVertex3f(  0.25, -0.5, -0.25 );
+        glNormal3f(0,0,-1); glTexCoord2f(1, 0); glVertex3f(  0.25,  0.0, -0.25 );
+        glNormal3f(0,0,-1); glTexCoord2f(1, 1); glVertex3f( -0.25,  0.0, -0.25 );
+        glNormal3f(0,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.25, -0.5, -0.25 );
+      glEnd();
+
+      // BACK
+      glBegin(GL_POLYGON);
+        glColor4ub(255, 255, 255, 255);
+        glNormal3f(0,0,1); glTexCoord2f(0, 0); glVertex3f(  0.25, -0.5, 0.25 );
+        glNormal3f(0,0,1); glTexCoord2f(1, 0); glVertex3f(  0.25,  0.0, 0.25 );
+        glNormal3f(0,0,1); glTexCoord2f(1, 1); glVertex3f( -0.25,  0.0, 0.25 );
+        glNormal3f(0,0,1); glTexCoord2f(0, 1); glVertex3f( -0.25, -0.5, 0.25 );
+      glEnd();
+
+      // RIGHT
+      glBegin(GL_POLYGON);
+        glColor4ub(255, 255, 255, 255);
+        glNormal3f(1,0,1); glTexCoord2f(0, 0); glVertex3f( 0.25, -0.5, -0.25 );
+        glNormal3f(1,0,1); glTexCoord2f(1, 0); glVertex3f( 0.25,  0.0, -0.25 );
+        glNormal3f(1,0,1); glTexCoord2f(1, 1); glVertex3f( 0.25,  0.0,  0.25 );
+        glNormal3f(1,0,1); glTexCoord2f(0, 1); glVertex3f( 0.25, -0.5,  0.25 );
+      glEnd();
+
+      // LEFT
+      glBegin(GL_POLYGON);
+        glColor4ub(255, 255, 255, 255);
+        glNormal3f(-1,0,0); glTexCoord2f(0, 0); glVertex3f( -0.25, -0.5,  0.25 );
+        glNormal3f(-1,0,0); glTexCoord2f(1, 0); glVertex3f( -0.25,  0.0,  0.25 );
+        glNormal3f(-1,0,0); glTexCoord2f(1, 1); glVertex3f( -0.25,  0.0, -0.25 );
+        glNormal3f(-1,0,0); glTexCoord2f(0, 1); glVertex3f( -0.25, -0.5, -0.25 );
+      glEnd();
+
+      // TOP
+      glBegin(GL_POLYGON);
+        glColor4ub(255, 255, 255, 255);
+        glNormal3f(0,1,0); glTexCoord2f(0, 0); glVertex3f(  0.25,  0.0,  0.25 );
+        glNormal3f(0,1,0); glTexCoord2f(1, 0); glVertex3f(  0.25,  0.0, -0.25 );
+        glNormal3f(0,1,0); glTexCoord2f(1, 1); glVertex3f( -0.25,  0.0, -0.25 );
+        glNormal3f(0,1,0); glTexCoord2f(0, 1); glVertex3f( -0.25,  0.0,  0.25 );
+      glEnd();
+
+      // BOTTOM
+      glBegin(GL_POLYGON);
+        glColor4ub(255, 255, 255, 255);
+        glNormal3f(0,-1,0); glTexCoord2f(0, 0); glVertex3f(  0.25, -0.5, -0.25 );
+        glNormal3f(0,-1,0); glTexCoord2f(1, 0); glVertex3f(  0.25, -0.5,  0.25 );
+        glNormal3f(0,-1,0); glTexCoord2f(1, 1); glVertex3f( -0.25, -0.5,  0.25 );
+        glNormal3f(0,-1,0); glTexCoord2f(0, 1); glVertex3f( -0.25, -0.5, -0.25 );
+      glEnd();
+    }
+    // Flat Cube
+    if( model == "MODEL_FLAT"){
+      // FRONT
+      glBegin(GL_POLYGON);
+        glColor4ub(255, 255, 255, 255);
+        glNormal3f(0,0,-1); glTexCoord2f(0, 0); glVertex3f(  0.5, -0.5, -0.5 );
+        glNormal3f(0,0,-1); glTexCoord2f(1, 0); glVertex3f(  0.5, -0.25, -0.5 );
+        glNormal3f(0,0,-1); glTexCoord2f(1, 1); glVertex3f( -0.5, -0.25, -0.5 );
+        glNormal3f(0,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.5, -0.5, -0.5 );
+      glEnd();
+
+      // BACK
+      glBegin(GL_POLYGON);
+        glColor4ub(255, 255, 255, 255);
+        glNormal3f(0,0,1); glTexCoord2f(0, 0); glVertex3f(  0.5, -0.5, 0.5 );
+        glNormal3f(0,0,1); glTexCoord2f(1, 0); glVertex3f(  0.5, -0.25, 0.5 );
+        glNormal3f(0,0,1); glTexCoord2f(1, 1); glVertex3f( -0.5, -0.25, 0.5 );
+        glNormal3f(0,0,1); glTexCoord2f(0, 1); glVertex3f( -0.5, -0.5, 0.5 );
+      glEnd();
+
+      // RIGHT
+      glBegin(GL_POLYGON);
+        glColor4ub(255, 255, 255, 255);
+        glNormal3f(1,0,1); glTexCoord2f(0, 0); glVertex3f( 0.5, -0.5, -0.5 );
+        glNormal3f(1,0,1); glTexCoord2f(1, 0); glVertex3f( 0.5, -0.25, -0.5 );
+        glNormal3f(1,0,1); glTexCoord2f(1, 1); glVertex3f( 0.5, -0.25,  0.5 );
+        glNormal3f(1,0,1); glTexCoord2f(0, 1); glVertex3f( 0.5, -0.5,  0.5 );
+      glEnd();
+
+      // LEFT
+      glBegin(GL_POLYGON);
+        glColor4ub(255, 255, 255, 255);
+        glNormal3f(-1,0,0); glTexCoord2f(0, 0); glVertex3f( -0.5, -0.5,  0.5 );
+        glNormal3f(-1,0,0); glTexCoord2f(1, 0); glVertex3f( -0.5, -0.25,  0.5 );
+        glNormal3f(-1,0,0); glTexCoord2f(1, 1); glVertex3f( -0.5, -0.25, -0.5 );
+        glNormal3f(-1,0,0); glTexCoord2f(0, 1); glVertex3f( -0.5, -0.5, -0.5 );
+      glEnd();
+
+      // TOP
+      glBegin(GL_POLYGON);
+        glColor4ub(255, 255, 255, 255);
+        glNormal3f(0,1,0); glTexCoord2f(0, 0); glVertex3f(  0.5, -0.25,  0.5 );
+        glNormal3f(0,1,0); glTexCoord2f(1, 0); glVertex3f(  0.5, -0.25, -0.5 );
+        glNormal3f(0,1,0); glTexCoord2f(1, 1); glVertex3f( -0.5, -0.25, -0.5 );
+        glNormal3f(0,1,0); glTexCoord2f(0, 1); glVertex3f( -0.5, -0.25,  0.5 );
+      glEnd();
+
+      // BOTTOM
+      glBegin(GL_POLYGON);
+        glColor4ub(255, 255, 255, 255);
+        glNormal3f(0,-1,0); glTexCoord2f(0, 0); glVertex3f(  0.5, -0.5, -0.5 );
+        glNormal3f(0,-1,0); glTexCoord2f(1, 0); glVertex3f(  0.5, -0.5,  0.5 );
+        glNormal3f(0,-1,0); glTexCoord2f(1, 1); glVertex3f( -0.5, -0.5,  0.5 );
+        glNormal3f(0,-1,0); glTexCoord2f(0, 1); glVertex3f( -0.5, -0.5, -0.5 );
+      glEnd();
+    }
+    // X like planes
+    else if( model == "MODEL_DOUBLE_PLANE"){
+      // FRONT
+      glBegin(GL_POLYGON);
+        glColor4ub(255, 255, 255, 255);
+        glNormal3f(0,0,-1); glTexCoord2f(1, 0); glVertex3f(  0.25, -0.5, 0.25 );
+        glNormal3f(0,0,-1); glTexCoord2f(1, 1); glVertex3f(  0.25,  0.5, 0.25 );
+        glNormal3f(0,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.25,  0.5, -0.25 );
+        glNormal3f(0,0,-1); glTexCoord2f(0, 0); glVertex3f( -0.25, -0.5, -0.25 );
+      glEnd();
+
+      // BACK
+      glBegin(GL_POLYGON);
+        glColor4ub(255, 255, 255, 255);
+        glNormal3f(0,0,1); glTexCoord2f(1, 0); glVertex3f(  0.25, -0.5, -0.25 );
+        glNormal3f(0,0,1); glTexCoord2f(1, 1); glVertex3f(  0.25,  0.5, -0.25 );
+        glNormal3f(0,0,1); glTexCoord2f(0, 1); glVertex3f( -0.25,  0.5, 0.25 );
+        glNormal3f(0,0,1); glTexCoord2f(0, 0); glVertex3f( -0.25, -0.5, 0.25 );
+      glEnd();
+    }
+    // X like planes tall
+    else if( model == "MODEL_DOUBLE_PLANE_TALL"){
+      // FRONT
+      glBegin(GL_POLYGON);
+        glColor4ub(255, 255, 255, 255);
+        glNormal3f(0,0,-1); glTexCoord2f(1, 0); glVertex3f(  0.25, -0.5, 0.25 );
+        glNormal3f(0,0,-1); glTexCoord2f(1, 1); glVertex3f(  0.25,  1.5, 0.25 );
+        glNormal3f(0,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.25,  1.5, -0.25 );
+        glNormal3f(0,0,-1); glTexCoord2f(0, 0); glVertex3f( -0.25, -0.5, -0.25 );
+      glEnd();
+
+      // BACK
+      glBegin(GL_POLYGON);
+        glColor4ub(255, 255, 255, 255);
+        glNormal3f(0,0,1); glTexCoord2f(1, 0); glVertex3f(  0.25, -0.5, -0.25 );
+        glNormal3f(0,0,1); glTexCoord2f(1, 1); glVertex3f(  0.25,  1.5, -0.25 );
+        glNormal3f(0,0,1); glTexCoord2f(0, 1); glVertex3f( -0.25,  1.5, 0.25 );
+        glNormal3f(0,0,1); glTexCoord2f(0, 0); glVertex3f( -0.25, -0.5, 0.25 );
+      glEnd();
+    }
 
     glPopMatrix();
   }

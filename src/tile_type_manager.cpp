@@ -36,12 +36,13 @@ void tile_type_manager::load( std::string newFile){
     int tileID = atoi(cTile-> first_attribute("id") -> value());
     std::string name = cTile-> first_node("name") -> value();
     std::string image = cTile-> first_node("images") -> first_node("image") -> value();
+    std::string model = cTile-> first_node("model") -> value();
 
     // Draw to screen (debug)
-    textprintf_centre_ex(screen,font,640,700,makecol(0,0,0),makecol(255,255,255),"Loading Tile:%s ID:%i",name.c_str(), tileID);
+    textprintf_centre_ex(screen,font,640,700,makecol(0,0,0),makecol(255,255,255),"Loading Tile:%s ID:%i MODEL:%s",name.c_str(), tileID, model.c_str());
 
     // Create tile, set variables and add it to the tile list
-    tile_type newTileType( name, tileID, NULL);
+    tile_type newTileType( name, tileID, NULL, model);
 
     // Set images
     newTileType.setImages( image, "NULL");

@@ -6,6 +6,7 @@
 		<images>
 			<image>NULL</image>
 		</images>
+		<model>MODEL_CUBE</model>
 	</tile>
 	<!--Grass-->
 	<tile id="1">
@@ -13,6 +14,7 @@
 		<images>
 			<image>images/textures/grass.png</image>
 		</images>
+		<model>MODEL_CUBE</model>
 	</tile>
 	<!--Sand-->
 	<tile id="2">
@@ -20,13 +22,15 @@
 		<images>
 			<image>images/textures/sand.png</image>
 		</images>
+		<model>MODEL_CUBE</model>
 	</tile>
 	<!--Snow-->
 	<tile id="3">
 		<name>Snow</name>
 		<images>
-			<image>images/tiles/snow.png</image>
+			<image>images/textures/snow.png</image>
 		</images>
+		<model>MODEL_FLAT</model>
 	</tile>
 	<!--Stone-->
 	<tile id="4">
@@ -34,21 +38,24 @@
 		<images>
 			<image>images/textures/stone.png</image>
 		</images>
+		<model>MODEL_CUBE</model>
 	</tile>
 	<!--Tree-->
 	<tile id="5">
 		<name>Tree</name>
 		<images>
-			<image>images/tiles/tree1.png</image>
-			<image>images/tiles/tree2.png</image>
+			<image>images/textures/tree1.png</image>
+			<image>images/textures/tree2.png</image>
 		</images>
+		<model>MODEL_DOUBLE_PLANE_TALL</model>
 	</tile>
 	<!--Rock-->
 	<tile id="6">
 		<name>Rock</name>
 		<images>
-			<image>images/tiles/rock.png</image>
+			<image>images/textures/rock.png</image>
 		</images>
+		<model>MODEL_CUBE_SMALL</model>
 	</tile>
 	<!--Water-->
 	<tile id="7">
@@ -57,6 +64,7 @@
 			<image>images/textures/water1.png</image>
 			<image>images/textures/water2.png</image>
 		</images>
+		<model>MODEL_CUBE</model>
 	</tile>
 	<!--Ice-->
 	<tile id="8">
@@ -64,6 +72,7 @@
 		<images>
 			<image>images/textures/ice.png</image>
 		</images>
+		<model>MODEL_CUBE</model>
 	</tile>
 	<!--Cactus-->
 	<tile id="9">
@@ -71,6 +80,7 @@
 		<images>
 			<image>images/textures/cactus.png</image>
 		</images>
+		<model>MODEL_CUBE_SMALL</model>
 	</tile>
 	<!--Lava-->
 	<tile id="10">
@@ -78,13 +88,15 @@
 		<images>
 			<image>images/textures/lava.png</image>
 		</images>
+		<model>MODEL_CUBE</model>
 	</tile>
 	<!--Tall Grass-->
 	<tile id="11">
 		<name>Tall Grass</name>
 		<images>
-			<image>images/tiles/tallgrass.png</image>
+			<image>images/textures/tallgrass.png</image>
 		</images>
+		<model>MODEL_DOUBLE_PLANE</model>
 	</tile>
 	<!--Grass Snow-->
 	<tile id="12">
@@ -92,13 +104,15 @@
 		<images>
 			<image>images/textures/grass_snow.png</image>
 		</images>
+		<model>MODEL_CUBE</model>
 	</tile>
 	<!--Tree Pine-->
 	<tile id="13">
 		<name>Pine Tree</name>
 		<images>
-			<image>images/tiles/tree_pine_1.png</image>
+			<image>images/textures/tree_pine_1.png</image>
 		</images>
+		<model>MODEL_DOUBLE_PLANE_TALL</model>
 	</tile>
 	<!--Temp Water-->
 	<tile id="14">
@@ -106,5 +120,6 @@
 		<images>
 			<image>NULL</image>
 		</images>
+		<model>MODEL_CUBE</model>
 	</tile>
 </tiles>

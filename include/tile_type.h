@@ -15,7 +15,7 @@
 
 class tile_type{
   public:
-    tile_type( std::string newName, unsigned char newType, BITMAP *defaultImage);
+    tile_type( std::string newName, unsigned char newType, BITMAP *defaultImage, std::string newModel);
     virtual ~tile_type();
 
     // Load image from file
@@ -40,6 +40,8 @@ class tile_type{
     unsigned short type;
     std::string name;
     BITMAP *image[2];
+
+    std::string model;
 };
 
 #endif // TILE_TYPE_H

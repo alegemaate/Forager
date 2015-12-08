@@ -144,7 +144,7 @@ void setup(bool first){
     glLoadIdentity();
 
     // set the perspective with the appropriate aspect ratio
-    glFrustum(-1, 1, -1, 1, 5, 100);
+    glFrustum(-1.0, 1.0, -1.0, 1.0, 1.0, 1000.0);
 
     //Now editing the model-view matrix.
     glMatrixMode(GL_MODELVIEW);
@@ -253,14 +253,14 @@ void game(){
   }
 
   if( key[KEY_I])
-    var1 += 0.1;
+    var1 += 0.5;
   if( key[KEY_K])
-    var1 -= 0.1;
+    var1 -= 0.5;
 
   if( key[KEY_J])
-    var2 += 0.1;
+    var2 += 0.5;
   if( key[KEY_L])
-    var2 -= 0.1;
+    var2 -= 0.5;
 
   //Counter for FPS
   frames_done++;
