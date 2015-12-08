@@ -3,12 +3,18 @@
 // Construct
 tile_map::tile_map( BITMAP *tempBuffer){
   // Starting position and zoom
-  //x = 620;
-  //y = 7880;
-  x = 0;
-  y = 0;
-  z = 2;
-  zoom = 16;
+  if( VIEW_MODE == 1){
+    x = -40;
+    y = 65;
+    z = 2;
+    zoom = 50;
+  }
+  else{
+    x = 620;
+    y = 7880;
+    z = 2;
+    zoom = 16;
+  }
 
   test_x = test_y = test_z = 0;
   sel_x = sel_y = sel_z = 0;
@@ -175,27 +181,37 @@ void tile_map::update(){
   if( !gameMode){
     //Zoom out
     if(mouse_z < 0){
-      if(zoom < 16){
-        // Center zoom
-        x += ((SCREEN_W) * zoom)/2 + (mouse_x - SCREEN_W/2) * zoom;
-        y += ((SCREEN_H) * zoom)/2 + (mouse_y - SCREEN_H/2) * zoom;
-
-        zoom *=2;
-        rest(40);
+      if( VIEW_MODE == 1){
+        zoom += 1;
       }
-      else
-        zoom = 16;
+      else{
+        if(zoom < 16){
+          // Center zoom
+          x += ((SCREEN_W) * zoom)/2 + (mouse_x - SCREEN_W/2) * zoom;
+          y += ((SCREEN_H) * zoom)/2 + (mouse_y - SCREEN_H/2) * zoom;
+
+          zoom *=2;
+          rest(40);
+        }
+        else
+          zoom = 16;
+      }
       position_mouse_z( 0);
     }
     //Zoom in
     if(mouse_z > 0){
-      if(zoom > 1){
-        zoom /=2;
-        rest(40);
+      if( VIEW_MODE == 1){
+        zoom -= 1;
+      }
+      else{
+        if(zoom > 1){
+          zoom /=2;
+          rest(40);
 
-        // Center zoom
-        x -= ((SCREEN_W) * zoom)/2 + (mouse_x - SCREEN_W/2) * zoom;
-        y -= ((SCREEN_H) * zoom)/2 + (mouse_y - SCREEN_H/2) * zoom;
+          // Center zoom
+          x -= ((SCREEN_W) * zoom)/2 + (mouse_x - SCREEN_W/2) * zoom;
+          y -= ((SCREEN_H) * zoom)/2 + (mouse_y - SCREEN_H/2) * zoom;
+        }
       }
       position_mouse_z( 0);
     }
@@ -372,7 +388,7 @@ void tile_map::generateMap(){
       }
 
       // Shift river
-      // Zero in on final destiantion
+      // Zero in on final destiantionposition_mouse_z( 0);
       if( random( 1, 10) == 1 || random( 1, 2) == 1 && river_x < river_end_x){
         river_x += 1;
       }
@@ -613,7 +629,7 @@ void tile_map::draw( int newAnimationFrame){
 */
 
         // Draw tiles on current level (if onscreen)
-        if( onScreen( map_tiles[i][t][n] -> getX(), map_tiles[i][t][n] -> getY(), map_tiles[i][t][n] -> getZ())){
+        if( gameMode == 1 || onScreen( map_tiles[i][t][n] -> getX(), map_tiles[i][t][n] -> getY(), map_tiles[i][t][n] -> getZ())){
           /*if( collisionAny(  mouse_x, mouse_x,
                           (( map_tiles[i][t][z] -> getX() + map_tiles[i][t][z] -> getZ()) * 64)/zoom + x/zoom,
                           (( map_tiles[i][t][z] -> getX() + map_tiles[i][t][z] -> getZ()) * 64)/zoom + x/zoom + 64/zoom,

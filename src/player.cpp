@@ -15,9 +15,9 @@ player::~player(){
 // Draw tile
 void player::draw( BITMAP *tempBuffer, int zoom, int offsetX, int offsetY){
   // Temp xyz that calc zoom
-  int z_x = (x * 64) /zoom;
-  int z_y = (y * 64) /zoom;
-  int z_z = (z * 64) /zoom;
+  int z_x = (x * 64);
+  int z_y = (y * 64);
+  int z_z = (z * 64);
 
   // Draw that image if it is onscreen
   if(image[0] != NULL){

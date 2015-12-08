@@ -23,7 +23,13 @@ void tile::setType(tile_type *val) {
 
 // Draw tile
 void tile::draw( BITMAP *tempBuffer, int newTick, int zoom, int offsetX, int offsetY, BITMAP *overlayImage){
-  tileImpl -> draw( tempBuffer, x/zoom, y/zoom, z/zoom, newTick, zoom, offsetX, offsetY);
+  // Temp xyz that calc zoom
+  if( VIEW_MODE == 1){
+    tileImpl -> draw( tempBuffer, x/64, y/64, z/64, newTick, zoom, offsetX, offsetY);
+  }
+  else{
+    tileImpl -> draw( tempBuffer, x/zoom, y/zoom, z/zoom, newTick, zoom, offsetX, offsetY);
+  }
 
   // Overlay if needed
   if(overlayImage != NULL){

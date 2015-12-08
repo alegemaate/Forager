@@ -164,8 +164,8 @@ void setup(bool first){
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
     // Enable lights
-    glEnable(GL_LIGHTING); //turns the "lights" on
-    glEnable(GL_LIGHT0); //allows light #0 out of about 8 lights to shine
+    //glEnable(GL_LIGHTING); //turns the "lights" on
+    //glEnable(GL_LIGHT0); //allows light #0 out of about 8 lights to shine
 
     // FPS STUFF
     //Creates a random number generator (based on time)
@@ -216,10 +216,11 @@ void setup(bool first){
 
     //Merge fonts
     font = merge_fonts(f4, f5 = merge_fonts(f2, f3));
-  }
 
-  var1 = - 5;
-  var2 = - 10;
+    // Set rotation
+    var1 = 45;
+    var2 = 45;
+  }
 }
 
 //Run the game loops
@@ -243,12 +244,12 @@ void game(){
     closeGame = true;
   }
 
-  if( key[KEY_O])
+  if( key[KEY_I])
     var1 += 0.1;
-  if( key[KEY_P])
+  if( key[KEY_K])
     var1 -= 0.1;
 
-  if( key[KEY_K])
+  if( key[KEY_J])
     var2 += 0.1;
   if( key[KEY_L])
     var2 -= 0.1;
@@ -259,9 +260,9 @@ void game(){
 
 //Draw images
 void draw(){
-  allegro_gl_set_allegro_mode();
+  /*allegro_gl_set_allegro_mode();
 
-  /*if(gameScreen == SPLASH){
+  if(gameScreen == SPLASH){
 
   }
   else if(gameScreen == MENU){
@@ -274,12 +275,8 @@ void draw(){
     //Background
     rectfill(buffer, 0, 0, 1280, 960, makecol(0,127,255));
 
-    // Draw map
-    if( !key[KEY_TILDE])
-      gameTiles -> draw( animationFrame);
-
     // Draw jimmy
-    jimmy -> draw( buffer, gameTiles -> getX(), gameTiles -> getY(), gameTiles -> getZoom());
+    //jimmy -> draw( buffer, gameTiles -> getX(), gameTiles -> getY(), gameTiles -> getZoom());
   }
 
   //FPS counter
@@ -294,133 +291,30 @@ void draw(){
   draw_sprite( screen, buffer, 0, 0);
 
   textprintf_ex(screen,font,0,0,makecol(0,0,0),makecol(255,255,255),"VAR1-%f VAR2-%f", var1, var2);
-*/
-  allegro_gl_unset_allegro_mode();
-  allegro_gl_flip();
 
-  glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+  allegro_gl_unset_allegro_mode();
+  allegro_gl_flip();*/
+
+  // Clear screen
+  glClearColor(0.1f, 0.5f, 0.9f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  // Reset camera transforms
+  glLoadIdentity();
+
+  // Rotate along x
+  glRotatef( var1, 1.0, 0.0, 0.0 );
+
+  // Rotate along y
+  glRotatef( var2, 0.0, 1.0, 0.0 );
+
+  // Zoom around
+  glTranslatef( 0, 0, -gameTiles -> getZoom() );
 
   // Draw map
   if( !key[KEY_TILDE])
     gameTiles -> draw( animationFrame);
 
-  /*//Enable texturing on all models for now on.
-  glEnable(GL_TEXTURE_2D);
-  glEnable(GL_BLEND);
-  //Define how alpha blending will work and enable alpha blending.
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  glBindTexture(GL_TEXTURE_2D, texture_number);
-  // No blurr texture
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-  // Reset Transform
-  glLoadIdentity();
-
-  // Texture!
-  glBegin(GL_QUADS);
-    //If we set the color to white here, then the textured quad won't be
-    //tinted red or half-see-through or something when we draw it based on
-    //the last call to glColor*().
-    glColor4ub(255, 255, 255, 255);
-
-    //Draw our four points, clockwise.
-    glTexCoord2f(0, 0); glVertex3f(-1, 1, var2 - 0.3);
-    glTexCoord2f(1, 0); glVertex3f(1, 1, var2);
-    glTexCoord2f(1, 1); glVertex3f(1, -1, var2 - 0.3);
-    glTexCoord2f(0, 1); glVertex3f(-1, -1, var2);
-  glEnd();
-
-  // Rotate
-  glRotatef(45, 0, 0, 1);
-
-  // No texture :(
-  glBegin(GL_QUADS);
-    //Define the color (blue)
-    glColor3ub(0, 0, 255);
-
-    //Draw our four points, clockwise.
-    glVertex3f(-0.5, 0.5, var1 + 0.1);
-    glVertex3f(0.5, 0.5, var1);
-    glVertex3f(0.5, -0.5, var1);
-    glVertex3f(-0.5, -0.5, var1);
-  glEnd();*/
-
-/*
-  glEnable(GL_TEXTURE_2D);
-  glEnable(GL_BLEND);
-  //Define how alpha blending will work and enable alpha blending.
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  glBindTexture(GL_TEXTURE_2D, texture_number);
-  // No blurr texture
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-  // Reset Transform
-  glLoadIdentity();
-
-  // Translate in
-  glTranslatef( 0.0, 0.0, -8 );
-
-  // Rotate when user changes rotate_x and rotate_y
-  glRotatef( gameTiles -> getX(), 1.0, 0.0, 0.0 );
-  glRotatef( gameTiles -> getY(), 0.0, 1.0, 0.0 );
-
-  //Multi-colored side - FRONT
-  glBegin(GL_POLYGON);
-    glColor4ub(255, 255, 255, 255);
-    glTexCoord2f(0, 0);     glVertex3f(  0.5, -0.5, -0.5 );      // P1 is red
-    glTexCoord2f(1, 0);     glVertex3f(  0.5,  0.5, -0.5 );      // P2 is green
-    glTexCoord2f(1, 1);     glVertex3f( -0.5,  0.5, -0.5 );      // P3 is blue
-    glTexCoord2f(0, 1);     glVertex3f( -0.5, -0.5, -0.5 );      // P4 is purple
-  glEnd();
-
-  // White side - BACK
-  glBegin(GL_POLYGON);
-    glColor4ub(255, 255, 255, 255);
-    glTexCoord2f(0, 0); glVertex3f(  0.5, -0.5, 0.5 );
-    glTexCoord2f(1, 0); glVertex3f(  0.5,  0.5, 0.5 );
-    glTexCoord2f(1, 1); glVertex3f( -0.5,  0.5, 0.5 );
-    glTexCoord2f(0, 1); glVertex3f( -0.5, -0.5, 0.5 );
-  glEnd();
-
-  // Purple side - RIGHT
-  glBegin(GL_POLYGON);
-    glColor4ub(255, 255, 255, 255);
-    glTexCoord2f(0, 0);glVertex3f( 0.5, -0.5, -0.5 );
-    glTexCoord2f(1, 0);glVertex3f( 0.5,  0.5, -0.5 );
-    glTexCoord2f(1, 1);glVertex3f( 0.5,  0.5,  0.5 );
-    glTexCoord2f(0, 1);glVertex3f( 0.5, -0.5,  0.5 );
-  glEnd();
-
-  // Green side - LEFT
-  glBegin(GL_POLYGON);
-    glColor4ub(255, 255, 255, 255);
-    glTexCoord2f(0, 0);glVertex3f( -0.5, -0.5,  0.5 );
-    glTexCoord2f(1, 0);glVertex3f( -0.5,  0.5,  0.5 );
-    glTexCoord2f(1, 1);glVertex3f( -0.5,  0.5, -0.5 );
-    glTexCoord2f(0, 1);glVertex3f( -0.5, -0.5, -0.5 );
-  glEnd();
-
-  // Blue side - TOP
-  glBegin(GL_POLYGON);
-    glColor4ub(255, 255, 255, 255);
-    glTexCoord2f(0, 0);glVertex3f(  0.5,  0.5,  0.5 );
-    glTexCoord2f(1, 0);glVertex3f(  0.5,  0.5, -0.5 );
-    glTexCoord2f(1, 1);glVertex3f( -0.5,  0.5, -0.5 );
-    glTexCoord2f(0, 1);glVertex3f( -0.5,  0.5,  0.5 );
-  glEnd();
-
-  // Red side - BOTTOM
-  glBegin(GL_POLYGON);
-    glColor4ub(255, 255, 255, 255);
-    glTexCoord2f(0, 0);glVertex3f(  0.5, -0.5, -0.5 );
-    glTexCoord2f(1, 0);glVertex3f(  0.5, -0.5,  0.5 );
-    glTexCoord2f(1, 1);glVertex3f( -0.5, -0.5,  0.5 );
-    glTexCoord2f(0, 1);glVertex3f( -0.5, -0.5, -0.5 );
-  glEnd();
-*/
   glFlush();
 }
 
