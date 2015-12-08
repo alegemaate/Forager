@@ -6,7 +6,7 @@ tile::tile(int newX, int newY, int newZ, tile_type *newType){
   y = newY;
   z = newZ;
 
-  biome = 0; //Yea
+  biome = 0;
 
   setType( newType);
 }

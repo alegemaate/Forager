@@ -55,6 +55,9 @@ int distanceTo2D( int x1, int y1, int x2, int y2);
 // Catch 0
 int divideCatchZero( int number1, int number2);
 
+// Frustum culling
+//extern bool boxInFrustum( frustum3 const & fru, bound3 const & box );
+
 // Fade in and out
 extern void highcolor_fade_in(BITMAP* bmp_orig, int speed);
 extern void highcolor_fade_out(int speed);

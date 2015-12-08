@@ -50,6 +50,9 @@ void tile_type::draw( BITMAP *tempBuffer, unsigned short x, unsigned short y, un
     glPushMatrix();
 
     glBindTexture(GL_TEXTURE_2D, image_reference_number[tickVal]);
+    // No blurr texture
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
     // Translate in
     glTranslatef( x, y, z);
@@ -172,8 +175,8 @@ void tile_type::draw( BITMAP *tempBuffer, unsigned short x, unsigned short y, un
       glBegin(GL_POLYGON);
         glColor4ub(255, 255, 255, 255);
         glNormal3f(0,0,-1); glTexCoord2f(0, 0); glVertex3f(  0.5, -0.5, -0.5 );
-        glNormal3f(0,0,-1); glTexCoord2f(1, 0); glVertex3f(  0.5, -0.25, -0.5 );
-        glNormal3f(0,0,-1); glTexCoord2f(1, 1); glVertex3f( -0.5, -0.25, -0.5 );
+        glNormal3f(0,0,-1); glTexCoord2f(1, 0); glVertex3f(  0.5, -0.4, -0.5 );
+        glNormal3f(0,0,-1); glTexCoord2f(1, 1); glVertex3f( -0.5, -0.4, -0.5 );
         glNormal3f(0,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.5, -0.5, -0.5 );
       glEnd();
 
@@ -181,8 +184,8 @@ void tile_type::draw( BITMAP *tempBuffer, unsigned short x, unsigned short y, un
       glBegin(GL_POLYGON);
         glColor4ub(255, 255, 255, 255);
         glNormal3f(0,0,1); glTexCoord2f(0, 0); glVertex3f(  0.5, -0.5, 0.5 );
-        glNormal3f(0,0,1); glTexCoord2f(1, 0); glVertex3f(  0.5, -0.25, 0.5 );
-        glNormal3f(0,0,1); glTexCoord2f(1, 1); glVertex3f( -0.5, -0.25, 0.5 );
+        glNormal3f(0,0,1); glTexCoord2f(1, 0); glVertex3f(  0.5, -0.4, 0.5 );
+        glNormal3f(0,0,1); glTexCoord2f(1, 1); glVertex3f( -0.5, -0.4, 0.5 );
         glNormal3f(0,0,1); glTexCoord2f(0, 1); glVertex3f( -0.5, -0.5, 0.5 );
       glEnd();
 
@@ -190,8 +193,8 @@ void tile_type::draw( BITMAP *tempBuffer, unsigned short x, unsigned short y, un
       glBegin(GL_POLYGON);
         glColor4ub(255, 255, 255, 255);
         glNormal3f(1,0,1); glTexCoord2f(0, 0); glVertex3f( 0.5, -0.5, -0.5 );
-        glNormal3f(1,0,1); glTexCoord2f(1, 0); glVertex3f( 0.5, -0.25, -0.5 );
-        glNormal3f(1,0,1); glTexCoord2f(1, 1); glVertex3f( 0.5, -0.25,  0.5 );
+        glNormal3f(1,0,1); glTexCoord2f(1, 0); glVertex3f( 0.5, -0.4, -0.5 );
+        glNormal3f(1,0,1); glTexCoord2f(1, 1); glVertex3f( 0.5, -0.4,  0.5 );
         glNormal3f(1,0,1); glTexCoord2f(0, 1); glVertex3f( 0.5, -0.5,  0.5 );
       glEnd();
 
@@ -199,18 +202,18 @@ void tile_type::draw( BITMAP *tempBuffer, unsigned short x, unsigned short y, un
       glBegin(GL_POLYGON);
         glColor4ub(255, 255, 255, 255);
         glNormal3f(-1,0,0); glTexCoord2f(0, 0); glVertex3f( -0.5, -0.5,  0.5 );
-        glNormal3f(-1,0,0); glTexCoord2f(1, 0); glVertex3f( -0.5, -0.25,  0.5 );
-        glNormal3f(-1,0,0); glTexCoord2f(1, 1); glVertex3f( -0.5, -0.25, -0.5 );
+        glNormal3f(-1,0,0); glTexCoord2f(1, 0); glVertex3f( -0.5, -0.4,  0.5 );
+        glNormal3f(-1,0,0); glTexCoord2f(1, 1); glVertex3f( -0.5, -0.4, -0.5 );
         glNormal3f(-1,0,0); glTexCoord2f(0, 1); glVertex3f( -0.5, -0.5, -0.5 );
       glEnd();
 
       // TOP
       glBegin(GL_POLYGON);
         glColor4ub(255, 255, 255, 255);
-        glNormal3f(0,1,0); glTexCoord2f(0, 0); glVertex3f(  0.5, -0.25,  0.5 );
-        glNormal3f(0,1,0); glTexCoord2f(1, 0); glVertex3f(  0.5, -0.25, -0.5 );
-        glNormal3f(0,1,0); glTexCoord2f(1, 1); glVertex3f( -0.5, -0.25, -0.5 );
-        glNormal3f(0,1,0); glTexCoord2f(0, 1); glVertex3f( -0.5, -0.25,  0.5 );
+        glNormal3f(0,1,0); glTexCoord2f(0, 0); glVertex3f(  0.5, -0.4,  0.5 );
+        glNormal3f(0,1,0); glTexCoord2f(1, 0); glVertex3f(  0.5, -0.4, -0.5 );
+        glNormal3f(0,1,0); glTexCoord2f(1, 1); glVertex3f( -0.5, -0.4, -0.5 );
+        glNormal3f(0,1,0); glTexCoord2f(0, 1); glVertex3f( -0.5, -0.4,  0.5 );
       glEnd();
 
       // BOTTOM
@@ -248,8 +251,8 @@ void tile_type::draw( BITMAP *tempBuffer, unsigned short x, unsigned short y, un
       glBegin(GL_POLYGON);
         glColor4ub(255, 255, 255, 255);
         glNormal3f(0,0,-1); glTexCoord2f(1, 0); glVertex3f(  0.5, -0.5, 0.5 );
-        glNormal3f(0,0,-1); glTexCoord2f(1, 1); glVertex3f(  0.5,  1.5, 0.5 );
-        glNormal3f(0,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.5,  1.5, -0.5 );
+        glNormal3f(0,0,-1); glTexCoord2f(1, 1); glVertex3f(  0.5,  2.5, 0.5 );
+        glNormal3f(0,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.5,  2.5, -0.5 );
         glNormal3f(0,0,-1); glTexCoord2f(0, 0); glVertex3f( -0.5, -0.5, -0.5 );
       glEnd();
 
@@ -257,8 +260,8 @@ void tile_type::draw( BITMAP *tempBuffer, unsigned short x, unsigned short y, un
       glBegin(GL_POLYGON);
         glColor4ub(255, 255, 255, 255);
         glNormal3f(0,0,1); glTexCoord2f(1, 0); glVertex3f(  0.5, -0.5, -0.5 );
-        glNormal3f(0,0,1); glTexCoord2f(1, 1); glVertex3f(  0.5,  1.5, -0.5 );
-        glNormal3f(0,0,1); glTexCoord2f(0, 1); glVertex3f( -0.5,  1.5, 0.5 );
+        glNormal3f(0,0,1); glTexCoord2f(1, 1); glVertex3f(  0.5,  2.5, -0.5 );
+        glNormal3f(0,0,1); glTexCoord2f(0, 1); glVertex3f( -0.5,  2.5, 0.5 );
         glNormal3f(0,0,1); glTexCoord2f(0, 0); glVertex3f( -0.5, -0.5, 0.5 );
       glEnd();
     }

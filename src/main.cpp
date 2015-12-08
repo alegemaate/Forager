@@ -180,6 +180,14 @@ void setup(bool first){
 
     glEnable( GL_DEPTH_TEST);
 
+    // TEXTURING
+    // Enable texturing and blending (all tiles use this so lets just call it once)
+    glEnable(GL_TEXTURE_2D);
+
+    // Alpha blending
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     // FPS STUFF
     //Creates a random number generator (based on time)
     srand (time(NULL));

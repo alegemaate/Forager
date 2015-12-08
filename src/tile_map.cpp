@@ -496,17 +496,6 @@ void tile_map::draw( int newAnimationFrame){
   // Translate map
   glTranslatef( x, y, z);
 
-  // TEXTURING
-  // Enable texturing and blending (all tiles use this so lets just call it once)
-  glEnable(GL_TEXTURE_2D);
-  // No blurr texture
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-  // Alpha blending
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
   // Go through all tiles and draw
   for(int i = 0; i < DEFAULT_MAP_WIDTH; i++){
     for(int t = 0; t < DEFAULT_MAP_LENGTH; t++){
