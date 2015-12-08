@@ -303,7 +303,7 @@ void draw(){
   if( !key[KEY_TILDE])
     gameTiles -> draw( animationFrame);
 
-  allegro_gl_flip();
+  //allegro_gl_flip();
   glFlush();
 }
 
