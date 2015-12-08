@@ -46,14 +46,6 @@ void tile_type::draw( BITMAP *tempBuffer, unsigned short x, unsigned short y, un
   if( image_reference_number != 0){
     glPushMatrix();
 
-    // Enable texturing and blending
-    glEnable(GL_TEXTURE_2D);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    // No blurr texture
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glBindTexture(GL_TEXTURE_2D, image_reference_number);
 
     // Translate in

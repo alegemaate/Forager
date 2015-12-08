@@ -259,30 +259,6 @@ void draw(){
   glClearColor(0.1f, 0.5f, 0.9f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  /**********************
-   * ALLEGRO GL DRAWING *
-   **********************/
-  allegro_gl_set_allegro_mode();
-
-  // Transparent buffer
-  rectfill( buffer, 0, 0, SCREEN_W, SCREEN_H, makecol( 255, 0, 255));
-
-  //FPS counter
-  if(showFPS){
-    textprintf_ex( buffer, font, 0, 0, makecol(0,0,0), makecol(255,255,255), "FPS-%i", fps);
-  }
-
-  // Cursor
-  //draw_sprite( buffer, cursor, mouse_x, mouse_y);
-
-  // Debug text
-  textprintf_ex( buffer, font, 0, 15, makecol(0,0,0), makecol(255,255,255), "Camera X:%4.1f Y:%4.1f Z:%4.1f RotX:%4.1f RotY:%4.1f ", gameTiles -> getX(), gameTiles -> getY(), gameTiles -> getZ(), gameTiles -> getRotX(), gameTiles -> getRotY());
-
-  //Draws buffer
-  draw_sprite( screen, buffer, 0, 0);
-
-  allegro_gl_unset_allegro_mode();
-
   /*******************
    * OPEN GL DRAWING *
    *******************/
@@ -303,8 +279,32 @@ void draw(){
   if( !key[KEY_TILDE])
     gameTiles -> draw( animationFrame);
 
-  //allegro_gl_flip();
-  glFlush();
+
+  /**********************
+   * ALLEGRO GL DRAWING *
+   **********************/
+  allegro_gl_set_allegro_mode();
+
+  // Transparent buffer
+  rectfill( buffer, 0, 0, SCREEN_W, SCREEN_H, makecol( 255, 0, 255));
+
+  //FPS counter
+  if(showFPS){
+    textprintf_ex( buffer, font, 0, 0, makecol(0,0,0), makecol(255,255,255), "FPS-%i", fps);
+  }
+
+  // Cursor
+  draw_sprite( buffer, cursor, mouse_x, mouse_y);
+
+  // Debug text
+  textprintf_ex( buffer, font, 0, 15, makecol(0,0,0), makecol(255,255,255), "Camera X:%4.1f Y:%4.1f Z:%4.1f RotX:%4.1f RotY:%4.1f ", gameTiles -> getX(), gameTiles -> getY(), gameTiles -> getZ(), gameTiles -> getRotX(), gameTiles -> getRotY());
+
+  //Draws buffer
+  draw_sprite( screen, buffer, 0, 0);
+
+  allegro_gl_unset_allegro_mode();
+
+  allegro_gl_flip();
 }
 
 int main(){
