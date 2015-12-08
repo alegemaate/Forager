@@ -152,20 +152,28 @@ void setup(bool first){
     //Clearing the model-view matrix.
     glLoadIdentity();
 
-    //glutInitDisplayMode( GLUT_DEPTH );
-    glEnable( GL_DEPTH_TEST);
-
     GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
     GLfloat mat_shininess[] = { 50.0 };
-    GLfloat light_position[] = { 0.0, 0.0, 1, 0.0 };
+    glShadeModel (GL_SMOOTH);
 
     glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
     glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+
+    GLfloat light_ambient[] = { 0.9, 0.9, 0.0, 1.0 };
+    GLfloat light_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
+    GLfloat light_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+    GLfloat light_position[] = { 1.0, 1.0, 1.0, 1.0 };
+
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
     // Enable lights
-    //glEnable(GL_LIGHTING); //turns the "lights" on
-    //glEnable(GL_LIGHT0); //allows light #0 out of about 8 lights to shine
+    glEnable(GL_LIGHTING); //turns the "lights" on
+    glEnable(GL_LIGHT0); //allows light #0 out of about 8 lights to shine
+
+    glEnable( GL_DEPTH_TEST);
 
     // FPS STUFF
     //Creates a random number generator (based on time)
@@ -310,6 +318,8 @@ void draw(){
 
   // Zoom around
   glTranslatef( 0, 0, -gameTiles -> getZoom() );
+
+  //glLightfv(GL_LIGHT0, GL_POSITION, new_light_position);
 
   // Draw map
   if( !key[KEY_TILDE])

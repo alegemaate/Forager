@@ -55,7 +55,7 @@
 		<name>Water</name>
 		<images>
 			<image>images/textures/water1.png</image>
-			<image>images/tiles/water2.png</image>
+			<image>images/textures/water2.png</image>
 		</images>
 	</tile>
 	<!--Ice-->
@@ -69,7 +69,7 @@
 	<tile id="9">
 		<name>Cactus</name>
 		<images>
-			<image>images/tiles/cactus.png</image>
+			<image>images/textures/cactus.png</image>
 		</images>
 	</tile>
 	<!--Lava-->
@@ -90,7 +90,7 @@
 	<tile id="12">
 		<name>Grass Snow</name>
 		<images>
-			<image>images/tiles/grass_snow.png</image>
+			<image>images/textures/grass_snow.png</image>
 		</images>
 	</tile>
 	<!--Tree Pine-->
