@@ -57,7 +57,6 @@ void tile_type::draw( BITMAP *tempBuffer, unsigned short x, unsigned short y, un
     // Translate in
     glTranslatef( x, y, z);
 
-    // Cube
     if( model == "MODEL_CUBE" || key[KEY_T]){
       // FRONT
       glBegin(GL_POLYGON);

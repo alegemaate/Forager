@@ -6,16 +6,19 @@
 */
 
 //Includes
+#define GLEW_STATIC
+#include <GL/glew.h>
+
 #include <allegro.h>
 #include <alpng.h>
 #include <alleggl.h>
-#include <GL/glu.h>
 
 #include <string>
 #include <time.h>
 #include <fstream>
 #include <sstream>
 #include <math.h>
+#include <iostream>
 #include "fmod/fmod.h"
 #include "fmod/fmod_errors.h"
 
@@ -49,8 +52,6 @@ int old_time;
 // An array to store the number of frames we did during the last 10 tenths of a second
 int frames_array[10];
 int frame_index = 0;
-
-GLuint texture_number;
 
 volatile int ticks = 0;
 void ticker(){
@@ -88,29 +89,89 @@ const GLfloat black[] = { 0.0, 0.0, 0.0, 1.0 };
 const GLfloat polished[] = { 10.0 };
 const GLfloat dull[] = { 0.0 };
 
+/******************
+ * KILLMESHADERS! *
+ ******************/
+unsigned long getFileLength( std::ifstream &file){
+    if(!file.good()) return 0;
+
+    unsigned long pos=file.tellg();
+    file.seekg(0,std::ios::end);
+    unsigned long len = file.tellg();
+    file.seekg(std::ios::beg);
+    return len;
+}
+
+int loadshader(char* filename, GLchar** ShaderSource, unsigned long* len){
+   std::ifstream file;
+   file.open(filename, std::ios::in); // opens as ASCII!
+   if(!file) return -1;
+
+   *len = getFileLength(file);
+
+   if (len==0) return -2;   // Error: Empty File
+
+   *ShaderSource = (GLchar*)(new char[(int)len+1]);
+   if (*ShaderSource == 0) return -3;   // can't reserve memory
+
+    // len isn't always strlen cause some characters are stripped in ascii read...
+    // it is important to 0-terminate the real length later, len is just max possible value...
+   *ShaderSource[(int)len] = 0;
+
+   unsigned int i=0;
+   while (file.good())
+   {
+       *ShaderSource[i] = file.get();       // get character from file.
+       if (!file.eof())
+        i++;
+   }
+
+   *ShaderSource[i] = 0;  // 0-terminate it at the correct position
+
+   file.close();
+
+   return 0; // No Error
+}
+
+int unloadshader(GLubyte** ShaderSource){
+   if (*ShaderSource != 0)
+     delete[] *ShaderSource;
+   *ShaderSource = 0;
+}
+
+GLuint vertexShader, fragmentShader;
+/*********************
+ * ENDKILLMESHADERS! *
+ *********************/
+
+
 //Load all ingame content
 void setup(bool first){
   showFPS = true;
 
-  //Runs only#include <GL/glut.h> the first time
   if(first){
-    /*
-     * SOME ALELGRO GL
-     */
-    //Setting our.. well... settings.  =)  Read the AllegroGL documentation
-    //for a more in-depth explanation for what these all do, but they are
-    //pretty self explanatory.
-    //Note: Z_DEPTH isn't mandatory for 2D drawing.  It's only useful for
-    //sorting 3D objects, so when you draw an object behind another, it
-    //doesn't get drawn on top of it.  You CAN use it for 2D drawing,
-    //but it's REALLY not necessary.
+    /****************
+     * SOME ALLEGRO *
+     ****************/
+    allegro_init();
+    install_allegro_gl();
+    alpng_init();
+    install_keyboard();
+    install_timer();
+    install_mouse();
+    set_color_depth( 32);
+    set_window_title("Forager");
+
+    /*******************
+     * SOME ALLEGRO GL *
+     *******************/
     allegro_gl_set(AGL_Z_DEPTH, 8);
     allegro_gl_set(AGL_COLOR_DEPTH, 32);
     allegro_gl_set(AGL_SUGGEST, AGL_Z_DEPTH | AGL_COLOR_DEPTH);
     allegro_gl_set(AGL_REQUIRE, AGL_DOUBLEBUFFER);
 
     //Set screenmode
-    if(false == true){
+    if(true == true){
       resDiv = 1;
       if(set_gfx_mode( GFX_OPENGL_WINDOWED, 1280, 960, 0, 0) !=0){
         resDiv = 2;
@@ -118,8 +179,7 @@ void setup(bool first){
           resDiv = 4;
           if(set_gfx_mode( GFX_OPENGL_WINDOWED, 320, 240, 0, 0) !=0){
             set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
-          	allegro_message("Unable to go into fullscreen graphic mode\n%s\n", allegro_error);
-            exit(1);
+          	abort_on_error("Unable to go into fullscreen graphic mode\n%s\n");
           }
         }
       }
@@ -132,16 +192,15 @@ void setup(bool first){
           resDiv = 4;
           if(set_gfx_mode( GFX_OPENGL_WINDOWED, 320, 240, 0, 0) !=0){
             set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
-          	allegro_message("Unable to set any windowed graphic mode\n%s\n", allegro_error);
-            exit(1);
+          	abort_on_error("Unable to set any windowed graphic mode\n%s\n");
           }
         }
       }
     }
 
-    /*
-     * SOME OPEN GL
-     */
+    /****************
+     * SOME OPEN GL *
+     ****************/
     //I am setting a state where I am editing the projection matrix.
     glMatrixMode(GL_PROJECTION);
 
@@ -202,6 +261,17 @@ void setup(bool first){
     glEnable(GL_LIGHT1);
 
     glEnable( GL_DEPTH_TEST);
+
+    /*************
+     * SOME GLEW *
+     *************/
+    //glewExperimental = TRUE;
+    if(glewInit())
+      abort_on_error("Crap bukkits! Glew init failed.");
+
+    // Shaders
+    vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
     // TEXTURING
     // Enable texturing and blending (all tiles use this so lets just call it once)
@@ -331,17 +401,7 @@ void draw(){
   allegro_gl_flip();
 }
 
-int main(){
-  //Initializing
-  allegro_init();
-  install_allegro_gl();
-  alpng_init();
-  install_keyboard();
-  install_timer();
-  install_mouse();
-  set_color_depth( 32);
-  set_window_title("Forager");
-
+int main( int argc, char* args[]){
   //Setup game
   setup(true);
 

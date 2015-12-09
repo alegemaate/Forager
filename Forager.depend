@@ -35,16 +35,17 @@
 1449551968 source:c:\users\allan\documents\games indev\forager\src\tile.cpp
 	"tile.h"
 
-1449640449 source:c:\users\allan\documents\games indev\forager\src\main.cpp
+1449689727 source:c:\users\allan\documents\games indev\forager\src\main.cpp
+	<GL/glew.h>
 	<allegro.h>
 	<alpng.h>
 	<alleggl.h>
-	<GL/glu.h>
 	<string>
 	<time.h>
 	<fstream>
 	<sstream>
 	<math.h>
+	<iostream>
 	"fmod/fmod.h"
 	"fmod/fmod_errors.h"
 	"ids.h"
@@ -111,10 +112,10 @@
 1449533766 source:c:\users\allan\documents\games indev\forager\src\player.cpp
 	"player.h"
 
-1449637146 source:c:\users\allan\documents\games indev\forager\src\tile_type.cpp
+1449688109 source:c:\users\allan\documents\games indev\forager\src\tile_type.cpp
 	"tile_type.h"
 
-1449551756 c:\users\allan\documents\games indev\forager\include\tile_type.h
+1449688100 c:\users\allan\documents\games indev\forager\include\tile_type.h
 	<allegro.h>
 	<string>
 	<alleggl.h>
@@ -147,4 +148,6 @@
 	<alleggl.h>
 	<GL/glu.h>
 	<vector>
+
+1449681925 source:c:\users\allan\documents\games indev\forager\src\shaders.cpp
 
