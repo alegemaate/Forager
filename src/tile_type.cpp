@@ -236,6 +236,24 @@ void tile_type::draw( BITMAP *tempBuffer, unsigned short x, unsigned short y, un
         glNormal3f(0,0,-1); glTexCoord2f(0, 0); glVertex3f( -0.25, -0.5, -0.25 );
       glEnd();
 
+      // FRONT
+      glBegin(GL_POLYGON);
+        glColor4ub(255, 255, 255, 255);
+        glNormal3f(0,0,1); glTexCoord2f(1, 0); glVertex3f(  0.25, -0.5, 0.25 );
+        glNormal3f(0,0,1); glTexCoord2f(1, 1); glVertex3f(  0.25,  0.5, 0.25 );
+        glNormal3f(0,0,1); glTexCoord2f(0, 1); glVertex3f( -0.25,  0.5, -0.25 );
+        glNormal3f(0,0,1); glTexCoord2f(0, 0); glVertex3f( -0.25, -0.5, -0.25 );
+      glEnd();
+
+      // BACK
+      glBegin(GL_POLYGON);
+        glColor4ub(255, 255, 255, 255);
+        glNormal3f(0,0,-1); glTexCoord2f(1, 0); glVertex3f(  0.25, -0.5, -0.25 );
+        glNormal3f(0,0,-1); glTexCoord2f(1, 1); glVertex3f(  0.25,  0.5, -0.25 );
+        glNormal3f(0,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.25,  0.5, 0.25 );
+        glNormal3f(0,0,-1); glTexCoord2f(0, 0); glVertex3f( -0.25, -0.5, 0.25 );
+      glEnd();
+
       // BACK
       glBegin(GL_POLYGON);
         glColor4ub(255, 255, 255, 255);
@@ -263,6 +281,24 @@ void tile_type::draw( BITMAP *tempBuffer, unsigned short x, unsigned short y, un
         glNormal3f(0,0,1); glTexCoord2f(1, 1); glVertex3f(  0.5,  2.5, -0.5 );
         glNormal3f(0,0,1); glTexCoord2f(0, 1); glVertex3f( -0.5,  2.5, 0.5 );
         glNormal3f(0,0,1); glTexCoord2f(0, 0); glVertex3f( -0.5, -0.5, 0.5 );
+      glEnd();
+
+      // FRONT
+      glBegin(GL_POLYGON);
+        glColor4ub(255, 255, 255, 255);
+        glNormal3f(0,0,1); glTexCoord2f(1, 0); glVertex3f(  0.5, -0.5, 0.5 );
+        glNormal3f(0,0,1); glTexCoord2f(1, 1); glVertex3f(  0.5,  2.5, 0.5 );
+        glNormal3f(0,0,1); glTexCoord2f(0, 1); glVertex3f( -0.5,  2.5, -0.5 );
+        glNormal3f(0,0,1); glTexCoord2f(0, 0); glVertex3f( -0.5, -0.5, -0.5 );
+      glEnd();
+
+      // BACK
+      glBegin(GL_POLYGON);
+        glColor4ub(255, 255, 255, 255);
+        glNormal3f(0,0,-1); glTexCoord2f(1, 0); glVertex3f(  0.5, -0.5, -0.5 );
+        glNormal3f(0,0,-1); glTexCoord2f(1, 1); glVertex3f(  0.5,  2.5, -0.5 );
+        glNormal3f(0,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.5,  2.5, 0.5 );
+        glNormal3f(0,0,-1); glTexCoord2f(0, 0); glVertex3f( -0.5, -0.5, 0.5 );
       glEnd();
     }
 

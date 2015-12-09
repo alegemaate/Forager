@@ -506,10 +506,18 @@ void tile_map::draw( int newAnimationFrame){
   glRotatef( rot_y, 0.0, 1.0, 0.0 );
 
   // Rotate along z (unused)
-  glRotatef( rot_z, 0.0, 0.0, 1.0 );
+  //glRotatef( rot_z, 0.0, 0.0, 1.0 );
 
   // Translate map
   glTranslatef( x, y, z);
+
+  // Place light 0 (Direction)
+  GLfloat light_position[] = { 1.0001, 1.0001, 1.0001, 0.0f };
+  glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+
+  // Place light 1 (Direction2)
+  GLfloat light_position2[] = { -1.0001, 1.0001, -1.0001, 0.0f };
+  glLightfv(GL_LIGHT1, GL_POSITION, light_position2);
 
   // Go through all tiles and draw
   for(int i = 0; i < DEFAULT_MAP_WIDTH; i++){
@@ -522,6 +530,7 @@ void tile_map::draw( int newAnimationFrame){
       }
     }
   }
+
 
 
   /*if( !gameMode){

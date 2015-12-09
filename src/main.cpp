@@ -141,7 +141,7 @@ void setup(bool first){
     glLoadIdentity();
 
     // set the perspective with the appropriate aspect ratio
-    glFrustum(-1.0, 1.0, -1.0, 1.0, 1.0, 1000.0);
+    glFrustum(-1.0, 1.0, -1.0, 1.0, 1.2, 1000.0);
 
     //Now editing the model-view matrix.
     glMatrixMode(GL_MODELVIEW);
@@ -158,25 +158,37 @@ void setup(bool first){
 
     // Lighting
     GLfloat mat_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-    GLfloat mat_shininess[] = { 10.0 };
+    GLfloat mat_shininess[] = { 0.2 };
     glShadeModel (GL_SMOOTH);
 
     glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
     glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
 
-    GLfloat light_ambient[] = { 0.9f, 0.8f, 0.5f, 0.5f };
-    GLfloat light_diffuse[] = { 0.8f, 0.8f, 0.8f, 1.0f };
+    GLfloat light_ambient[] = { 0.3f, 0.3f, 0.2f, 1.0f };
+    GLfloat light_ambient2[] = { 0.2f, 0.2f, 0.1f, 1.0f };
+    GLfloat light_diffuse[] = { 0.8f, 0.6f, 0.4f, 1.0f };
+    GLfloat light_diffuse2[] = { 0.4f, 0.3f, 0.2f, 1.0f };
     GLfloat light_specular[] = { 0.5f, 0.5f, 0.5f, 1.0f };
-    GLfloat light_position[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    GLfloat light_position[] = { 0.0001, 0.0001, 1.0001, 0.0f };
 
+    // Light 1
     glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
     glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
+    // Light 2
+    glLightfv(GL_LIGHT1, GL_AMBIENT, light_ambient2);
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, light_diffuse2);
+    glLightfv(GL_LIGHT1, GL_SPECULAR, light_specular);
+    glLightfv(GL_LIGHT1, GL_POSITION, light_position);
+
+    glLightModelf(GL_LIGHT_MODEL_LOCAL_VIEWER, 1);
+
     // Enable lights
     glEnable(GL_LIGHTING); //turns the "lights" on
-    glEnable(GL_LIGHT0); //allows light #0 out of about 8 lights to shine
+    glEnable(GL_LIGHT0);
+    glEnable(GL_LIGHT1);
 
     glEnable( GL_DEPTH_TEST);
 
@@ -263,9 +275,15 @@ void game(){
 
 //Draw images
 void draw(){
+  // View matrix
+  glMatrixMode(GL_MODELVIEW);
+
   // Clear screen
   glClearColor(0.1f, 0.5f, 0.9f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  // Reset transforms
+  glLoadIdentity();
 
   /*******************
    * OPEN GL DRAWING *
