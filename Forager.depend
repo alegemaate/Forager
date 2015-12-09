@@ -35,7 +35,7 @@
 1449551968 source:c:\users\allan\documents\games indev\forager\src\tile.cpp
 	"tile.h"
 
-1449689727 source:c:\users\allan\documents\games indev\forager\src\main.cpp
+1449697760 source:c:\users\allan\documents\games indev\forager\src\main.cpp
 	<GL/glew.h>
 	<allegro.h>
 	<alpng.h>
@@ -46,6 +46,7 @@
 	<sstream>
 	<math.h>
 	<iostream>
+	<stdio.h>
 	"fmod/fmod.h"
 	"fmod/fmod_errors.h"
 	"ids.h"

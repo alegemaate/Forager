@@ -19,6 +19,7 @@
 #include <sstream>
 #include <math.h>
 #include <iostream>
+#include <stdio.h>
 #include "fmod/fmod.h"
 #include "fmod/fmod_errors.h"
 
@@ -102,35 +103,41 @@ unsigned long getFileLength( std::ifstream &file){
     return len;
 }
 
-int loadshader(char* filename, GLchar** ShaderSource, unsigned long* len){
-   std::ifstream file;
-   file.open(filename, std::ios::in); // opens as ASCII!
-   if(!file) return -1;
+int loadshader(char *filename, GLchar *ShaderSource, GLint *len){
+  std::ifstream file;
+  file.open(filename, std::ios::in); // opens as ASCII!
 
-   *len = getFileLength(file);
+  if(!fexists(filename))
+    return -1;
 
-   if (len==0) return -2;   // Error: Empty File
+  GLint fileLength = getFileLength(file);
+  len = &fileLength;
 
-   *ShaderSource = (GLchar*)(new char[(int)len+1]);
-   if (*ShaderSource == 0) return -3;   // can't reserve memory
+  if (*len == 0)
+    return -2;   // Error: Empty File
 
-    // len isn't always strlen cause some characters are stripped in ascii read...
-    // it is important to 0-terminate the real length later, len is just max possible value...
-   *ShaderSource[(int)len] = 0;
+  ShaderSource = (new char[(int)*len+1]);
 
-   unsigned int i=0;
-   while (file.good())
-   {
-       *ShaderSource[i] = file.get();       // get character from file.
-       if (!file.eof())
-        i++;
-   }
+  if (*ShaderSource == 0)
+    return -3;   // can't reserve memory
 
-   *ShaderSource[i] = 0;  // 0-terminate it at the correct position
+  // len isn't always strlen cause some characters are stripped in ascii read...
+  // it is important to 0-terminate the real length later, len is just max possible value...
+  ShaderSource[(int)*len] = 0;
 
-   file.close();
+  char *swagChar = new char[(int)*len+1];
+  unsigned int i=0;
+  while (file.good()){
+    ShaderSource[i] = file.get();     // get character from file.
+    std::cout << i << *len <<  ":" << ShaderSource[i] << "\n";
+    if (!file.eof())
+      i++;
+  }
+  ShaderSource[i] = 0;  // 0-terminate it at the correct position
 
-   return 0; // No Error
+  file.close();
+
+  return 0; // No Error
 }
 
 int unloadshader(GLubyte** ShaderSource){
@@ -140,6 +147,7 @@ int unloadshader(GLubyte** ShaderSource){
 }
 
 GLuint vertexShader, fragmentShader;
+GLuint ProgramObject;
 /*********************
  * ENDKILLMESHADERS! *
  *********************/
@@ -262,17 +270,6 @@ void setup(bool first){
 
     glEnable( GL_DEPTH_TEST);
 
-    /*************
-     * SOME GLEW *
-     *************/
-    //glewExperimental = TRUE;
-    if(glewInit())
-      abort_on_error("Crap bukkits! Glew init failed.");
-
-    // Shaders
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-
     // TEXTURING
     // Enable texturing and blending (all tiles use this so lets just call it once)
     glEnable(GL_TEXTURE_2D);
@@ -281,11 +278,129 @@ void setup(bool first){
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    /*************
+     * SOME GLEW *
+     *************/
+    //glewExperimental = TRUE;
+    if(glewInit())
+      abort_on_error("Crap bukkits! Glew init failed.");
+
+    // Shaders
+    /*vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+
+    // Load them!
+    const int MAX_LINES=512;
+    const int MAX_LINE_LENGTH=256;   // 255 + NULL terminator
+    static char program[MAX_LINES*MAX_LINE_LENGTH];
+    GLchar *VertexShaderSource, *FragmentShaderSource;
+    GLint vertexShaderFileLength, fragmentShaderFileLength;
+
+    if(loadshader("data/shaders/fragmentshader.txt", VertexShaderSource, &vertexShaderFileLength) != 0)
+      abort_on_error("data/shaders/fragmentshader.txt NOT found!");
+    if(loadshader("data/shaders/vertexshader.txt", FragmentShaderSource, &fragmentShaderFileLength) != 0)
+      abort_on_error("data/shaders/vertexshader.txt NOT found!");
+
+    std::cout << "swaggerswagg\n";
+    glShaderSource(vertexShader, 1, const_cast<const GLcharARB**>(&VertexShaderSource), &vertexShaderFileLength);
+    std::cout << "swaggerswagg2\n";
+    glShaderSource(fragmentShader, 1,  const_cast<const GLcharARB**>(&FragmentShaderSource), &fragmentShaderFileLength);
+    std::cout << "swaggerswagg3\n";*/
+
+
+    //Load shaders
+    GLenum my_program;
+    GLcharARB * my_fragment_shader_source;
+    GLcharARB * my_vertex_shader_source;
+
+    // Get Vertex And Fragment Shader Sources
+    FILE *fp;
+    GLubyte *buf;
+    int length;
+    bool ret = true;
+
+    if (!(fp = fopen("data/shaders/vertexshader.txt","rb")))
+      printf("Error opening vertexshader.txt");
+
+    fseek(fp, 0, SEEK_END);
+    length = ftell(fp);
+    fseek(fp, 0, SEEK_SET);
+
+    my_vertex_shader_source = new GLcharARB[length+1];
+    fread( my_vertex_shader_source, 1, length, fp);//< -- First error
+
+    if (!(fp = fopen("data/shaders/fragmentshader.txt","rb")))
+      abort_on_error("Error opening fragmentshader.txt");
+
+    fseek(fp, 0, SEEK_END);
+    length = ftell(fp);
+    fseek(fp, 0, SEEK_SET);
+
+    my_fragment_shader_source = new GLcharARB[length+1];
+
+    fread( my_fragment_shader_source, 1, length, fp);
+    my_program = glCreateProgramObjectARB();
+    vertexShader = glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB);
+    fragmentShader = glCreateShaderObjectARB(GL_FRAGMENT_SHADER_ARB);
+
+    // Load Shader Sources
+    // Load Shader Sources
+    glShaderSourceARB(vertexShader, 1, const_cast<const GLcharARB**>(&my_vertex_shader_source), NULL);//First error
+    delete my_vertex_shader_source;
+    glShaderSourceARB(fragmentShader, 1, const_cast<const GLcharARB**>(&my_fragment_shader_source), NULL);//SecondError
+    delete my_vertex_shader_source;
+
+    // Compile them
+    glCompileShaderARB(vertexShader);
+    glCompileShaderARB(fragmentShader);
+
+    // Check success
+    GLint compiled;
+    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &compiled);
+    if (!compiled){
+       abort_on_error( "Dude, vertex shader didnt compile...");
+    }
+    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &compiled);
+    if (!compiled){
+       abort_on_error( "Dude, fragmentation shader didnt compile...");
+    }
+
+    // Make program
+    ProgramObject = glCreateProgram();
+
+    glAttachShader(ProgramObject, vertexShader);
+    glAttachShader(ProgramObject, fragmentShader);
+
+    glLinkProgram(ProgramObject);
+
+    GLint linked;
+    glGetProgramiv(ProgramObject, GL_LINK_STATUS, &linked);
+    if (!linked){
+      std::cout << "Dude, program didnt link...";
+
+      // Dump log
+      GLint blen = 0;
+      GLsizei slen = 0;
+
+      glGetShaderiv(ProgramObject, GL_INFO_LOG_LENGTH , &blen);
+      if (blen > 1){
+        GLchar* compiler_log = (GLchar*)malloc(blen);
+        glGetInfoLogARB(ProgramObject, blen, &slen, compiler_log);
+        std::cout << "linker_log:\n";
+        free (compiler_log);
+      }
+
+      abort_on_error( "Dude, program didnt link...");
+    }
+
+    // Use our Shaders :D:D:D:D:D
+    glUseProgram(ProgramObject);
+
     // FPS STUFF
     //Creates a random number generator (based on time)
     srand (time(NULL));
 
-    //Setup for FPS system
+    //Setup fNULLor FPS system
     LOCK_VARIABLE(ticks);
     LOCK_FUNCTION(ticker);
     install_int_ex(ticker, BPS_TO_TIMER(updates_per_second));
@@ -369,6 +484,7 @@ void draw(){
   /*******************
    * OPEN GL DRAWING *
    *******************/
+
   // Draw map
   if( !key[KEY_TILDE])
     gameTiles -> draw( animationFrame);
