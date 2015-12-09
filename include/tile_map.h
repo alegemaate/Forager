@@ -10,6 +10,7 @@
 
 #include <allegro.h>
 #include <string>
+#include <math.h>
 
 #include "tile.h"
 #include "ids.h"

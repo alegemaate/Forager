@@ -68,47 +68,62 @@ void tile_map::load_images(){
 
 // Update map
 void tile_map::update(){
-  // Right
-  if(key[KEY_D] || key[KEY_RIGHT]){
-    x += 0.5;
+  // Move, slower in gamemode
+  // Forward
+  if(key[KEY_W] || key[KEY_UP]){
+    z += (float)cos(rot_y * M_PI / 180)/(5 + 10 * gameMode);
+    x -= (float)sin(rot_y * M_PI / 180)/(5 + 10 * gameMode);
+    y += (float)sin(rot_x * M_PI / 180)/(5 + 10 * gameMode);
+  }
+  // Backward
+  if(key[KEY_S] || key[KEY_DOWN]){
+    z -= (float)cos(rot_y * M_PI / 180)/(5 + 10 * gameMode);
+    x += (float)sin(rot_y * M_PI / 180)/(5 + 10 * gameMode);
+    y -= (float)sin(rot_x * M_PI / 180)/(5 + 10 * gameMode);
   }
   // Left
   if(key[KEY_A] || key[KEY_LEFT]){
-    x -= 0.5;
+    x += (float)cos(rot_y * M_PI / 180)/(5 + 10 * gameMode);
+    z += (float)sin(rot_y * M_PI / 180)/(5 + 10 * gameMode);
   }
-  // Down
-  if(key[KEY_S] || key[KEY_DOWN]){
-    z += 0.5;
-  }
-  // Up
-  if(key[KEY_W] || key[KEY_UP]){
-    z -= 0.5;
+  // Right
+  if(key[KEY_D] || key[KEY_RIGHT]){
+    x -= (float)cos(rot_y * M_PI / 180)/(5 + 10 * gameMode);
+    z -= (float)sin(rot_y * M_PI /180)/(5 + 10 * gameMode);
   }
 
-  // Rotating
-  if( key[KEY_I])
-    rot_x += 0.5;
-  if( key[KEY_K])
-    rot_x -= 0.5;
+  // Pan around
+  rot_y -= SCREEN_W/2 - mouse_x;
+  rot_x -= SCREEN_H/2 - mouse_y;
 
-  if( key[KEY_J])
-    rot_y += 0.5;
-  if( key[KEY_L])
-    rot_y -= 0.5;
+  // No backflips!
+  if( rot_x > 90)
+    rot_x = 90;
+  else if( rot_x < -90)
+    rot_x = -90;
+
+  // Reset spinning amount
+  if( rot_y >= 360)
+    rot_y -= 360;
+  else if( rot_y < 0)
+    rot_y += 360;
+
+  // Reset mouse pos
+  position_mouse(SCREEN_W/2, SCREEN_H/2);
 
   // Zooming
   //Zoom out
   if(mouse_z < 0){
-    y -= 0.5;
+    zoom -= 0.5;
     if( !gameMode )
-      y -= 0.5;
+      zoom -= 0.5;
     position_mouse_z( 0);
   }
   //Zoom in
   if(mouse_z > 0){
-    y += 0.5;
+    zoom += 0.5;
     if( !gameMode )
-      y += 0.5;
+      zoom += 0.5;
     position_mouse_z( 0);
   }
 
