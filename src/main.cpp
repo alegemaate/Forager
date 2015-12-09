@@ -272,6 +272,7 @@ void setup(bool first){
 
     // TEXTURING
     // Enable texturing and blending (all tiles use this so lets just call it once)
+    glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
     glEnable(GL_TEXTURE_2D);
 
     // Alpha blending
@@ -310,8 +311,8 @@ void setup(bool first){
 
     //Load shaders
     GLenum my_program;
-    GLcharARB * my_fragment_shader_source;
-    GLcharARB * my_vertex_shader_source;
+    GLcharARB *my_fragment_shader_source;
+    GLcharARB *my_vertex_shader_source;
 
     // Get Vertex And Fragment Shader Sources
     FILE *fp;
@@ -327,7 +328,7 @@ void setup(bool first){
     fseek(fp, 0, SEEK_SET);
 
     my_vertex_shader_source = new GLcharARB[length+1];
-    fread( my_vertex_shader_source, 1, length, fp);//< -- First error
+    fread( my_vertex_shader_source, 1, length, fp);
 
     if (!(fp = fopen("data/shaders/fragmentshader.txt","rb")))
       abort_on_error("Error opening fragmentshader.txt");
@@ -394,7 +395,7 @@ void setup(bool first){
     }
 
     // Use our Shaders :D:D:D:D:D
-    glUseProgram(ProgramObject);
+    //glUseProgram(ProgramObject);
 
     // FPS STUFF
     //Creates a random number generator (based on time)

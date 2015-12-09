@@ -10,7 +10,7 @@
 				<Option output="build/Forager" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="build/" />
 				<Option object_output="output/" />
-				<Option type="0" />
+				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add directory="include" />
@@ -22,28 +22,32 @@
 			<Add option="-lalpng" />
 			<Add option="-lalleg" />
 			<Add option="-luser32" />
-			<Add option="-lglut32" />
 			<Add option="-lgdi32" />
-			<Add option="-lopengl32" />
+			<Add option="-lglew32s" />
 			<Add option="-lglu32" />
+			<Add option="-lopengl32" />
 		</Linker>
+		<Unit filename="include/GLShader.h" />
 		<Unit filename="include/biome.h" />
 		<Unit filename="include/biome_manager.h" />
 		<Unit filename="include/coordinate.h" />
 		<Unit filename="include/ids.h" />
 		<Unit filename="include/image_manager.h" />
 		<Unit filename="include/player.h" />
+		<Unit filename="include/shaders.h" />
 		<Unit filename="include/tile.h" />
 		<Unit filename="include/tile_map.h" />
 		<Unit filename="include/tile_type.h" />
 		<Unit filename="include/tile_type_manager.h" />
 		<Unit filename="include/tools.h" />
+		<Unit filename="src/GLShader.cpp" />
 		<Unit filename="src/biome.cpp" />
 		<Unit filename="src/biome_manager.cpp" />
 		<Unit filename="src/coordinate.cpp" />
 		<Unit filename="src/image_manager.cpp" />
 		<Unit filename="src/main.cpp" />
 		<Unit filename="src/player.cpp" />
+		<Unit filename="src/shaders.cpp" />
 		<Unit filename="src/tile.cpp" />
 		<Unit filename="src/tile_map.cpp" />
 		<Unit filename="src/tile_type.cpp" />
