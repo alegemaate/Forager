@@ -516,7 +516,7 @@ void tile_map::draw( int newAnimationFrame){
   glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
   // Place light 1 (Direction2)
-  GLfloat light_position2[] = { -1.0001, 1.0001, -1.0001, 0.0f };
+  GLfloat light_position2[] = { -1.0001, -1.0001, -1.0001, 0.0f };
   glLightfv(GL_LIGHT1, GL_POSITION, light_position2);
 
   // Go through all tiles and draw

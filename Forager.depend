@@ -18,7 +18,7 @@
 	"ids.h"
 	"tile_type.h"
 
-1449637966 source:c:\users\allan\documents\games indev\forager\src\tile_map.cpp
+1449639576 source:c:\users\allan\documents\games indev\forager\src\tile_map.cpp
 	"tile_map.h"
 
 1449619104 c:\users\allan\documents\games indev\forager\include\tile_map.h
@@ -35,7 +35,7 @@
 1449551968 source:c:\users\allan\documents\games indev\forager\src\tile.cpp
 	"tile.h"
 
-1449637021 source:c:\users\allan\documents\games indev\forager\src\main.cpp
+1449640449 source:c:\users\allan\documents\games indev\forager\src\main.cpp
 	<allegro.h>
 	<alpng.h>
 	<alleggl.h>
