@@ -50,6 +50,7 @@ void tile_type::draw( BITMAP *tempBuffer, unsigned short x, unsigned short y, un
     glPushMatrix();
 
     glBindTexture(GL_TEXTURE_2D, image_reference_number[tickVal]);
+
     // No blurr texture
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);

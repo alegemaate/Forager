@@ -161,6 +161,9 @@ void tile_map::update(){
 
 // Procedural Generation of map
 void tile_map::generateMap(){
+  // GENERATE MAP
+  std::cout << "GENERATING MAP\n-------------\n";
+
   // STEP 1:
   // Start with air
   quickPeek( "Filling with Air");
@@ -235,7 +238,7 @@ void tile_map::generateMap(){
         }
       }
     }
-    //textprintf_ex( screen,font, 0, 20,makecol(0,0,0),makecol(255,255,255),"Tiles Remaining: %10d", checkBiomeNumber( BIOME_NONE));
+    //std::cout << "Tiles Remaining:" << checkBiomeNumber( BIOME_NONE) << "\n";
   }
 
   // Quick Peek
@@ -259,7 +262,7 @@ void tile_map::generateMap(){
 
   for( int r = 0; r < numberRivers; r++){
     // Rivers Remaining
-    //textprintf_ex( screen,font, 0, 20,makecol(0,0,0),makecol(255,255,255),"Rivers Remaining: %10d", numberRivers-r);
+    std::cout << "Rivers Remaining:" << numberRivers-r << "\n";
 
     // Temp Variables
     int river_x = -1;
@@ -489,7 +492,7 @@ void tile_map::quickPeek( std::string currentPhase){
   textprintf_ex( buffPoint,font, 0, 0,makecol(0,0,0),makecol(255,255,255),"%s", currentPhase.c_str());
   draw_sprite( screen, buffPoint, 0, 0);
   allegro_gl_unset_allegro_mode();*/
-
+  std::cout << "PHASE:" << currentPhase.c_str() << "\n";
   draw( 0);
 }
 

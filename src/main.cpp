@@ -171,6 +171,7 @@ void setup(bool first){
     install_keyboard();
     install_timer();
     install_mouse();
+
     set_color_depth( 32);
     set_window_title("Forager");
 
@@ -289,6 +290,11 @@ void setup(bool first){
     //glewExperimental = TRUE;
     if(glewInit())
       abort_on_error("Crap bukkits! Glew init failed.");
+    else
+      std::cout << "Glew initialized \n\n";
+
+    // LOAD SHADERS
+    std::cout << "SHADERS\n-------------\n";
 
     // Shaders
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -302,9 +308,14 @@ void setup(bool first){
     GLint vertexShaderFileLength, fragmentShaderFileLength;
 
     if(loadshader("data/shaders/textured.vert", &VertexShaderSource, &vertexShaderFileLength) != 0)
-      abort_on_error("data/shaders/toon.vert NOT found!");
+      abort_on_error("data/shaders/textured.vert NOT found!");
+    else
+      std::cout << "data/shaders/textured.vert found\n";
+
     if(loadshader("data/shaders/textured.frag", &FragmentShaderSource, &fragmentShaderFileLength) != 0)
-      abort_on_error("data/shaders/toon.frag NOT found!");
+      abort_on_error("data/shaders/textured.frag NOT found!");
+    else
+      std::cout << "data/shaders/textured.frag found\n";
 
     glShaderSource(vertexShader, 1, const_cast<const GLcharARB**>(&VertexShaderSource), &vertexShaderFileLength);
     glShaderSource(fragmentShader, 1,  const_cast<const GLcharARB**>(&FragmentShaderSource), &fragmentShaderFileLength);
@@ -319,10 +330,15 @@ void setup(bool first){
     if (!compiled){
        abort_on_error( "Dude, vertex shader didnt compile...");
     }
+    else
+      std::cout << "Vertex Shader compiled!\n";
+
     glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &compiled);
     if (!compiled){
        abort_on_error( "Dude, fragmentation shader didnt compile...");
     }
+    else
+      std::cout << "Fragmentation Shader compiled!\n";
 
     // Make program
     ProgramObject = glCreateProgram();
@@ -351,6 +367,8 @@ void setup(bool first){
 
       abort_on_error( "Dude, program didnt link...");
     }
+    else
+      std::cout << "Program linked!\n\n";
 
     // Use our Shaders :D:D:D:D:D
     glUseProgram(ProgramObject);
