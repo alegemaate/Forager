@@ -103,7 +103,7 @@ unsigned long getFileLength( std::ifstream &file){
     return len;
 }
 
-int loadshader(char *filename, GLchar *ShaderSource, GLint *len){
+int loadshader(char *filename, GLchar **ShaderSource, GLint *len){
   std::ifstream file;
   file.open(filename, std::ios::in); // opens as ASCII!
 
@@ -111,31 +111,35 @@ int loadshader(char *filename, GLchar *ShaderSource, GLint *len){
     return -1;
 
   GLint fileLength = getFileLength(file);
-  len = &fileLength;
+  *len = fileLength;
 
   if (*len == 0)
     return -2;   // Error: Empty File
 
-  ShaderSource = (new char[(int)*len+1]);
+  char *tShaderSource = (GLchar*)new char[*len+1]();
 
-  if (*ShaderSource == 0)
-    return -3;   // can't reserve memory
+  // can't reserve memory
+  if (tShaderSource == 0)
+    return -3;
 
   // len isn't always strlen cause some characters are stripped in ascii read...
   // it is important to 0-terminate the real length later, len is just max possible value...
-  ShaderSource[(int)*len] = 0;
+  tShaderSource[*len] = '\0';
 
-  char *swagChar = new char[(int)*len+1];
-  unsigned int i=0;
+  unsigned int i = 0;
   while (file.good()){
-    ShaderSource[i] = file.get();     // get character from file.
-    std::cout << i << *len <<  ":" << ShaderSource[i] << "\n";
+    tShaderSource[i] = file.get();     // get character from file.
     if (!file.eof())
       i++;
   }
-  ShaderSource[i] = 0;  // 0-terminate it at the correct position
+  tShaderSource[i] = '\0';  // 0-terminate it at the correct position
 
   file.close();
+
+  *ShaderSource = tShaderSource;
+
+  /*for( int i = 0; i < *len; i++)
+    std::cout << tShaderSource[i];*/
 
   return 0; // No Error
 }
@@ -287,7 +291,7 @@ void setup(bool first){
       abort_on_error("Crap bukkits! Glew init failed.");
 
     // Shaders
-    /*vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    vertexShader = glCreateShader(GL_VERTEX_SHADER);
     fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
     // Load them!
@@ -297,59 +301,13 @@ void setup(bool first){
     GLchar *VertexShaderSource, *FragmentShaderSource;
     GLint vertexShaderFileLength, fragmentShaderFileLength;
 
-    if(loadshader("data/shaders/fragmentshader.txt", VertexShaderSource, &vertexShaderFileLength) != 0)
-      abort_on_error("data/shaders/fragmentshader.txt NOT found!");
-    if(loadshader("data/shaders/vertexshader.txt", FragmentShaderSource, &fragmentShaderFileLength) != 0)
-      abort_on_error("data/shaders/vertexshader.txt NOT found!");
+    if(loadshader("data/shaders/textured.vert", &VertexShaderSource, &vertexShaderFileLength) != 0)
+      abort_on_error("data/shaders/toon.vert NOT found!");
+    if(loadshader("data/shaders/textured.frag", &FragmentShaderSource, &fragmentShaderFileLength) != 0)
+      abort_on_error("data/shaders/toon.frag NOT found!");
 
-    std::cout << "swaggerswagg\n";
     glShaderSource(vertexShader, 1, const_cast<const GLcharARB**>(&VertexShaderSource), &vertexShaderFileLength);
-    std::cout << "swaggerswagg2\n";
     glShaderSource(fragmentShader, 1,  const_cast<const GLcharARB**>(&FragmentShaderSource), &fragmentShaderFileLength);
-    std::cout << "swaggerswagg3\n";*/
-
-
-    //Load shaders
-    GLenum my_program;
-    GLcharARB *my_fragment_shader_source;
-    GLcharARB *my_vertex_shader_source;
-
-    // Get Vertex And Fragment Shader Sources
-    FILE *fp;
-    GLubyte *buf;
-    int length;
-    bool ret = true;
-
-    if (!(fp = fopen("data/shaders/vertexshader.txt","rb")))
-      printf("Error opening vertexshader.txt");
-
-    fseek(fp, 0, SEEK_END);
-    length = ftell(fp);
-    fseek(fp, 0, SEEK_SET);
-
-    my_vertex_shader_source = new GLcharARB[length+1];
-    fread( my_vertex_shader_source, 1, length, fp);
-
-    if (!(fp = fopen("data/shaders/fragmentshader.txt","rb")))
-      abort_on_error("Error opening fragmentshader.txt");
-
-    fseek(fp, 0, SEEK_END);
-    length = ftell(fp);
-    fseek(fp, 0, SEEK_SET);
-
-    my_fragment_shader_source = new GLcharARB[length+1];
-
-    fread( my_fragment_shader_source, 1, length, fp);
-    my_program = glCreateProgramObjectARB();
-    vertexShader = glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB);
-    fragmentShader = glCreateShaderObjectARB(GL_FRAGMENT_SHADER_ARB);
-
-    // Load Shader Sources
-    // Load Shader Sources
-    glShaderSourceARB(vertexShader, 1, const_cast<const GLcharARB**>(&my_vertex_shader_source), NULL);//First error
-    delete my_vertex_shader_source;
-    glShaderSourceARB(fragmentShader, 1, const_cast<const GLcharARB**>(&my_fragment_shader_source), NULL);//SecondError
-    delete my_vertex_shader_source;
 
     // Compile them
     glCompileShaderARB(vertexShader);
@@ -395,7 +353,7 @@ void setup(bool first){
     }
 
     // Use our Shaders :D:D:D:D:D
-    //glUseProgram(ProgramObject);
+    glUseProgram(ProgramObject);
 
     // FPS STUFF
     //Creates a random number generator (based on time)
@@ -432,7 +390,7 @@ void setup(bool first){
     gameTiles -> generateMap();
 
     // Character
-    jimmy = new player( 5, 5, 10);
+    //jimmy = new player( 5, 5, 10);
 
     //Sets Font
     f1 = load_font("images/fonts/arial_black.pcx", NULL, NULL);

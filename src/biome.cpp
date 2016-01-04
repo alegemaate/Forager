@@ -1,6 +1,7 @@
 #include "biome.h"
 
 biome::biome(std::string newName, int newID){
+
   name = newName;
   ID = newID;
 
