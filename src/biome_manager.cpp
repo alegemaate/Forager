@@ -47,8 +47,8 @@ void biome_manager::load( std::string newFile){
     int mountain_steepness = atoi(cBiome-> first_node("mountain") -> first_node("steepness") -> value());
 
     // Draw to screen (debug)
-    textprintf_centre_ex(screen,font,640,700,makecol(0,0,0),makecol(255,255,255),"Loading Biome:%s ID:%i",name.c_str(), biomeID);
-    textprintf_centre_ex(screen,font,640,760,makecol(0,0,0),makecol(255,255,255),"%i %i %i %i", mountain_frequency, mountain_height, mountain_radius, mountain_steepness);
+    //textprintf_centre_ex(screen,font,640,700,makecol(0,0,0),makecol(255,255,255),"Loading Biome:%s ID:%i",name.c_str(), biomeID);
+    //textprintf_centre_ex(screen,font,640,760,makecol(0,0,0),makecol(255,255,255),"%i %i %i %i", mountain_frequency, mountain_height, mountain_radius, mountain_steepness);
 
     // Create biome, set variables and add it to the biome list
     biome newBiome( name, biomeID);

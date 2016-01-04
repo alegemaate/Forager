@@ -23,7 +23,7 @@ void player::draw( BITMAP *tempBuffer, int zoom, int offsetX, int offsetY){
   if(image[0] != NULL){
     stretch_sprite( tempBuffer, image[0], 0,0,1280,1280);
 
-    if( key[KEY_Y])textprintf_ex( tempBuffer,font,(z_x + z_z) + offsetX/zoom, (z_x - z_z)/2 - z_y + (offsetY + 32)/zoom,makecol(0,0,0),makecol(255,255,255),"%i %i %i", x, z, y);
+    //if( key[KEY_Y])textprintf_ex( tempBuffer,font,(z_x + z_z) + offsetX/zoom, (z_x - z_z)/2 - z_y + (offsetY + 32)/zoom,makecol(0,0,0),makecol(255,255,255),"%i %i %i", x, z, y);
     //textprintf_ex( tempBuffer,font,(z_x + z_z) + offsetX/zoom, (z_x - z_z)/2 - z_y + (offsetY + 32)/zoom,makecol(0,0,0),makecol(255,255,255),"%i", biome);
   }
 }

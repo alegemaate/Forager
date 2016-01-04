@@ -235,7 +235,7 @@ void tile_map::generateMap(){
         }
       }
     }
-    textprintf_ex( screen,font, 0, 20,makecol(0,0,0),makecol(255,255,255),"Tiles Remaining: %10d", checkBiomeNumber( BIOME_NONE));
+    //textprintf_ex( screen,font, 0, 20,makecol(0,0,0),makecol(255,255,255),"Tiles Remaining: %10d", checkBiomeNumber( BIOME_NONE));
   }
 
   // Quick Peek
@@ -259,7 +259,7 @@ void tile_map::generateMap(){
 
   for( int r = 0; r < numberRivers; r++){
     // Rivers Remaining
-    textprintf_ex( screen,font, 0, 20,makecol(0,0,0),makecol(255,255,255),"Rivers Remaining: %10d", numberRivers-r);
+    //textprintf_ex( screen,font, 0, 20,makecol(0,0,0),makecol(255,255,255),"Rivers Remaining: %10d", numberRivers-r);
 
     // Temp Variables
     int river_x = -1;
@@ -484,11 +484,11 @@ long tile_map::checkBiomeNumber( char biomeToCheck){
 
 // Quick Peek
 void tile_map::quickPeek( std::string currentPhase){
-  allegro_gl_set_allegro_mode();
+  /*allegro_gl_set_allegro_mode();
   rectfill( buffPoint, 0, 0, SCREEN_W, SCREEN_H, makecol( 0, 0, 0));
   textprintf_ex( buffPoint,font, 0, 0,makecol(0,0,0),makecol(255,255,255),"%s", currentPhase.c_str());
   draw_sprite( screen, buffPoint, 0, 0);
-  allegro_gl_unset_allegro_mode();
+  allegro_gl_unset_allegro_mode();*/
 
   draw( 0);
 }

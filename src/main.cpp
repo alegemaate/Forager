@@ -455,7 +455,7 @@ void draw(){
   allegro_gl_set_allegro_mode();
 
   // Transparent buffer
-  rectfill( buffer, 0, 0, SCREEN_W, SCREEN_H, makecol( 255, 0, 255));
+  /*rectfill( buffer, 0, 0, SCREEN_W, SCREEN_H, makecol( 255, 0, 255));
 
   //FPS counter
   if(showFPS){
@@ -470,7 +470,7 @@ void draw(){
 
   //Draws buffer
   draw_sprite( screen, buffer, 0, 0);
-
+*/
   allegro_gl_unset_allegro_mode();
 
   allegro_gl_flip();

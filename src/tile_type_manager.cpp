@@ -40,7 +40,7 @@ void tile_type_manager::load( std::string newFile){
     std::string model = cTile-> first_node("model") -> value();
 
     // Draw to screen (debug)
-    textprintf_centre_ex(screen,font,640,700,makecol(0,0,0),makecol(255,255,255),"Loading Tile:%s ID:%i MODEL:%s",name.c_str(), tileID, model.c_str());
+    //textprintf_centre_ex(screen,font,640,700,makecol(0,0,0),makecol(255,255,255),"Loading Tile:%s ID:%i MODEL:%s",name.c_str(), tileID, model.c_str());
 
     // Create tile, set variables and add it to the tile list
     tile_type newTileType( name, tileID, NULL, model);
