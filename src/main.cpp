@@ -82,14 +82,6 @@ END_OF_FUNCTION(ticker)
 tile_map* gameTiles;
 player* jimmy;
 
-// Colours and properties of materials.
-const GLfloat white[] = { 1.0, 1.0, 1.0, 1.0 };
-const GLfloat earth[] = { 0.6f, 0.6f, 0.5f, 1.0 };
-const GLfloat sun[] = { 0.8f, 0.8f, 0.7f, 1.0 };
-const GLfloat black[] = { 0.0, 0.0, 0.0, 1.0 };
-const GLfloat polished[] = { 10.0 };
-const GLfloat dull[] = { 0.0 };
-
 /******************
  * KILLMESHADERS! *
  ******************/
@@ -237,22 +229,22 @@ void setup(bool first){
     glEnable(GL_ALPHA_TEST);
     glShadeModel (GL_SMOOTH);
 
+    // Colours and properties of materials
+    GLfloat mat_ambient[] = { 0.2f, 0.2f, 0.2f, 1.0f};
+    GLfloat mat_diffuse[]  ={ 0.5f, 0.5f, 0.2f, 1.0f};
+    GLfloat mat_specular[] = { 0.9f, 0.9f, 0.9f, 1.0f};
+    GLfloat mat_shininess[] = { 50.0f };
+
+    glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+
     // Lighting
-    /*GLfloat mat_specular[] = { 0.9f, 0.9f, 0.9f, 1.0f};
-    GLfloat mat_diffuse[]  ={ 1.0f, 1.0f, 1.0f, 1.0f};
-    GLfloat mat_ambient[] = { 0.9f, 0.9f, 0.9f, 1.0f};
-    GLfloat mat_shininess[] = { 50.0f };*/
-
-    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, earth);
-    glMaterialfv(GL_FRONT, GL_SPECULAR, white);
-    glMaterialfv(GL_FRONT, GL_SHININESS, polished);
-
-    GLfloat light_ambient[] = { 0.4f, 0.4f, 0.3f, 1.0f };
-    GLfloat light_ambient2[] = { 0.2f, 0.2f, 0.1f, 1.0f };
-    GLfloat light_diffuse[] = { 0.8f, 0.8f, 0.8f, 1.0f };
-    GLfloat light_diffuse2[] = { 0.8f, 0.6f, 0.4f, 1.0f };
+    GLfloat light_ambient[] = { 0.3f, 0.3f, 0.3f, 1.0f };
+    GLfloat light_diffuse[] = { 0.8f, 0.7f, 0.5f, 1.0f };
     GLfloat light_specular[] = { 0.9f, 0.9f, 1.0f, 1.0f };
-    GLfloat light_position[] = { 0.0001, 0.0001, 1.0001, 0.0f };
+    GLfloat light_position[] = { 0.2, 0.0001, 1.0001, 0.0f };
 
     // Light 1
     glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
@@ -260,20 +252,17 @@ void setup(bool first){
     glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
-    // Light 2
-    glLightfv(GL_LIGHT1, GL_AMBIENT, light_ambient);
-    glLightfv(GL_LIGHT1, GL_DIFFUSE, light_diffuse2);
-    glLightfv(GL_LIGHT1, GL_SPECULAR, light_specular);
-    glLightfv(GL_LIGHT1, GL_POSITION, light_position);
-
     glLightModelf(GL_LIGHT_MODEL_LOCAL_VIEWER, 1);
 
     // Enable lights
     glEnable(GL_LIGHTING); //turns the "lights" on
     glEnable(GL_LIGHT0);
-    glEnable(GL_LIGHT1);
 
     glEnable( GL_DEPTH_TEST);
+
+    // Cull back faces
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
 
     // TEXTURING
     // Enable texturing and blending (all tiles use this so lets just call it once)

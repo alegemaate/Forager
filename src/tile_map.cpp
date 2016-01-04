@@ -296,7 +296,7 @@ void tile_map::generateMap(){
     // Carve river
     while( river_x != river_end_x || river_y != river_end_y){
       if( river_y < DEFAULT_MAP_LENGTH && river_x < DEFAULT_MAP_WIDTH && river_x >= 0 && river_y >= 0){
-        map_tiles[river_x][river_y][1] -> setType( tile_defs.getTileByType(TILE_TEMP_WATER));
+        map_tiles[river_x][river_y][1] -> setType( tile_defs.getTileByType(TILE_TEMP));
       }
 
       // Shift river
@@ -322,12 +322,12 @@ void tile_map::generateMap(){
       int wideningDir = random( 0, 1);
       for(int i = 1; i < DEFAULT_MAP_WIDTH; i++){
         for(int t = 1; t < DEFAULT_MAP_LENGTH; t++){
-          if( map_tiles[i][t][1] -> getType() == TILE_TEMP_WATER){
+          if( map_tiles[i][t][1] -> getType() == TILE_TEMP){
             if( wideningDir == 1){
-              map_tiles[i - 1][t][1] -> setType( tile_defs.getTileByType(TILE_TEMP_WATER));
+              map_tiles[i - 1][t][1] -> setType( tile_defs.getTileByType(TILE_TEMP));
             }
             else{
-              map_tiles[i][t - 1][1] -> setType( tile_defs.getTileByType(TILE_TEMP_WATER));
+              map_tiles[i][t - 1][1] -> setType( tile_defs.getTileByType(TILE_TEMP));
             }
           }
         }
@@ -337,7 +337,7 @@ void tile_map::generateMap(){
     // Temp water to water
     for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
       for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
-        if( map_tiles[i][t][1] -> getType() == TILE_TEMP_WATER){
+        if( map_tiles[i][t][1] -> getType() == TILE_TEMP){
           map_tiles[i][t][1] -> setType( tile_defs.getTileByType(TILE_WATER));
         }
       }
@@ -396,6 +396,45 @@ void tile_map::generateMap(){
         if( map_tiles[i][t][u] -> getType() == TILE_GRASS && map_tiles[i][t][u-1] -> getType() == TILE_AIR){
           map_tiles[i][t][u-1] -> setType( tile_defs.getTileByType(TILE_GRASS));
         }
+      }
+    }
+  }
+
+  // STEP 6c:
+  // Slating "Stuff from Under"
+  quickPeek( "Slating Stuff from Under");
+
+  for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
+    for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
+      for(int u = 0; u < DEFAULT_MAP_HEIGHT; u++){
+        bool slatedForRemoval = true;
+        if( i > 0 && map_tiles[i - 1][t][u] -> getType() == TILE_AIR)
+          slatedForRemoval = false;
+        else if( t > 0 && map_tiles[i][t - 1][u] -> getType() == TILE_AIR)
+          slatedForRemoval = false;
+        else if( u > 0 && map_tiles[i][t][u - 1] -> getType() == TILE_AIR)
+          slatedForRemoval = false;
+        else if( i < DEFAULT_MAP_WIDTH - 1 && map_tiles[i + 1][t][u] -> getType() == TILE_AIR)
+          slatedForRemoval = false;
+        else if( t < DEFAULT_MAP_LENGTH - 1 && map_tiles[i][t + 1][u] -> getType() == TILE_AIR)
+          slatedForRemoval = false;
+        else if( u < DEFAULT_MAP_HEIGHT - 1 && map_tiles[i][t][u + 1] -> getType() == TILE_AIR)
+          slatedForRemoval = false;
+
+        if( slatedForRemoval)
+          map_tiles[i][t][u] -> setType( tile_defs.getTileByType(TILE_TEMP));
+      }
+    }
+  }
+
+  // STEP 6d:
+  // Removing "Stuff from Under"
+  quickPeek( "Removing Stuff from Under");
+  for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
+    for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
+      for(int u = 0; u < DEFAULT_MAP_HEIGHT; u++){
+        if( map_tiles[i][t][u] -> getType() == TILE_TEMP)
+          map_tiles[i][t][u] -> setType( tile_defs.getTileByType(TILE_AIR));
       }
     }
   }
@@ -469,7 +508,6 @@ void tile_map::generateMap(){
       }
     }
   }
-
 
   // Done!
   quickPeek( "Done!");

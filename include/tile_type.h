@@ -27,6 +27,9 @@ class tile_type{
     // Get name
     std::string getName(){ return name; }
 
+    // Get model
+    std::string getModel(){ return model; }
+
     // Draw
     void draw( BITMAP *tempBuffer, unsigned short x, unsigned short y, unsigned short z, bool newTick);
 

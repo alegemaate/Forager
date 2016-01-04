@@ -7,7 +7,7 @@
 			<image>NULL</image>
 			<image2>NULL</image2>
 		</images>
-		<model>MODEL_CUBE</model>
+		<model>MODEL_NONE</model>
 	</tile>
 	<!--Grass-->
 	<tile id="1">
