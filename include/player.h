@@ -9,8 +9,8 @@
 #define PLAYER_H
 
 #include "tools.h"
-#include "ids.h"
 #include "tile_map.h"
+#include "globals.h"
 
 
 class player{

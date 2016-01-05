@@ -47,6 +47,10 @@ void tile_type::draw( BITMAP *tempBuffer, unsigned short x, unsigned short y, un
     tickVal = 0;
 
   if( image_reference_number[tickVal] != 0){
+    // Shader
+    if( type == TILE_WATER)
+      glUseProgram(waterShader);
+
     glBindTexture(GL_TEXTURE_2D, image_reference_number[tickVal]);
 
     // No blurr texture
@@ -344,5 +348,9 @@ void tile_type::draw( BITMAP *tempBuffer, unsigned short x, unsigned short y, un
     }
 
     glPopMatrix();
+
+    // Shader back
+    if( type == TILE_WATER)
+      glUseProgram(defaultShader);
   }
 }

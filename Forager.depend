@@ -21,7 +21,7 @@
 1452010035 source:c:\users\allan\documents\games indev\forager\src\tile_map.cpp
 	"tile_map.h"
 
-1452010450 c:\users\allan\documents\games indev\forager\include\tile_map.h
+1452024418 c:\users\allan\documents\games indev\forager\include\tile_map.h
 	<allegro.h>
 	<string>
 	<math.h>
@@ -32,11 +32,12 @@
 	"biome.h"
 	"tile_type_manager.h"
 	"skybox.h"
+	"globals.h"
 
 1449551968 source:c:\users\allan\documents\games indev\forager\src\tile.cpp
 	"tile.h"
 
-1452016927 source:c:\users\allan\documents\games indev\forager\src\main.cpp
+1452024934 source:c:\users\allan\documents\games indev\forager\src\main.cpp
 	<GL/glew.h>
 	<allegro.h>
 	<alpng.h>
@@ -56,15 +57,14 @@
 	"tools.h"
 	"player.h"
 	"audio_3d.h"
-
-1452009008 c:\users\allan\documents\games indev\forager\include\ids.h
-
-1430682228 source:c:\users\allan\documents\games indev\forager\src\globals.cpp
 	"globals.h"
 
-1430682228 c:\users\allan\documents\games indev\forager\include\globals.h
-	<allegro.h>
-	<string>
+1452024222 c:\users\allan\documents\games indev\forager\include\ids.h
+
+1452024349 source:c:\users\allan\documents\games indev\forager\src\globals.cpp
+	"globals.h"
+
+1452024366 c:\users\allan\documents\games indev\forager\include\globals.h
 
 1452008890 c:\users\allan\documents\games indev\forager\include\tools.h
 	<allegro.h>
@@ -110,22 +110,24 @@
 1447733328 source:c:\users\allan\documents\games indev\forager\src\coordinate.cpp
 	"coordinate.h"
 
-1452014816 c:\users\allan\documents\games indev\forager\include\player.h
+1452024397 c:\users\allan\documents\games indev\forager\include\player.h
 	"tools.h"
-	"ids.h"
 	"tile_map.h"
+	"globals.h"
 
 1452013969 source:c:\users\allan\documents\games indev\forager\src\player.cpp
 	"player.h"
 
-1451967657 source:c:\users\allan\documents\games indev\forager\src\tile_type.cpp
+1452025129 source:c:\users\allan\documents\games indev\forager\src\tile_type.cpp
 	"tile_type.h"
 
-1451946444 c:\users\allan\documents\games indev\forager\include\tile_type.h
+1452024467 c:\users\allan\documents\games indev\forager\include\tile_type.h
 	<allegro.h>
 	<string>
 	<alleggl.h>
 	<GL/glu.h>
+	"globals.h"
+	"ids.h"
 
 1451939251 source:c:\users\allan\documents\games indev\forager\src\tile_type_manager.cpp
 	"tile_type_manager.h"
@@ -168,7 +170,7 @@
 1451969074 source:c:\users\allan\documents\games indev\forager\src\skybox.cpp
 	"skybox.h"
 
-1452017665 source:c:\users\allan\documents\games indev\forager\src\audio_3d.cpp
+1452020549 source:c:\users\allan\documents\games indev\forager\src\audio_3d.cpp
 	"audio_3d.h"
 
 1452015151 c:\users\allan\documents\games indev\forager\include\audio_3d.h

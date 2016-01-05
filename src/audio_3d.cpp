@@ -48,7 +48,6 @@ void audio_3d::play3D( float *newListenerX, float *newListenerY, float *newListe
 void audio_3d::update(){
   if( a3d_play_3D){
     a3d_volume_3d = a3d_volume - 5 * (distanceTo3D( x, y, z, *listenerX, *listenerY, *listenerZ));
-    //std::cout << a3d_volume_3d << "\n";
     if( a3d_volume_3d > 0)
       adjust_sample( a3d_file, a3d_volume_3d, a3d_pan, a3d_frequency, a3d_loop);
     else

@@ -68,6 +68,4 @@
 
 #define VIEW_MODE 1
 
-static bool gameMode = false;
-
 #endif

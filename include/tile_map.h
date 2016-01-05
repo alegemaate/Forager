@@ -19,6 +19,7 @@
 #include "biome.h"
 #include "tile_type_manager.h"
 #include "skybox.h"
+#include "globals.h"
 
 class tile_map{
   public:

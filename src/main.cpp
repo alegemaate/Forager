@@ -29,6 +29,7 @@
 #include "tools.h"
 #include "player.h"
 #include "audio_3d.h"
+#include "globals.h"
 
 //Create variables
 int gameScreen = INGAME;
@@ -36,12 +37,18 @@ int animationFrame;
 bool closeGame;
 bool showFPS;
 
+//Water
+GLfloat waveTime, waveWidth, waveHeight, waveFreq;
+GLint waveTimeLoc;
+GLint waveWidthLoc;
+GLint waveHeightLoc;
+
 //Create fonts
 FONT *f1, *f2, *f3, *f4, *f5;
 
 //Create images
-BITMAP* buffer;
-BITMAP* cursor;
+BITMAP *buffer;
+BITMAP *cursor;
 
 // Sounds
 audio_3d *dinner;
@@ -131,9 +138,6 @@ int loadshader(char *filename, GLchar **ShaderSource, GLint *len){
 
   *ShaderSource = tShaderSource;
 
-  /*for( int i = 0; i < *len; i++)
-    std::cout << tShaderSource[i];*/
-
   return 0; // No Error
 }
 
@@ -143,8 +147,46 @@ int unloadshader(GLubyte** ShaderSource){
    *ShaderSource = 0;
 }
 
-GLuint vertexShader, fragmentShader;
-GLuint ProgramObject;
+void setupShader( std::string shaderFile, GLuint newShader){
+  // Load them!
+  GLchar *shaderSource;
+  GLint shaderFileLength;
+
+  // Convert from string to char*
+  char * charShaderFile = const_cast<char*> ( shaderFile.c_str() );
+
+  if(loadshader(charShaderFile, &shaderSource, &shaderFileLength) != 0)
+    abort_on_error((shaderFile + " NOT found!").c_str());
+  else
+    std::cout << shaderFile << " found\n";
+
+  glShaderSource(newShader, 1, const_cast<const GLcharARB**>(&shaderSource), &shaderFileLength);
+
+  // Compile them
+  glCompileShaderARB(newShader);
+
+  // Check success
+  GLint compiled;
+  glGetShaderiv(newShader, GL_COMPILE_STATUS, &compiled);
+  if (!compiled)
+     abort_on_error( ("Dude, " + shaderFile + " didnt compile...").c_str());
+  else
+    std::cout << shaderFile << " shader compiled!\n";
+}
+
+// Setup program
+void setupProgram( GLuint newProgram){
+  glLinkProgram(newProgram);
+
+  GLint linked;
+  glGetProgramiv(newProgram, GL_LINK_STATUS, &linked);
+
+  if (!linked)
+    abort_on_error( ("Program " + convertIntToString(newProgram) + "didnt link...").c_str());
+  else
+    std::cout << "Program " << newProgram << " linked!\n\n";
+}
+
 /*********************
  * ENDKILLMESHADERS! *
  *********************/
@@ -275,81 +317,49 @@ void setup(bool first){
     std::cout << "SHADERS\n-------------\n";
 
     // Shaders
+    // DEFAULT
+    GLuint vertexShader, fragmentShader;
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
     fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
-    // Load them!
-    const int MAX_LINES=512;
-    const int MAX_LINE_LENGTH=256;   // 255 + NULL terminator
-    static char program[MAX_LINES*MAX_LINE_LENGTH];
-    GLchar *VertexShaderSource, *FragmentShaderSource;
-    GLint vertexShaderFileLength, fragmentShaderFileLength;
-
-    if(loadshader("data/shaders/textured.vert", &VertexShaderSource, &vertexShaderFileLength) != 0)
-      abort_on_error("data/shaders/textured.vert NOT found!");
-    else
-      std::cout << "data/shaders/textured.vert found\n";
-
-    if(loadshader("data/shaders/textured.frag", &FragmentShaderSource, &fragmentShaderFileLength) != 0)
-      abort_on_error("data/shaders/textured.frag NOT found!");
-    else
-      std::cout << "data/shaders/textured.frag found\n";
-
-    glShaderSource(vertexShader, 1, const_cast<const GLcharARB**>(&VertexShaderSource), &vertexShaderFileLength);
-    glShaderSource(fragmentShader, 1,  const_cast<const GLcharARB**>(&FragmentShaderSource), &fragmentShaderFileLength);
-
-    // Compile them
-    glCompileShaderARB(vertexShader);
-    glCompileShaderARB(fragmentShader);
-
-    // Check success
-    GLint compiled;
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &compiled);
-    if (!compiled){
-       abort_on_error( "Dude, vertex shader didnt compile...");
-    }
-    else
-      std::cout << "Vertex Shader compiled!\n";
-
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &compiled);
-    if (!compiled){
-       abort_on_error( "Dude, fragmentation shader didnt compile...");
-    }
-    else
-      std::cout << "Fragmentation Shader compiled!\n";
+    setupShader( "data/shaders/textured.vert", vertexShader);
+    setupShader( "data/shaders/textured.frag", fragmentShader);
 
     // Make program
-    ProgramObject = glCreateProgram();
+    defaultShader = glCreateProgram();
 
-    glAttachShader(ProgramObject, vertexShader);
-    glAttachShader(ProgramObject, fragmentShader);
+    glAttachShader(defaultShader, vertexShader);
+    glAttachShader(defaultShader, fragmentShader);
 
-    glLinkProgram(ProgramObject);
+    setupProgram( defaultShader);
 
-    GLint linked;
-    glGetProgramiv(ProgramObject, GL_LINK_STATUS, &linked);
-    if (!linked){
-      std::cout << "Dude, program didnt link...";
+    // WATER
+    GLuint waterVertexShader, waterFragmentShader;
+    waterVertexShader = glCreateShader(GL_VERTEX_SHADER);
+    waterFragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
-      // Dump log
-      GLint blen = 0;
-      GLsizei slen = 0;
+    setupShader( "data/shaders/water.vert", waterVertexShader);
+    setupShader( "data/shaders/water.frag", waterFragmentShader);
 
-      glGetShaderiv(ProgramObject, GL_INFO_LOG_LENGTH , &blen);
-      if (blen > 1){
-        GLchar* compiler_log = (GLchar*)malloc(blen);
-        glGetInfoLogARB(ProgramObject, blen, &slen, compiler_log);
-        std::cout << "linker_log:\n";
-        free (compiler_log);
-      }
+    // Make program
+    waterShader = glCreateProgram();
 
-      abort_on_error( "Dude, program didnt link...");
-    }
-    else
-      std::cout << "Program linked!\n\n";
+    glAttachShader(waterShader, waterVertexShader);
+    glAttachShader(waterShader, waterFragmentShader);
+
+    setupProgram( waterShader);
+
+    // Wave shader stuffz
+    waveTime = 1.5;
+    waveWidth = 0.1;
+    waveHeight = 0.8;
+    waveFreq = 0.01;
+    waveTimeLoc = glGetUniformLocation(waterShader, "waveTime");
+    waveWidthLoc = glGetUniformLocation(waterShader, "waveWidth");
+    waveHeightLoc = glGetUniformLocation(waterShader, "waveHeight");
 
     // Use our Shaders :D:D:D:D:D
-    glUseProgram(ProgramObject);
+    glUseProgram(defaultShader);
 
     // FPS STUFF
     //Creates a random number generator (based on time)
@@ -420,6 +430,19 @@ void game(){
     if( key[KEY_M])
       dinner -> play3D( jimmy -> getPointX(), jimmy -> getPointY(), jimmy -> getPointZ(), 255, 127, 1000, true);
     dinner -> update();
+
+
+    // Back to normal shader
+    glUseProgram(waterShader);
+    // Change time
+		glUniform1f(waveTimeLoc, waveTime);
+		glUniform1f(waveWidthLoc, waveWidth);
+		glUniform1f(waveHeightLoc, waveHeight);
+    // Back to normal shader
+    glUseProgram(defaultShader);
+
+    // Update wave variable
+		waveTime += waveFreq;
   }
 
   //Exit game
@@ -464,6 +487,8 @@ void draw(){
   if( !key[KEY_TILDE])
     gameTiles -> draw( animationFrame);
 
+  // Back to normal shader
+  glUseProgram(defaultShader);
 
   /**********************
    * ALLEGRO GL DRAWING *

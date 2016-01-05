@@ -13,6 +13,9 @@
 #include <alleggl.h>
 #include <GL/glu.h>
 
+#include "globals.h"
+#include "ids.h"
+
 class tile_type{
   public:
     tile_type( std::string newName, unsigned char newType, BITMAP *defaultImage, std::string newModel);
