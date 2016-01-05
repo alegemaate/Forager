@@ -17,6 +17,9 @@ tile_map::tile_map( BITMAP *tempBuffer){
   sel_x = sel_y = sel_z = 0;
   gameMode = false;
 
+  // Load sky
+  theSky.loadSkybox( "images/skybox/", "front.png", "back.png", "left.png", "right.png", "top.png", "bottom.png");
+
   // Buffer
   buffPoint = tempBuffer;
 
@@ -156,6 +159,13 @@ void tile_map::update(){
   if( gameMode){
     if( canFall){
       y -= 0.2;
+      if( y < -10){
+        x = DEFAULT_MAP_LENGTH/2;
+        y = DEFAULT_MAP_HEIGHT;
+        z = DEFAULT_MAP_WIDTH/2;
+        rot_x = 45;
+        rot_y = 135;
+      }
     }
     // Cant fall
     else if( key[KEY_SPACE] && y_velocity == 0){
@@ -596,6 +606,9 @@ void tile_map::draw( int newAnimationFrame){
   GLfloat light_position2[] = { -1.0001, -1.0001, -1.0001, 0.0f };
   glLightfv(GL_LIGHT1, GL_POSITION, light_position2);
 
+  // Skybox
+  theSky.renderSkybox();
+
   // Go through all tiles and draw
   for(int i = 0; i < DEFAULT_MAP_WIDTH; i++){
     for(int t = 0; t < DEFAULT_MAP_LENGTH; t++){
@@ -604,8 +617,6 @@ void tile_map::draw( int newAnimationFrame){
       }
     }
   }
-
-
 
   /*if( !gameMode){
     allegro_gl_set_allegro_mode();

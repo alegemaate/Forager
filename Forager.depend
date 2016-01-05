@@ -18,10 +18,10 @@
 	"ids.h"
 	"tile_type.h"
 
-1451963581 source:c:\users\allan\documents\games indev\forager\src\tile_map.cpp
+1451966742 source:c:\users\allan\documents\games indev\forager\src\tile_map.cpp
 	"tile_map.h"
 
-1451963529 c:\users\allan\documents\games indev\forager\include\tile_map.h
+1451964959 c:\users\allan\documents\games indev\forager\include\tile_map.h
 	<allegro.h>
 	<string>
 	<math.h>
@@ -31,11 +31,12 @@
 	"biome_manager.h"
 	"biome.h"
 	"tile_type_manager.h"
+	"skybox.h"
 
 1449551968 source:c:\users\allan\documents\games indev\forager\src\tile.cpp
 	"tile.h"
 
-1451961511 source:c:\users\allan\documents\games indev\forager\src\main.cpp
+1451968351 source:c:\users\allan\documents\games indev\forager\src\main.cpp
 	<GL/glew.h>
 	<allegro.h>
 	<alpng.h>
@@ -114,7 +115,7 @@
 1451939406 source:c:\users\allan\documents\games indev\forager\src\player.cpp
 	"player.h"
 
-1451958829 source:c:\users\allan\documents\games indev\forager\src\tile_type.cpp
+1451967657 source:c:\users\allan\documents\games indev\forager\src\tile_type.cpp
 	"tile_type.h"
 
 1451946444 c:\users\allan\documents\games indev\forager\include\tile_type.h
@@ -152,4 +153,15 @@
 	<vector>
 
 1449681925 source:c:\users\allan\documents\games indev\forager\src\shaders.cpp
+
+1451966586 c:\users\allan\documents\games indev\forager\include\skybox.h
+	<string>
+	<allegro.h>
+	<alpng.h>
+	<alleggl.h>
+	"ids.h"
+	"tools.h"
+
+1451967972 source:c:\users\allan\documents\games indev\forager\src\skybox.cpp
+	"skybox.h"
 

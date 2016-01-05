@@ -18,6 +18,7 @@
 #include "biome_manager.h"
 #include "biome.h"
 #include "tile_type_manager.h"
+#include "skybox.h"
 
 class tile_map{
   public:
@@ -55,6 +56,8 @@ class tile_map{
     double y_velocity;
 
     bool gameMode;
+
+    skybox theSky;
 
     BITMAP *overlay_images[20];
     BITMAP *buffPoint;
