@@ -294,7 +294,7 @@ void tile_map::generateMap(){
     }
   }
 
-  // STEP6b:
+  // STEP 7:
   // Fill in holes
   quickPeek( "Filling holes");
 
@@ -308,8 +308,37 @@ void tile_map::generateMap(){
     }
   }
 
-  // STEP 6c:
-  // Slating "Stuff from Under"
+  // Step 8a:
+  // Change lakes to water
+  quickPeek( "Adding water to lakes");
+
+  for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
+    for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
+      for(int u = 0; u <  DEFAULT_MAP_HEIGHT; u++){
+        if( map_tiles[i][t][u] -> getType() == TILE_GRASS){
+          if( map_tiles[i][t][u] -> getBiome() == BIOME_LAKE)
+            map_tiles[i][t][u] -> setType( tile_defs.getTileByType(TILE_WATER));
+        }
+      }
+    }
+  }
+
+  // STEP 8b:
+  // Removing "Water Mountains"
+  quickPeek( "Carving mountains");
+
+  for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
+    for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
+      if( map_tiles[i][t][1] -> getType() == TILE_WATER){
+        for(int u = 2; u < DEFAULT_MAP_HEIGHT; u++){
+          map_tiles[i][t][u] -> setType( tile_defs.getTileByType(TILE_AIR));
+        }
+      }
+    }
+  }
+
+  // STEP 9a:
+  // Slating "Slating from Under"
   quickPeek( "Slating Stuff from Under");
 
   for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
@@ -335,7 +364,7 @@ void tile_map::generateMap(){
     }
   }
 
-  // STEP 6d:
+  // STEP 9b:
   // Removing "Stuff from Under"
   quickPeek( "Removing Stuff from Under");
   for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
@@ -347,7 +376,7 @@ void tile_map::generateMap(){
     }
   }
 
-  // STEP 7:
+  // STEP 10:
   // Create biome resources
   quickPeek( "Creating biome resources");
 
@@ -363,7 +392,7 @@ void tile_map::generateMap(){
     }
   }
 
-  // STEP 8:
+  // STEP 11:
   // Change water depending on biome
   quickPeek( "Changing water up");
 
@@ -381,7 +410,7 @@ void tile_map::generateMap(){
     }
   }
 
-  // STEP 9:
+  // STEP 12:
   // Set biome tiles
   quickPeek( "Setting corresponding biome images");
 
@@ -394,24 +423,8 @@ void tile_map::generateMap(){
             map_tiles[i][t][u] -> setType( tile_defs.getTileByType(TILE_GRASS_SNOW));
           else if( map_tiles[i][t][u] -> getBiome() == BIOME_BARREN)
             map_tiles[i][t][u] -> setType( tile_defs.getTileByType(TILE_STONE));
-          else if( map_tiles[i][t][u] -> getBiome() == BIOME_LAKE)
-            map_tiles[i][t][u] -> setType( tile_defs.getTileByType(TILE_WATER));
           else if( map_tiles[i][t][u] -> getBiome() == BIOME_DESERT)
             map_tiles[i][t][u] -> setType( tile_defs.getTileByType(TILE_SAND));
-        }
-      }
-    }
-  }
-
-  // STEP 10:
-  // Removing "Water Mountains"
-  quickPeek( "Carving mountains");
-
-  for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
-    for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
-      if( map_tiles[i][t][1] -> getType() == TILE_WATER || map_tiles[i][t][1] -> getType() == TILE_LAVA || map_tiles[i][t][1] -> getType() == TILE_ICE){
-        for(int u = 2; u < DEFAULT_MAP_HEIGHT; u++){
-          map_tiles[i][t][u] -> setType( tile_defs.getTileByType(TILE_AIR));
         }
       }
     }
