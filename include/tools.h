@@ -14,15 +14,20 @@
 #include <sstream>
 #include <fstream>
 #include <cmath>
+#include <math.h>
 
 extern bool keyboard_keypressed();
 extern bool joy_buttonpressed();
+
 //Collision
 extern bool collisionAny(int xMin1, int xMax1, int xMin2, int xMax2, int yMin1, int yMax1, int yMin2, int yMax2);
 extern bool collisionBottom(int yMin1, int yMax1, int yMin2, int yMax2);
 extern bool collisionTop(int yMin1, int yMax1, int yMin2, int yMax2);
 extern bool collisionRight(int xMin1, int xMax1, int xMin2, int xMax2);
 extern bool collisionLeft(int xMin1, int xMax1, int xMin2, int xMax2);
+
+// 3D Collision
+extern bool collision3d(int x1, int width1, int x2, int width2, int y1, int height1, int y2, int height2, int z1, int depth1, int z2, int depth2);
 
 // Mouse position including resolution difference
 extern int mouseX();
@@ -44,13 +49,14 @@ extern std::string convertDoubleToString(double number);
 extern std::string convertBoolToString(bool boolean);
 
 // Slope of line
-double findSlope( int y_1, int y_2, int x_1, int x_2);
+extern double findSlope( int y_1, int y_2, int x_1, int x_2);
 
 // Objects are close
-bool closeTo( double val1, double val2, double maxDifference);
+extern bool closeTo( double val1, double val2, double maxDifference);
 
-int distanceTo1D( int x1, int x2);
-int distanceTo2D( int x1, int y1, int x2, int y2);
+extern int distanceTo1D( int x1, int x2);
+extern int distanceTo2D( int x1, int y1, int x2, int y2);
+extern int distanceTo3D( int x1, int y1, int z1, int x2, int y2, int z2);
 
 // Catch 0
 int divideCatchZero( int number1, int number2);

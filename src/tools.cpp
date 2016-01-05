@@ -47,6 +47,21 @@ bool collisionLeft(int xMin1, int xMax1, int xMin2, int xMax2){
   return false;
 }*/
 
+// 3D collision
+bool collision3d(int x1, int width1, int x2, int width2, int y1, int height1, int y2, int height2, int z1, int depth1, int z2, int depth2){
+  //check the X axis
+  if(abs(x1 - x2) < width1 + width2){
+    //check the Y axis
+    if(abs(y1 - y2) < height1 + height2){
+        //check the Z axis
+        if(abs(z1 - z2) < depth1 + depth2){
+           return true;
+        }
+    }
+  }
+  return false;
+}
+
 //Checks if file exists
 bool fexists(const char *filename){
   std::ifstream ifile(filename);
@@ -107,6 +122,11 @@ int distanceTo1D( int x1, int x2){
 // Returns distance 2D
 int distanceTo2D(int x1, int y1, int x2, int y2){
     return sqrt((x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1));
+}
+
+// Returns distance 2D
+int distanceTo3D(int x1, int y1, int z1, int x2, int y2, int z2){
+	return sqrt((x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1) + (z2 - z1)*(z2 - z1));
 }
 
 // Divide catch 0

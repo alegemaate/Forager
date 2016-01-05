@@ -4,12 +4,14 @@
 tile_map::tile_map( BITMAP *tempBuffer){
   // Starting position and zoom
   x = 0;
-  y = -15;
+  y = 15;
   z = 0;
   rot_x = 45;
   rot_y = 135;
   rot_z = 0;
   zoom = 0;
+
+  y_velocity = 0;
 
   test_x = test_y = test_z = 0;
   sel_x = sel_y = sel_z = 0;
@@ -21,7 +23,7 @@ tile_map::tile_map( BITMAP *tempBuffer){
   // Load biomes
   biomes.load( "data/biomes.xml");
 
-  // Load tiles
+  // Load tiles225
   tile_defs.load( "data/tiles.xml");
 
   // Make a mapful of tiles
@@ -71,25 +73,27 @@ void tile_map::update(){
   // Move, slower in gamemode
   // Forward
   if(key[KEY_W] || key[KEY_UP]){
-    z += (float)cos(rot_y * M_PI / 180)/(5 + 10 * gameMode);
-    x -= (float)sin(rot_y * M_PI / 180)/(5 + 10 * gameMode);
-    y += (float)sin(rot_x * M_PI / 180)/(5 + 10 * gameMode);
+    if( !gameMode)
+      y -= (float)sin(rot_x / 180 * M_PI)/(5 + 10 * gameMode);
+    z -= (float)cos(rot_y  / 180 * M_PI)/(5 + 10 * gameMode);
+    x += (float)sin(rot_y / 180 * M_PI)/(5 + 10 * gameMode);
   }
   // Backward
   if(key[KEY_S] || key[KEY_DOWN]){
-    z -= (float)cos(rot_y * M_PI / 180)/(5 + 10 * gameMode);
-    x += (float)sin(rot_y * M_PI / 180)/(5 + 10 * gameMode);
-    y -= (float)sin(rot_x * M_PI / 180)/(5 + 10 * gameMode);
+    if( !gameMode)
+      y += (float)sin(rot_x / 180 * M_PI)/(5 + 10 * gameMode);
+    z += (float)cos(rot_y / 180 * M_PI)/(5 + 10 * gameMode);
+    x -= (float)sin(rot_y / 180 * M_PI)/(5 + 10 * gameMode);
   }
   // Left
   if(key[KEY_A] || key[KEY_LEFT]){
-    x += (float)cos(rot_y * M_PI / 180)/(5 + 10 * gameMode);
-    z += (float)sin(rot_y * M_PI / 180)/(5 + 10 * gameMode);
+    x -= (float)cos(rot_y / 180 * M_PI)/(5 + 10 * gameMode);
+    z -= (float)sin(rot_y / 180 * M_PI)/(5 + 10 * gameMode);
   }
   // Right
   if(key[KEY_D] || key[KEY_RIGHT]){
-    x -= (float)cos(rot_y * M_PI / 180)/(5 + 10 * gameMode);
-    z -= (float)sin(rot_y * M_PI /180)/(5 + 10 * gameMode);
+    x += (float)cos(rot_y / 180 * M_PI)/(5 + 10 * gameMode);
+    z += (float)sin(rot_y / 180 * M_PI)/(5 + 10 * gameMode);
   }
 
   // Pan around
@@ -127,6 +131,43 @@ void tile_map::update(){
     position_mouse_z( 0);
   }
 
+  // Collision
+  bool canFall = true;
+
+  //std::cout << "X:" << x << " Y:" << y << " Z:" << z << " RotX:" << rot_x << " RotY:" << rot_y << "\n";
+  if( gameMode){
+    for(int i = 0; i < DEFAULT_MAP_WIDTH; i++){
+      for(int t = 0; t < DEFAULT_MAP_LENGTH; t++){
+        for(int n = 0; n < DEFAULT_MAP_HEIGHT; n++){
+          if( canFall && (map_tiles[i][t][n] -> getType() != TILE_AIR && map_tiles[i][t][n] -> getType() != TILE_SNOW && map_tiles[i][t][n] -> getType() != TILE_GRASS && map_tiles[i][t][n] -> getType() != TILE_TREE)){
+            // Check if near first
+            if( distanceTo3D( x, y, z, map_tiles[i][t][n] -> getX(), map_tiles[i][t][n] -> getY(), map_tiles[i][t][n] -> getZ()) <= 2){
+              if( collision3d( x, 1, map_tiles[i][t][n] -> getX(), 1, y, 1, map_tiles[i][t][n] -> getY(), 1, z, 1, map_tiles[i][t][n] -> getZ(), 1)){
+                canFall = false;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Yep u can fall
+  if( gameMode){
+    if( canFall){
+      y -= 0.2;
+    }
+    // Cant fall
+    else if( key[KEY_SPACE] && y_velocity == 0){
+      y_velocity = 0.5;
+    }
+    y += y_velocity;
+    if( y_velocity > 0)
+      y_velocity *= 0.90;
+    if( y_velocity < 0.01)
+      y_velocity = 0;
+  }
+
   //Gen
   if(key[KEY_R]){
     generateMap();
@@ -134,21 +175,19 @@ void tile_map::update(){
 
   // Game mode
   if( key[KEY_G]){
-    if( !gameMode){
-      x = -15;
-      y = -3;
-      z = -15;
-      rot_x = 15;
-      rot_y = 135;
-      rot_z = 0;
-    }
-    else{
+    if( gameMode){
       x = 0;
-      y = -15;
+      y = 15;
       z = 0;
       rot_x = 45;
       rot_y = 135;
-      rot_z = 0;
+    }
+    else{
+      x = DEFAULT_MAP_LENGTH/2;
+      y = DEFAULT_MAP_HEIGHT;
+      z = DEFAULT_MAP_WIDTH/2;
+      rot_x = 45;
+      rot_y = 135;
     }
     gameMode = !gameMode;
     rest( 300);
@@ -546,11 +585,8 @@ void tile_map::draw( int newAnimationFrame){
   // Rotate along y
   glRotatef( rot_y, 0.0, 1.0, 0.0 );
 
-  // Rotate along z (unused)
-  //glRotatef( rot_z, 0.0, 0.0, 1.0 );
-
   // Translate map
-  glTranslatef( x, y, z);
+  glTranslatef( -x, -y, -z);
 
   // Place light 0 (Direction)
   GLfloat light_position[] = { 1.0001, 1.0001, 1.0001, 0.0f };
@@ -564,10 +600,7 @@ void tile_map::draw( int newAnimationFrame){
   for(int i = 0; i < DEFAULT_MAP_WIDTH; i++){
     for(int t = 0; t < DEFAULT_MAP_LENGTH; t++){
       for(int n = 0; n < DEFAULT_MAP_HEIGHT; n++){
-        // Draw tiles on current level (if onscreen)
-        if( VIEW_MODE == 1 || onScreen( map_tiles[i][t][n] -> getX(), map_tiles[i][t][n] -> getY(), map_tiles[i][t][n] -> getZ())){
-          map_tiles[i][t][n] -> draw( buffPoint, newAnimationFrame, overlay_images[OVERLAY_NONE]);
-        }
+        map_tiles[i][t][n] -> draw( buffPoint, newAnimationFrame, overlay_images[OVERLAY_NONE]);
       }
     }
   }

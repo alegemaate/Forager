@@ -52,6 +52,8 @@ class tile_map{
     double x, y, z;
     double rot_x, rot_y, rot_z;
 
+    double y_velocity;
+
     bool gameMode;
 
     BITMAP *overlay_images[20];

@@ -64,7 +64,7 @@ volatile int game_time = 0;
 void game_time_ticker(){
     game_time++;
 }
-END_OF_FUNCTION(ticker)
+END_OF_FUNCTION(game_time_ticker)
 
 const int updates_per_second = 60;
 
@@ -77,7 +77,7 @@ void animationTicker(){
     animationFrame = 0;
   }
 }
-END_OF_FUNCTION(ticker)
+END_OF_FUNCTION(animationTicker)
 
 tile_map* gameTiles;
 player* jimmy;
@@ -213,7 +213,7 @@ void setup(bool first){
     glLoadIdentity();
 
     // set the perspective with the appropriate aspect ratio
-    glFrustum(-1.0, 1.0, -1.0, 1.0, 1.2, 1000.0);
+    glFrustum(-1.15, 1.15, -1.0, 1.0, 1.2, 200.0);
 
     //Now editing the model-view matrix.
     glMatrixMode(GL_MODELVIEW);
@@ -230,10 +230,10 @@ void setup(bool first){
     glShadeModel (GL_SMOOTH);
 
     // Colours and properties of materials
-    GLfloat mat_ambient[] = { 0.2f, 0.2f, 0.2f, 1.0f};
-    GLfloat mat_diffuse[]  ={ 0.5f, 0.5f, 0.2f, 1.0f};
-    GLfloat mat_specular[] = { 0.9f, 0.9f, 0.9f, 1.0f};
-    GLfloat mat_shininess[] = { 50.0f };
+    GLfloat mat_ambient[] = { 0.3f, 0.3f, 0.3f, 1.0f};
+    GLfloat mat_diffuse[]  ={ 0.4f, 0.4f, 0.3f, 1.0f};
+    GLfloat mat_specular[] = { 0.1f, 0.25f, 0.50f, 1.0f};
+    GLfloat mat_shininess[] = { 5.0f };
 
     glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
     glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
@@ -241,9 +241,9 @@ void setup(bool first){
     glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
 
     // Lighting
-    GLfloat light_ambient[] = { 0.3f, 0.3f, 0.3f, 1.0f };
+    GLfloat light_ambient[] = { 0.1f, 0.1f, 0.1f, 1.0f };
     GLfloat light_diffuse[] = { 0.8f, 0.7f, 0.5f, 1.0f };
-    GLfloat light_specular[] = { 0.9f, 0.9f, 1.0f, 1.0f };
+    GLfloat light_specular[] = { 0.3f, 0.3f, 0.3f, 1.0f };
     GLfloat light_position[] = { 0.2, 0.0001, 1.0001, 0.0f };
 
     // Light 1
@@ -476,8 +476,8 @@ void draw(){
   textprintf_ex( buffer, font, 0, 15, makecol(0,0,0), makecol(255,255,255), "Camera X:%4.1f Y:%4.1f Z:%4.1f RotX:%4.1f RotY:%4.1f ", gameTiles -> getX(), gameTiles -> getY(), gameTiles -> getZ(), gameTiles -> getRotX(), gameTiles -> getRotY());
 
   //Draws buffer
-  draw_sprite( screen, buffer, 0, 0);
-*/
+  draw_sprite( screen, buffer, 0, 0);*/
+
   allegro_gl_unset_allegro_mode();
 
   allegro_gl_flip();
@@ -491,11 +491,11 @@ int main( int argc, char* args[]){
   while(!closeGame){
     //Runs FPS system
     while(ticks == 0){
-      //rest(1);
+      rest(1);
     }
     while(ticks > 0){
       int old_ticks = ticks;
-      //Update always
+      // Update while in tick
       game();
       ticks--;
       if(old_ticks <= ticks)
@@ -511,8 +511,10 @@ int main( int argc, char* args[]){
 			frames_done = 0;
 			old_time += 1;
     }
-    //Update every set amount of frames
+    // Update every tick
     draw();
+    if( key[KEY_F])
+      std::cout << fps << "\n";
     frames_done++;
   }
   allegro_exit();

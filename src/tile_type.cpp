@@ -47,13 +47,14 @@ void tile_type::draw( BITMAP *tempBuffer, unsigned short x, unsigned short y, un
     tickVal = 0;
 
   if( image_reference_number[tickVal] != 0){
-    glPushMatrix();
-
     glBindTexture(GL_TEXTURE_2D, image_reference_number[tickVal]);
 
     // No blurr texture
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Go into modelview matrix
+    glPushMatrix();
 
     // Translate in
     glTranslatef( x, y, z);
