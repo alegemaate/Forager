@@ -35,6 +35,7 @@
 		<Unit filename="include/image_manager.h" />
 		<Unit filename="include/player.h" />
 		<Unit filename="include/shaders.h" />
+		<Unit filename="include/skybox.h" />
 		<Unit filename="include/tile.h" />
 		<Unit filename="include/tile_map.h" />
 		<Unit filename="include/tile_type.h" />
@@ -48,6 +49,7 @@
 		<Unit filename="src/main.cpp" />
 		<Unit filename="src/player.cpp" />
 		<Unit filename="src/shaders.cpp" />
+		<Unit filename="src/skybox.cpp" />
 		<Unit filename="src/tile.cpp" />
 		<Unit filename="src/tile_map.cpp" />
 		<Unit filename="src/tile_type.cpp" />

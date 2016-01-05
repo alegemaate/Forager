@@ -5,6 +5,9 @@
   Stores ID's for blocks, biomes and more. Probably should be replaced :D
 */
 
+#ifndef IDS_H
+#define IDS_H
+
 // Tiles
 #define TILE_AIR 0
 #define TILE_GRASS 1
@@ -64,3 +67,7 @@
 #define OVERLAY_SELECTED 6
 
 #define VIEW_MODE 1
+
+static bool gameMode = false;
+
+#endif

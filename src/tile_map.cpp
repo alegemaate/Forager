@@ -2,19 +2,7 @@
 
 // Construct
 tile_map::tile_map( BITMAP *tempBuffer){
-  // Starting position and zoom
-  x = 0;
-  y = 15;
-  z = 0;
-  rot_x = 45;
-  rot_y = 135;
-  rot_z = 0;
-  zoom = 0;
-
-  y_velocity = 0;
-
-  test_x = test_y = test_z = 0;
-  sel_x = sel_y = sel_z = 0;
+  // Start in view mode
   gameMode = false;
 
   // Load sky
@@ -46,12 +34,12 @@ tile_map::~tile_map(){
 
 // Check if tile is on screen
 bool tile_map::onScreen( int tile_x, int tile_y, int tile_z){
-  if(((tile_x + tile_z) + x) >= -120 * zoom &&
+  /*if(((tile_x + tile_z) + x) >= -120 * zoom &&
      ((tile_x  + tile_z) + x) <= SCREEN_W * zoom &&
      ((tile_x/2 - tile_z/2) + y - tile_y) >= -120 * zoom &&
      ((tile_x/2 - tile_z/2) + y - tile_y) <= SCREEN_H * zoom)
       return true;
-  return false;
+  return false;*/
 }
 
 // Load images for tiles
@@ -73,139 +61,10 @@ void tile_map::load_images(){
 
 // Update map
 void tile_map::update(){
-  // Move, slower in gamemode
-  // Forward
-  if(key[KEY_W] || key[KEY_UP]){
-    if( !gameMode)
-      y -= (float)sin(rot_x / 180 * M_PI)/(5 + 10 * gameMode);
-    z -= (float)cos(rot_y  / 180 * M_PI)/(5 + 10 * gameMode);
-    x += (float)sin(rot_y / 180 * M_PI)/(5 + 10 * gameMode);
-  }
-  // Backward
-  if(key[KEY_S] || key[KEY_DOWN]){
-    if( !gameMode)
-      y += (float)sin(rot_x / 180 * M_PI)/(5 + 10 * gameMode);
-    z += (float)cos(rot_y / 180 * M_PI)/(5 + 10 * gameMode);
-    x -= (float)sin(rot_y / 180 * M_PI)/(5 + 10 * gameMode);
-  }
-  // Left
-  if(key[KEY_A] || key[KEY_LEFT]){
-    x -= (float)cos(rot_y / 180 * M_PI)/(5 + 10 * gameMode);
-    z -= (float)sin(rot_y / 180 * M_PI)/(5 + 10 * gameMode);
-  }
-  // Right
-  if(key[KEY_D] || key[KEY_RIGHT]){
-    x += (float)cos(rot_y / 180 * M_PI)/(5 + 10 * gameMode);
-    z += (float)sin(rot_y / 180 * M_PI)/(5 + 10 * gameMode);
-  }
-
-  // Pan around
-  rot_y -= SCREEN_W/2 - mouse_x;
-  rot_x -= SCREEN_H/2 - mouse_y;
-
-  // No backflips!
-  if( rot_x > 90)
-    rot_x = 90;
-  else if( rot_x < -90)
-    rot_x = -90;
-
-  // Reset spinning amount
-  if( rot_y >= 360)
-    rot_y -= 360;
-  else if( rot_y < 0)
-    rot_y += 360;
-
-  // Reset mouse pos
-  position_mouse(SCREEN_W/2, SCREEN_H/2);
-
-  // Zooming
-  //Zoom out
-  if(mouse_z < 0){
-    zoom -= 0.5;
-    if( !gameMode )
-      zoom -= 0.5;
-    position_mouse_z( 0);
-  }
-  //Zoom in
-  if(mouse_z > 0){
-    zoom += 0.5;
-    if( !gameMode )
-      zoom += 0.5;
-    position_mouse_z( 0);
-  }
-
-  // Collision
-  bool canFall = true;
-
-  //std::cout << "X:" << x << " Y:" << y << " Z:" << z << " RotX:" << rot_x << " RotY:" << rot_y << "\n";
-  if( gameMode){
-    for(int i = 0; i < DEFAULT_MAP_WIDTH; i++){
-      for(int t = 0; t < DEFAULT_MAP_LENGTH; t++){
-        for(int n = 0; n < DEFAULT_MAP_HEIGHT; n++){
-          if( canFall && (map_tiles[i][t][n] -> getType() != TILE_AIR && map_tiles[i][t][n] -> getType() != TILE_SNOW && map_tiles[i][t][n] -> getType() != TILE_GRASS && map_tiles[i][t][n] -> getType() != TILE_TREE)){
-            // Check if near first
-            if( distanceTo3D( x, y, z, map_tiles[i][t][n] -> getX(), map_tiles[i][t][n] -> getY(), map_tiles[i][t][n] -> getZ()) <= 2){
-              if( collision3d( x, 1, map_tiles[i][t][n] -> getX(), 1, y, 1, map_tiles[i][t][n] -> getY(), 1, z, 1, map_tiles[i][t][n] -> getZ(), 1)){
-                canFall = false;
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  // Yep u can fall
-  if( gameMode){
-    if( canFall){
-      y -= 0.2;
-      if( y < -10){
-        x = DEFAULT_MAP_LENGTH/2;
-        y = DEFAULT_MAP_HEIGHT;
-        z = DEFAULT_MAP_WIDTH/2;
-        rot_x = 45;
-        rot_y = 135;
-      }
-    }
-    // Cant fall
-    else if( key[KEY_SPACE] && y_velocity == 0){
-      y_velocity = 0.5;
-    }
-    y += y_velocity;
-    if( y_velocity > 0)
-      y_velocity *= 0.90;
-    if( y_velocity < 0.01)
-      y_velocity = 0;
-  }
-
   //Gen
   if(key[KEY_R]){
     generateMap();
   }
-
-  // Game mode
-  if( key[KEY_G]){
-    if( gameMode){
-      x = 0;
-      y = 15;
-      z = 0;
-      rot_x = 45;
-      rot_y = 135;
-    }
-    else{
-      x = DEFAULT_MAP_LENGTH/2;
-      y = DEFAULT_MAP_HEIGHT;
-      z = DEFAULT_MAP_WIDTH/2;
-      rot_x = 45;
-      rot_y = 135;
-    }
-    gameMode = !gameMode;
-    rest( 300);
-  }
-
-  // Erase tile
-  if( mouse_b & 1)
-    map_tiles[sel_x][sel_y][sel_z] -> setType( tile_defs.getTileByType(TILE_AIR));
 }
 
 // Procedural Generation of map
@@ -585,19 +444,6 @@ void tile_map::quickPeek( std::string currentPhase){
 
 //Draw map
 void tile_map::draw( int newAnimationFrame){
-  // TRANSFORMS
-  // Reset camera transforms
-  glLoadIdentity();
-
-  // Rotate along x
-  glRotatef( rot_x, 1.0, 0.0, 0.0 );
-
-  // Rotate along y
-  glRotatef( rot_y, 0.0, 1.0, 0.0 );
-
-  // Translate map
-  glTranslatef( -x, -y, -z);
-
   // Place light 0 (Direction)
   GLfloat light_position[] = { 1.0001, 1.0001, 1.0001, 0.0f };
   glLightfv(GL_LIGHT0, GL_POSITION, light_position);

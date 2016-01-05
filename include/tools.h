@@ -59,7 +59,7 @@ extern int distanceTo2D( int x1, int y1, int x2, int y2);
 extern int distanceTo3D( int x1, int y1, int z1, int x2, int y2, int z2);
 
 // Catch 0
-int divideCatchZero( int number1, int number2);
+extern int divideCatchZero( int number1, int number2);
 
 // Frustum culling
 //extern bool boxInFrustum( frustum3 const & fru, bound3 const & box );

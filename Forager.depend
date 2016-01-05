@@ -18,10 +18,10 @@
 	"ids.h"
 	"tile_type.h"
 
-1451968453 source:c:\users\allan\documents\games indev\forager\src\tile_map.cpp
+1452010035 source:c:\users\allan\documents\games indev\forager\src\tile_map.cpp
 	"tile_map.h"
 
-1451964959 c:\users\allan\documents\games indev\forager\include\tile_map.h
+1452010450 c:\users\allan\documents\games indev\forager\include\tile_map.h
 	<allegro.h>
 	<string>
 	<math.h>
@@ -36,7 +36,7 @@
 1449551968 source:c:\users\allan\documents\games indev\forager\src\tile.cpp
 	"tile.h"
 
-1451968697 source:c:\users\allan\documents\games indev\forager\src\main.cpp
+1452016927 source:c:\users\allan\documents\games indev\forager\src\main.cpp
 	<GL/glew.h>
 	<allegro.h>
 	<alpng.h>
@@ -55,8 +55,9 @@
 	"tile_map.h"
 	"tools.h"
 	"player.h"
+	"audio_3d.h"
 
-1451955311 c:\users\allan\documents\games indev\forager\include\ids.h
+1452009008 c:\users\allan\documents\games indev\forager\include\ids.h
 
 1430682228 source:c:\users\allan\documents\games indev\forager\src\globals.cpp
 	"globals.h"
@@ -65,7 +66,7 @@
 	<allegro.h>
 	<string>
 
-1451962983 c:\users\allan\documents\games indev\forager\include\tools.h
+1452008890 c:\users\allan\documents\games indev\forager\include\tools.h
 	<allegro.h>
 	<string>
 	<iostream>
@@ -109,10 +110,12 @@
 1447733328 source:c:\users\allan\documents\games indev\forager\src\coordinate.cpp
 	"coordinate.h"
 
-1448115177 c:\users\allan\documents\games indev\forager\include\player.h
-	<allegro.h>
+1452014816 c:\users\allan\documents\games indev\forager\include\player.h
+	"tools.h"
+	"ids.h"
+	"tile_map.h"
 
-1451939406 source:c:\users\allan\documents\games indev\forager\src\player.cpp
+1452013969 source:c:\users\allan\documents\games indev\forager\src\player.cpp
 	"player.h"
 
 1451967657 source:c:\users\allan\documents\games indev\forager\src\tile_type.cpp
@@ -164,4 +167,12 @@
 
 1451969074 source:c:\users\allan\documents\games indev\forager\src\skybox.cpp
 	"skybox.h"
+
+1452017665 source:c:\users\allan\documents\games indev\forager\src\audio_3d.cpp
+	"audio_3d.h"
+
+1452015151 c:\users\allan\documents\games indev\forager\include\audio_3d.h
+	<allegro.h>
+	<string>
+	"tools.h"
 

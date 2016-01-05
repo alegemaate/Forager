@@ -28,6 +28,7 @@
 #include "tile_map.h"
 #include "tools.h"
 #include "player.h"
+#include "audio_3d.h"
 
 //Create variables
 int gameScreen = INGAME;
@@ -42,8 +43,8 @@ FONT *f1, *f2, *f3, *f4, *f5;
 BITMAP* buffer;
 BITMAP* cursor;
 
-//Resolution X
-int resDiv;
+// Sounds
+audio_3d *dinner;
 
 //FPS System
 int fps;
@@ -163,6 +164,8 @@ void setup(bool first){
     install_keyboard();
     install_timer();
     install_mouse();
+    if( install_sound(DIGI_AUTODETECT,MIDI_AUTODETECT,"."))
+      abort_on_error( allegro_error);
 
     set_color_depth( 32);
     set_window_title("Forager");
@@ -199,7 +202,7 @@ void setup(bool first){
     glLoadIdentity();
 
     // set the perspective with the appropriate aspect ratio
-    glFrustum(-(SCREEN_W/SCREEN_H), (SCREEN_W/SCREEN_H), -1.0, 1.0, 0.8, 200.0);
+    glFrustum(-(SCREEN_W/SCREEN_H), (SCREEN_W/SCREEN_H), -1.0, 1.0, 1.0, 200.0);
 
     //Now editing the model-view matrix.
     glMatrixMode(GL_MODELVIEW);
@@ -383,7 +386,10 @@ void setup(bool first){
     gameTiles -> generateMap();
 
     // Character
-    //jimmy = new player( 5, 5, 10);
+    jimmy = new player( 0, 15, 0, 45, 135);
+
+    // Sounds
+    dinner = new audio_3d( "sounds/dinner.wav", 0, 0, 0);
 
     //Sets Font
     f1 = load_font("images/fonts/arial_black.pcx", NULL, NULL);
@@ -408,8 +414,12 @@ void game(){
 
   }
   else if(gameScreen == INGAME){
-    if( !key[KEY_TILDE])
-      gameTiles -> update();
+    gameTiles -> update();
+    jimmy -> logic( gameTiles);
+
+    if( key[KEY_M])
+      dinner -> play3D( jimmy -> getPointX(), jimmy -> getPointY(), jimmy -> getPointZ(), 255, 127, 1000, true);
+    dinner -> update();
   }
 
   //Exit game
@@ -437,6 +447,19 @@ void draw(){
    * OPEN GL DRAWING *
    *******************/
 
+  // Draw player
+  jimmy -> render();
+
+  // TRANSFORMS
+  // Rotate along x
+  glRotatef( jimmy -> getXRotation(), 1.0, 0.0, 0.0 );
+
+  // Rotate along y
+  glRotatef( jimmy -> getYRotation(), 0.0, 1.0, 0.0 );
+
+  // Translate map
+  glTranslatef( -jimmy -> getX(), -jimmy -> getY(), -jimmy -> getZ());
+
   // Draw map
   if( !key[KEY_TILDE])
     gameTiles -> draw( animationFrame);
@@ -445,7 +468,7 @@ void draw(){
   /**********************
    * ALLEGRO GL DRAWING *
    **********************/
-  allegro_gl_set_allegro_mode();
+  //allegro_gl_set_allegro_mode();
 
   // Transparent buffer
   /*rectfill( buffer, 0, 0, SCREEN_W, SCREEN_H, makecol( 255, 0, 255));
@@ -464,7 +487,7 @@ void draw(){
   //Draws buffer
   draw_sprite( screen, buffer, 0, 0);*/
 
-  allegro_gl_unset_allegro_mode();
+  //allegro_gl_unset_allegro_mode();
 
   allegro_gl_flip();
 }
