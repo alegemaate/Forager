@@ -45,6 +45,10 @@ void skybox::renderSkybox(){
   // Translate in
   glTranslatef( DEFAULT_MAP_LENGTH/2, DEFAULT_MAP_HEIGHT/2, DEFAULT_MAP_WIDTH/2);
 
+  // Nice and bright
+  GLfloat sky_ambient[] = { 0.8f, 0.8f, 0.8f, 0.8f};
+  glMaterialfv(GL_FRONT, GL_AMBIENT, sky_ambient);
+
   // FRONT
   glBindTexture(GL_TEXTURE_2D, textureRef[0]);
   glBegin(GL_TRIANGLES);
@@ -122,6 +126,10 @@ void skybox::renderSkybox(){
     glNormal3f(0,1,0); glTexCoord2f(0, 1); glVertex3f( DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH ); //B
     glNormal3f(0,1,0); glTexCoord2f(0, 0); glVertex3f( DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH ); //F
   glEnd();
+
+  // Cool, back to normal
+  GLfloat mat_old_ambient[] = { 0.3f, 0.3f, 0.3f, 1.0f};
+  glMaterialfv(GL_FRONT, GL_AMBIENT, mat_old_ambient);
 
   glPopMatrix();
 }

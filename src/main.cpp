@@ -176,29 +176,15 @@ void setup(bool first){
     allegro_gl_set(AGL_REQUIRE, AGL_DOUBLEBUFFER);
 
     //Set screenmode
-    if(true == true){
-      resDiv = 1;
-      if(set_gfx_mode( GFX_OPENGL_WINDOWED, 1280, 960, 0, 0) !=0){
-        resDiv = 2;
-        if(set_gfx_mode( GFX_OPENGL_WINDOWED, 640, 480, 0, 0) !=0){
-          resDiv = 4;
-          if(set_gfx_mode( GFX_OPENGL_WINDOWED, 320, 240, 0, 0) !=0){
-            set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
-          	abort_on_error("Unable to go into fullscreen graphic mode\n%s\n");
-          }
-        }
-      }
-    }
-    else{
-      resDiv = 1;
-      if(set_gfx_mode( GFX_OPENGL_WINDOWED, 1280, 960, 0, 0) !=0){
-        resDiv = 2;
-        if(set_gfx_mode( GFX_OPENGL_WINDOWED, 640, 480, 0, 0) !=0){
-          resDiv = 4;
-          if(set_gfx_mode( GFX_OPENGL_WINDOWED, 320, 240, 0, 0) !=0){
-            set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
-          	abort_on_error("Unable to set any windowed graphic mode\n%s\n");
-          }
+    int monitor_width = 0;
+    int monitor_height = 0;
+    get_desktop_resolution( &monitor_width, &monitor_height);
+
+    if(set_gfx_mode( GFX_OPENGL_FULLSCREEN, monitor_width, monitor_height, 0, 0) !=0){
+      if(set_gfx_mode( GFX_OPENGL_WINDOWED, monitor_width, monitor_height, 0, 0) !=0){
+        if(set_gfx_mode( GFX_OPENGL_WINDOWED, monitor_width/2, monitor_height/2, 0, 0) !=0){
+          set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
+          abort_on_error("Unable to go into fullscreen graphic mode\n%s\n");
         }
       }
     }
@@ -213,7 +199,7 @@ void setup(bool first){
     glLoadIdentity();
 
     // set the perspective with the appropriate aspect ratio
-    glFrustum(-1.15, 1.15, -1.0, 1.0, 0.8, 200.0);
+    glFrustum(-(SCREEN_W/SCREEN_H), (SCREEN_W/SCREEN_H), -1.0, 1.0, 0.8, 200.0);
 
     //Now editing the model-view matrix.
     glMatrixMode(GL_MODELVIEW);
