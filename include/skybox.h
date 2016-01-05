@@ -1,3 +1,10 @@
+/*
+  Skybox
+  Allan Legemaate
+  04/01/16
+  A neato lil skybox loader
+*/
+
 #ifndef SKYBOX_H
 #define SKYBOX_H
 

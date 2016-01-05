@@ -1,3 +1,10 @@
+/*
+  Audio 3D
+  Allan Legemaate
+  05/01/16
+  3D Sound object
+*/
+
 #ifndef AUDIO_3D_H
 #define AUDIO_3D_H
 

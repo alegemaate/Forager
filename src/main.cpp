@@ -30,6 +30,7 @@
 #include "player.h"
 #include "audio_3d.h"
 #include "globals.h"
+#include "material_manager.h"
 
 //Create variables
 int gameScreen = INGAME;
@@ -260,16 +261,8 @@ void setup(bool first){
     glEnable(GL_ALPHA_TEST);
     glShadeModel (GL_SMOOTH);
 
-    // Colours and properties of materials
-    GLfloat mat_ambient[] = { 0.3f, 0.3f, 0.3f, 1.0f};
-    GLfloat mat_diffuse[]  ={ 0.4f, 0.4f, 0.3f, 1.0f};
-    GLfloat mat_specular[] = { 0.1f, 0.25f, 0.50f, 1.0f};
-    GLfloat mat_shininess[] = { 5.0f };
-
-    glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
-    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+    // Set default material
+    changeMaterial( MATERIAL_DEFAULT);
 
     // Lighting
     GLfloat light_ambient[] = { 0.1f, 0.1f, 0.1f, 1.0f };

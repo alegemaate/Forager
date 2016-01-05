@@ -15,6 +15,7 @@
 
 #include "globals.h"
 #include "ids.h"
+#include "material_manager.h"
 
 class tile_type{
   public:

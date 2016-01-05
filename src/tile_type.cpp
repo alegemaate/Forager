@@ -48,8 +48,10 @@ void tile_type::draw( BITMAP *tempBuffer, unsigned short x, unsigned short y, un
 
   if( image_reference_number[tickVal] != 0){
     // Shader
-    if( type == TILE_WATER)
-      glUseProgram(waterShader);
+    if( type == TILE_WATER){
+      glUseProgram( waterShader);
+      changeMaterial( MATERIAL_WATER);
+    }
 
     glBindTexture(GL_TEXTURE_2D, image_reference_number[tickVal]);
 
@@ -350,7 +352,9 @@ void tile_type::draw( BITMAP *tempBuffer, unsigned short x, unsigned short y, un
     glPopMatrix();
 
     // Shader back
-    if( type == TILE_WATER)
-      glUseProgram(defaultShader);
+    if( currentMaterial != MATERIAL_DEFAULT){
+      changeMaterial( MATERIAL_DEFAULT);
+      glUseProgram( defaultShader);
+    }
   }
 }
