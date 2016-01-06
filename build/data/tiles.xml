@@ -8,6 +8,8 @@
 			<image2>NULL</image2>
 		</images>
 		<model>MODEL_NONE</model>
+		<attrubite>ATTRIBUTE_GAS</attrubite>
+		<random>0</random>
 	</tile>
 	<!--Grass-->
 	<tile id="1">
@@ -17,6 +19,8 @@
 			<image2>NULL</image2>
 		</images>
 		<model>MODEL_CUBE</model>
+		<attrubite>ATTRIBUTE_SOLID</attrubite>
+		<random>0</random>
 	</tile>
 	<!--Sand-->
 	<tile id="2">
@@ -26,6 +30,8 @@
 			<image2>NULL</image2>
 		</images>
 		<model>MODEL_CUBE</model>
+		<attrubite>ATTRIBUTE_SOLID</attrubite>
+		<random>0</random>
 	</tile>
 	<!--Snow-->
 	<tile id="3">
@@ -35,6 +41,8 @@
 			<image2>NULL</image2>
 		</images>
 		<model>MODEL_FLAT</model>
+		<attrubite>ATTRIBUTE_GAS</attrubite>
+		<random>0</random>
 	</tile>
 	<!--Stone-->
 	<tile id="4">
@@ -44,6 +52,8 @@
 			<image2>NULL</image2>
 		</images>
 		<model>MODEL_CUBE</model>
+		<attrubite>ATTRIBUTE_SOLID</attrubite>
+		<random>0</random>
 	</tile>
 	<!--Tree-->
 	<tile id="5">
@@ -53,6 +63,8 @@
 			<image2>images/textures/tree2.png</image2>
 		</images>
 		<model>MODEL_DOUBLE_PLANE_TALL</model>
+		<attrubite>ATTRIBUTE_GAS</attrubite>
+		<random>25</random>
 	</tile>
 	<!--Rock-->
 	<tile id="6">
@@ -62,6 +74,8 @@
 			<image2>NULL</image2>
 		</images>
 		<model>MODEL_CUBE_SMALL</model>
+		<attrubite>ATTRIBUTE_SOLID</attrubite>
+		<random>25</random>
 	</tile>
 	<!--Water-->
 	<tile id="7">
@@ -71,6 +85,8 @@
 			<image2>images/textures/water2.png</image2>
 		</images>
 		<model>MODEL_CUBE</model>
+		<attrubite>ATTRIBUTE_LIQUID</attrubite>
+		<random>0</random>
 	</tile>
 	<!--Ice-->
 	<tile id="8">
@@ -80,6 +96,8 @@
 			<image2>NULL</image2>
 		</images>
 		<model>MODEL_CUBE</model>
+		<attrubite>ATTRIBUTE_SOLID</attrubite>
+		<random>0</random>
 	</tile>
 	<!--Cactus-->
 	<tile id="9">
@@ -89,6 +107,8 @@
 			<image2>NULL</image2>
 		</images>
 		<model>MODEL_CUBE_SMALL</model>
+		<attrubite>ATTRIBUTE_GAS</attrubite>
+		<random>20</random>
 	</tile>
 	<!--Lava-->
 	<tile id="10">
@@ -98,6 +118,8 @@
 			<image2>NULL</image2>
 		</images>
 		<model>MODEL_CUBE</model>
+		<attrubite>ATTRIBUTE_SOLID</attrubite>
+		<random>0</random>
 	</tile>
 	<!--Tall Grass-->
 	<tile id="11">
@@ -107,6 +129,8 @@
 			<image2>NULL</image2>
 		</images>
 		<model>MODEL_DOUBLE_PLANE</model>
+		<attrubite>ATTRIBUTE_GAS</attrubite>
+		<random>30</random>
 	</tile>
 	<!--Grass Snow-->
 	<tile id="12">
@@ -116,6 +140,8 @@
 			<image2>NULL</image2>
 		</images>
 		<model>MODEL_CUBE</model>
+		<attrubite>ATTRIBUTE_SOLID</attrubite>
+		<random>0</random>
 	</tile>
 	<!--Tree Pine-->
 	<tile id="13">
@@ -125,6 +151,8 @@
 			<image2>NULL</image2>
 		</images>
 		<model>MODEL_DOUBLE_PLANE_TALL</model>
+		<attrubite>ATTRIBUTE_GAS</attrubite>
+		<random>0.15</random>
 	</tile>
 	<!--Temp Water-->
 	<tile id="14">
@@ -134,5 +162,7 @@
 			<image2>NULL</image2>
 		</images>
 		<model>MODEL_CUBE</model>
+		<attrubite>ATTRIBUTE_GAS</attrubite>
+		<random>0</random>
 	</tile>
 </tiles>

@@ -27,9 +27,9 @@
 #define TILE_JOHNNY 15
 
 // Types
-#define TYPE_GAS 0
-#define TYPE_LIQUID 1
-#define TYPE_SOLID 2
+#define ATTRIBUTE_GAS 0
+#define ATTRIBUTE_LIQUID 1
+#define ATTRIBUTE_SOLID 2
 
 // Biomes
 #define BIOME_NONE 0

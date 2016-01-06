@@ -9,9 +9,9 @@ biome_manager::~biome_manager(){
 }
 
 
-// Load biomes from xml
+
+// Load biomes from file
 void biome_manager::load( std::string newFile){
-  // Load biomes from file
   rapidxml::xml_document<> doc;
   std::ifstream file;
 
@@ -30,7 +30,9 @@ void biome_manager::load( std::string newFile){
 
   rapidxml::xml_node<> *allBiomes = doc.first_node();
 
-  // Load levels
+  // Load biomes from xml
+  std::cout << "   BIOMES\n-------------\n";
+
   for(rapidxml::xml_node<> *cBiome=allBiomes-> first_node("biome"); cBiome; cBiome=cBiome->next_sibling()){
     // Read xml variables
     // General
@@ -49,6 +51,10 @@ void biome_manager::load( std::string newFile){
     // Draw to screen (debug)
     //textprintf_centre_ex(screen,font,640,700,makecol(0,0,0),makecol(255,255,255),"Loading Biome:%s ID:%i",name.c_str(), biomeID);
     //textprintf_centre_ex(screen,font,640,760,makecol(0,0,0),makecol(255,255,255),"%i %i %i %i", mountain_frequency, mountain_height, mountain_radius, mountain_steepness);
+    std::cout << "-> Loading Biome:" << name << " ID:" <<  biomeID << " CHANCE:" << chance << "\n   "
+              << " MtnFreq:" << mountain_frequency << " MtnHt:" << mountain_height << " MtnRad:" << mountain_radius << " MtnSteep:" << mountain_steepness << "\n";
+
+
 
     // Create biome, set variables and add it to the biome list
     biome newBiome( name, biomeID);
@@ -70,8 +76,10 @@ void biome_manager::load( std::string newFile){
 
     // Add the biome
     biomes.push_back( newBiome);
-
   }
+
+  // Done
+  std::cout << "\n";
 }
 
 biome biome_manager::getBiome( int biomeID){

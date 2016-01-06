@@ -15,27 +15,34 @@
 
 class tile{
   public:
-    tile(int newX, int newY, int newZ, tile_type *newType);
+    tile(unsigned char newX, unsigned char newY, unsigned char newZ, tile_type *newType);
     virtual ~tile();
 
     unsigned short getType() { return tileImpl -> getType(); }
+    tile_type * getTile() { return tileImpl; }
     void setType(tile_type *val);
 
     void draw( BITMAP *tempBuffer, int newTick, BITMAP *overlayImage);
 
     // Get X value
-    unsigned short getX() { return x; }
-    unsigned short getY() { return y; }
-    unsigned short getZ() { return z; }
+    unsigned char getX() { return x; }
+    unsigned char getY() { return y; }
+    unsigned char getZ() { return z; }
+
+    void jiggle( char newxJiggle, char newyJiggle, char newzJiggle);
 
     // Set/Get biome
     void setBiome( int newBiomeID){ biome = newBiomeID; }
     unsigned char getBiome(){ return biome;}
   protected:
   private:
-    unsigned short x;
-    unsigned short y;
-    unsigned short z;
+    unsigned char x;
+    unsigned char y;
+    unsigned char z;
+    char xJiggle;
+    char yJiggle;
+    char zJiggle;
+
     unsigned char biome;
 
     tile_type *tileImpl;

@@ -70,7 +70,7 @@ void tile_map::update(){
 // Procedural Generation of map
 void tile_map::generateMap(){
   // GENERATE MAP
-  std::cout << "GENERATING MAP\n-------------\n";
+  std::cout << "GENERATING MAP\n--------------\n";
 
   // STEP 1:
   // Start with air
@@ -81,6 +81,7 @@ void tile_map::generateMap(){
       for(int u = 0; u <  DEFAULT_MAP_HEIGHT; u++){
         map_tiles[i][t][u] -> setType( tile_defs.getTileByType(TILE_AIR));
         map_tiles[i][t][u] -> setBiome(BIOME_NONE);
+        map_tiles[i][t][u] -> jiggle( 0, 0, 0);
       }
     }
   }
@@ -387,6 +388,9 @@ void tile_map::generateMap(){
         if( map_tiles[i][t][u-1] -> getType() == TILE_GRASS && map_tiles[i][t][u] -> getType() == TILE_AIR){
           // Spawn tile
           map_tiles[i][t][u] -> setType( tile_defs.getTileByType(biomes.getBiome(map_tiles[i][t][u] -> getBiome()).spawnResource()));
+          map_tiles[i][t][u] -> jiggle( map_tiles[i][t][u] -> getTile() -> getRandomness(),
+                                        0,
+                                        random(0, map_tiles[i][t][u] -> getTile() -> getRandomness()));
         }
       }
     }

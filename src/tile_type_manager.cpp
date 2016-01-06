@@ -29,6 +29,9 @@ void tile_type_manager::load( std::string newFile){
 
   rapidxml::xml_node<> *allTiles = doc.first_node();
 
+  // Loading
+  std::cout << "   TILES\n-------------\n";
+
   // Load tiles
   for(rapidxml::xml_node<> *cTile=allTiles-> first_node("tile"); cTile; cTile=cTile->next_sibling()){
     // Read xml variables
@@ -38,12 +41,24 @@ void tile_type_manager::load( std::string newFile){
     std::string image1 = cTile-> first_node("images") -> first_node("image") -> value();
     std::string image2 = cTile-> first_node("images") -> first_node("image2") -> value();
     std::string model = cTile-> first_node("model") -> value();
+    int randomness = atoi(cTile-> first_node("random") -> value());
+
+    std::string attrubite_string = cTile-> first_node("attrubite") -> value();
+    int attrubite = ATTRIBUTE_GAS;
+
+    // Get attrubite
+    if( attrubite_string == "ATTRIBUTE_GAS")
+      attrubite = ATTRIBUTE_GAS;
+    else if( attrubite_string == "ATTRIBUTE_SOLID")
+      attrubite = ATTRIBUTE_SOLID;
+    else if( attrubite_string == "ATTRIBUTE_LIQUID")
+      attrubite = ATTRIBUTE_LIQUID;
 
     // Draw to screen (debug)
-    //textprintf_centre_ex(screen,font,640,700,makecol(0,0,0),makecol(255,255,255),"Loading Tile:%s ID:%i MODEL:%s",name.c_str(), tileID, model.c_str());
+    std::cout << "-> Loading Tile:" << name << "  ID:" <<  tileID << "  MODEL:" << model << "  ATTRIBUTE:" << attrubite_string << "  RANDOMNESS:" << randomness << "\n";
 
     // Create tile, set variables and add it to the tile list
-    tile_type newTileType( name, tileID, NULL, model);
+    tile_type newTileType( name, tileID, NULL, model, attrubite, randomness);
 
     // Set images
     newTileType.setImages( image1, image2);
@@ -51,6 +66,8 @@ void tile_type_manager::load( std::string newFile){
     // Add the tile
     tile_defs.push_back( newTileType);
   }
+
+  std::cout << "\n\n";
 }
 
 tile_type *tile_type_manager::getTileByType( int tileID){

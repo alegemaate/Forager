@@ -311,7 +311,7 @@ void setup(bool first){
       std::cout << "Glew initialized \n\n";
 
     // LOAD SHADERS
-    std::cout << "SHADERS\n-------------\n";
+    std::cout << "   SHADERS\n-------------\n";
 
     // Shaders
     // DEFAULT
@@ -489,7 +489,7 @@ void game(){
     // Change time
     glUniform1f(skyTimeLoc, skyTime);
 
-    skyTime += 0.0005;
+    skyTime += 0.0001;
     if( skyTime > 1)
       skyTime = 0;
 

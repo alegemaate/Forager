@@ -1,7 +1,7 @@
 #include "tile_type.h"
 
 // Init tile
-tile_type::tile_type( std::string newName, unsigned char newType, BITMAP *defaultImage, std::string newModel){
+tile_type::tile_type( std::string newName, unsigned char newType, BITMAP *defaultImage, std::string newModel, unsigned char newAttribute, unsigned char newRandomness){
   // Set init variables
   type = newType;
   name = newName;
@@ -12,6 +12,10 @@ tile_type::tile_type( std::string newName, unsigned char newType, BITMAP *defaul
 
   image_reference_number[0] = 0;
   image_reference_number[1] = 0;
+
+  randomness = newRandomness;
+
+  attribute = newAttribute;
 }
 
 // Destroy tile
@@ -39,7 +43,7 @@ void tile_type::setImages( std::string path1, std::string path2){
 
 
 // Draw tile
-void tile_type::draw( BITMAP *tempBuffer, unsigned short x, unsigned short y, unsigned short z, bool newTick){
+void tile_type::draw( BITMAP *tempBuffer, double x, double y, double z, bool newTick){
   // Tick value
   bool tickVal = newTick;
 

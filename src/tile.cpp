@@ -1,10 +1,14 @@
 #include "tile.h"
 
 // Constructor
-tile::tile(int newX, int newY, int newZ, tile_type *newType){
+tile::tile(unsigned char newX, unsigned char newY, unsigned char newZ, tile_type *newType){
   x = newX;
   y = newY;
   z = newZ;
+
+  xJiggle = 0;
+  yJiggle = 0;
+  zJiggle = 0;
 
   biome = 0;
 
@@ -16,6 +20,16 @@ tile::~tile(){
 
 }
 
+// Jiggle them tiles
+void tile::jiggle( char newxJiggle, char newyJiggle, char newzJiggle){
+  xJiggle = newxJiggle;
+  yJiggle = newyJiggle;
+  zJiggle = newzJiggle;
+
+  if( getType() == TILE_TREE)
+    std::cout << newxJiggle << "\n";
+}
+
 // Set tile type
 void tile::setType(tile_type *val) {
   tileImpl = val;
@@ -24,7 +38,7 @@ void tile::setType(tile_type *val) {
 // Draw tile
 void tile::draw( BITMAP *tempBuffer, int newTick, BITMAP *overlayImage){
   // Temp xyz that calc zoom
-  tileImpl -> draw( tempBuffer, x, y, z, newTick);
+  tileImpl -> draw( tempBuffer, double(x + xJiggle/100), double(y + yJiggle/100), double(z + zJiggle/100), newTick);
 
   // Overlay if needed
   if(overlayImage != NULL){

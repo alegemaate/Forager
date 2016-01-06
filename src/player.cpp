@@ -80,10 +80,10 @@ void player::logic( tile_map *newMap){
     for(int i = 0; i < DEFAULT_MAP_WIDTH; i++){
       for(int t = 0; t < DEFAULT_MAP_LENGTH; t++){
         for(int n = 0; n < DEFAULT_MAP_HEIGHT; n++){
-          if( canFall && (newMap -> map_tiles[i][t][n] -> getType() != TILE_AIR && newMap -> map_tiles[i][t][n] -> getType() != TILE_SNOW && newMap -> map_tiles[i][t][n] -> getType() != TILE_GRASS && newMap -> map_tiles[i][t][n] -> getType() != TILE_TREE)){
+          if( canFall && newMap -> map_tiles[i][t][n] -> getTile() -> getAttribute() != ATTRIBUTE_GAS&& newMap -> map_tiles[i][t][n] -> getTile() -> getAttribute() != ATTRIBUTE_LIQUID){
             // Check if near first
             if( distanceTo3D( x, y, z, newMap -> map_tiles[i][t][n] -> getX(), newMap -> map_tiles[i][t][n] -> getY(), newMap -> map_tiles[i][t][n] -> getZ()) <= 2){
-              if( collision3d( x, 1, newMap -> map_tiles[i][t][n] -> getX(), 1, y, 1, newMap -> map_tiles[i][t][n] -> getY(), 1, z, 1, newMap -> map_tiles[i][t][n] -> getZ(), 1)){
+              if( collision3d( x, 0.5, newMap -> map_tiles[i][t][n] -> getX(), 0.5, y, 2, newMap -> map_tiles[i][t][n] -> getY(), 0.5, z, 0.5, newMap -> map_tiles[i][t][n] -> getZ(), 0.5)){
                 canFall = false;
               }
             }

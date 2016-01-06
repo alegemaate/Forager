@@ -48,7 +48,7 @@ bool collisionLeft(int xMin1, int xMax1, int xMin2, int xMax2){
 }*/
 
 // 3D collision
-bool collision3d(int x1, int width1, int x2, int width2, int y1, int height1, int y2, int height2, int z1, int depth1, int z2, int depth2){
+bool collision3d(double x1, double width1, double x2, double width2, double y1, double height1, double y2, double height2, double z1, double depth1, double z2, double depth2){
   //check the X axis
   if(abs(x1 - x2) < width1 + width2){
     //check the Y axis
