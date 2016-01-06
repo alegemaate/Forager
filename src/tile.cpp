@@ -25,9 +25,6 @@ void tile::jiggle( char newxJiggle, char newyJiggle, char newzJiggle){
   xJiggle = newxJiggle;
   yJiggle = newyJiggle;
   zJiggle = newzJiggle;
-
-  if( getType() == TILE_TREE)
-    std::cout << newxJiggle << "\n";
 }
 
 // Set tile type
@@ -38,7 +35,7 @@ void tile::setType(tile_type *val) {
 // Draw tile
 void tile::draw( BITMAP *tempBuffer, int newTick, BITMAP *overlayImage){
   // Temp xyz that calc zoom
-  tileImpl -> draw( tempBuffer, double(x + xJiggle/100), double(y + yJiggle/100), double(z + zJiggle/100), newTick);
+  tileImpl -> draw( tempBuffer, x +  double(xJiggle)/100, y + double(yJiggle)/100, z + double(zJiggle)/100, newTick);
 
   // Overlay if needed
   if(overlayImage != NULL){

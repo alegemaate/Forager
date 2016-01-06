@@ -64,7 +64,7 @@
 		</images>
 		<model>MODEL_DOUBLE_PLANE_TALL</model>
 		<attrubite>ATTRIBUTE_GAS</attrubite>
-		<random>25</random>
+		<random>80</random>
 	</tile>
 	<!--Rock-->
 	<tile id="6">
@@ -75,7 +75,7 @@
 		</images>
 		<model>MODEL_CUBE_SMALL</model>
 		<attrubite>ATTRIBUTE_SOLID</attrubite>
-		<random>25</random>
+		<random>100</random>
 	</tile>
 	<!--Water-->
 	<tile id="7">
@@ -108,7 +108,7 @@
 		</images>
 		<model>MODEL_CUBE_SMALL</model>
 		<attrubite>ATTRIBUTE_GAS</attrubite>
-		<random>20</random>
+		<random>100</random>
 	</tile>
 	<!--Lava-->
 	<tile id="10">
@@ -130,7 +130,7 @@
 		</images>
 		<model>MODEL_DOUBLE_PLANE</model>
 		<attrubite>ATTRIBUTE_GAS</attrubite>
-		<random>30</random>
+		<random>100</random>
 	</tile>
 	<!--Grass Snow-->
 	<tile id="12">
@@ -152,7 +152,7 @@
 		</images>
 		<model>MODEL_DOUBLE_PLANE_TALL</model>
 		<attrubite>ATTRIBUTE_GAS</attrubite>
-		<random>0.15</random>
+		<random>80</random>
 	</tile>
 	<!--Temp Water-->
 	<tile id="14">

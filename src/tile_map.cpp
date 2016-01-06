@@ -388,9 +388,9 @@ void tile_map::generateMap(){
         if( map_tiles[i][t][u-1] -> getType() == TILE_GRASS && map_tiles[i][t][u] -> getType() == TILE_AIR){
           // Spawn tile
           map_tiles[i][t][u] -> setType( tile_defs.getTileByType(biomes.getBiome(map_tiles[i][t][u] -> getBiome()).spawnResource()));
-          map_tiles[i][t][u] -> jiggle( map_tiles[i][t][u] -> getTile() -> getRandomness(),
+          map_tiles[i][t][u] -> jiggle( random(0, (int)map_tiles[i][t][u] -> getTile() -> getRandomness()),
                                         0,
-                                        random(0, map_tiles[i][t][u] -> getTile() -> getRandomness()));
+                                        random(0, (int)map_tiles[i][t][u] -> getTile() -> getRandomness()));
         }
       }
     }

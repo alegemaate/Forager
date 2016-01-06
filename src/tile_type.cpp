@@ -1,7 +1,7 @@
 #include "tile_type.h"
 
 // Init tile
-tile_type::tile_type( std::string newName, unsigned char newType, BITMAP *defaultImage, std::string newModel, unsigned char newAttribute, unsigned char newRandomness){
+tile_type::tile_type( std::string newName, unsigned char newType, BITMAP *defaultImage, std::string newModel, unsigned char newAttribute, char newRandomness){
   // Set init variables
   type = newType;
   name = newName;

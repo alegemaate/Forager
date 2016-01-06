@@ -19,14 +19,14 @@
 
 class tile_type{
   public:
-    tile_type( std::string newName, unsigned char newType, BITMAP *defaultImage, std::string newModel, unsigned char newAttribute = 0, unsigned char newRandomness = 0);
+    tile_type( std::string newName, unsigned char newType, BITMAP *defaultImage, std::string newModel, unsigned char newAttribute = 0, char newRandomness = 0);
     virtual ~tile_type();
 
     // Load image from file
     void setImages( std::string path1, std::string path2);
 
     // Get type
-    unsigned char getType(){ return type; }
+    char getType(){ return type; }
 
     // Get name
     std::string getName(){ return name; }
@@ -52,7 +52,7 @@ class tile_type{
     std::string name;
     BITMAP *image[2];
     unsigned char attribute;
-    unsigned char randomness;
+    char randomness;
 
     int image_reference_number[2];
 
