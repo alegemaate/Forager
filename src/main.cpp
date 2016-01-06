@@ -38,11 +38,15 @@ int animationFrame;
 bool closeGame;
 bool showFPS;
 
-//Water
+// Water
 GLfloat waveTime, waveWidth, waveHeight, waveFreq;
 GLint waveTimeLoc;
 GLint waveWidthLoc;
 GLint waveHeightLoc;
+
+// Sky
+GLfloat skyTime;
+GLint skyTimeLoc;
 
 //Create fonts
 FONT *f1, *f2, *f3, *f4, *f5;
@@ -265,9 +269,9 @@ void setup(bool first){
     changeMaterial( MATERIAL_DEFAULT);
 
     // Lighting
-    GLfloat light_ambient[] = { 0.1f, 0.1f, 0.1f, 1.0f };
-    GLfloat light_diffuse[] = { 0.8f, 0.7f, 0.5f, 1.0f };
-    GLfloat light_specular[] = { 0.3f, 0.3f, 0.3f, 1.0f };
+    GLfloat light_diffuse[] = { 0.1f, 0.1f, 0.1f, 1.0f };
+    GLfloat light_ambient[] = { 0.8f, 0.8f, 0.8f, 1.0f };
+    GLfloat light_specular[] = { 0.0f, 0.0f, 0.0f, 1.0f };
     GLfloat light_position[] = { 0.2, 0.0001, 1.0001, 0.0f };
 
     // Light 1
@@ -342,6 +346,23 @@ void setup(bool first){
 
     setupProgram( waterShader);
 
+
+    // SKY
+    GLuint skyVertexShader, skyFragmentShader;
+    skyVertexShader = glCreateShader(GL_VERTEX_SHADER);
+    skyFragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+
+    setupShader( "data/shaders/sky.vert", skyVertexShader);
+    setupShader( "data/shaders/sky.frag", skyFragmentShader);
+
+    // Make program
+    skyShader = glCreateProgram();
+
+    glAttachShader(skyShader, skyVertexShader);
+    glAttachShader(skyShader, skyFragmentShader);
+
+    setupProgram( skyShader);
+
     // Wave shader stuffz
     waveTime = 1.5;
     waveWidth = 0.1;
@@ -350,6 +371,25 @@ void setup(bool first){
     waveTimeLoc = glGetUniformLocation(waterShader, "waveTime");
     waveWidthLoc = glGetUniformLocation(waterShader, "waveWidth");
     waveHeightLoc = glGetUniformLocation(waterShader, "waveHeight");
+
+    // Sky shader stuff
+    skyTime = 0.4;
+    skyTimeLoc = glGetUniformLocation(skyShader, "timer");
+
+    BITMAP *sampler;
+    GLint samplerRef;
+    if(!(sampler = load_bitmap( "images/skybox/sample.png", NULL)))
+      abort_on_error("Could not load image images/skybox/sample.png");
+    samplerRef = allegro_gl_make_texture_ex( AGL_TEXTURE_HAS_ALPHA | AGL_TEXTURE_FLIP, sampler, GL_RGBA);
+
+    // Sampler
+    glUseProgram(skyShader);
+
+    int my_sampler = glGetUniformLocation(skyShader, "sampler");
+    glUniform1i( my_sampler, 1);
+
+    my_sampler = glGetUniformLocation(skyShader, "tex");
+    glUniform1i( my_sampler, 0);
 
     // Use our Shaders :D:D:D:D:D
     glUseProgram(defaultShader);
@@ -388,6 +428,8 @@ void setup(bool first){
     gameTiles -> load_images();
     gameTiles -> generateMap();
 
+    gameTiles -> theSky.skyboxSampler = samplerRef;
+
     // Character
     jimmy = new player( 0, 15, 0, 45, 135);
 
@@ -425,17 +467,34 @@ void game(){
     dinner -> update();
 
 
-    // Back to normal shader
+    // Water Shader
     glUseProgram(waterShader);
+
     // Change time
 		glUniform1f(waveTimeLoc, waveTime);
 		glUniform1f(waveWidthLoc, waveWidth);
 		glUniform1f(waveHeightLoc, waveHeight);
-    // Back to normal shader
-    glUseProgram(defaultShader);
+
+		// Change light according to time (using cos!)
+		float newColorVal = -0.5 * ( cos(2 * M_PI * skyTime) - 1);// PARABOLIC -1 * pow((2 * skyTime) - 1, 2) + 1;
+		GLfloat light_ambient[] = { newColorVal, newColorVal, newColorVal, 1.0f };
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
 
     // Update wave variable
 		waveTime += waveFreq;
+
+		// Sky Shader
+    glUseProgram(skyShader);
+
+    // Change time
+    glUniform1f(skyTimeLoc, skyTime);
+
+    skyTime += 0.0001;
+    if( skyTime > 1)
+      skyTime = 0;
+
+    // Back to normal shader
+    glUseProgram(defaultShader);
   }
 
   //Exit game

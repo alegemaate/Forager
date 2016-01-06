@@ -8,6 +8,7 @@ player::player( float newX, float newY, float newZ, float newXRot, float newYRot
   yRotation = newYRot;
 
   y_velocity = 0;
+  sprinting = false;
 }
 
 player::~player(){
@@ -21,30 +22,36 @@ void player::render(){
 
 // Move character and such
 void player::logic( tile_map *newMap){
-// Move, slower in gamemode
+  // Move, slower in gamemode
+  // Sprint
+  if( key[KEY_LSHIFT])
+    sprinting = true;
+  else
+    sprinting = false;
+
   // Forward
   if(key[KEY_W] || key[KEY_UP]){
     if( !gameMode)
-      y -= (float)sin(xRotation / 180 * M_PI)/(5 + 10 * gameMode);
-    z -= (float)cos(yRotation  / 180 * M_PI)/(5 + 10 * gameMode);
-    x += (float)sin(yRotation / 180 * M_PI)/(5 + 10 * gameMode);
+      y -= (float)sin(xRotation / 180 * M_PI)/(5 + 10 * gameMode) * (sprinting + 1);
+    z -= (float)cos(yRotation  / 180 * M_PI)/(5 + 10 * gameMode) * (sprinting + 1);
+    x += (float)sin(yRotation / 180 * M_PI)/(5 + 10 * gameMode) * (sprinting + 1);
   }
   // Backward
   if(key[KEY_S] || key[KEY_DOWN]){
     if( !gameMode)
-      y += (float)sin(xRotation / 180 * M_PI)/(5 + 10 * gameMode);
-    z += (float)cos(yRotation / 180 * M_PI)/(5 + 10 * gameMode);
-    x -= (float)sin(yRotation / 180 * M_PI)/(5 + 10 * gameMode);
+      y += (float)sin(xRotation / 180 * M_PI)/(5 + 10 * gameMode) * (sprinting + 1);
+    z += (float)cos(yRotation / 180 * M_PI)/(5 + 10 * gameMode) * (sprinting + 1);
+    x -= (float)sin(yRotation / 180 * M_PI)/(5 + 10 * gameMode) * (sprinting + 1);
   }
   // Left
   if(key[KEY_A] || key[KEY_LEFT]){
-    x -= (float)cos(yRotation / 180 * M_PI)/(5 + 10 * gameMode);
-    z -= (float)sin(yRotation / 180 * M_PI)/(5 + 10 * gameMode);
+    x -= (float)cos(yRotation / 180 * M_PI)/(5 + 10 * gameMode) * (sprinting + 1);
+    z -= (float)sin(yRotation / 180 * M_PI)/(5 + 10 * gameMode) * (sprinting + 1);
   }
   // Right
   if(key[KEY_D] || key[KEY_RIGHT]){
-    x += (float)cos(yRotation / 180 * M_PI)/(5 + 10 * gameMode);
-    z += (float)sin(yRotation / 180 * M_PI)/(5 + 10 * gameMode);
+    x += (float)cos(yRotation / 180 * M_PI)/(5 + 10 * gameMode) * (sprinting + 1);
+    z += (float)sin(yRotation / 180 * M_PI)/(5 + 10 * gameMode) * (sprinting + 1);
   }
 
   // Pan around
@@ -69,7 +76,6 @@ void player::logic( tile_map *newMap){
   // Collision
   bool canFall = true;
 
-  //std::cout << "X:" << x << " Y:" << y << " Z:" << z << " RotX:" << xRotation << " RotY:" << yRotation << "\n";
   if( gameMode){
     for(int i = 0; i < DEFAULT_MAP_WIDTH; i++){
       for(int t = 0; t < DEFAULT_MAP_LENGTH; t++){

@@ -45,12 +45,13 @@ void skybox::renderSkybox(){
   // Translate in
   glTranslatef( DEFAULT_MAP_LENGTH/2, DEFAULT_MAP_HEIGHT/2, DEFAULT_MAP_WIDTH/2);
 
-  // Nice and bright
-  GLfloat sky_ambient[] = { 0.8f, 0.8f, 0.8f, 0.8f};
-  glMaterialfv(GL_FRONT, GL_AMBIENT, sky_ambient);
-
   // FRONT
+  glActiveTexture(GL_TEXTURE0 + 0);
   glBindTexture(GL_TEXTURE_2D, textureRef[0]);
+
+  glActiveTexture(GL_TEXTURE0 + 1);
+  glBindTexture(GL_TEXTURE_2D, skyboxSampler);
+
   glBegin(GL_TRIANGLES);
     glColor4ub(255, 255, 255, 255);
     glNormal3f(0,0,1); glTexCoord2f(1, 1); glVertex3f( -DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH );  //C
@@ -63,7 +64,9 @@ void skybox::renderSkybox(){
   glEnd();
 
   // BACK
+  glActiveTexture(GL_TEXTURE0 + 0);
   glBindTexture(GL_TEXTURE_2D, textureRef[1]);
+
   glBegin(GL_TRIANGLES);
     glColor4ub(255, 255, 255, 255);
     glNormal3f(0,0,-1); glTexCoord2f(1, 1); glVertex3f( DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH ); //H
@@ -76,7 +79,9 @@ void skybox::renderSkybox(){
   glEnd();
 
   // LEFT
+  glActiveTexture(GL_TEXTURE0 + 0);
   glBindTexture(GL_TEXTURE_2D, textureRef[2]);
+
   glBegin(GL_TRIANGLES);
     glColor4ub(255, 255, 255, 255);
     glNormal3f(1,0,0); glTexCoord2f(1, 1); glVertex3f(  -DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH ); //G
@@ -89,7 +94,9 @@ void skybox::renderSkybox(){
   glEnd();
 
   // RIGHT
+  glActiveTexture(GL_TEXTURE0 + 0);
   glBindTexture(GL_TEXTURE_2D, textureRef[3]);
+
   glBegin(GL_TRIANGLES);
     glColor4ub(255, 255, 255, 255);
     glNormal3f(-1,0,0); glTexCoord2f(1, 1); glVertex3f( DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH ); //D
@@ -102,7 +109,9 @@ void skybox::renderSkybox(){
   glEnd();
 
   // TOP
+  glActiveTexture(GL_TEXTURE0 + 0);
   glBindTexture(GL_TEXTURE_2D, textureRef[4]);
+
   glBegin(GL_TRIANGLES);
     glColor4ub(255, 255, 255, 255);
     glNormal3f(0,-1,0); glTexCoord2f(1, 1); glVertex3f( -DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH ); //G
@@ -115,7 +124,9 @@ void skybox::renderSkybox(){
   glEnd();
 
   // BOTTOM
+  glActiveTexture(GL_TEXTURE0 + 0);
   glBindTexture(GL_TEXTURE_2D, textureRef[5]);
+
   glBegin(GL_TRIANGLES);
     glColor4ub(255, 255, 255, 255);
     glNormal3f(0,1,0); glTexCoord2f(1, 1); glVertex3f( -DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH ); //A

@@ -466,7 +466,9 @@ void tile_map::draw( int newAnimationFrame){
   glLightfv(GL_LIGHT1, GL_POSITION, light_position2);
 
   // Skybox
+  glUseProgram(skyShader);
   theSky.renderSkybox();
+  glUseProgram(defaultShader);
 
   // Go through all tiles and draw
   for(int i = 0; i < DEFAULT_MAP_WIDTH; i++){

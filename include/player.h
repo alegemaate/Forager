@@ -41,6 +41,8 @@ class player{
 
     float y_velocity;
 
+    bool sprinting;
+
     BITMAP *image[6];
 };
 

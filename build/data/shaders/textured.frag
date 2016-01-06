@@ -13,9 +13,9 @@ uniform sampler2D tex,l3d;
 void main()
 {
 	// Variables
-	vec3 texture_color, material_color;
+	vec3 texture_color, material_color, light_color;
 	vec4 texel;
-	float intensity, texture_alpha, material_alpha;
+	float intensity, texture_alpha, material_alpha, light_alpha;
 	
 	
 	// Get light intensity
@@ -25,6 +25,10 @@ void main()
 	material_color = intensity * (gl_FrontMaterial.diffuse).rgb + 
 								  gl_FrontMaterial.ambient.rgb;
 	material_alpha = gl_FrontMaterial.diffuse.a;
+
+	// Light info
+	light_color = gl_LightSource[0].ambient.rgb + (intensity * gl_LightSource[0].diffuse.rgb);
+	light_alpha = gl_LightSource[0].diffuse.a;
 	
 	// Get texture
 	texel = texture2D(tex,gl_TexCoord[0].st) + 
@@ -35,6 +39,6 @@ void main()
 	texture_alpha = texel.a;
 	
 	// Stick em all together
-	gl_FragColor = vec4( texture_color * material_color, texture_alpha * material_alpha);
+	gl_FragColor = vec4( texture_color * material_color * light_color, texture_alpha * material_alpha * light_alpha);
 }  
 

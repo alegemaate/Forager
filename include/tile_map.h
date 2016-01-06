@@ -34,6 +34,8 @@ class tile_map{
     void draw( int newAnimationFrame);
 
     tile *map_tiles[DEFAULT_MAP_WIDTH][DEFAULT_MAP_LENGTH][DEFAULT_MAP_HEIGHT];
+
+    skybox theSky;
   protected:
 
   private:
@@ -42,7 +44,7 @@ class tile_map{
     void quickPeek( std::string currentPhase);
     long checkBiomeNumber( char biomeToCheck);
 
-    skybox theSky;
+
 
     BITMAP *overlay_images[20];
     BITMAP *buffPoint;

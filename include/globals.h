@@ -2,6 +2,6 @@
 #define GLOBALS_H
 
 extern bool gameMode;
-extern int defaultShader, waterShader;
+extern int defaultShader, waterShader, skyShader;
 
 #endif // GLOBALS_H
