@@ -83,7 +83,7 @@ void player::logic( tile_map *newMap){
           if( canFall && newMap -> map_tiles[i][t][n] -> getTile() -> getAttribute() != ATTRIBUTE_GAS&& newMap -> map_tiles[i][t][n] -> getTile() -> getAttribute() != ATTRIBUTE_LIQUID){
             // Check if near first
             if( distanceTo3D( x, y, z, newMap -> map_tiles[i][t][n] -> getX(), newMap -> map_tiles[i][t][n] -> getY(), newMap -> map_tiles[i][t][n] -> getZ()) <= 2){
-              if( collision3d( x, 0.5, newMap -> map_tiles[i][t][n] -> getX(), 0.5, y, 2, newMap -> map_tiles[i][t][n] -> getY(), 0.5, z, 0.5, newMap -> map_tiles[i][t][n] -> getZ(), 0.5)){
+              if( collision3d( x, 0.5, newMap -> map_tiles[i][t][n] -> getX(), 0.5, y, 1.5, newMap -> map_tiles[i][t][n] -> getY(), 0.5, z, 0.5, newMap -> map_tiles[i][t][n] -> getZ(), 0.5)){
                 canFall = false;
               }
             }

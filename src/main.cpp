@@ -249,7 +249,9 @@ void setup(bool first){
     glLoadIdentity();
 
     // set the perspective with the appropriate aspect ratio
-    glFrustum(-(SCREEN_W/SCREEN_H), (SCREEN_W/SCREEN_H), -1.0, 1.0, 1.0, 200.0);
+    float halfWidth = tan(0.5 * (100.0 * (M_PI/180)));
+    float halfHeight = halfWidth * SCREEN_H / SCREEN_W;
+    glFrustum(-halfWidth, halfWidth, -halfHeight, halfHeight, 0.5, 200.0);
 
     //Now editing the model-view matrix.
     glMatrixMode(GL_MODELVIEW);
