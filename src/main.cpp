@@ -489,7 +489,7 @@ void game(){
     // Change time
     glUniform1f(skyTimeLoc, skyTime);
 
-    skyTime += 0.0001;
+    skyTime += 0.0005;
     if( skyTime > 1)
       skyTime = 0;
 
