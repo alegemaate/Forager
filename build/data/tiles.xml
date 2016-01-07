@@ -74,7 +74,7 @@
 			<image2>NULL</image2>
 		</images>
 		<model>MODEL_CUBE_SMALL</model>
-		<attrubite>ATTRIBUTE_SOLID</attrubite>
+		<attrubite>ATTRIBUTE_GAS</attrubite>
 		<random>100</random>
 	</tile>
 	<!--Water-->

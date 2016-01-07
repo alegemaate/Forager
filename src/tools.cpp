@@ -22,30 +22,20 @@ bool collisionAny(int xMin1, int xMax1, int xMin2, int xMax2, int yMin1, int yMa
   }
   return false;
 }
-/*bool collisionBottom(int yMin1, int yMax1, int yMin2, int yMax2){
-  if(yMin1 < yMax2 && yMax1 > yMax2){
+bool collisionOverlap(double x1, double width1, double x2, double width2){
+  if(x1 - width1 < x2 + width2 && x1 - width1 > x2 - width2){
     return true;
   }
   return false;
 }
-bool collisionTop(int yMin1, int yMax1, int yMin2, int yMax2){
-  if(yMin2 < yMax1 && yMin1 < yMin2){
+
+bool collisionOverlap2(double x1, double width, double x2){
+  if(x1 + width > x2 && x1 < x2){
     return true;
   }
   return false;
 }
-bool collisionRight(int xMin1, int xMax1, int xMin2, int xMax2){
-  if(xMin2 < xMax1 && xMin1 < xMin2){
-    return true;
-  }
-  return false;
-}
-bool collisionLeft(int xMin1, int xMax1, int xMin2, int xMax2){
-  if(xMin1 < xMax2 && xMax1 > xMax2){
-    return true;
-  }
-  return false;
-}*/
+
 
 // 3D collision
 bool collision3d(double x1, double width1, double x2, double width2, double y1, double height1, double y2, double height2, double z1, double depth1, double z2, double depth2){

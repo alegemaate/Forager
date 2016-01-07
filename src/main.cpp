@@ -231,12 +231,14 @@ void setup(bool first){
     get_desktop_resolution( &monitor_width, &monitor_height);
 
     if(set_gfx_mode( GFX_OPENGL_FULLSCREEN, monitor_width, monitor_height, 0, 0) !=0){
-      if(set_gfx_mode( GFX_OPENGL_WINDOWED, monitor_width, monitor_height, 0, 0) !=0){
-        if(set_gfx_mode( GFX_OPENGL_WINDOWED, monitor_width/2, monitor_height/2, 0, 0) !=0){
+      //if(set_gfx_mode( GFX_OPENGL_WINDOWED, monitor_width, monitor_height, 0, 0) !=0){
+        //if(set_gfx_mode( GFX_OPENGL_WINDOWED, monitor_width/2, monitor_height/2, 0, 0) !=0){
+        if(set_gfx_mode( GFX_OPENGL_WINDOWED, 1280, 960, 0, 0) !=0){
           set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
-          abort_on_error("Unable to go into fullscreen graphic mode\n%s\n");
+          abort_on_error("Unable to go into any graphic mode\n%s\n");
         }
-      }
+        //}
+     // }
     }
 
     /****************
@@ -249,7 +251,7 @@ void setup(bool first){
     glLoadIdentity();
 
     // set the perspective with the appropriate aspect ratio
-    float halfWidth = tan(0.5 * (100.0 * (M_PI/180)));
+    float halfWidth = tan(0.5 * (90.0 * (M_PI/180)));
     float halfHeight = halfWidth * SCREEN_H / SCREEN_W;
     glFrustum(-halfWidth, halfWidth, -halfHeight, halfHeight, 0.5, 200.0);
 

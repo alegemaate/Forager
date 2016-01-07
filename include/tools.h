@@ -21,10 +21,8 @@ extern bool joy_buttonpressed();
 
 //Collision
 extern bool collisionAny(int xMin1, int xMax1, int xMin2, int xMax2, int yMin1, int yMax1, int yMin2, int yMax2);
-extern bool collisionBottom(int yMin1, int yMax1, int yMin2, int yMax2);
-extern bool collisionTop(int yMin1, int yMax1, int yMin2, int yMax2);
-extern bool collisionRight(int xMin1, int xMax1, int xMin2, int xMax2);
-extern bool collisionLeft(int xMin1, int xMax1, int xMin2, int xMax2);
+extern bool collisionOverlap(double x1, double width, double x2, double width2);
+extern bool collisionOverlap2(double x1, double width, double x2);
 
 // 3D Collision
 extern bool collision3d(double x1, double width1, double x2, double width2, double y1, double height1, double y2, double height2, double z1, double depth1, double z2, double depth2);
