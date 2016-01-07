@@ -15,13 +15,13 @@ tile_map::tile_map( BITMAP *tempBuffer){
   biomes.load( "data/biomes.xml");
 
   // Load tiles225
-  tile_defs.load( "data/tiles.xml");
+  all_tile_defs.load( "data/tiles.xml");
 
   // Make a mapful of tiles
   for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
     for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
       for(int u = 0; u <  DEFAULT_MAP_HEIGHT; u++){
-        map_tiles[i][t][u] = new tile( i, u, t, tile_defs.getTileByType(0));
+        map_tiles[i][t][u] = new tile( i, u, t, all_tile_defs.getTileByType(0));
       }
     }
   }
@@ -79,7 +79,7 @@ void tile_map::generateMap(){
   for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
     for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
       for(int u = 0; u <  DEFAULT_MAP_HEIGHT; u++){
-        map_tiles[i][t][u] -> setType( tile_defs.getTileByType(TILE_AIR));
+        map_tiles[i][t][u] -> setType( all_tile_defs.getTileByType(TILE_AIR));
         map_tiles[i][t][u] -> setBiome(BIOME_NONE);
         map_tiles[i][t][u] -> jiggle( 0, 0, 0);
       }
@@ -93,7 +93,7 @@ void tile_map::generateMap(){
   for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
     for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
       for(int u = 0; u <  2; u++){
-        map_tiles[i][t][u] -> setType( tile_defs.getTileByType(TILE_GRASS));
+        map_tiles[i][t][u] -> setType( all_tile_defs.getTileByType(TILE_GRASS));
       }
     }
   }
@@ -205,7 +205,7 @@ void tile_map::generateMap(){
     // Carve river
     while( river_x != river_end_x || river_y != river_end_y){
       if( river_y < DEFAULT_MAP_LENGTH && river_x < DEFAULT_MAP_WIDTH && river_x >= 0 && river_y >= 0){
-        map_tiles[river_x][river_y][1] -> setType( tile_defs.getTileByType(TILE_TEMP));
+        map_tiles[river_x][river_y][1] -> setType( all_tile_defs.getTileByType(TILE_TEMP));
       }
 
       // Shift river
@@ -233,10 +233,10 @@ void tile_map::generateMap(){
         for(int t = 1; t < DEFAULT_MAP_LENGTH; t++){
           if( map_tiles[i][t][1] -> getType() == TILE_TEMP){
             if( wideningDir == 1){
-              map_tiles[i - 1][t][1] -> setType( tile_defs.getTileByType(TILE_TEMP));
+              map_tiles[i - 1][t][1] -> setType( all_tile_defs.getTileByType(TILE_TEMP));
             }
             else{
-              map_tiles[i][t - 1][1] -> setType( tile_defs.getTileByType(TILE_TEMP));
+              map_tiles[i][t - 1][1] -> setType( all_tile_defs.getTileByType(TILE_TEMP));
             }
           }
         }
@@ -247,7 +247,7 @@ void tile_map::generateMap(){
     for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
       for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
         if( map_tiles[i][t][1] -> getType() == TILE_TEMP){
-          map_tiles[i][t][1] -> setType( tile_defs.getTileByType(TILE_WATER));
+          map_tiles[i][t][1] -> setType( all_tile_defs.getTileByType(TILE_WATER));
         }
       }
     }
@@ -283,7 +283,7 @@ void tile_map::generateMap(){
                   if(i + q < DEFAULT_MAP_WIDTH && i + q >= 0 && t + r < DEFAULT_MAP_LENGTH && t + r >= 0){
                     // Round mountains!
                     if( distanceTo2D(i, t, i + q, t + r) < (mountainRaduis - ceil(pow(double(mountain_steepness)/10, w)))){
-                      map_tiles[i + q][t + r][u + w] -> setType( tile_defs.getTileByType(TILE_GRASS));
+                      map_tiles[i + q][t + r][u + w] -> setType( all_tile_defs.getTileByType(TILE_GRASS));
                     }
                   }
                 }
@@ -303,7 +303,7 @@ void tile_map::generateMap(){
     for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
       for(int u = DEFAULT_MAP_HEIGHT - 1; u > 1; u--){
         if( map_tiles[i][t][u] -> getType() == TILE_GRASS && map_tiles[i][t][u-1] -> getType() == TILE_AIR){
-          map_tiles[i][t][u-1] -> setType( tile_defs.getTileByType(TILE_GRASS));
+          map_tiles[i][t][u-1] -> setType( all_tile_defs.getTileByType(TILE_GRASS));
         }
       }
     }
@@ -318,7 +318,7 @@ void tile_map::generateMap(){
       for(int u = 0; u <  DEFAULT_MAP_HEIGHT; u++){
         if( map_tiles[i][t][u] -> getType() == TILE_GRASS){
           if( map_tiles[i][t][u] -> getBiome() == BIOME_LAKE)
-            map_tiles[i][t][u] -> setType( tile_defs.getTileByType(TILE_WATER));
+            map_tiles[i][t][u] -> setType( all_tile_defs.getTileByType(TILE_WATER));
         }
       }
     }
@@ -332,7 +332,7 @@ void tile_map::generateMap(){
     for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
       if( map_tiles[i][t][1] -> getType() == TILE_WATER){
         for(int u = 2; u < DEFAULT_MAP_HEIGHT; u++){
-          map_tiles[i][t][u] -> setType( tile_defs.getTileByType(TILE_AIR));
+          map_tiles[i][t][u] -> setType( all_tile_defs.getTileByType(TILE_AIR));
         }
       }
     }
@@ -360,7 +360,7 @@ void tile_map::generateMap(){
           slatedForRemoval = false;
 
         if( slatedForRemoval)
-          map_tiles[i][t][u] -> setType( tile_defs.getTileByType(TILE_TEMP));
+          map_tiles[i][t][u] -> setType( all_tile_defs.getTileByType(TILE_TEMP));
       }
     }
   }
@@ -372,7 +372,7 @@ void tile_map::generateMap(){
     for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
       for(int u = 0; u < DEFAULT_MAP_HEIGHT; u++){
         if( map_tiles[i][t][u] -> getType() == TILE_TEMP)
-          map_tiles[i][t][u] -> setType( tile_defs.getTileByType(TILE_AIR));
+          map_tiles[i][t][u] -> setType( all_tile_defs.getTileByType(TILE_AIR));
       }
     }
   }
@@ -387,7 +387,7 @@ void tile_map::generateMap(){
       for(int u = 1; u <  DEFAULT_MAP_HEIGHT - 1; u++){
         if( map_tiles[i][t][u-1] -> getType() == TILE_GRASS && map_tiles[i][t][u] -> getType() == TILE_AIR){
           // Spawn tile
-          map_tiles[i][t][u] -> setType( tile_defs.getTileByType(biomes.getBiome(map_tiles[i][t][u] -> getBiome()).spawnResource()));
+          map_tiles[i][t][u] -> setType( all_tile_defs.getTileByType(biomes.getBiome(map_tiles[i][t][u] -> getBiome()).spawnResource()));
           map_tiles[i][t][u] -> jiggle( random(0, (int)map_tiles[i][t][u] -> getTile() -> getRandomness()),
                                         0,
                                         random(0, (int)map_tiles[i][t][u] -> getTile() -> getRandomness()));
@@ -406,9 +406,9 @@ void tile_map::generateMap(){
         // Water, to ice or lava or none
         if( map_tiles[i][t][u] -> getType() == TILE_WATER){
           if( map_tiles[i][t][u] -> getBiome() == BIOME_TUNDRA)
-            map_tiles[i][t][u] -> setType( tile_defs.getTileByType(TILE_ICE));
+            map_tiles[i][t][u] -> setType( all_tile_defs.getTileByType(TILE_ICE));
           else if( map_tiles[i][t][u] -> getBiome() == BIOME_BARREN)
-            map_tiles[i][t][u] -> setType( tile_defs.getTileByType(TILE_LAVA));
+            map_tiles[i][t][u] -> setType( all_tile_defs.getTileByType(TILE_LAVA));
         }
       }
     }
@@ -424,11 +424,11 @@ void tile_map::generateMap(){
         // Dirt, to sand or rock or snow
         if( map_tiles[i][t][u] -> getType() == TILE_GRASS){
           if( map_tiles[i][t][u] -> getBiome() == BIOME_TUNDRA)
-            map_tiles[i][t][u] -> setType( tile_defs.getTileByType(TILE_GRASS_SNOW));
+            map_tiles[i][t][u] -> setType( all_tile_defs.getTileByType(TILE_GRASS_SNOW));
           else if( map_tiles[i][t][u] -> getBiome() == BIOME_BARREN)
-            map_tiles[i][t][u] -> setType( tile_defs.getTileByType(TILE_STONE));
+            map_tiles[i][t][u] -> setType( all_tile_defs.getTileByType(TILE_STONE));
           else if( map_tiles[i][t][u] -> getBiome() == BIOME_DESERT)
-            map_tiles[i][t][u] -> setType( tile_defs.getTileByType(TILE_SAND));
+            map_tiles[i][t][u] -> setType( all_tile_defs.getTileByType(TILE_SAND));
         }
       }
     }

@@ -35,6 +35,8 @@ class tile_map{
 
     tile *map_tiles[DEFAULT_MAP_WIDTH][DEFAULT_MAP_LENGTH][DEFAULT_MAP_HEIGHT];
 
+    tile_type_manager *getManager(){ return &all_tile_defs; }
+
     skybox theSky;
   protected:
 
@@ -49,7 +51,7 @@ class tile_map{
     BITMAP *overlay_images[20];
     BITMAP *buffPoint;
 
-    tile_type_manager tile_defs;
+    tile_type_manager all_tile_defs;
     biome_manager biomes;
 };
 

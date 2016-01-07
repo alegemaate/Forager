@@ -98,6 +98,14 @@ void player::logic( tile_map *newMap){
                   canMoveZPLUS = false;
                   z -= 0.01;
                 }
+
+                // Destory Blocks FOR FUN
+                if( (!canMoveZMINUS || !canMoveZPLUS || !canMoveXMINUS || !canMoveXPLUS)){
+                  if( mouse_b & 1)
+                      newMap -> map_tiles[i][t][n] -> setType( newMap -> getManager() -> getTileByType(TILE_GRASS));
+                  if( mouse_b & 2)
+                    newMap -> map_tiles[i][t][n] -> setType( newMap -> getManager() -> getTileByType(TILE_AIR));
+                }
               }
             }
           }
