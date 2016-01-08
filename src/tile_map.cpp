@@ -461,14 +461,6 @@ void tile_map::quickPeek( std::string currentPhase){
 
 //Draw map
 void tile_map::draw( int newAnimationFrame){
-  // Place light 0 (Direction)
-  GLfloat light_position[] = { 1.0001, 1.0001, 1.0001, 0.0f };
-  glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-
-  // Place light 1 (Direction2)
-  GLfloat light_position2[] = { -1.0001, -1.0001, -1.0001, 0.0f };
-  glLightfv(GL_LIGHT1, GL_POSITION, light_position2);
-
   // Skybox
   glUseProgram(skyShader);
   theSky.renderSkybox();

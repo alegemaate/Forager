@@ -75,23 +75,23 @@ void tile_type::draw( BITMAP *tempBuffer, double x, double y, double z, bool new
       glBegin(GL_TRIANGLES);
         // FRONT
         glColor4ub(255, 255, 255, 255);
-        glNormal3f(0,0,-1); glTexCoord2f(0, 0); glVertex3f( -0.5, 0.5, 0.5 );  //C
-        glNormal3f(0,0,-1); glTexCoord2f(1, 0); glVertex3f( -0.5, -0.5, 0.5 ); //A
-        glNormal3f(0,0,-1); glTexCoord2f(1, 1); glVertex3f( 0.5, -0.5, 0.5 );  //B
+        glNormal3f(0,0,1); glTexCoord2f(0, 0); glVertex3f( -0.5, 0.5, 0.5 );  //C
+        glNormal3f(0,0,1); glTexCoord2f(1, 0); glVertex3f( -0.5, -0.5, 0.5 ); //A
+        glNormal3f(0,0,1); glTexCoord2f(1, 1); glVertex3f( 0.5, -0.5, 0.5 );  //B
 
-        glNormal3f(0,0,-1); glTexCoord2f(0, 0); glVertex3f( -0.5, 0.5, 0.5 ); //C
-        glNormal3f(0,0,-1); glTexCoord2f(1, 1); glVertex3f( 0.5, -0.5, 0.5 ); //B
-        glNormal3f(0,0,-1); glTexCoord2f(0, 1); glVertex3f( 0.5, 0.5, 0.5 ); //D
+        glNormal3f(0,0,1); glTexCoord2f(0, 0); glVertex3f( -0.5, 0.5, 0.5 ); //C
+        glNormal3f(0,0,1); glTexCoord2f(1, 1); glVertex3f( 0.5, -0.5, 0.5 ); //B
+        glNormal3f(0,0,1); glTexCoord2f(0, 1); glVertex3f( 0.5, 0.5, 0.5 ); //D
 
         // BACK
         glColor4ub(255, 255, 255, 255);
-        glNormal3f(0,0,1); glTexCoord2f(0, 0); glVertex3f( 0.5, 0.5, -0.5 ); //H
-        glNormal3f(0,0,1); glTexCoord2f(1, 0); glVertex3f( 0.5, -0.5, -0.5 ); //F
-        glNormal3f(0,0,1); glTexCoord2f(1, 1); glVertex3f( -0.5, -0.5, -0.5 ); //E
+        glNormal3f(0,0,-1); glTexCoord2f(0, 0); glVertex3f( 0.5, 0.5, -0.5 ); //H
+        glNormal3f(0,0,-1); glTexCoord2f(1, 0); glVertex3f( 0.5, -0.5, -0.5 ); //F
+        glNormal3f(0,0,-1); glTexCoord2f(1, 1); glVertex3f( -0.5, -0.5, -0.5 ); //E
 
-        glNormal3f(0,0,1); glTexCoord2f(0, 0); glVertex3f( 0.5, 0.5, -0.5 ); //H
-        glNormal3f(0,0,1); glTexCoord2f(1, 1); glVertex3f( -0.5, -0.5, -0.5 ); //E
-        glNormal3f(0,0,1); glTexCoord2f(0, 1); glVertex3f( -0.5, 0.5, -0.5 ); //G
+        glNormal3f(0,0,-1); glTexCoord2f(0, 0); glVertex3f( 0.5, 0.5, -0.5 ); //H
+        glNormal3f(0,0,-1); glTexCoord2f(1, 1); glVertex3f( -0.5, -0.5, -0.5 ); //E
+        glNormal3f(0,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.5, 0.5, -0.5 ); //G
 
         // RIGHT
         glColor4ub(255, 255, 255, 255);
@@ -139,23 +139,23 @@ void tile_type::draw( BITMAP *tempBuffer, double x, double y, double z, bool new
       glBegin(GL_TRIANGLES);
         // FRONT
         glColor4ub(255, 255, 255, 255);
-        glNormal3f(0,0,-1); glTexCoord2f(0, 0); glVertex3f( -0.25, 0, 0.25 );  //C
-        glNormal3f(0,0,-1); glTexCoord2f(1, 0); glVertex3f( -0.25, -0.5, 0.25 ); //A
-        glNormal3f(0,0,-1); glTexCoord2f(1, 1); glVertex3f( 0.25, -0.5, 0.25 );  //B
+        glNormal3f(0,0,1); glTexCoord2f(0, 0); glVertex3f( -0.25, 0, 0.25 );  //C
+        glNormal3f(0,0,1); glTexCoord2f(1, 0); glVertex3f( -0.25, -0.5, 0.25 ); //A
+        glNormal3f(0,0,1); glTexCoord2f(1, 1); glVertex3f( 0.25, -0.5, 0.25 );  //B
 
-        glNormal3f(0,0,-1); glTexCoord2f(0, 0); glVertex3f( -0.25, 0, 0.25 ); //C
-        glNormal3f(0,0,-1); glTexCoord2f(1, 1); glVertex3f( 0.25, -0.5, 0.25 ); //B
-        glNormal3f(0,0,-1); glTexCoord2f(0, 1); glVertex3f( 0.25, 0, 0.25 ); //D
+        glNormal3f(0,0,1); glTexCoord2f(0, 0); glVertex3f( -0.25, 0, 0.25 ); //C
+        glNormal3f(0,0,1); glTexCoord2f(1, 1); glVertex3f( 0.25, -0.5, 0.25 ); //B
+        glNormal3f(0,0,1); glTexCoord2f(0, 1); glVertex3f( 0.25, 0, 0.25 ); //D
 
         // BACK
         glColor4ub(255, 255, 255, 255);
-        glNormal3f(0,0,1); glTexCoord2f(0, 0); glVertex3f( 0.25, 0, -0.25 ); //H
-        glNormal3f(0,0,1); glTexCoord2f(1, 0); glVertex3f( 0.25, -0.5, -0.25 ); //F
-        glNormal3f(0,0,1); glTexCoord2f(1, 1); glVertex3f( -0.25, -0.5, -0.25 ); //E
+        glNormal3f(0,0,-1); glTexCoord2f(0, 0); glVertex3f( 0.25, 0, -0.25 ); //H
+        glNormal3f(0,0,-1); glTexCoord2f(1, 0); glVertex3f( 0.25, -0.5, -0.25 ); //F
+        glNormal3f(0,0,-1); glTexCoord2f(1, 1); glVertex3f( -0.25, -0.5, -0.25 ); //E
 
-        glNormal3f(0,0,1); glTexCoord2f(0, 0); glVertex3f( 0.25, 0, -0.25 ); //H
-        glNormal3f(0,0,1); glTexCoord2f(1, 1); glVertex3f( -0.25, -0.5, -0.25 ); //E
-        glNormal3f(0,0,1); glTexCoord2f(0, 1); glVertex3f( -0.25, 0, -0.25 ); //G
+        glNormal3f(0,0,-1); glTexCoord2f(0, 0); glVertex3f( 0.25, 0, -0.25 ); //H
+        glNormal3f(0,0,-1); glTexCoord2f(1, 1); glVertex3f( -0.25, -0.5, -0.25 ); //E
+        glNormal3f(0,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.25, 0, -0.25 ); //G
 
         // RIGHT
         glColor4ub(255, 255, 255, 255);
@@ -203,23 +203,23 @@ void tile_type::draw( BITMAP *tempBuffer, double x, double y, double z, bool new
       glBegin(GL_TRIANGLES);
         // FRONT
         glColor4ub(255, 255, 255, 255);
-        glNormal3f(0,0,-1); glTexCoord2f(0, 0); glVertex3f( -0.5, -0.4, 0.5 );  //C
-        glNormal3f(0,0,-1); glTexCoord2f(1, 0); glVertex3f( -0.5, -0.5, 0.5 ); //A
-        glNormal3f(0,0,-1); glTexCoord2f(1, 1); glVertex3f( 0.5, -0.5, 0.5 );  //B
+        glNormal3f(0,0,1); glTexCoord2f(0, 0); glVertex3f( -0.5, -0.4, 0.5 );  //C
+        glNormal3f(0,0,1); glTexCoord2f(1, 0); glVertex3f( -0.5, -0.5, 0.5 ); //A
+        glNormal3f(0,0,1); glTexCoord2f(1, 1); glVertex3f( 0.5, -0.5, 0.5 );  //B
 
-        glNormal3f(0,0,-1); glTexCoord2f(0, 0); glVertex3f( -0.5, -0.4, 0.5 ); //C
-        glNormal3f(0,0,-1); glTexCoord2f(1, 1); glVertex3f( 0.5, -0.5, 0.5 ); //B
-        glNormal3f(0,0,-1); glTexCoord2f(0, 1); glVertex3f( 0.5, -0.4, 0.5 ); //D
+        glNormal3f(0,0,1); glTexCoord2f(0, 0); glVertex3f( -0.5, -0.4, 0.5 ); //C
+        glNormal3f(0,0,1); glTexCoord2f(1, 1); glVertex3f( 0.5, -0.5, 0.5 ); //B
+        glNormal3f(0,0,1); glTexCoord2f(0, 1); glVertex3f( 0.5, -0.4, 0.5 ); //D
 
         // BACK
         glColor4ub(255, 255, 255, 255);
-        glNormal3f(0,0,1); glTexCoord2f(0, 0); glVertex3f( 0.5, -0.4, -0.5 ); //H
-        glNormal3f(0,0,1); glTexCoord2f(1, 0); glVertex3f( 0.5, -0.5, -0.5 ); //F
-        glNormal3f(0,0,1); glTexCoord2f(1, 1); glVertex3f( -0.5, -0.5, -0.5 ); //E
+        glNormal3f(0,0,-1); glTexCoord2f(0, 0); glVertex3f( 0.5, -0.4, -0.5 ); //H
+        glNormal3f(0,0,-1); glTexCoord2f(1, 0); glVertex3f( 0.5, -0.5, -0.5 ); //F
+        glNormal3f(0,0,-1); glTexCoord2f(1, 1); glVertex3f( -0.5, -0.5, -0.5 ); //E
 
-        glNormal3f(0,0,1); glTexCoord2f(0, 0); glVertex3f( 0.5, -0.4, -0.5 ); //H
-        glNormal3f(0,0,1); glTexCoord2f(1, 1); glVertex3f( -0.5, -0.5, -0.5 ); //E
-        glNormal3f(0,0,1); glTexCoord2f(0, 1); glVertex3f( -0.5, -0.4, -0.5 ); //G
+        glNormal3f(0,0,-1); glTexCoord2f(0, 0); glVertex3f( 0.5, -0.4, -0.5 ); //H
+        glNormal3f(0,0,-1); glTexCoord2f(1, 1); glVertex3f( -0.5, -0.5, -0.5 ); //E
+        glNormal3f(0,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.5, -0.4, -0.5 ); //G
 
         // RIGHT
         glColor4ub(255, 255, 255, 255);
@@ -267,44 +267,44 @@ void tile_type::draw( BITMAP *tempBuffer, double x, double y, double z, bool new
       glBegin(GL_TRIANGLES);
         // SIDE 1 FRONT
         glColor4ub(255, 255, 255, 255);
-        glNormal3f(0,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.25, 0.5, 0.25 );  //C
-        glNormal3f(0,0,-1); glTexCoord2f(0, 0); glVertex3f( -0.25, -0.5, 0.25 ); //A
-        glNormal3f(0,0,-1); glTexCoord2f(1, 0); glVertex3f( 0.25, -0.5, -0.25 );  //B
+        glNormal3f(1,0,1); glTexCoord2f(0, 1); glVertex3f( -0.25, 0.5, 0.25 );  //C
+        glNormal3f(1,0,1); glTexCoord2f(0, 0); glVertex3f( -0.25, -0.5, 0.25 ); //A
+        glNormal3f(1,0,1); glTexCoord2f(1, 0); glVertex3f( 0.25, -0.5, -0.25 );  //B
 
-        glNormal3f(0,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.25, 0.5, 0.25 ); //C
-        glNormal3f(0,0,-1); glTexCoord2f(1, 0); glVertex3f( 0.25, -0.5, -0.25 ); //B
-        glNormal3f(0,0,-1); glTexCoord2f(1, 1); glVertex3f( 0.25, 0.5, -0.25 ); //D
+        glNormal3f(1,0,1); glTexCoord2f(0, 1); glVertex3f( -0.25, 0.5, 0.25 ); //C
+        glNormal3f(1,0,1); glTexCoord2f(1, 0); glVertex3f( 0.25, -0.5, -0.25 ); //B
+        glNormal3f(1,0,1); glTexCoord2f(1, 1); glVertex3f( 0.25, 0.5, -0.25 ); //D
 
         // SIDE 1 BACK
         glColor4ub(255, 255, 255, 255);
-        glNormal3f(0,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.25, 0.5, 0.25 );  //C
-        glNormal3f(0,0,-1); glTexCoord2f(1, 0); glVertex3f( 0.25, -0.5, -0.25 );  //B
-        glNormal3f(0,0,-1); glTexCoord2f(0, 0); glVertex3f( -0.25, -0.5, 0.25 ); //A
+        glNormal3f(-1,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.25, 0.5, 0.25 );  //C
+        glNormal3f(-1,0,-1); glTexCoord2f(1, 0); glVertex3f( 0.25, -0.5, -0.25 );  //B
+        glNormal3f(-1,0,-1); glTexCoord2f(0, 0); glVertex3f( -0.25, -0.5, 0.25 ); //A
 
-        glNormal3f(0,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.25, 0.5, 0.25 ); //C
-        glNormal3f(0,0,-1); glTexCoord2f(1, 1); glVertex3f( 0.25, 0.5, -0.25 ); //D
-        glNormal3f(0,0,-1); glTexCoord2f(1, 0); glVertex3f( 0.25, -0.5, -0.25 ); //B
+        glNormal3f(-1,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.25, 0.5, 0.25 ); //C
+        glNormal3f(-1,0,-1); glTexCoord2f(1, 1); glVertex3f( 0.25, 0.5, -0.25 ); //D
+        glNormal3f(-1,0,-1); glTexCoord2f(1, 0); glVertex3f( 0.25, -0.5, -0.25 ); //B
 
 
         // SIDE 2 FRONT
         glColor4ub(255, 255, 255, 255);
-        glNormal3f(0,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.25, 0.5, -0.25 );  //C
-        glNormal3f(0,0,-1); glTexCoord2f(0, 0); glVertex3f( -0.25, -0.5, -0.25 ); //A
-        glNormal3f(0,0,-1); glTexCoord2f(1, 0); glVertex3f( 0.25, -0.5, 0.25 );  //B
+        glNormal3f(-1,0,1); glTexCoord2f(0, 1); glVertex3f( -0.25, 0.5, -0.25 );  //C
+        glNormal3f(-1,0,1); glTexCoord2f(0, 0); glVertex3f( -0.25, -0.5, -0.25 ); //A
+        glNormal3f(-1,0,1); glTexCoord2f(1, 0); glVertex3f( 0.25, -0.5, 0.25 );  //B
 
-        glNormal3f(0,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.25, 0.5, -0.25 ); //C
-        glNormal3f(0,0,-1); glTexCoord2f(1, 0); glVertex3f( 0.25, -0.5, 0.25 ); //B
-        glNormal3f(0,0,-1); glTexCoord2f(1, 1); glVertex3f( 0.25, 0.5, 0.25 ); //D
+        glNormal3f(-1,0,1); glTexCoord2f(0, 1); glVertex3f( -0.25, 0.5, -0.25 ); //C
+        glNormal3f(-1,0,1); glTexCoord2f(1, 0); glVertex3f( 0.25, -0.5, 0.25 ); //B
+        glNormal3f(-1,0,1); glTexCoord2f(1, 1); glVertex3f( 0.25, 0.5, 0.25 ); //D
 
         // SIDE 2 BACK
         glColor4ub(255, 255, 255, 255);
-        glNormal3f(0,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.25, 0.5, -0.25 );  //C
-        glNormal3f(0,0,-1); glTexCoord2f(1, 0); glVertex3f( 0.25, -0.5, 0.25 );  //B
-        glNormal3f(0,0,-1); glTexCoord2f(0, 0); glVertex3f( -0.25, -0.5, -0.25 ); //A
+        glNormal3f(1,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.25, 0.5, -0.25 );  //C
+        glNormal3f(1,0,-1); glTexCoord2f(1, 0); glVertex3f( 0.25, -0.5, 0.25 );  //B
+        glNormal3f(1,0,-1); glTexCoord2f(0, 0); glVertex3f( -0.25, -0.5, -0.25 ); //A
 
-        glNormal3f(0,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.25, 0.5, -0.25 ); //C
-        glNormal3f(0,0,-1); glTexCoord2f(1, 1); glVertex3f( 0.25, 0.5, 0.25 ); //D
-        glNormal3f(0,0,-1); glTexCoord2f(1, 0); glVertex3f( 0.25, -0.5, 0.25 ); //B
+        glNormal3f(1,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.25, 0.5, -0.25 ); //C
+        glNormal3f(1,0,-1); glTexCoord2f(1, 1); glVertex3f( 0.25, 0.5, 0.25 ); //D
+        glNormal3f(1,0,-1); glTexCoord2f(1, 0); glVertex3f( 0.25, -0.5, 0.25 ); //B
       glEnd();
     }
     // X like planes tall
@@ -312,44 +312,44 @@ void tile_type::draw( BITMAP *tempBuffer, double x, double y, double z, bool new
       glBegin(GL_TRIANGLES);
         // SIDE 1 FRONT
         glColor4ub(255, 255, 255, 255);
-        glNormal3f(0,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.5, 2.5, 0.5 );  //C
-        glNormal3f(0,0,-1); glTexCoord2f(0, 0); glVertex3f( -0.5, -0.5, 0.5 ); //A
-        glNormal3f(0,0,-1); glTexCoord2f(1, 0); glVertex3f( 0.5, -0.5, -0.5 );  //B
+        glNormal3f(1,0,1); glTexCoord2f(0, 1); glVertex3f( -0.5, 2.5, 0.5 );  //C
+        glNormal3f(1,0,1); glTexCoord2f(0, 0); glVertex3f( -0.5, -0.5, 0.5 ); //A
+        glNormal3f(1,0,1); glTexCoord2f(1, 0); glVertex3f( 0.5, -0.5, -0.5 );  //B
 
-        glNormal3f(0,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.5, 2.5, 0.5 ); //C
-        glNormal3f(0,0,-1); glTexCoord2f(1, 0); glVertex3f( 0.5, -0.5, -0.5 ); //B
-        glNormal3f(0,0,-1); glTexCoord2f(1, 1); glVertex3f( 0.5, 2.5, -0.5 ); //D
+        glNormal3f(1,0,1); glTexCoord2f(0, 1); glVertex3f( -0.5, 2.5, 0.5 ); //C
+        glNormal3f(1,0,1); glTexCoord2f(1, 0); glVertex3f( 0.5, -0.5, -0.5 ); //B
+        glNormal3f(1,0,1); glTexCoord2f(1, 1); glVertex3f( 0.5, 2.5, -0.5 ); //D
 
         // SIDE 1 BACK
         glColor4ub(255, 255, 255, 255);
-        glNormal3f(0,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.5, 2.5, 0.5 );  //C
-        glNormal3f(0,0,-1); glTexCoord2f(1, 0); glVertex3f( 0.5, -0.5, -0.5 );  //B
-        glNormal3f(0,0,-1); glTexCoord2f(0, 0); glVertex3f( -0.5, -0.5, 0.5 ); //A
+        glNormal3f(-1,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.5, 2.5, 0.5 );  //C
+        glNormal3f(-1,0,-1); glTexCoord2f(1, 0); glVertex3f( 0.5, -0.5, -0.5 );  //B
+        glNormal3f(-1,0,-1); glTexCoord2f(0, 0); glVertex3f( -0.5, -0.5, 0.5 ); //A
 
-        glNormal3f(0,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.5, 2.5, 0.5 ); //C
-        glNormal3f(0,0,-1); glTexCoord2f(1, 1); glVertex3f( 0.5, 2.5, -0.5 ); //D
-        glNormal3f(0,0,-1); glTexCoord2f(1, 0); glVertex3f( 0.5, -0.5, -0.5 ); //B
+        glNormal3f(-1,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.5, 2.5, 0.5 ); //C
+        glNormal3f(-1,0,-1); glTexCoord2f(1, 1); glVertex3f( 0.5, 2.5, -0.5 ); //D
+        glNormal3f(-1,0,-1); glTexCoord2f(1, 0); glVertex3f( 0.5, -0.5, -0.5 ); //B
 
 
         // SIDE 2 FRONT
         glColor4ub(255, 255, 255, 255);
-        glNormal3f(0,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.5, 2.5, -0.5 );  //C
-        glNormal3f(0,0,-1); glTexCoord2f(0, 0); glVertex3f( -0.5, -0.5, -0.5 ); //A
-        glNormal3f(0,0,-1); glTexCoord2f(1, 0); glVertex3f( 0.5, -0.5, 0.5 );  //B
+        glNormal3f(-1,0,1); glTexCoord2f(0, 1); glVertex3f( -0.5, 2.5, -0.5 );  //C
+        glNormal3f(-1,0,1); glTexCoord2f(0, 0); glVertex3f( -0.5, -0.5, -0.5 ); //A
+        glNormal3f(-1,0,1); glTexCoord2f(1, 0); glVertex3f( 0.5, -0.5, 0.5 );  //B
 
-        glNormal3f(0,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.5, 2.5, -0.5 ); //C
-        glNormal3f(0,0,-1); glTexCoord2f(1, 0); glVertex3f( 0.5, -0.5, 0.5 ); //B
-        glNormal3f(0,0,-1); glTexCoord2f(1, 1); glVertex3f( 0.5, 2.5, 0.5 ); //D
+        glNormal3f(-1,0,1); glTexCoord2f(0, 1); glVertex3f( -0.5, 2.5, -0.5 ); //C
+        glNormal3f(-1,0,1); glTexCoord2f(1, 0); glVertex3f( 0.5, -0.5, 0.5 ); //B
+        glNormal3f(-1,0,1); glTexCoord2f(1, 1); glVertex3f( 0.5, 2.5, 0.5 ); //D
 
         // SIDE 2 BACK
         glColor4ub(255, 255, 255, 255);
-        glNormal3f(0,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.5, 2.5, -0.5 );  //C
-        glNormal3f(0,0,-1); glTexCoord2f(1, 0); glVertex3f( 0.5, -0.5, 0.5 );  //B
-        glNormal3f(0,0,-1); glTexCoord2f(0, 0); glVertex3f( -0.5, -0.5, -0.5 ); //A
+        glNormal3f(1,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.5, 2.5, -0.5 );  //C
+        glNormal3f(1,0,-1); glTexCoord2f(1, 0); glVertex3f( 0.5, -0.5, 0.5 );  //B
+        glNormal3f(1,0,-1); glTexCoord2f(0, 0); glVertex3f( -0.5, -0.5, -0.5 ); //A
 
-        glNormal3f(0,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.5, 2.5, -0.5 ); //C
-        glNormal3f(0,0,-1); glTexCoord2f(1, 1); glVertex3f( 0.5, 2.5, 0.5 ); //D
-        glNormal3f(0,0,-1); glTexCoord2f(1, 0); glVertex3f( 0.5, -0.5, 0.5 ); //B
+        glNormal3f(1,0,-1); glTexCoord2f(0, 1); glVertex3f( -0.5, 2.5, -0.5 ); //C
+        glNormal3f(1,0,-1); glTexCoord2f(1, 1); glVertex3f( 0.5, 2.5, 0.5 ); //D
+        glNormal3f(1,0,-1); glTexCoord2f(1, 0); glVertex3f( 0.5, -0.5, 0.5 ); //B
       glEnd();
     }
 

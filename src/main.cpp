@@ -45,7 +45,6 @@ GLint waveWidthLoc;
 GLint waveHeightLoc;
 
 // Sky
-GLfloat skyTime;
 GLint skyTimeLoc;
 
 //Create fonts
@@ -271,24 +270,6 @@ void setup(bool first){
     // Set default material
     changeMaterial( MATERIAL_DEFAULT);
 
-    // Lighting
-    GLfloat light_diffuse[] = { 0.1f, 0.1f, 0.1f, 1.0f };
-    GLfloat light_ambient[] = { 0.8f, 0.8f, 0.8f, 1.0f };
-    GLfloat light_specular[] = { 0.0f, 0.0f, 0.0f, 1.0f };
-    GLfloat light_position[] = { 0.2, 0.0001, 1.0001, 0.0f };
-
-    // Light 1
-    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
-    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-
-    glLightModelf(GL_LIGHT_MODEL_LOCAL_VIEWER, 1);
-
-    // Enable lights
-    glEnable(GL_LIGHTING); //turns the "lights" on
-    glEnable(GL_LIGHT0);
-
     glEnable( GL_DEPTH_TEST);
 
     // Cull back faces
@@ -397,6 +378,22 @@ void setup(bool first){
     // Use our Shaders :D:D:D:D:D
     glUseProgram(defaultShader);
 
+    // Enable lights
+    glEnable(GL_LIGHTING); //turns the "lights" on
+    glEnable(GL_LIGHT0);
+
+    // Lighting
+    GLfloat light_ambient[] = { 0.8f, 0.8f, 0.8f, 1.0f };
+    GLfloat light_diffuse[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+    GLfloat light_specular[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+    GLfloat light_position[] = { 1.5f, 2.0f, 1.0f, 0.0f };
+
+    // Light 0
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
+    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+
     // FPS STUFF
     //Creates a random number generator (based on time)
     srand (time(NULL));
@@ -473,7 +470,7 @@ void game(){
     dinner -> update();
 
 
-    // Water Shader
+    /// Water Shader
     glUseProgram(waterShader);
 
     // Change time
@@ -481,26 +478,34 @@ void game(){
 		glUniform1f(waveWidthLoc, waveWidth);
 		glUniform1f(waveHeightLoc, waveHeight);
 
-		// Change light according to time (using cos!)
-		float newColorVal = -0.5 * ( cos(2 * M_PI * skyTime) - 1);// PARABOLIC -1 * pow((2 * skyTime) - 1, 2) + 1;
-		GLfloat light_ambient[] = { newColorVal, newColorVal, newColorVal, 1.0f };
-    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
-
     // Update wave variable
 		waveTime += waveFreq;
 
-		// Sky Shader
+		/// Sky Shader
     glUseProgram(skyShader);
 
     // Change time
     glUniform1f(skyTimeLoc, skyTime);
 
-    skyTime += 0.0001;
+    skyTime += 0.0005;
     if( skyTime > 1)
       skyTime = 0;
 
     // Back to normal shader
     glUseProgram(defaultShader);
+
+    // Orbit sun around world (I know.. i know.. thats not how it works)
+    sunY = -1 * cos(2 * M_PI * skyTime);
+    sunX = 1 * cos(2 * M_PI * skyTime);
+    sunZ = -1 * sin(2 * M_PI * skyTime);
+
+    // Change light according to time (using cos! and parabolas!)
+    // Red uses a parabola to simulate sunrise (more red so pink) and night (less red so blue)
+    float newRVal = (-1 * pow((2.4 * skyTime) - 1.2, 2) + 1) + 0.1;
+    float newGVal = -0.5 * ( cos(2 * M_PI * skyTime) - 1) + 0.1;
+    float newBVal = -0.5 * ( cos(2 * M_PI * skyTime) - 1) + 0.1;
+    GLfloat light_ambient[] = { newRVal, newGVal, newBVal, 1.0f };
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
   }
 
   //Exit game
@@ -518,7 +523,7 @@ void draw(){
   glMatrixMode(GL_MODELVIEW);
 
   // Clear screen
-  glClearColor(0.1f, 0.5f, 0.9f, 1.0f);
+  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   // Reset transforms
@@ -543,6 +548,10 @@ void draw(){
 
   // Translate map
   glTranslatef( -jimmy -> getX(), -jimmy -> getY(), -jimmy -> getZ());
+
+  // Place light 0 Back to normal
+  GLfloat light_position[] = { sunX, sunY, sunZ, 0.0f };
+  glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
   // Draw map
   if( !key[KEY_TILDE])
@@ -569,6 +578,7 @@ void draw(){
 
   // Debug text
   textprintf_ex( buffer, ARIAL_BLACK, 20, 20, makecol(0,0,0), makecol(255,255,255), "Camera X:%4.1f Y:%4.1f Z:%4.1f RotX:%4.1f RotY:%4.1f ", jimmy -> getX(), jimmy -> getY(), jimmy -> getZ(), jimmy -> getXRotation(), jimmy -> getYRotation());
+  textprintf_ex( buffer, ARIAL_BLACK, 20, 60, makecol(0,0,0), makecol(255,255,255), "Sun X:%1.4f Y:%1.4f Z:%1.4f Time:%1.5f ", sunX, sunY, sunZ, skyTime);
 
   //Draws buffer
   draw_sprite( screen, buffer, 0, 0);

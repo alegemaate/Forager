@@ -2,29 +2,42 @@
 	Water fragment shader 
 	Allan Legemaate
 	05/01/16
-	This gets texture and light info
+	Very basic fragment shader, uses material and 
+	applies lighting
 */
 #version 120
 
 varying vec3 lightDir,normal;
-uniform sampler2D tex,l3d;
+uniform sampler2D texture1,texture2;
 
 void main()
 {
-	vec3 ct,cf;
-	vec4 texel;
-	float intensity,at,af;
+	// Variables
+	vec3 texture_color, material_color, light_color;
+	vec4 texture_info;
+	float intensity, texture_alpha, material_alpha, light_alpha;
 	
+	
+	// Get light intensity
 	intensity = max(dot(lightDir,normalize(normal)),0.0);
 	
-	cf = intensity * (gl_FrontMaterial.diffuse).rgb + 
-					  gl_FrontMaterial.ambient.rgb;
-	af = gl_FrontMaterial.diffuse.a;
+	// Fetch material color and alpha 
+	material_color = intensity * (gl_FrontMaterial.diffuse).rgb + 
+								  gl_FrontMaterial.ambient.rgb;
+	material_alpha = gl_FrontMaterial.diffuse.a;
+
+	// Light info
+	light_color = gl_LightSource[0].ambient.rgb + (intensity * gl_LightSource[0].diffuse.rgb);
+	light_alpha = gl_LightSource[0].diffuse.a;
 	
-	texel = texture2D(tex,gl_TexCoord[0].st)+
-		  texture2D(l3d,gl_TexCoord[0].st);
-	ct = texel.rgb;
-	at = texel.a;
+	// Get texture info
+	texture_info = texture2D(texture1,gl_TexCoord[0].st) + 
+			texture2D(texture2,gl_TexCoord[0].st);
 	
-	gl_FragColor = vec4(ct * cf, at * af);
+	// Fetch texture color and alpha 
+	texture_color = texture_info.rgb;
+	texture_alpha = texture_info.a;
+	
+	// Stick em all together
+	gl_FragColor = vec4( texture_color * material_color * light_color, texture_alpha * material_alpha * light_alpha);
 }  

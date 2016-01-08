@@ -3,5 +3,6 @@
 
 extern bool gameMode;
 extern int defaultShader, waterShader, skyShader;
+extern float skyTime, sunX, sunY, sunZ;
 
 #endif // GLOBALS_H

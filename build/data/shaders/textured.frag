@@ -8,13 +8,13 @@
 #version 120
 
 varying vec3 lightDir,normal;
-uniform sampler2D tex,l3d;
+uniform sampler2D texture1,texture2;
 
 void main()
 {
 	// Variables
 	vec3 texture_color, material_color, light_color;
-	vec4 texel;
+	vec4 texture_info;
 	float intensity, texture_alpha, material_alpha, light_alpha;
 	
 	
@@ -30,15 +30,14 @@ void main()
 	light_color = gl_LightSource[0].ambient.rgb + (intensity * gl_LightSource[0].diffuse.rgb);
 	light_alpha = gl_LightSource[0].diffuse.a;
 	
-	// Get texture
-	texel = texture2D(tex,gl_TexCoord[0].st) + 
-			texture2D(l3d,gl_TexCoord[0].st);
+	// Get texture info
+	texture_info = texture2D(texture1,gl_TexCoord[0].st) + 
+			texture2D(texture2,gl_TexCoord[0].st);
 	
 	// Fetch texture color and alpha 
-	texture_color = texel.rgb;
-	texture_alpha = texel.a;
+	texture_color = texture_info.rgb;
+	texture_alpha = texture_info.a;
 	
 	// Stick em all together
 	gl_FragColor = vec4( texture_color * material_color * light_color, texture_alpha * material_alpha * light_alpha);
 }  
-
