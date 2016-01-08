@@ -37,7 +37,7 @@
 1452113467 source:c:\users\allan\documents\games indev\forager\src\tile.cpp
 	"tile.h"
 
-1452131747 source:c:\users\allan\documents\games indev\forager\src\main.cpp
+1452212313 source:c:\users\allan\documents\games indev\forager\src\main.cpp
 	<GL/glew.h>
 	<allegro.h>
 	<alpng.h>
@@ -116,7 +116,7 @@
 	"tile_map.h"
 	"globals.h"
 
-1452132423 source:c:\users\allan\documents\games indev\forager\src\player.cpp
+1452210897 source:c:\users\allan\documents\games indev\forager\src\player.cpp
 	"player.h"
 
 1452113516 source:c:\users\allan\documents\games indev\forager\src\tile_type.cpp

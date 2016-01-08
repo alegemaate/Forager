@@ -73,30 +73,30 @@ void player::logic( tile_map *newMap){
                     y = newMap -> map_tiles[i][t][n] -> getY() + 0.5 + 1.5;
                 }
               }
-              if( collision3d( x, 0.5, newMap -> map_tiles[i][t][n] -> getX(), 0.5, y + y_velocity, 1.5, newMap -> map_tiles[i][t][n] -> getY(), 0.5, z, 0.5, newMap -> map_tiles[i][t][n] -> getZ(), 0.5)){
+              if( collision3d( x, 0.3, newMap -> map_tiles[i][t][n] -> getX(), 0.5, y + y_velocity, 1.5, newMap -> map_tiles[i][t][n] -> getY(), 0.5, z, 0.3, newMap -> map_tiles[i][t][n] -> getZ(), 0.5)){
                 // X Coords
                 // Left
                 double buffer = 0.2;
-                if( collisionOverlap( x - buffer, 0.5, newMap -> map_tiles[i][t][n] -> getX(), 0.5)){
+                if( collisionOverlap( x - buffer, 0.3, newMap -> map_tiles[i][t][n] -> getX(), 0.5)){
                   canMoveXMINUS = false;
-                  x += 0.01;
+                  x += 0.005;
                 }
                 // Right
-                if( collisionOverlap( newMap -> map_tiles[i][t][n] -> getX(), 0.5, x + buffer, 0.5)){
+                if( collisionOverlap( newMap -> map_tiles[i][t][n] -> getX(), 0.5, x + buffer, 0.3)){
                   canMoveXPLUS = false;
-                  x -= 0.01;
+                  x -= 0.005;
                 }
 
                 // Z Coords
                 // Front
-                if( collisionOverlap( z - buffer, 0.5, newMap -> map_tiles[i][t][n] -> getZ(), 0.5)){
+                if( collisionOverlap( z - buffer, 0.3, newMap -> map_tiles[i][t][n] -> getZ(), 0.5)){
                   canMoveZMINUS = false;
-                  z += 0.01;
+                  z += 0.005;
                 }
                 // Back
-                if( collisionOverlap( newMap -> map_tiles[i][t][n] -> getZ(), 0.5, z + buffer, 0.5)){
+                if( collisionOverlap( newMap -> map_tiles[i][t][n] -> getZ(), 0.5, z + buffer, 0.3)){
                   canMoveZPLUS = false;
-                  z -= 0.01;
+                  z -= 0.005;
                 }
 
                 // Destory Blocks FOR FUN

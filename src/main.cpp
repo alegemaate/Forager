@@ -50,6 +50,7 @@ GLint skyTimeLoc;
 
 //Create fonts
 FONT *f1, *f2, *f3, *f4, *f5;
+FONT *ARIAL_BLACK;
 
 //Create images
 BITMAP *buffer;
@@ -423,7 +424,10 @@ void setup(bool first){
     //Creates a buffer
     buffer = create_bitmap( 1280, 960);
 
-    cursor = load_bitmap( "images/cursor.png", NULL);
+    cursor = load_bitmap( "images/cursor2.png", NULL);
+
+    // Mouse sensitivity
+    set_mouse_speed( 3, 3);
 
     //normal map
     gameTiles = new tile_map( buffer);
@@ -445,7 +449,7 @@ void setup(bool first){
     f4 = extract_font_range(f1, 'Z'+1, 'z');
 
     //Merge fonts
-    //font = merge_fonts(f4, f5 = merge_fonts(f2, f3));
+    ARIAL_BLACK = merge_fonts(f4, f5 = merge_fonts(f2, f3));
   }
 }
 
@@ -524,6 +528,9 @@ void draw(){
    * OPEN GL DRAWING *
    *******************/
 
+  // Default shader
+  glUseProgram(defaultShader);
+
   // Draw player
   jimmy -> render();
 
@@ -541,16 +548,16 @@ void draw(){
   if( !key[KEY_TILDE])
     gameTiles -> draw( animationFrame);
 
-  // Back to normal shader
-  glUseProgram(defaultShader);
+  // Back to init shader
+  glUseProgram(0);
 
   /**********************
    * ALLEGRO GL DRAWING *
    **********************/
-  //allegro_gl_set_allegro_mode();
+  allegro_gl_set_allegro_mode();
 
   // Transparent buffer
-  /*rectfill( buffer, 0, 0, SCREEN_W, SCREEN_H, makecol( 255, 0, 255));
+  rectfill( buffer, 0, 0, SCREEN_W, SCREEN_H, makecol( 255, 0, 255));
 
   //FPS counter
   if(showFPS){
@@ -558,15 +565,15 @@ void draw(){
   }
 
   // Cursor
-  draw_sprite( buffer, cursor, mouse_x, mouse_y);
+  draw_sprite( buffer, cursor, (SCREEN_W - cursor -> w)/2, (SCREEN_H - cursor -> h)/2);
 
   // Debug text
-  textprintf_ex( buffer, font, 0, 15, makecol(0,0,0), makecol(255,255,255), "Camera X:%4.1f Y:%4.1f Z:%4.1f RotX:%4.1f RotY:%4.1f ", gameTiles -> getX(), gameTiles -> getY(), gameTiles -> getZ(), gameTiles -> getRotX(), gameTiles -> getRotY());
+  textprintf_ex( buffer, ARIAL_BLACK, 20, 20, makecol(0,0,0), makecol(255,255,255), "Camera X:%4.1f Y:%4.1f Z:%4.1f RotX:%4.1f RotY:%4.1f ", jimmy -> getX(), jimmy -> getY(), jimmy -> getZ(), jimmy -> getXRotation(), jimmy -> getYRotation());
 
   //Draws buffer
-  draw_sprite( screen, buffer, 0, 0);*/
+  draw_sprite( screen, buffer, 0, 0);
 
-  //allegro_gl_unset_allegro_mode();
+  allegro_gl_unset_allegro_mode();
 
   allegro_gl_flip();
 }
