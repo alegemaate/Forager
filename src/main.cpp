@@ -419,19 +419,12 @@ void setup(bool first){
       frames_array[ii] = 0;
 
     //Creates a buffer
-    buffer = create_bitmap( 1280, 960);
+    buffer = create_bitmap( SCREEN_W, SCREEN_H);
 
     cursor = load_bitmap( "images/cursor2.png", NULL);
 
     // Mouse sensitivity
     set_mouse_speed( 3, 3);
-
-    //normal map
-    gameTiles = new tile_map( buffer);
-    gameTiles -> load_images();
-    gameTiles -> generateMap();
-
-    gameTiles -> theSky.skyboxSampler = samplerRef;
 
     // Character
     jimmy = new player( 0, 15, 0, 45, 135);
@@ -447,6 +440,17 @@ void setup(bool first){
 
     //Merge fonts
     ARIAL_BLACK = merge_fonts(f4, f5 = merge_fonts(f2, f3));
+
+    //normal map
+    // TRANSFORMS
+    glRotatef( jimmy -> getXRotation(), 1.0, 0.0, 0.0 );
+    glRotatef( jimmy -> getYRotation(), 0.0, 1.0, 0.0 );
+    glTranslatef( -jimmy -> getX(), -jimmy -> getY(), -jimmy -> getZ());
+
+    gameTiles = new tile_map( buffer);
+    gameTiles -> theSky.skyboxSampler = samplerRef;
+    gameTiles -> load_images();
+    gameTiles -> generateMap();
   }
 }
 
@@ -618,8 +622,6 @@ int main( int argc, char* args[]){
     }
     // Update every tick
     draw();
-    if( key[KEY_F])
-      std::cout << fps << "\n";
     frames_done++;
   }
   allegro_exit();

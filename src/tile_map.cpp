@@ -450,13 +450,34 @@ long tile_map::checkBiomeNumber( char biomeToCheck){
 
 // Quick Peek
 void tile_map::quickPeek( std::string currentPhase){
-  /*allegro_gl_set_allegro_mode();
-  rectfill( buffPoint, 0, 0, SCREEN_W, SCREEN_H, makecol( 0, 0, 0));
-  textprintf_ex( buffPoint,font, 0, 0,makecol(0,0,0),makecol(255,255,255),"%s", currentPhase.c_str());
-  draw_sprite( screen, buffPoint, 0, 0);
-  allegro_gl_unset_allegro_mode();*/
+  // Send to console
   std::cout << "PHASE:" << currentPhase.c_str() << "\n";
+
+  // View matrix
+  glMatrixMode(GL_MODELVIEW);
+
+  // Clear screen
+  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  // Draw tiles
   draw( 0);
+
+  // Allegro drawing
+  glUseProgram(0);
+  allegro_gl_set_allegro_mode();
+
+  // Transparent buffer
+  rectfill( buffPoint, 0, 0, SCREEN_W, SCREEN_H, makecol( 255, 0, 255));
+
+  // Info
+  textprintf_centre_ex( buffPoint, font, SCREEN_W/2, SCREEN_H/2,makecol(0,0,0),makecol(255,255,255),"%s", currentPhase.c_str());
+
+  // Draw to screen
+  draw_sprite( screen, buffPoint, 0, 0);
+
+  allegro_gl_unset_allegro_mode();
+  allegro_gl_flip();
 }
 
 //Draw map
@@ -474,21 +495,4 @@ void tile_map::draw( int newAnimationFrame){
       }
     }
   }
-
-  /*if( !gameMode){
-    allegro_gl_set_allegro_mode();
-
-    // Quick Info
-    textprintf_ex( buffPoint,font,0, 80,makecol(0,0,0),makecol(255,255,255),"X:%i Y:%i Z:%i Zoom:%i", x, y, z, zoom);
-    textprintf_ex( buffPoint,font,0, 120,makecol(0,0,0),makecol(255,255,255),"TX:%i TY:%i TZ:%i GameMode:%s", test_x, test_y, test_z, convertBoolToString(gameMode).c_str());
-
-    // Tile info
-    textprintf_ex( buffPoint,font,0, 160,makecol(0,0,0),makecol(255,255,255),"TILE INFO- Type:%s Biome:%s BiomeID:%i Temp:%i",
-                  (tile_defs.getTileByType( map_tiles[sel_x][sel_y][sel_z] -> getType()) -> getName()).c_str(),
-                  biomes.getBiome(map_tiles[sel_x][sel_y][sel_z] -> getBiome()).getName().c_str(),
-                  map_tiles[sel_x][sel_y][sel_z] -> getBiome(),
-                  biomes.getBiome(map_tiles[sel_x][sel_y][sel_z] -> getBiome()).getTemperature());
-
-    allegro_gl_unset_allegro_mode();
-  }*/
 }

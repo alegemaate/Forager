@@ -165,4 +165,26 @@
 		<attrubite>ATTRIBUTE_GAS</attrubite>
 		<random>0</random>
 	</tile>
+	<!--Wood -->
+	<tile id="15">
+		<name>Wood</name>
+		<images>
+			<image>images/textures/wood.png</image>
+			<image2>NULL</image2>
+		</images>
+		<model>MODEL_CUBE</model>
+		<attrubite>ATTRIBUTE_SOLID</attrubite>
+		<random>0</random>
+	</tile>
+	<!--Leaves -->
+	<tile id="16">
+		<name>Leaves</name>
+		<images>
+			<image>images/textures/leaves.png</image>
+			<image2>NULL</image2>
+		</images>
+		<model>MODEL_CUBE</model>
+		<attrubite>ATTRIBUTE_SOLID</attrubite>
+		<random>0</random>
+	</tile>
 </tiles>
