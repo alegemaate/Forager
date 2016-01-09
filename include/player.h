@@ -29,6 +29,8 @@ class player{
     float getXRotation() { return xRotation; }
     float getYRotation() { return yRotation; }
 
+    void transformWorld();
+
     void render();
     void logic( tile_map *newMap);
   protected:

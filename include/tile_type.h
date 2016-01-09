@@ -41,7 +41,7 @@ class tile_type{
     unsigned char getAttribute(){ return attribute; }
 
     // Draw
-    void draw( BITMAP *tempBuffer, double x, double y, double z, bool newTick);
+    void draw( double x, double y, double z, bool newTick);
 
     // Logic
     void logic();

@@ -22,7 +22,7 @@ class tile{
     tile_type * getTile() { return tileImpl; }
     void setType(tile_type *val);
 
-    void draw( BITMAP *tempBuffer, int newTick, BITMAP *overlayImage);
+    void draw( int newTick);
 
     // Get X value
     unsigned char getX() { return x; }

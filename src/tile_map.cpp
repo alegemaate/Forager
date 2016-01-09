@@ -14,7 +14,7 @@ tile_map::tile_map( BITMAP *tempBuffer){
   // Load biomes
   biomes.load( "data/biomes.xml");
 
-  // Load tiles225
+  // Load tiles
   all_tile_defs.load( "data/tiles.xml");
 
   // Make a mapful of tiles
@@ -22,6 +22,16 @@ tile_map::tile_map( BITMAP *tempBuffer){
     for(int t = 0; t <  DEFAULT_MAP_LENGTH; t++){
       for(int u = 0; u <  DEFAULT_MAP_HEIGHT; u++){
         map_tiles[i][t][u] = new tile( i, u, t, all_tile_defs.getTileByType(0));
+      }
+    }
+  }
+
+  // Make lotsa chunkz
+  for(int i = 0; i < WORLD_WIDTH; i++){
+    for(int t = 0; t < WORLD_LENGTH; t++){
+      for(int n = 0; n < WORLD_HEIGHT; n++){
+        if(!allChunks[i][n][t])
+          allChunks[i][n][t] = new chunk( i, n, t);
       }
     }
   }
@@ -453,6 +463,9 @@ void tile_map::quickPeek( std::string currentPhase){
   // Send to console
   std::cout << "PHASE:" << currentPhase.c_str() << "\n";
 
+  // Tessellate
+  //tessellate();
+
   // View matrix
   glMatrixMode(GL_MODELVIEW);
 
@@ -483,15 +496,23 @@ void tile_map::quickPeek( std::string currentPhase){
 //Draw map
 void tile_map::draw( int newAnimationFrame){
   // Skybox
-  glUseProgram(skyShader);
-  theSky.renderSkybox();
-  glUseProgram(defaultShader);
+  //glUseProgram(skyShader);
+  //theSky.renderSkybox();
+  //glUseProgram(defaultShader);
 
   // Go through all tiles and draw
   for(int i = 0; i < DEFAULT_MAP_WIDTH; i++){
     for(int t = 0; t < DEFAULT_MAP_LENGTH; t++){
       for(int n = 0; n < DEFAULT_MAP_HEIGHT; n++){
-        map_tiles[i][t][n] -> draw( buffPoint, newAnimationFrame, overlay_images[OVERLAY_NONE]);
+        //map_tiles[i][t][n] -> draw( newAnimationFrame);
+      }
+    }
+  }
+  for(int i = 0; i < WORLD_WIDTH; i++){
+    for(int t = 0; t < WORLD_LENGTH; t++){
+      for(int n = 0; n < WORLD_HEIGHT; n++){
+        if(allChunks[i][n][t])
+          allChunks[i][n][t] -> render();
       }
     }
   }

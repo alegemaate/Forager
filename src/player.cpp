@@ -15,6 +15,14 @@ player::~player(){
 
 }
 
+// Apply world transformations to players
+// Perspective
+void player::transformWorld(){
+  glRotatef( xRotation, 1.0, 0.0, 0.0 );
+  glRotatef( yRotation, 0.0, 1.0, 0.0 );
+  glTranslatef( -x, -y, -z);
+}
+
 // Draw tile
 void player::render(){
   // Nothing.. YET EHHEAHAEH
@@ -192,9 +200,9 @@ void player::logic( tile_map *newMap){
       yRotation = 135;
     }
     else{
-      x = DEFAULT_MAP_LENGTH/2;
+      x = DEFAULT_MAP_WIDTH/2;
       y = DEFAULT_MAP_HEIGHT;
-      z = DEFAULT_MAP_WIDTH/2;
+      z = DEFAULT_MAP_LENGTH/2;
       xRotation = 45;
       yRotation = 135;
     }

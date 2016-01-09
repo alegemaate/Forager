@@ -230,7 +230,7 @@ void setup(bool first){
     int monitor_height = 0;
     get_desktop_resolution( &monitor_width, &monitor_height);
 
-    if(set_gfx_mode( GFX_OPENGL_FULLSCREEN, monitor_width, monitor_height, 0, 0) !=0){
+    //if(set_gfx_mode( GFX_OPENGL_FULLSCREEN, monitor_width, monitor_height, 0, 0) !=0){
       //if(set_gfx_mode( GFX_OPENGL_WINDOWED, monitor_width, monitor_height, 0, 0) !=0){
         //if(set_gfx_mode( GFX_OPENGL_WINDOWED, monitor_width/2, monitor_height/2, 0, 0) !=0){
         if(set_gfx_mode( GFX_OPENGL_WINDOWED, 1280, 960, 0, 0) !=0){
@@ -239,7 +239,7 @@ void setup(bool first){
         }
         //}
      // }
-    }
+    //}
 
     /****************
      * SOME OPEN GL *
@@ -443,9 +443,7 @@ void setup(bool first){
 
     //normal map
     // TRANSFORMS
-    glRotatef( jimmy -> getXRotation(), 1.0, 0.0, 0.0 );
-    glRotatef( jimmy -> getYRotation(), 0.0, 1.0, 0.0 );
-    glTranslatef( -jimmy -> getX(), -jimmy -> getY(), -jimmy -> getZ());
+    jimmy -> transformWorld();
 
     gameTiles = new tile_map( buffer);
     gameTiles -> theSky.skyboxSampler = samplerRef;
@@ -473,25 +471,24 @@ void game(){
       dinner -> play3D( jimmy -> getPointX(), jimmy -> getPointY(), jimmy -> getPointZ(), 255, 127, 1000, true);
     dinner -> update();
 
-
     /// Water Shader
     glUseProgram(waterShader);
 
     // Change time
-		glUniform1f(waveTimeLoc, waveTime);
-		glUniform1f(waveWidthLoc, waveWidth);
-		glUniform1f(waveHeightLoc, waveHeight);
+    glUniform1f(waveTimeLoc, waveTime);
+    glUniform1f(waveWidthLoc, waveWidth);
+    glUniform1f(waveHeightLoc, waveHeight);
 
     // Update wave variable
-		waveTime += waveFreq;
+    waveTime += waveFreq;
 
-		/// Sky Shader
+    /// Sky Shader
     glUseProgram(skyShader);
 
     // Change time
     glUniform1f(skyTimeLoc, skyTime);
 
-    skyTime += 0.0005;
+    //skyTime += 0.0005;
     if( skyTime > 1)
       skyTime = 0;
 
@@ -540,26 +537,21 @@ void draw(){
   // Default shader
   glUseProgram(defaultShader);
 
+  // Transform world to players view
+  jimmy -> transformWorld();
+
   // Draw player
   jimmy -> render();
-
-  // TRANSFORMS
-  // Rotate along x
-  glRotatef( jimmy -> getXRotation(), 1.0, 0.0, 0.0 );
-
-  // Rotate along y
-  glRotatef( jimmy -> getYRotation(), 0.0, 1.0, 0.0 );
-
-  // Translate map
-  glTranslatef( -jimmy -> getX(), -jimmy -> getY(), -jimmy -> getZ());
 
   // Place light 0 Back to normal
   GLfloat light_position[] = { sunX, sunY, sunZ, 0.0f };
   glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
+  bool frameOn = int(skyTime * 60) % 2;
+
   // Draw map
   if( !key[KEY_TILDE])
-    gameTiles -> draw( animationFrame);
+    gameTiles -> draw( frameOn);
 
   // Back to init shader
   glUseProgram(0);
@@ -582,7 +574,7 @@ void draw(){
 
   // Debug text
   textprintf_ex( buffer, ARIAL_BLACK, 20, 20, makecol(0,0,0), makecol(255,255,255), "Camera X:%4.1f Y:%4.1f Z:%4.1f RotX:%4.1f RotY:%4.1f ", jimmy -> getX(), jimmy -> getY(), jimmy -> getZ(), jimmy -> getXRotation(), jimmy -> getYRotation());
-  textprintf_ex( buffer, ARIAL_BLACK, 20, 60, makecol(0,0,0), makecol(255,255,255), "Sun X:%1.4f Y:%1.4f Z:%1.4f Time:%1.5f ", sunX, sunY, sunZ, skyTime);
+  textprintf_ex( buffer, ARIAL_BLACK, 20, 60, makecol(0,0,0), makecol(255,255,255), "Sun X:%1.2f Y:%1.2f Z:%1.2f Time:%1.3f ", sunX, sunY, sunZ, skyTime);
 
   //Draws buffer
   draw_sprite( screen, buffer, 0, 0);
@@ -605,7 +597,8 @@ int main( int argc, char* args[]){
     while(ticks > 0){
       int old_ticks = ticks;
       // Update while in tick
-      game();
+      if( !key[KEY_1])
+        game();
       ticks--;
       if(old_ticks <= ticks)
         break;
