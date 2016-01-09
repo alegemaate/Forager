@@ -40,6 +40,9 @@ class tile_type{
     // Get type
     unsigned char getAttribute(){ return attribute; }
 
+    // Tex
+    int getImageRef(){ return image_reference_number[0]; }
+
     // Draw
     void draw( double x, double y, double z, bool newTick);
 

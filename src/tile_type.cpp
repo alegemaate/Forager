@@ -29,6 +29,7 @@ void tile_type::setImages( std::string path1, std::string path2){
   if( path1 != "NULL"){
     image[0] = load_bitmap( path1.c_str(), NULL);
     image_reference_number[0] = allegro_gl_make_texture_ex( AGL_TEXTURE_HAS_ALPHA | AGL_TEXTURE_FLIP, image[0], GL_RGBA);
+    texture_reference[type] = image_reference_number[0];
   }
 
   // Load image 2

@@ -36,7 +36,7 @@ chunk::chunk( int newX, int newY, int newZ) {
   for(int i = 0; i < CX; i++) {
     for(int t = 0; t < CY; t++) {
       for(int k = 0; k < CZ; k++) {
-        blk[i][t][k] = 1;
+        blk[i][t][k] = random(0, 3);
       }
     }
   }
@@ -79,20 +79,20 @@ void chunk::tessellate(){
           fillArray( glm::vec3( i - 0.5, t + 0.5, k - 0.5), glm::vec3( -1, 0, 0), glm::vec2( 0, 0), geometry, j * 8);
           indices[j] = j;
           j++;
-          fillArray( glm::vec3( i - 0.5, t - 0.5, k + 0.5), glm::vec3( -1, 0, 0), glm::vec2( 0, 0), geometry, j * 8);
+          fillArray( glm::vec3( i - 0.5, t - 0.5, k + 0.5), glm::vec3( -1, 0, 0), glm::vec2( 1, 0), geometry, j * 8);
           indices[j] = j;
           j++;
-          fillArray( glm::vec3( i - 0.5, t + 0.5, k + 0.5), glm::vec3( -1, 0, 0), glm::vec2( 0, 0), geometry, j * 8);
+          fillArray( glm::vec3( i - 0.5, t + 0.5, k + 0.5), glm::vec3( -1, 0, 0), glm::vec2( 1, 1), geometry, j * 8);
           indices[j] = j;
           j++;
 
           fillArray( glm::vec3( i - 0.5, t + 0.5, k - 0.5), glm::vec3( -1, 0, 0), glm::vec2( 0, 0), geometry, j * 8);
           indices[j] = j;
           j++;
-          fillArray( glm::vec3( i - 0.5, t - 0.5, k - 0.5), glm::vec3( -1, 0, 0), glm::vec2( 0, 0), geometry, j * 8);
+          fillArray( glm::vec3( i - 0.5, t - 0.5, k - 0.5), glm::vec3( -1, 0, 0), glm::vec2( 1, 1), geometry, j * 8);
           indices[j] = j;
           j++;
-          fillArray( glm::vec3( i - 0.5, t - 0.5, k + 0.5), glm::vec3( -1, 0, 0), glm::vec2( 0, 0), geometry, j * 8);
+          fillArray( glm::vec3( i - 0.5, t - 0.5, k + 0.5), glm::vec3( -1, 0, 0), glm::vec2( 0, 1), geometry, j * 8);
           indices[j] = j;
           j++;
         }
@@ -102,20 +102,20 @@ void chunk::tessellate(){
           fillArray( glm::vec3( i + 0.5, t + 0.5, k + 0.5), glm::vec3( 1, 0, 0), glm::vec2( 0, 0), geometry, j * 8);
           indices[j] = j;
           j++;
-          fillArray( glm::vec3( i + 0.5, t - 0.5, k + 0.5), glm::vec3( 1, 0, 0), glm::vec2( 0, 0), geometry, j * 8);
+          fillArray( glm::vec3( i + 0.5, t - 0.5, k + 0.5), glm::vec3( 1, 0, 0), glm::vec2( 1, 0), geometry, j * 8);
           indices[j] = j;
           j++;
-          fillArray( glm::vec3( i + 0.5, t - 0.5, k - 0.5), glm::vec3( 1, 0, 0), glm::vec2( 0, 0), geometry, j * 8);
+          fillArray( glm::vec3( i + 0.5, t - 0.5, k - 0.5), glm::vec3( 1, 0, 0), glm::vec2( 1, 1), geometry, j * 8);
           indices[j] = j;
           j++;
 
           fillArray( glm::vec3( i + 0.5, t + 0.5, k + 0.5), glm::vec3( 1, 0, 0), glm::vec2( 0, 0), geometry, j * 8);
           indices[j] = j;
           j++;
-          fillArray( glm::vec3( i + 0.5, t - 0.5, k - 0.5), glm::vec3( 1, 0, 0), glm::vec2( 0, 0), geometry, j * 8);
+          fillArray( glm::vec3( i + 0.5, t - 0.5, k - 0.5), glm::vec3( 1, 0, 0), glm::vec2( 1, 1), geometry, j * 8);
           indices[j] = j;
           j++;
-          fillArray( glm::vec3( i + 0.5, t + 0.5, k - 0.5), glm::vec3( 1, 0, 0), glm::vec2( 0, 0), geometry, j * 8);
+          fillArray( glm::vec3( i + 0.5, t + 0.5, k - 0.5), glm::vec3( 1, 0, 0), glm::vec2( 0, 1), geometry, j * 8);
           indices[j] = j;
           j++;
         }
@@ -125,20 +125,20 @@ void chunk::tessellate(){
           fillArray( glm::vec3( i - 0.5, t - 0.5, k + 0.5), glm::vec3( 0, -1, 0), glm::vec2( 0, 0), geometry, j * 8);
           indices[j] = j;
           j++;
-          fillArray( glm::vec3( i - 0.5, t - 0.5, k - 0.5), glm::vec3( 0, -1, 0), glm::vec2( 0, 0), geometry, j * 8);
+          fillArray( glm::vec3( i - 0.5, t - 0.5, k - 0.5), glm::vec3( 0, -1, 0), glm::vec2( 1, 0), geometry, j * 8);
           indices[j] = j;
           j++;
-          fillArray( glm::vec3( i + 0.5, t - 0.5, k - 0.5), glm::vec3( 0, -1, 0), glm::vec2( 0, 0), geometry, j * 8);
+          fillArray( glm::vec3( i + 0.5, t - 0.5, k - 0.5), glm::vec3( 0, -1, 0), glm::vec2( 1, 1), geometry, j * 8);
           indices[j] = j;
           j++;
 
           fillArray( glm::vec3( i - 0.5, t - 0.5, k + 0.5), glm::vec3( 0, -1, 0), glm::vec2( 0, 0), geometry, j * 8);
           indices[j] = j;
           j++;
-          fillArray( glm::vec3( i + 0.5, t - 0.5, k - 0.5), glm::vec3( 0, -1, 0), glm::vec2( 0, 0), geometry, j * 8);
+          fillArray( glm::vec3( i + 0.5, t - 0.5, k - 0.5), glm::vec3( 0, -1, 0), glm::vec2( 1, 1), geometry, j * 8);
           indices[j] = j;
           j++;
-          fillArray( glm::vec3( i + 0.5, t - 0.5, k + 0.5), glm::vec3( 0, -1, 0), glm::vec2( 0, 0), geometry, j * 8);
+          fillArray( glm::vec3( i + 0.5, t - 0.5, k + 0.5), glm::vec3( 0, -1, 0), glm::vec2( 0, 1), geometry, j * 8);
           indices[j] = j;
           j++;
         }
@@ -148,43 +148,43 @@ void chunk::tessellate(){
           fillArray( glm::vec3( i - 0.5, t + 0.5, k - 0.5), glm::vec3( 0, 1, 0), glm::vec2( 0, 0), geometry, j * 8);
           indices[j] = j;
           j++;
-          fillArray( glm::vec3( i - 0.5, t + 0.5, k + 0.5), glm::vec3( 0, 1, 0), glm::vec2( 0, 0), geometry, j * 8);
+          fillArray( glm::vec3( i - 0.5, t + 0.5, k + 0.5), glm::vec3( 0, 1, 0), glm::vec2( 1, 0), geometry, j * 8);
           indices[j] = j;
           j++;
-          fillArray( glm::vec3( i + 0.5, t + 0.5, k + 0.5), glm::vec3( 0, 1, 0), glm::vec2( 0, 0), geometry, j * 8);
+          fillArray( glm::vec3( i + 0.5, t + 0.5, k + 0.5), glm::vec3( 0, 1, 0), glm::vec2( 1, 1), geometry, j * 8);
           indices[j] = j;
           j++;
 
           fillArray( glm::vec3( i - 0.5, t + 0.5, k - 0.5), glm::vec3( 0, 1, 0), glm::vec2( 0, 0), geometry, j * 8);
           indices[j] = j;
           j++;
-          fillArray( glm::vec3( i + 0.5, t + 0.5, k + 0.5), glm::vec3( 0, 1, 0), glm::vec2( 0, 0), geometry, j * 8);
+          fillArray( glm::vec3( i + 0.5, t + 0.5, k + 0.5), glm::vec3( 0, 1, 0), glm::vec2( 1, 1), geometry, j * 8);
           indices[j] = j;
           j++;
-          fillArray( glm::vec3( i + 0.5, t + 0.5, k - 0.5), glm::vec3( 0, 1, 0), glm::vec2( 0, 0), geometry, j * 8);
+          fillArray( glm::vec3( i + 0.5, t + 0.5, k - 0.5), glm::vec3( 0, 1, 0), glm::vec2( 0, 1), geometry, j * 8);
           indices[j] = j;
           j++;
         }
 
         // BACK(-z)
-        if( k == 0 || k > 0 && blk[k][t][k - 1] == 0){
+        if( k == 0 || k > 0 && blk[i][t][k - 1] == 0){
           fillArray( glm::vec3( i + 0.5, t - 0.5, k - 0.5), glm::vec3( 0, 0, -1), glm::vec2( 0, 0), geometry, j * 8);
           indices[j] = j;
           j++;
-          fillArray( glm::vec3( i - 0.5, t - 0.5, k - 0.5), glm::vec3( 0, 0, -1), glm::vec2( 0, 0), geometry, j * 8);
+          fillArray( glm::vec3( i - 0.5, t - 0.5, k - 0.5), glm::vec3( 0, 0, -1), glm::vec2( 1, 0), geometry, j * 8);
           indices[j] = j;
           j++;
-          fillArray( glm::vec3( i + 0.5, t + 0.5, k - 0.5), glm::vec3( 0, 0, -1), glm::vec2( 0, 0), geometry, j * 8);
+          fillArray( glm::vec3( i + 0.5, t + 0.5, k - 0.5), glm::vec3( 0, 0, -1), glm::vec2( 1, 1), geometry, j * 8);
           indices[j] = j;
           j++;
 
           fillArray( glm::vec3( i + 0.5, t + 0.5, k - 0.5), glm::vec3( 0, 0, -1), glm::vec2( 0, 0), geometry, j * 8);
           indices[j] = j;
           j++;
-          fillArray( glm::vec3( i - 0.5, t - 0.5, k - 0.5), glm::vec3( 0, 0, -1), glm::vec2( 0, 0), geometry, j * 8);
+          fillArray( glm::vec3( i - 0.5, t - 0.5, k - 0.5), glm::vec3( 0, 0, -1), glm::vec2( 1, 1), geometry, j * 8);
           indices[j] = j;
           j++;
-          fillArray( glm::vec3( i - 0.5, t + 0.5, k - 0.5), glm::vec3( 0, 0, -1), glm::vec2( 0, 0), geometry, j * 8);
+          fillArray( glm::vec3( i - 0.5, t + 0.5, k - 0.5), glm::vec3( 0, 0, -1), glm::vec2( 0, 1), geometry, j * 8);
           indices[j] = j;
           j++;
         }
@@ -194,20 +194,20 @@ void chunk::tessellate(){
           fillArray( glm::vec3( i - 0.5, t + 0.5, k + 0.5), glm::vec3( 0, 0, 1), glm::vec2( 0, 0), geometry, j * 8);
           indices[j] = j;
           j++;
-          fillArray( glm::vec3( i - 0.5, t - 0.5, k + 0.5), glm::vec3( 0, 0, 1), glm::vec2( 0, 0), geometry, j * 8);
+          fillArray( glm::vec3( i - 0.5, t - 0.5, k + 0.5), glm::vec3( 0, 0, 1), glm::vec2( 1, 0), geometry, j * 8);
           indices[j] = j;
           j++;
-          fillArray( glm::vec3( i + 0.5, t - 0.5, k + 0.5), glm::vec3( 0, 0, 1), glm::vec2( 0, 0), geometry, j * 8);
+          fillArray( glm::vec3( i + 0.5, t - 0.5, k + 0.5), glm::vec3( 0, 0, 1), glm::vec2( 1, 1), geometry, j * 8);
           indices[j] = j;
           j++;
 
           fillArray( glm::vec3( i - 0.5, t + 0.5, k + 0.5), glm::vec3( 0, 0, 1), glm::vec2( 0, 0), geometry, j * 8);
           indices[j] = j;
           j++;
-          fillArray( glm::vec3( i + 0.5, t - 0.5, k + 0.5), glm::vec3( 0, 0, 1), glm::vec2( 0, 0), geometry, j * 8);
+          fillArray( glm::vec3( i + 0.5, t - 0.5, k + 0.5), glm::vec3( 0, 0, 1), glm::vec2( 1, 1), geometry, j * 8);
           indices[j] = j;
           j++;
-          fillArray( glm::vec3( i + 0.5, t + 0.5, k + 0.5), glm::vec3( 0, 0, 1), glm::vec2( 0, 0), geometry, j * 8);
+          fillArray( glm::vec3( i + 0.5, t + 0.5, k + 0.5), glm::vec3( 0, 0, 1), glm::vec2( 0, 1), geometry, j * 8);
           indices[j] = j;
           j++;
         }
@@ -257,22 +257,26 @@ void chunk::render() {
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indice_array);
 
   // Step 2
-  glEnableClientState(GL_TEXTURE_COORD_ARRAY);
   glEnableClientState(GL_NORMAL_ARRAY);
   glEnableClientState(GL_VERTEX_ARRAY);
+  glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
   // Step 3
-  glTexCoordPointer(3, GL_FLOAT, sizeof(GLfloat)*8, (float*)(sizeof(GLfloat)*5));
   glNormalPointer(GL_FLOAT, sizeof(GLfloat)*8, (float*)(sizeof(GLfloat)*3));
   glVertexPointer(3, GL_FLOAT, sizeof(GLfloat)*8, NULL);
+  glTexCoordPointer(2, GL_FLOAT, sizeof(GLfloat)*8, (float*)(sizeof(GLfloat)*6));
+
+
+  glBindTexture(GL_TEXTURE_2D, 9);
 
   // Step 4
   glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, NULL);
 
   // Step 5
+  glDisableClientState(GL_TEXTURE_COORD_ARRAY);
   glDisableClientState(GL_VERTEX_ARRAY);
   glDisableClientState(GL_NORMAL_ARRAY);
-  glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
 
   glPopMatrix();
 }

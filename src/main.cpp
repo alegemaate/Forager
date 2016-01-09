@@ -383,8 +383,8 @@ void setup(bool first){
     glEnable(GL_LIGHT0);
 
     // Lighting
-    GLfloat light_ambient[] = { 0.8f, 0.8f, 0.8f, 1.0f };
-    GLfloat light_diffuse[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+    GLfloat light_ambient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+    GLfloat light_diffuse[] = { 0.9f, 0.9f, 0.9f, 1.0f };
     GLfloat light_specular[] = { 0.0f, 0.0f, 0.0f, 1.0f };
     GLfloat light_position[] = { 1.5f, 2.0f, 1.0f, 0.0f };
 
@@ -488,7 +488,7 @@ void game(){
     // Change time
     glUniform1f(skyTimeLoc, skyTime);
 
-    //skyTime += 0.0005;
+    skyTime += 0.0005;
     if( skyTime > 1)
       skyTime = 0;
 
@@ -506,7 +506,7 @@ void game(){
     float newGVal = -0.5 * ( cos(2 * M_PI * skyTime) - 1) + 0.1;
     float newBVal = -0.5 * ( cos(2 * M_PI * skyTime) - 1) + 0.1;
     GLfloat light_ambient[] = { newRVal, newGVal, newBVal, 1.0f };
-    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
+    //glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
   }
 
   //Exit game
