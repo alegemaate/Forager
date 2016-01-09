@@ -4,6 +4,7 @@
 #include <alleggl.h>
 #include <GLM/GLM.hpp>
 #include <iostream>
+#include "tools.h"
 
 #define CX 16
 #define CY 16

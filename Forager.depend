@@ -63,7 +63,7 @@
 	"globals.h"
 	"material_manager.h"
 
-1452303011 c:\users\allan\documents\games indev\forager\include\ids.h
+1452303047 c:\users\allan\documents\games indev\forager\include\ids.h
 
 1452220101 source:c:\users\allan\documents\games indev\forager\src\globals.cpp
 	"globals.h"
@@ -192,11 +192,12 @@
 1452029234 source:c:\users\allan\documents\games indev\forager\src\material_manager.cpp
 	"material_manager.h"
 
-1452302721 source:c:\users\allan\documents\games indev\forager\src\chunk.cpp
+1452313510 source:c:\users\allan\documents\games indev\forager\src\chunk.cpp
 	"chunk.h"
 
-1452302647 c:\users\allan\documents\games indev\forager\include\chunk.h
+1452303743 c:\users\allan\documents\games indev\forager\include\chunk.h
 	<alleggl.h>
 	<GLM/GLM.hpp>
 	<iostream>
+	"tools.h"
 
