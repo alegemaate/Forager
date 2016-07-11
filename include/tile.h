@@ -29,6 +29,10 @@ class tile{
     unsigned char getY() { return y; }
     unsigned char getZ() { return z; }
 
+    void setX( unsigned char newVal) { x = newVal; }
+    void setY( unsigned char newVal) { y = newVal; }
+    void setZ( unsigned char newVal) { z = newVal; }
+
     void jiggle( char newxJiggle, char newyJiggle, char newzJiggle);
 
     // Set/Get biome

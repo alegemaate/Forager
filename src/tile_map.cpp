@@ -497,24 +497,25 @@ void tile_map::quickPeek( std::string currentPhase){
 void tile_map::draw( int newAnimationFrame){
   // Skybox
   glUseProgram(skyShader);
-  //theSky.renderSkybox();
+  theSky.renderSkybox();
   glUseProgram(defaultShader);
 
   // Go through all tiles and draw
-  /*for(int i = 0; i < DEFAULT_MAP_WIDTH; i++){
+  for(int i = 0; i < DEFAULT_MAP_WIDTH; i++){
     for(int t = 0; t < DEFAULT_MAP_LENGTH; t++){
       for(int n = 0; n < DEFAULT_MAP_HEIGHT; n++){
         map_tiles[i][t][n] -> draw( newAnimationFrame);
       }
     }
-  }*/
+  }
 
 
   for(int i = 0; i < WORLD_WIDTH; i++){
     for(int t = 0; t < WORLD_LENGTH; t++){
       for(int n = 0; n < WORLD_HEIGHT; n++){
-        if(allChunks[i][n][t])
-          allChunks[i][n][t] -> render();
+        if(allChunks[i][n][t]){
+          //allChunks[i][n][t] -> render();
+        }
       }
     }
   }

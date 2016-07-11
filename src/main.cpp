@@ -58,6 +58,8 @@ BITMAP *cursor;
 // Sounds
 audio_3d *dinner;
 
+tile *sunTile;
+
 //FPS System
 int fps;
 int frames_done;
@@ -383,8 +385,8 @@ void setup(bool first){
     glEnable(GL_LIGHT0);
 
     // Lighting
-    GLfloat light_ambient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
-    GLfloat light_diffuse[] = { 0.9f, 0.9f, 0.9f, 1.0f };
+    GLfloat light_ambient[] = { 0.4f, 0.4f, 0.4f, 1.0f };
+    GLfloat light_diffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
     GLfloat light_specular[] = { 0.0f, 0.0f, 0.0f, 1.0f };
     GLfloat light_position[] = { 1.5f, 2.0f, 1.0f, 0.0f };
 
@@ -449,6 +451,15 @@ void setup(bool first){
     gameTiles -> theSky.skyboxSampler = samplerRef;
     gameTiles -> load_images();
     gameTiles -> generateMap();
+
+    sunX = -1.5;
+    sunY = 1.5;
+    sunTile = new tile( sunX, sunY, sunZ, gameTiles -> getManager() -> getTileByType(1));
+
+    // Load them models
+    if( !quick_primatives::load_models()){
+      abort_on_error( "quick_primatives couldnt load the damn model!");
+    }
   }
 }
 
@@ -488,25 +499,54 @@ void game(){
     // Change time
     glUniform1f(skyTimeLoc, skyTime);
 
-    skyTime += 0.0005;
     if( skyTime > 1)
       skyTime = 0;
+    else if( skyTime < 0)
+      skyTime = 1;
+
+    skyTime += 0.000005;
+
+    /*if( key[KEY_U])
+      sunY+=0.05;
+    else if( key[KEY_J])
+      sunY-=0.05;
+    if( key[KEY_I])
+      sunX+=0.05;
+    else if( key[KEY_K])
+      sunX-=0.05;
+    if( key[KEY_O])
+      sunZ+=0.05;
+    else if( key[KEY_L])
+      sunZ-=0.05;*/
+
+    if( key[KEY_PLUS_PAD])
+      skyTime += 0.005;
+    else if( key[KEY_MINUS_PAD])
+      skyTime -= 0.005;
 
     // Back to normal shader
     glUseProgram(defaultShader);
 
-    // Orbit sun around world (I know.. i know.. thats not how it works)
+    // Orbit sun around world (i know.. i know.. thats not how it works)
     sunY = -1 * cos(2 * M_PI * skyTime);
     sunX = 1 * cos(2 * M_PI * skyTime);
     sunZ = -1 * sin(2 * M_PI * skyTime);
 
     // Change light according to time (using cos! and parabolas!)
     // Red uses a parabola to simulate sunrise (more red so pink) and night (less red so blue)
-    float newRVal = (-1 * pow((2.4 * skyTime) - 1.2, 2) + 1) + 0.1;
-    float newGVal = -0.5 * ( cos(2 * M_PI * skyTime) - 1) + 0.1;
-    float newBVal = -0.5 * ( cos(2 * M_PI * skyTime) - 1) + 0.1;
+    //DAY
+    float newRVal, newGVal, newBVal;
+    newRVal = (-1 * pow((2.4 * skyTime) - 1.2, 2) + 1) + 0.1;
+    newGVal = -0.5 * ( cos(2 * M_PI * skyTime) - 1) + 0.1;
+    newBVal = -0.5 * ( cos(2 * M_PI * skyTime) - 1) + 0.1;
+
+    // Light color
     GLfloat light_ambient[] = { newRVal, newGVal, newBVal, 1.0f };
-    //glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
+
+    // Sun light intensity
+    GLfloat light_diffuse[] = { (0.6 + sunY)/2, (0.6 + sunY)/2, (0.6 + sunY)/2, 1.0f };
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
   }
 
   //Exit game
@@ -548,6 +588,11 @@ void draw(){
   glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
   bool frameOn = int(skyTime * 60) % 2;
+
+  sunTile -> setX( sunX);
+  sunTile -> setY( sunY);
+  sunTile -> setZ( sunZ);
+  sunTile -> draw( frameOn);
 
   // Draw map
   if( !key[KEY_TILDE])

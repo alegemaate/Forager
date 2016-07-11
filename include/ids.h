@@ -49,12 +49,12 @@
 #define INGAME 4
 
 #define DEFAULT_MAP_HEIGHT 16
-#define DEFAULT_MAP_WIDTH 16
-#define DEFAULT_MAP_LENGTH 16
+#define DEFAULT_MAP_WIDTH 32
+#define DEFAULT_MAP_LENGTH 32
 
-#define WORLD_HEIGHT 1
-#define WORLD_WIDTH 4
-#define WORLD_LENGTH 4
+#define WORLD_HEIGHT 2
+#define WORLD_WIDTH 6
+#define WORLD_LENGTH 6
 
 // Overlays
 #define OVERLAY_NONE 0

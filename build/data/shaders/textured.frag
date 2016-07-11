@@ -22,12 +22,11 @@ void main()
 	intensity = max(dot(lightDir,normalize(normal)),0.0);
 	
 	// Fetch material color and alpha 
-	material_color = intensity * (gl_FrontMaterial.diffuse).rgb + 
-								  gl_FrontMaterial.ambient.rgb;
+	material_color =  max( intensity * gl_FrontMaterial.diffuse.rgb, gl_FrontMaterial.ambient.rgb);
 	material_alpha = gl_FrontMaterial.diffuse.a;
 
 	// Light info
-	light_color = gl_LightSource[0].ambient.rgb + (intensity * gl_LightSource[0].diffuse.rgb);
+	light_color = max( intensity * gl_LightSource[0].diffuse.rgb, gl_LightSource[0].ambient.rgb);
 	light_alpha = gl_LightSource[0].diffuse.a;
 	
 	// Get texture info

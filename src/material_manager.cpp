@@ -6,8 +6,8 @@ int currentMaterial = 0;
 void changeMaterial( int material){
   // DEFAULT
   if( material == MATERIAL_DEFAULT){
-    GLfloat mat_ambient[] = { 0.3f, 0.3f, 0.3f, 1.0f};
-    GLfloat mat_diffuse[]  ={ 0.4f, 0.4f, 0.3f, 1.0f};
+    GLfloat mat_ambient[] = { 0.4f, 0.4f, 0.4f, 1.0f};
+    GLfloat mat_diffuse[]  ={ 0.6f, 0.6f, 0.6f, 1.0f};
     GLfloat mat_specular[] = { 0.1f, 0.25f, 0.50f, 1.0f};
     GLfloat mat_shininess[] = { 0.1f };
 
