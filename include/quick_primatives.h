@@ -30,6 +30,7 @@ class quick_primatives
 
     static model test_model;
     static model model_cube;
+
   protected:
   private:
 };

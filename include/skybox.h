@@ -29,6 +29,9 @@ class skybox{
   private:
     BITMAP *texture[6];
     int textureRef[6];
+
+    GLuint vbo;
+    GLuint vao;
 };
 
 #endif // SKYBOX_H
