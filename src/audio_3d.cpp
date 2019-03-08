@@ -1,5 +1,7 @@
 #include "audio_3d.h"
 
+#include "tools.h"
+
 audio_3d::audio_3d( std::string file, float newX, float newY, float newZ){
   // Init
   this -> x = newX;

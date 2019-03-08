@@ -8,10 +8,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "tools.h"
 #include "tile_map.h"
-#include "globals.h"
-
 
 class player{
   public:

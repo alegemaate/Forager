@@ -1,5 +1,8 @@
 #include "model_loader.h"
 
+#include <iostream>
+#include <stdio.h>
+
 model_loader::model_loader()
 {
   //ctor

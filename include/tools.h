@@ -10,11 +10,6 @@
 
 #include <allegro.h>
 #include <string>
-#include <iostream>
-#include <sstream>
-#include <fstream>
-#include <cmath>
-#include <math.h>
 
 extern bool keyboard_keypressed();
 extern bool joy_buttonpressed();

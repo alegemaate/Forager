@@ -10,8 +10,6 @@
 
 #include <string>
 
-#include "tools.h"
-
 #define NUMBER_TILE_IDS 100
 
 class biome{

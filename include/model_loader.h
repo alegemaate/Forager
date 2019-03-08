@@ -8,11 +8,9 @@
 #ifndef MODEL_LOADER_H
 #define MODEL_LOADER_H
 
-#include <iostream>
 #include <string.h>
 #include <vector>
 #include <glm/glm.hpp>
-#include <stdio.h>
 
 class model_loader
 {

@@ -10,11 +10,7 @@
 
 #include <string>
 #include <allegro.h>
-#include <alpng.h>
 #include <alleggl.h>
-#include "ids.h"
-#include "tools.h"
-#include "globals.h"
 
 class skybox{
   public:

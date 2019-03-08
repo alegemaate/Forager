@@ -8,11 +8,9 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#include <alleggl.h>
 #include <vector>
 #include <GLM/GLM.hpp>
-#include <model_loader.h>
-#include "tools.h"
+#include <alleggl.h>
 
 class model
 {

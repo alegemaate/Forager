@@ -1,5 +1,13 @@
 #include "tile_type_manager.h"
 
+#include <fstream>
+#include <sstream>
+#include <iostream>
+
+#include "rapidxml.hpp"
+#include "rapidxml_print.hpp"
+#include "tools.h"
+
 tile_type_manager::tile_type_manager(){
   //ctor
 }

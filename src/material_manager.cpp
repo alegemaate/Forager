@@ -1,5 +1,7 @@
 #include "material_manager.h"
 
+#include <alleggl.h>
+
 int currentMaterial = 0;
 
 // Colours and properties of materials

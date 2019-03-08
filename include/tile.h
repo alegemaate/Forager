@@ -10,7 +10,6 @@
 
 #include <allegro.h>
 
-#include "ids.h"
 #include "tile_type.h"
 
 class tile{

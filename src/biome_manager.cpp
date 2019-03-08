@@ -1,5 +1,13 @@
 #include "biome_manager.h"
 
+#include <iostream>
+#include <fstream>
+#include <sstream>
+
+#include "rapidxml.hpp"
+#include "rapidxml_print.hpp"
+#include "tools.h"
+
 biome_manager::biome_manager(){
 
 }

@@ -1,5 +1,11 @@
 #include "tile_map.h"
 
+#include <iostream>
+
+#include "globals.h"
+#include "ids.h"
+#include "tools.h"
+
 // Construct
 tile_map::tile_map( BITMAP *tempBuffer){
   // Start in view mode

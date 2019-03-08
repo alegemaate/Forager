@@ -1,5 +1,8 @@
 #include "model.h"
 
+#include <model_loader.h>
+#include "tools.h"
+
 // Init
 model::model(){
   // Set to 0

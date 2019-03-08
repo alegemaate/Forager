@@ -21,11 +21,11 @@
 			<Add option="-lagl" />
 			<Add option="-lalpng" />
 			<Add option="-lalleg" />
+			<Add option="-lopengl32" />
 			<Add option="-luser32" />
 			<Add option="-lgdi32" />
 			<Add option="-lglew32s" />
 			<Add option="-lglu32" />
-			<Add option="-lopengl32" />
 		</Linker>
 		<Unit filename="include/audio_3d.h" />
 		<Unit filename="include/biome.h" />
@@ -39,6 +39,10 @@
 		<Unit filename="include/model_loader.h" />
 		<Unit filename="include/player.h" />
 		<Unit filename="include/quick_primatives.h" />
+		<Unit filename="include/rapidxml/rapidxml.hpp" />
+		<Unit filename="include/rapidxml/rapidxml_iterators.hpp" />
+		<Unit filename="include/rapidxml/rapidxml_print.hpp" />
+		<Unit filename="include/rapidxml/rapidxml_utils.hpp" />
 		<Unit filename="include/skybox.h" />
 		<Unit filename="include/tile.h" />
 		<Unit filename="include/tile_map.h" />

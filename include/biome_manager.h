@@ -10,13 +10,6 @@
 
 #include <vector>
 #include <string>
-#include <iostream>
-#include <fstream>
-#include <sstream>
-
-#include "rapidxml.hpp"
-#include "rapidxml_print.hpp"
-#include "tools.h"
 
 #include "biome.h"
 

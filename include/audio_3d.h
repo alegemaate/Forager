@@ -10,7 +10,6 @@
 
 #include <allegro.h>
 #include <string>
-#include "tools.h"
 
 class audio_3d{
   public:

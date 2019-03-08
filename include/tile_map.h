@@ -10,17 +10,14 @@
 
 #include <allegro.h>
 #include <string>
-#include <math.h>
+
+#include <glm/glm.hpp>
+#include <glm/gtx/string_cast.hpp>
+
 #include "tile.h"
-#include "ids.h"
-#include "tools.h"
 #include "biome_manager.h"
-#include "biome.h"
 #include "tile_type_manager.h"
 #include "skybox.h"
-#include "globals.h"
-#include <glm/glm.hpp>
-#include "glm/gtx/string_cast.hpp"
 #include "chunk.h"
 
 typedef glm::tvec3<GLbyte> byte3;

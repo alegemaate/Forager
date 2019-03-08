@@ -1,5 +1,11 @@
 #include "tools.h"
 
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <cmath>
+#include <math.h>
+
 //Iterates through the number of buttons in a joystick and returns true if any keys are pressed
 /*bool keyboard_keypressed(){
     bool keypressed=false;

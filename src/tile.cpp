@@ -1,5 +1,7 @@
 #include "tile.h"
 
+#include "ids.h"
+
 // Constructor
 tile::tile(unsigned char newX, unsigned char newY, unsigned char newZ, tile_type *newType){
   x = newX;

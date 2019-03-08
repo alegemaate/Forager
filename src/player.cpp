@@ -1,5 +1,8 @@
 #include "player.h"
 
+#include "tools.h"
+#include "globals.h"
+
 player::player( float newX, float newY, float newZ, float newXRot, float newYRot){
   x = newX;
   y = newY;
