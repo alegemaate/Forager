@@ -11,14 +11,14 @@
 
 #include <allegro.h>
 
-class image_manager
-{
-  public:
-    image_manager();
-    virtual ~image_manager();
-  protected:
-  private:
-    BITMAP *images[NUMBER_IMAGES];
+class image_manager {
+ public:
+  image_manager();
+  virtual ~image_manager();
+
+ protected:
+ private:
+  BITMAP* images[NUMBER_IMAGES];
 };
 
-#endif // IMAGE_MANAGER_H
+#endif  // IMAGE_MANAGER_H

@@ -10,39 +10,40 @@
 
 #include "tile_map.h"
 
-class player{
-  public:
-    player( float newX, float newY, float newZ, float newXRot, float newYRot);
-    virtual ~player();
+class player {
+ public:
+  player(float newX, float newY, float newZ, float newXRot, float newYRot);
+  virtual ~player();
 
-    float getX() { return x; }
-    float getY() { return y; }
-    float getZ() { return z; }
+  float getX() { return x; }
+  float getY() { return y; }
+  float getZ() { return z; }
 
-    float* getPointX() { return &x; }
-    float* getPointY() { return &y; }
-    float* getPointZ() { return &z; }
+  float* getPointX() { return &x; }
+  float* getPointY() { return &y; }
+  float* getPointZ() { return &z; }
 
-    float getXRotation() { return xRotation; }
-    float getYRotation() { return yRotation; }
+  float getXRotation() { return xRotation; }
+  float getYRotation() { return yRotation; }
 
-    void transformWorld();
+  void transformWorld();
 
-    void render();
-    void logic( tile_map *newMap);
-  protected:
-  private:
-    float x;
-    float y;
-    float z;
-    float xRotation;
-    float yRotation;
+  void render();
+  void logic(tile_map* newMap);
 
-    float y_velocity;
+ protected:
+ private:
+  float x;
+  float y;
+  float z;
+  float xRotation;
+  float yRotation;
 
-    bool sprinting;
+  float y_velocity;
 
-    BITMAP *image[6];
+  bool sprinting;
+
+  BITMAP* image[6];
 };
 
-#endif // PLAYER_H
+#endif  // PLAYER_H

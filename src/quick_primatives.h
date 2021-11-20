@@ -9,13 +9,14 @@
 #define QUICK_PRIMATIVES_H
 
 #include <alleggl.h>
-#include <GLM/GLM.hpp>
+
 #include <GL/glu.h>
+#include <GLM/GLM.hpp>
+
 #include "model.h"
 
-class quick_primatives
-{
-public:
+class quick_primatives {
+ public:
   quick_primatives();
   virtual ~quick_primatives();
 
@@ -31,8 +32,8 @@ public:
   static model test_model;
   static model model_cube;
 
-protected:
-private:
+ protected:
+ private:
 };
 
-#endif // QUICK_PRIMATIVES_H
+#endif  // QUICK_PRIMATIVES_H

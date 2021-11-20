@@ -5,30 +5,29 @@
   This loads all the types of tiles into a container for access by tile objects.
 */
 
-
 #ifndef TILE_TYPE_MANAGER_H
 #define TILE_TYPE_MANAGER_H
 
-#include <vector>
 #include <string>
+#include <vector>
 
 #include "tile_type.h"
 
-class tile_type_manager{
-  public:
-    tile_type_manager();
-    virtual ~tile_type_manager();
+class tile_type_manager {
+ public:
+  tile_type_manager();
+  virtual ~tile_type_manager();
 
-    // Load tile types
-    void load( std::string newFile);
+  // Load tile types
+  void load(std::string newFile);
 
-    // Allows communication
-    int getNumberTiles(){ return tile_defs.size(); }
-    tile_type *getTileByType( int tileID);
+  // Allows communication
+  int getNumberTiles() { return tile_defs.size(); }
+  tile_type* getTileByType(int tileID);
 
-  protected:
-  private:
-    std::vector<tile_type> tile_defs;
+ protected:
+ private:
+  std::vector<tile_type> tile_defs;
 };
 
-#endif // TILE_TYPE_MANAGER_H
+#endif  // TILE_TYPE_MANAGER_H

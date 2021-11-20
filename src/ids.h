@@ -41,7 +41,7 @@
 #define BIOME_LAKE 6
 #define BIOME_RIVER 7
 
-//Define all of the possible game screens
+// Define all of the possible game screens
 #define SPLASH 0
 #define TITLE 1
 #define MENU 2

@@ -5,15 +5,14 @@
   Maybe these will prove useful
 */
 
-
 #include "coordinate.h"
 
-coordinate::coordinate(int newX, int newY, int newZ){
+coordinate::coordinate(int newX, int newY, int newZ) {
   x = newX;
   y = newY;
   z = newZ;
 }
 
-coordinate::~coordinate(){
-  //dtor
+coordinate::~coordinate() {
+  // dtor
 }

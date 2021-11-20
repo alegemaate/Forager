@@ -12,43 +12,47 @@
 
 #include "tile_type.h"
 
-class tile{
-  public:
-    tile(unsigned char newX, unsigned char newY, unsigned char newZ, tile_type *newType);
-    virtual ~tile();
+class tile {
+ public:
+  tile(unsigned char newX,
+       unsigned char newY,
+       unsigned char newZ,
+       tile_type* newType);
+  virtual ~tile();
 
-    unsigned short getType() { return tileImpl -> getType(); }
-    tile_type * getTile() { return tileImpl; }
-    void setType(tile_type *val);
+  unsigned short getType() { return tileImpl->getType(); }
+  tile_type* getTile() { return tileImpl; }
+  void setType(tile_type* val);
 
-    void draw( int newTick);
+  void draw(int newTick);
 
-    // Get X value
-    unsigned char getX() { return x; }
-    unsigned char getY() { return y; }
-    unsigned char getZ() { return z; }
+  // Get X value
+  unsigned char getX() { return x; }
+  unsigned char getY() { return y; }
+  unsigned char getZ() { return z; }
 
-    void setX( unsigned char newVal) { x = newVal; }
-    void setY( unsigned char newVal) { y = newVal; }
-    void setZ( unsigned char newVal) { z = newVal; }
+  void setX(unsigned char newVal) { x = newVal; }
+  void setY(unsigned char newVal) { y = newVal; }
+  void setZ(unsigned char newVal) { z = newVal; }
 
-    void jiggle( char newxJiggle, char newyJiggle, char newzJiggle);
+  void jiggle(char newxJiggle, char newyJiggle, char newzJiggle);
 
-    // Set/Get biome
-    void setBiome( int newBiomeID){ biome = newBiomeID; }
-    unsigned char getBiome(){ return biome;}
-  protected:
-  private:
-    unsigned char x;
-    unsigned char y;
-    unsigned char z;
-    char xJiggle;
-    char yJiggle;
-    char zJiggle;
+  // Set/Get biome
+  void setBiome(int newBiomeID) { biome = newBiomeID; }
+  unsigned char getBiome() { return biome; }
 
-    unsigned char biome;
+ protected:
+ private:
+  unsigned char x;
+  unsigned char y;
+  unsigned char z;
+  char xJiggle;
+  char yJiggle;
+  char zJiggle;
 
-    tile_type *tileImpl;
+  unsigned char biome;
+
+  tile_type* tileImpl;
 };
 
-#endif // TILE_H
+#endif  // TILE_H

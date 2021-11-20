@@ -9,7 +9,7 @@
 
 #include <iostream>
 #include "tools.h"
-
+ 
 // Construct
 chunk::chunk( int newX, int newY, int newZ) {
   // Set pos

@@ -5,36 +5,36 @@
   Foraging Game!
 */
 
-//Includes
+// Includes
 #define GLEW_STATIC
 #include <GL/glew.h>
 
+#include <alleggl.h>
 #include <allegro.h>
 #include <loadpng.h>
-#include <alleggl.h>
 
-#include <string>
+#include <math.h>
+#include <stdio.h>
 #include <time.h>
 #include <fstream>
-#include <sstream>
-#include <math.h>
 #include <iostream>
-#include <stdio.h>
+#include <sstream>
+#include <string>
 
+#include "audio_3d.h"
+#include "globals.h"
 #include "ids.h"
+#include "material_manager.h"
+#include "player.h"
 #include "tile.h"
 #include "tile_map.h"
 #include "tools.h"
-#include "player.h"
-#include "audio_3d.h"
-#include "globals.h"
-#include "material_manager.h"
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846264338327950288
 #endif
 
-//Create variables
+// Create variables
 int gameScreen = INGAME;
 int animationFrame;
 bool closeGame;
@@ -49,68 +49,61 @@ GLint waveHeightLoc;
 // Sky
 GLint skyTimeLoc;
 
-//Create fonts
+// Create fonts
 FONT *f1, *f2, *f3, *f4, *f5;
-FONT *ARIAL_BLACK;
+FONT* ARIAL_BLACK;
 
-//Create images
-BITMAP *buffer;
-BITMAP *cursor;
+// Create images
+BITMAP* buffer;
+BITMAP* cursor;
 
 // Sounds
-audio_3d *dinner;
+audio_3d* dinner;
 
-tile *sunTile;
+tile* sunTile;
 
-//FPS System
+// FPS System
 int fps;
 int frames_done;
 int old_time;
 
-// An array to store the number of frames we did during the last 10 tenths of a second
+// An array to store the number of frames we did during the last 10 tenths of a
+// second
 int frames_array[10];
 int frame_index = 0;
 
 volatile int ticks = 0;
-void ticker()
-{
+void ticker() {
   ticks++;
 }
 END_OF_FUNCTION(ticker)
 
 volatile int game_time = 0;
-void game_time_ticker()
-{
+void game_time_ticker() {
   game_time++;
 }
 END_OF_FUNCTION(game_time_ticker)
 
 const int updates_per_second = 60;
 
-//Animations
-void animationTicker()
-{
-  if (animationFrame == 0)
-  {
+// Animations
+void animationTicker() {
+  if (animationFrame == 0) {
     animationFrame = 1;
-  }
-  else if (animationFrame == 1)
-  {
+  } else if (animationFrame == 1) {
     animationFrame = 0;
   }
 }
 END_OF_FUNCTION(animationTicker)
 
-tile_map *gameTiles;
-player *jimmy;
+tile_map* gameTiles;
+player* jimmy;
 
 /******************
  * KILLMESHADERS! *
  ******************/
-unsigned long getFileLength(std::ifstream &file)
-{
-  if (!file.good())
-  {
+unsigned long getFileLength(std::ifstream& file) {
+  if (!file.good()) {
     return 0;
   }
 
@@ -121,10 +114,9 @@ unsigned long getFileLength(std::ifstream &file)
   return len;
 }
 
-int loadshader(char *filename, GLchar **ShaderSource, GLint *len)
-{
+int loadshader(char* filename, GLchar** ShaderSource, GLint* len) {
   std::ifstream file;
-  file.open(filename, std::ios::in); // opens as ASCII!
+  file.open(filename, std::ios::in);  // opens as ASCII!
 
   if (!fexists(filename))
     return -1;
@@ -133,56 +125,55 @@ int loadshader(char *filename, GLchar **ShaderSource, GLint *len)
   *len = fileLength;
 
   if (*len == 0)
-    return -2; // Error: Empty File
+    return -2;  // Error: Empty File
 
-  char *tShaderSource = (GLchar *)new char[*len + 1]();
+  char* tShaderSource = (GLchar*)new char[*len + 1]();
 
   // can't reserve memory
   if (tShaderSource == 0)
     return -3;
 
   // len isn't always strlen cause some characters are stripped in ascii read...
-  // it is important to 0-terminate the real length later, len is just max possible value...
+  // it is important to 0-terminate the real length later, len is just max
+  // possible value...
   tShaderSource[*len] = '\0';
 
   unsigned int i = 0;
-  while (file.good())
-  {
-    tShaderSource[i] = file.get(); // get character from file.
+  while (file.good()) {
+    tShaderSource[i] = file.get();  // get character from file.
     if (!file.eof())
       i++;
   }
-  tShaderSource[i] = '\0'; // 0-terminate it at the correct position
+  tShaderSource[i] = '\0';  // 0-terminate it at the correct position
 
   file.close();
 
   *ShaderSource = tShaderSource;
 
-  return 0; // No Error
+  return 0;  // No Error
 }
 
-int unloadshader(GLubyte **ShaderSource)
-{
+int unloadshader(GLubyte** ShaderSource) {
   if (*ShaderSource != 0)
     delete[] * ShaderSource;
   *ShaderSource = 0;
 }
 
-void setupShader(std::string shaderFile, GLuint newShader)
-{
+void setupShader(std::string shaderFile, GLuint newShader) {
   // Load them!
-  GLchar *shaderSource;
+  GLchar* shaderSource;
   GLint shaderFileLength;
 
   // Convert from string to char*
-  char *charShaderFile = const_cast<char *>(shaderFile.c_str());
+  char* charShaderFile = const_cast<char*>(shaderFile.c_str());
 
   if (loadshader(charShaderFile, &shaderSource, &shaderFileLength) != 0)
     abort_on_error((shaderFile + " NOT found!").c_str());
   else
     std::cout << shaderFile << " found\n";
 
-  glShaderSource(newShader, 1, const_cast<const GLcharARB **>(&shaderSource), &shaderFileLength);
+  glShaderSource(newShader, 1, const_cast<const GLcharARB**>(&shaderSource),
+                 &shaderFileLength);
 
   // Compile them
   glCompileShaderARB(newShader);
@@ -197,15 +188,16 @@ void setupShader(std::string shaderFile, GLuint newShader)
 }
 
 // Setup program
-void setupProgram(GLuint newProgram)
-{
+void setupProgram(GLuint newProgram) {
   glLinkProgram(newProgram);
 
   GLint linked;
   glGetProgramiv(newProgram, GL_LINK_STATUS, &linked);
 
   if (!linked)
-    abort_on_error(("Program " + convertIntToString(newProgram) + "didnt link...").c_str());
+    abort_on_error(
+        ("Program " + convertIntToString(newProgram) + "didnt link...")
+            .c_str());
   else
     std::cout << "Program " << newProgram << " linked!\n\n";
 }
@@ -214,13 +206,11 @@ void setupProgram(GLuint newProgram)
  * ENDKILLMESHADERS! *
  *********************/
 
-//Load all ingame content
-void setup(bool first)
-{
+// Load all ingame content
+void setup(bool first) {
   showFPS = true;
 
-  if (first)
-  {
+  if (first) {
     /****************
      * SOME ALLEGRO *
      ****************/
@@ -244,16 +234,16 @@ void setup(bool first)
     allegro_gl_set(AGL_SUGGEST, AGL_Z_DEPTH | AGL_COLOR_DEPTH);
     allegro_gl_set(AGL_REQUIRE, AGL_DOUBLEBUFFER);
 
-    //Set screenmode
+    // Set screenmode
     int monitor_width = 0;
     int monitor_height = 0;
     get_desktop_resolution(&monitor_width, &monitor_height);
 
-    //if(set_gfx_mode( GFX_OPENGL_FULLSCREEN, monitor_width, monitor_height, 0, 0) !=0){
-    //if(set_gfx_mode( GFX_OPENGL_WINDOWED, monitor_width, monitor_height, 0, 0) !=0){
-    //if(set_gfx_mode( GFX_OPENGL_WINDOWED, monitor_width/2, monitor_height/2, 0, 0) !=0){
-    if (set_gfx_mode(GFX_OPENGL_WINDOWED, 1280, 960, 0, 0) != 0)
-    {
+    // if(set_gfx_mode( GFX_OPENGL_FULLSCREEN, monitor_width, monitor_height, 0,
+    // 0) !=0){ if(set_gfx_mode( GFX_OPENGL_WINDOWED, monitor_width,
+    // monitor_height, 0, 0) !=0){ if(set_gfx_mode( GFX_OPENGL_WINDOWED,
+    // monitor_width/2, monitor_height/2, 0, 0) !=0){
+    if (set_gfx_mode(GFX_OPENGL_WINDOWED, 1280, 960, 0, 0) != 0) {
       set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
       abort_on_error("Unable to go into any graphic mode\n%s\n");
     }
@@ -264,19 +254,19 @@ void setup(bool first)
     /****************
      * SOME OPEN GL *
      ****************/
-    //I am setting a state where I am editing the projection matrix.
+    // I am setting a state where I am editing the projection matrix.
     glMatrixMode(GL_PROJECTION);
 
-    //Clearing the projection matrix...
+    // Clearing the projection matrix...
     glLoadIdentity();
 
     // set the perspective with the appropriate aspect ratio
     gluPerspective(55.0f, (GLfloat)SCREEN_W / (GLfloat)SCREEN_H, 0.1f, 200.0f);
 
-    //Now editing the model-view matrix.
+    // Now editing the model-view matrix.
     glMatrixMode(GL_MODELVIEW);
 
-    //Clearing the model-view matrix.
+    // Clearing the model-view matrix.
     glLoadIdentity();
 
     // Viewport
@@ -297,7 +287,8 @@ void setup(bool first)
     glCullFace(GL_BACK);
 
     // TEXTURING
-    // Enable texturing and blending (all tiles use this so lets just call it once)
+    // Enable texturing and blending (all tiles use this so lets just call it
+    // once)
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
     glEnable(GL_TEXTURE_2D);
 
@@ -308,7 +299,7 @@ void setup(bool first)
     /*************
      * SOME GLEW *
      *************/
-    //glewExperimental = TRUE;
+    // glewExperimental = TRUE;
     if (glewInit())
       abort_on_error("Crap bukkits! Glew init failed.");
     else
@@ -379,11 +370,12 @@ void setup(bool first)
     skyTime = 0.4;
     skyTimeLoc = glGetUniformLocation(skyShader, "timer");
 
-    BITMAP *sampler;
+    BITMAP* sampler;
     GLint samplerRef;
     if (!(sampler = load_bitmap("images/skybox/sample.png", NULL)))
       abort_on_error("Could not load image images/skybox/sample.png");
-    samplerRef = allegro_gl_make_texture_ex(AGL_TEXTURE_HAS_ALPHA | AGL_TEXTURE_FLIP, sampler, GL_RGBA);
+    samplerRef = allegro_gl_make_texture_ex(
+        AGL_TEXTURE_HAS_ALPHA | AGL_TEXTURE_FLIP, sampler, GL_RGBA);
 
     // Sampler
     glUseProgram(skyShader);
@@ -398,7 +390,7 @@ void setup(bool first)
     glUseProgram(defaultShader);
 
     // Enable lights
-    glEnable(GL_LIGHTING); //turns the "lights" on
+    glEnable(GL_LIGHTING);  // turns the "lights" on
     glEnable(GL_LIGHT0);
 
     // Lighting
@@ -414,10 +406,10 @@ void setup(bool first)
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
     // FPS STUFF
-    //Creates a random number generator (based on time)
+    // Creates a random number generator (based on time)
     srand(time(NULL));
 
-    //Setup fNULLor FPS system
+    // Setup fNULLor FPS system
     LOCK_VARIABLE(ticks);
     LOCK_FUNCTION(ticker);
     install_int_ex(ticker, BPS_TO_TIMER(updates_per_second));
@@ -437,7 +429,7 @@ void setup(bool first)
     for (int ii = 0; ii < 10; ii++)
       frames_array[ii] = 0;
 
-    //Creates a buffer
+    // Creates a buffer
     buffer = create_bitmap(SCREEN_W, SCREEN_H);
 
     cursor = load_bitmap("images/cursor2.png", NULL);
@@ -451,16 +443,16 @@ void setup(bool first)
     // Sounds
     dinner = new audio_3d("sounds/dinner.wav", 0, 0, 0);
 
-    //Sets Font
+    // Sets Font
     f1 = load_font("images/fonts/arial_black.pcx", NULL, NULL);
     f2 = extract_font_range(f1, ' ', 'A' - 1);
     f3 = extract_font_range(f1, 'A', 'Z');
     f4 = extract_font_range(f1, 'Z' + 1, 'z');
 
-    //Merge fonts
+    // Merge fonts
     ARIAL_BLACK = merge_fonts(f4, f5 = merge_fonts(f2, f3));
 
-    //normal map
+    // normal map
     // TRANSFORMS
     jimmy->transformWorld();
 
@@ -471,35 +463,28 @@ void setup(bool first)
 
     sunX = -1.5;
     sunY = 1.5;
-    sunTile = new tile(sunX, sunY, sunZ, gameTiles->getManager()->getTileByType(1));
+    sunTile =
+        new tile(sunX, sunY, sunZ, gameTiles->getManager()->getTileByType(1));
 
     // Load them models
-    if (!quick_primatives::load_models())
-    {
+    if (!quick_primatives::load_models()) {
       abort_on_error("quick_primatives couldnt load the damn model!");
     }
   }
 }
 
-//Run the game loops
-void game()
-{
-  if (gameScreen == SPLASH)
-  {
-  }
-  else if (gameScreen == MENU)
-  {
-  }
-  else if (gameScreen == LEVELSELECT)
-  {
-  }
-  else if (gameScreen == INGAME)
-  {
+// Run the game loops
+void game() {
+  if (gameScreen == SPLASH) {
+  } else if (gameScreen == MENU) {
+  } else if (gameScreen == LEVELSELECT) {
+  } else if (gameScreen == INGAME) {
     gameTiles->update();
     jimmy->logic(gameTiles);
 
     if (key[KEY_M])
-      dinner->play3D(jimmy->getPointX(), jimmy->getPointY(), jimmy->getPointZ(), 255, 127, 1000, true);
+      dinner->play3D(jimmy->getPointX(), jimmy->getPointY(), jimmy->getPointZ(),
+                     255, 127, 1000, true);
     dinner->update();
 
     /// Water Shader
@@ -553,8 +538,9 @@ void game()
     sunZ = -1 * sin(2 * M_PI * skyTime);
 
     // Change light according to time (using cos! and parabolas!)
-    // Red uses a parabola to simulate sunrise (more red so pink) and night (less red so blue)
-    //DAY
+    // Red uses a parabola to simulate sunrise (more red so pink) and night
+    // (less red so blue)
+    // DAY
     float newRVal, newGVal, newBVal;
     newRVal = (-1 * pow((2.4 * skyTime) - 1.2, 2) + 1) + 0.1;
     newGVal = -0.5 * (cos(2 * M_PI * skyTime) - 1) + 0.1;
@@ -565,23 +551,22 @@ void game()
     glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
 
     // Sun light intensity
-    GLfloat light_diffuse[] = {(0.6 + sunY) / 2, (0.6 + sunY) / 2, (0.6 + sunY) / 2, 1.0f};
+    GLfloat light_diffuse[] = {(0.6 + sunY) / 2, (0.6 + sunY) / 2,
+                               (0.6 + sunY) / 2, 1.0f};
     glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
   }
 
-  //Exit game
-  if (key[KEY_ESC])
-  {
+  // Exit game
+  if (key[KEY_ESC]) {
     closeGame = true;
   }
 
-  //Counter for FPS
+  // Counter for FPS
   frames_done++;
 }
 
-//Draw images
-void draw()
-{
+// Draw images
+void draw() {
   // View matrix
   glMatrixMode(GL_MODELVIEW);
 
@@ -631,20 +616,27 @@ void draw()
   // Transparent buffer
   rectfill(buffer, 0, 0, SCREEN_W, SCREEN_H, makecol(255, 0, 255));
 
-  //FPS counter
-  if (showFPS)
-  {
-    textprintf_ex(buffer, font, 0, 0, makecol(0, 0, 0), makecol(255, 255, 255), "FPS-%i", fps);
+  // FPS counter
+  if (showFPS) {
+    textprintf_ex(buffer, font, 0, 0, makecol(0, 0, 0), makecol(255, 255, 255),
+                  "FPS-%i", fps);
   }
 
   // Cursor
-  draw_sprite(buffer, cursor, (SCREEN_W - cursor->w) / 2, (SCREEN_H - cursor->h) / 2);
+  draw_sprite(buffer, cursor, (SCREEN_W - cursor->w) / 2,
+              (SCREEN_H - cursor->h) / 2);
 
   // Debug text
-  textprintf_ex(buffer, ARIAL_BLACK, 20, 20, makecol(0, 0, 0), makecol(255, 255, 255), "Camera X:%4.1f Y:%4.1f Z:%4.1f RotX:%4.1f RotY:%4.1f ", jimmy->getX(), jimmy->getY(), jimmy->getZ(), jimmy->getXRotation(), jimmy->getYRotation());
-  textprintf_ex(buffer, ARIAL_BLACK, 20, 60, makecol(0, 0, 0), makecol(255, 255, 255), "Sun X:%1.2f Y:%1.2f Z:%1.2f Time:%1.3f ", sunX, sunY, sunZ, skyTime);
+  textprintf_ex(buffer, ARIAL_BLACK, 20, 20, makecol(0, 0, 0),
+                makecol(255, 255, 255),
+                "Camera X:%4.1f Y:%4.1f Z:%4.1f RotX:%4.1f RotY:%4.1f ",
+                jimmy->getX(), jimmy->getY(), jimmy->getZ(),
+                jimmy->getXRotation(), jimmy->getYRotation());
+  textprintf_ex(
+      buffer, ARIAL_BLACK, 20, 60, makecol(0, 0, 0), makecol(255, 255, 255),
+      "Sun X:%1.2f Y:%1.2f Z:%1.2f Time:%1.3f ", sunX, sunY, sunZ, skyTime);
 
-  //Draws buffer
+  // Draws buffer
   draw_sprite(screen, buffer, 0, 0);
 
   allegro_gl_unset_allegro_mode();
@@ -652,21 +644,17 @@ void draw()
   allegro_gl_flip();
 }
 
-int main(int argc, char *args[])
-{
-  //Setup game
+int main(int argc, char* args[]) {
+  // Setup game
   setup(true);
 
-  //Starts Game
-  while (!closeGame)
-  {
-    //Runs FPS system
-    while (ticks == 0)
-    {
+  // Starts Game
+  while (!closeGame) {
+    // Runs FPS system
+    while (ticks == 0) {
       rest(1);
     }
-    while (ticks > 0)
-    {
+    while (ticks > 0) {
       int old_ticks = ticks;
       // Update while in tick
       if (!key[KEY_1])
@@ -675,13 +663,15 @@ int main(int argc, char *args[])
       if (old_ticks <= ticks)
         break;
     }
-    if (game_time >= old_time + 1)
-    {
-      fps -= frames_array[frame_index];        //decrement the fps by the frames done a second ago
-      frames_array[frame_index] = frames_done; //store the number of frames done this 0.1 second
-      fps += frames_done;                      //increment the fps by the newly done frames
+    if (game_time >= old_time + 1) {
+      fps -= frames_array[frame_index];  // decrement the fps by the frames done
+                                         // a second ago
+      frames_array[frame_index] =
+          frames_done;     // store the number of frames done this 0.1 second
+      fps += frames_done;  // increment the fps by the newly done frames
 
-      frame_index = (frame_index + 1) % 10; //increment the frame index and snap it to 10
+      frame_index = (frame_index + 1) %
+                    10;  // increment the frame index and snap it to 10
 
       frames_done = 0;
       old_time += 1;

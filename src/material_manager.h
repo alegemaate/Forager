@@ -13,8 +13,8 @@
 #define MATERIAL_COPPER 2
 #define MATERIAL_RUBBER 3
 
-extern void changeMaterial( int material);
+extern void changeMaterial(int material);
 
 extern int currentMaterial;
 
-#endif // MATERIAL_MANAGER_H
+#endif  // MATERIAL_MANAGER_H

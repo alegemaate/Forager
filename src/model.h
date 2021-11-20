@@ -8,29 +8,30 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#include <vector>
 #include <GLM/GLM.hpp>
+#include <vector>
+
 #include <alleggl.h>
 
-class model
-{
-  public:
-    model();
-    virtual ~model();
+class model {
+ public:
+  model();
+  virtual ~model();
 
-    std::vector< glm::vec3 > vertices;
-    std::vector< glm::vec2 > uvs;
-    std::vector< glm::vec3 > normals;
+  std::vector<glm::vec3> vertices;
+  std::vector<glm::vec2> uvs;
+  std::vector<glm::vec3> normals;
 
-    GLuint vertexbuffer;
-    GLuint normalbuffer;
-    GLuint texturebuffer;
+  GLuint vertexbuffer;
+  GLuint normalbuffer;
+  GLuint texturebuffer;
 
-    GLuint texture_id;
+  GLuint texture_id;
 
-    bool load( const char * path, const char * uv_path);
-  protected:
-  private:
+  bool load(const char* path, const char* uv_path);
+
+ protected:
+ private:
 };
 
-#endif // MODEL_H
+#endif  // MODEL_H

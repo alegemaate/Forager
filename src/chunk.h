@@ -8,48 +8,50 @@
 #define CY 16
 #define CZ 16
 
-class chunk
-{
-  public:
-    chunk( int newX, int newY, int newZ);
-    virtual ~chunk();
+class chunk {
+ public:
+  chunk(int newX, int newY, int newZ);
+  virtual ~chunk();
 
-    // Fill array with given data
-    void fillArray( glm::vec3 posVec, glm::vec3 normVec, glm::vec2 texVec, GLfloat *newArray, unsigned long index);
+  // Fill array with given data
+  void fillArray(glm::vec3 posVec,
+                 glm::vec3 normVec,
+                 glm::vec2 texVec,
+                 GLfloat* newArray,
+                 unsigned long index);
 
-    // Tessilate chunk
-    void tessellate();
+  // Tessilate chunk
+  void tessellate();
 
-    // Get block
-    uint8_t get(int x, int y, int z);
+  // Get block
+  uint8_t get(int x, int y, int z);
 
-    // Set block
-    void set(int x, int y, int z, uint8_t type);
+  // Set block
+  void set(int x, int y, int z, uint8_t type);
 
-    // Tessilate and such
-    void update();
+  // Tessilate and such
+  void update();
 
-    // Render it all
-    void render();
+  // Render it all
+  void render();
 
+ protected:
+ private:
+  int index_x, index_y, index_z;
 
-  protected:
-  private:
-    int index_x, index_y, index_z;
+  uint8_t blk[CX][CY][CZ];
+  int elements;
+  bool changed;
 
-    uint8_t blk[CX][CY][CZ];
-    int elements;
-    bool changed;
+  // Data
+  GLuint geometry_array;
+  GLuint indice_array;
 
-    // Data
-    GLuint geometry_array;
-    GLuint indice_array;
+  unsigned long num_indices;
+  unsigned long num_geometry;
 
-    unsigned long num_indices;
-    unsigned long num_geometry;
-
-    GLfloat *geometry;
-    unsigned long *indices;
+  GLfloat* geometry;
+  unsigned long* indices;
 };
 
-#endif // CHUNK_H
+#endif  // CHUNK_H

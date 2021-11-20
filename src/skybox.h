@@ -8,26 +8,34 @@
 #ifndef SKYBOX_H
 #define SKYBOX_H
 
-#include <string>
 #include <allegro.h>
+
 #include <alleggl.h>
+#include <string>
 
-class skybox{
-  public:
-    skybox();
-    virtual ~skybox();
+class skybox {
+ public:
+  skybox();
+  virtual ~skybox();
 
-    void loadSkybox(std::string a_sDirectory, std::string a_sFront, std::string a_sBack, std::string a_sLeft, std::string a_sRight, std::string a_sTop, std::string a_sBottom);
-    void renderSkybox();
+  void loadSkybox(std::string a_sDirectory,
+                  std::string a_sFront,
+                  std::string a_sBack,
+                  std::string a_sLeft,
+                  std::string a_sRight,
+                  std::string a_sTop,
+                  std::string a_sBottom);
+  void renderSkybox();
 
-    int skyboxSampler;
-  protected:
-  private:
-    BITMAP *texture[6];
-    int textureRef[6];
+  int skyboxSampler;
 
-    GLuint vbo;
-    GLuint vao;
+ protected:
+ private:
+  BITMAP* texture[6];
+  int textureRef[6];
+
+  GLuint vbo;
+  GLuint vao;
 };
 
-#endif // SKYBOX_H
+#endif  // SKYBOX_H

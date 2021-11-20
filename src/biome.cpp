@@ -2,13 +2,12 @@
 
 #include "tools.h"
 
-biome::biome(std::string newName, int newID){
-
+biome::biome(std::string newName, int newID) {
   name = newName;
   ID = newID;
 
   // Set spawn rates to 0
-  for( int i = 0; i < 100; i ++){
+  for (int i = 0; i < 100; i++) {
     tileSpawnRates[i] = 0;
     tilesSpawnable[i] = 0;
   }
@@ -24,12 +23,15 @@ biome::biome(std::string newName, int newID){
   spawnChance = 0;
 }
 
-biome::~biome(){
-  //dtor
+biome::~biome() {
+  // dtor
 }
 
 // Set mountain rates
-void biome::setMountainRates( int newFrequency, int newHeight, int newRadius, int newSteepness){
+void biome::setMountainRates(int newFrequency,
+                             int newHeight,
+                             int newRadius,
+                             int newSteepness) {
   mountain_frequency = newFrequency;
   mountain_height = newHeight;
   mountain_radius = newRadius;
@@ -37,28 +39,28 @@ void biome::setMountainRates( int newFrequency, int newHeight, int newRadius, in
 }
 
 // Add spawnable tile
-void biome::addTileFrequency( int tileID, int frequency){
+void biome::addTileFrequency(int tileID, int frequency) {
   tileSpawnRates[tileID] = frequency;
 }
 
 // Spawn resources randomly according to parameters
-int biome::spawnResource(){
+int biome::spawnResource() {
   // Place some stuff
   bool objectPlaced = false;
   int randomGenerateSpawn = 0;
-  while( !objectPlaced && numberSpawnableResources > 0){
+  while (!objectPlaced && numberSpawnableResources > 0) {
     randomGenerateSpawn = random(0, numberSpawnableResources);
     // Choose an object
-    if( random(0, tileSpawnRates[tilesSpawnable[randomGenerateSpawn]]) == 1)
+    if (random(0, tileSpawnRates[tilesSpawnable[randomGenerateSpawn]]) == 1)
       objectPlaced = true;
   }
   return tilesSpawnable[randomGenerateSpawn];
 }
 
 // Calc spawn rates
-void biome::finish(){
-  for( int i = 0; i < NUMBER_TILE_IDS; i++){
-    if( tileSpawnRates[i] > 0){
+void biome::finish() {
+  for (int i = 0; i < NUMBER_TILE_IDS; i++) {
+    if (tileSpawnRates[i] > 0) {
       tilesSpawnable[numberSpawnableResources] = i;
       numberSpawnableResources++;
     }
