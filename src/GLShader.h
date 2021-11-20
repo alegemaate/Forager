@@ -2,7 +2,6 @@
 #define GLSHADER_H
 
 #include <allegro.h>
-#include <alpng.h>
 #include <alleggl.h>
 #include <GL/glu.h>
 
