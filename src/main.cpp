@@ -35,7 +35,6 @@
 #endif
 
 // Create variables
-int gameScreen = INGAME;
 int animationFrame;
 bool closeGame;
 bool showFPS;
@@ -62,29 +61,11 @@ audio_3d* dinner;
 
 tile* sunTile;
 
-// FPS System
-int fps;
-int frames_done;
-int old_time;
-
-// An array to store the number of frames we did during the last 10 tenths of a
-// second
-int frames_array[10];
-int frame_index = 0;
-
 volatile int ticks = 0;
 void ticker() {
   ticks++;
 }
 END_OF_FUNCTION(ticker)
-
-volatile int game_time = 0;
-void game_time_ticker() {
-  game_time++;
-}
-END_OF_FUNCTION(game_time_ticker)
-
-const int updates_per_second = 60;
 
 // Animations
 void animationTicker() {
@@ -107,7 +88,6 @@ unsigned long getFileLength(std::ifstream& file) {
     return 0;
   }
 
-  unsigned long pos = file.tellg();
   file.seekg(0, std::ios::end);
   unsigned long len = file.tellg();
   file.seekg(std::ios::beg);
@@ -151,12 +131,6 @@ int loadshader(char* filename, GLchar** ShaderSource, GLint* len) {
   *ShaderSource = tShaderSource;
 
   return 0;  // No Error
-}
-
-int unloadshader(GLubyte** ShaderSource) {
-  if (*ShaderSource != 0)
-    delete[] * ShaderSource;
-  *ShaderSource = 0;
 }
 
 void setupShader(std::string shaderFile, GLuint newShader) {
@@ -239,17 +213,10 @@ void setup(bool first) {
     int monitor_height = 0;
     get_desktop_resolution(&monitor_width, &monitor_height);
 
-    // if(set_gfx_mode( GFX_OPENGL_FULLSCREEN, monitor_width, monitor_height, 0,
-    // 0) !=0){ if(set_gfx_mode( GFX_OPENGL_WINDOWED, monitor_width,
-    // monitor_height, 0, 0) !=0){ if(set_gfx_mode( GFX_OPENGL_WINDOWED,
-    // monitor_width/2, monitor_height/2, 0, 0) !=0){
     if (set_gfx_mode(GFX_OPENGL_WINDOWED, 1280, 960, 0, 0) != 0) {
       set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
       abort_on_error("Unable to go into any graphic mode\n%s\n");
     }
-    //}
-    // }
-    //}
 
     /****************
      * SOME OPEN GL *
@@ -299,11 +266,11 @@ void setup(bool first) {
     /*************
      * SOME GLEW *
      *************/
-    // glewExperimental = TRUE;
-    if (glewInit())
+    if (glewInit()) {
       abort_on_error("Crap bukkits! Glew init failed.");
-    else
+    } else {
       std::cout << "Glew initialized \n\n";
+    }
 
     // LOAD SHADERS
     std::cout << "   SHADERS\n-------------\n";
@@ -372,8 +339,9 @@ void setup(bool first) {
 
     BITMAP* sampler;
     GLint samplerRef;
-    if (!(sampler = load_bitmap("images/skybox/sample.png", NULL)))
+    if (!(sampler = load_bitmap("images/skybox/sample.png", NULL))) {
       abort_on_error("Could not load image images/skybox/sample.png");
+    }
     samplerRef = allegro_gl_make_texture_ex(
         AGL_TEXTURE_HAS_ALPHA | AGL_TEXTURE_FLIP, sampler, GL_RGBA);
 
@@ -412,22 +380,11 @@ void setup(bool first) {
     // Setup fNULLor FPS system
     LOCK_VARIABLE(ticks);
     LOCK_FUNCTION(ticker);
-    install_int_ex(ticker, BPS_TO_TIMER(updates_per_second));
-
-    LOCK_VARIABLE(game_time);
-    LOCK_FUNCTION(game_time_ticker);
-    install_int_ex(game_time_ticker, BPS_TO_TIMER(10));
+    install_int_ex(ticker, BPS_TO_TIMER(1000));
 
     LOCK_VARIABLE(animationFrame);
     LOCK_FUNCTION(animationTicker);
     install_int_ex(animationTicker, SECS_TO_TIMER(1));
-
-    fps = 0;
-    frames_done = 0;
-    old_time = 0;
-
-    for (int ii = 0; ii < 10; ii++)
-      frames_array[ii] = 0;
 
     // Creates a buffer
     buffer = create_bitmap(SCREEN_W, SCREEN_H);
@@ -475,94 +432,90 @@ void setup(bool first) {
 
 // Run the game loops
 void game() {
-  if (gameScreen == SPLASH) {
-  } else if (gameScreen == MENU) {
-  } else if (gameScreen == LEVELSELECT) {
-  } else if (gameScreen == INGAME) {
-    gameTiles->update();
-    jimmy->logic(gameTiles);
+  gameTiles->update();
+  jimmy->logic(gameTiles);
 
-    if (key[KEY_M])
-      dinner->play3D(jimmy->getPointX(), jimmy->getPointY(), jimmy->getPointZ(),
-                     255, 127, 1000, true);
-    dinner->update();
+  if (key[KEY_M])
+    dinner->play3D(jimmy->getPointX(), jimmy->getPointY(), jimmy->getPointZ(),
+                   255, 127, 1000, true);
+  dinner->update();
 
-    /// Water Shader
-    glUseProgram(waterShader);
+  /// Water Shader
+  glUseProgram(waterShader);
 
-    // Change time
-    glUniform1f(waveTimeLoc, waveTime);
-    glUniform1f(waveWidthLoc, waveWidth);
-    glUniform1f(waveHeightLoc, waveHeight);
+  // Change time
+  glUniform1f(waveTimeLoc, waveTime);
+  glUniform1f(waveWidthLoc, waveWidth);
+  glUniform1f(waveHeightLoc, waveHeight);
 
-    // Update wave variable
-    waveTime += waveFreq;
+  // Update wave variable
+  waveTime += waveFreq;
 
-    /// Sky Shader
-    glUseProgram(skyShader);
+  /// Sky Shader
+  glUseProgram(skyShader);
 
-    // Change time
-    glUniform1f(skyTimeLoc, skyTime);
+  // Change time
+  glUniform1f(skyTimeLoc, skyTime);
 
-    if (skyTime > 1)
-      skyTime = 0;
-    else if (skyTime < 0)
-      skyTime = 1;
+  if (skyTime > 1)
+    skyTime = 0;
+  else if (skyTime < 0)
+    skyTime = 1;
 
-    skyTime += 0.000005;
+  skyTime += 0.000005;
 
-    /*if( key[KEY_U])
-      sunY+=0.05;
-    else if( key[KEY_J])
-      sunY-=0.05;
-    if( key[KEY_I])
-      sunX+=0.05;
-    else if( key[KEY_K])
-      sunX-=0.05;
-    if( key[KEY_O])
-      sunZ+=0.05;
-    else if( key[KEY_L])
-      sunZ-=0.05;*/
-
-    if (key[KEY_PLUS_PAD])
-      skyTime += 0.005;
-    else if (key[KEY_MINUS_PAD])
-      skyTime -= 0.005;
-
-    // Back to normal shader
-    glUseProgram(defaultShader);
-
-    // Orbit sun around world (i know.. i know.. thats not how it works)
-    sunY = -1 * cos(2 * M_PI * skyTime);
-    sunX = 1 * cos(2 * M_PI * skyTime);
-    sunZ = -1 * sin(2 * M_PI * skyTime);
-
-    // Change light according to time (using cos! and parabolas!)
-    // Red uses a parabola to simulate sunrise (more red so pink) and night
-    // (less red so blue)
-    // DAY
-    float newRVal, newGVal, newBVal;
-    newRVal = (-1 * pow((2.4 * skyTime) - 1.2, 2) + 1) + 0.1;
-    newGVal = -0.5 * (cos(2 * M_PI * skyTime) - 1) + 0.1;
-    newBVal = -0.5 * (cos(2 * M_PI * skyTime) - 1) + 0.1;
-
-    // Light color
-    GLfloat light_ambient[] = {newRVal, newGVal, newBVal, 1.0f};
-    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
-
-    // Sun light intensity
-    GLfloat light_diffuse[] = {(0.6 + sunY) / 2, (0.6 + sunY) / 2,
-                               (0.6 + sunY) / 2, 1.0f};
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+  if (key[KEY_U]) {
+    sunY += 0.05;
+  } else if (key[KEY_J]) {
+    sunY -= 0.05;
   }
+  if (key[KEY_I]) {
+    sunX += 0.05;
+  } else if (key[KEY_K]) {
+    sunX -= 0.05;
+  }
+  if (key[KEY_O]) {
+    sunZ += 0.05;
+  } else if (key[KEY_L]) {
+    sunZ -= 0.05;
+  }
+
+  if (key[KEY_PLUS_PAD]) {
+    skyTime += 0.005;
+  } else if (key[KEY_MINUS_PAD]) {
+    skyTime -= 0.005;
+  }
+
+  // Back to normal shader
+  glUseProgram(defaultShader);
+
+  // Orbit sun around world (i know.. i know.. thats not how it works)
+  sunY = -1 * cos(2 * M_PI * skyTime);
+  sunX = 1 * cos(2 * M_PI * skyTime);
+  sunZ = -1 * sin(2 * M_PI * skyTime);
+
+  // Change light according to time (using cos! and parabolas!)
+  // Red uses a parabola to simulate sunrise (more red so pink) and night
+  // (less red so blue)
+  // DAY
+  float newRVal, newGVal, newBVal;
+  newRVal = (-1 * pow((2.4 * skyTime) - 1.2, 2) + 1) + 0.1;
+  newGVal = -0.5 * (cos(2 * M_PI * skyTime) - 1) + 0.1;
+  newBVal = -0.5 * (cos(2 * M_PI * skyTime) - 1) + 0.1;
+
+  // Light color
+  GLfloat light_ambient[] = {newRVal, newGVal, newBVal, 1.0f};
+  glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
+
+  // Sun light intensity
+  GLfloat light_diffuse[] = {(0.6 + sunY) / 2, (0.6 + sunY) / 2,
+                             (0.6 + sunY) / 2, 1.0f};
+  glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
 
   // Exit game
   if (key[KEY_ESC]) {
     closeGame = true;
   }
-
-  // Counter for FPS
-  frames_done++;
 }
 
 // Draw images
@@ -602,8 +555,9 @@ void draw() {
   sunTile->draw(frameOn);
 
   // Draw map
-  if (!key[KEY_TILDE])
+  if (!key[KEY_TILDE]) {
     gameTiles->draw(frameOn);
+  }
 
   // Back to init shader
   glUseProgram(0);
@@ -615,12 +569,6 @@ void draw() {
 
   // Transparent buffer
   rectfill(buffer, 0, 0, SCREEN_W, SCREEN_H, makecol(255, 0, 255));
-
-  // FPS counter
-  if (showFPS) {
-    textprintf_ex(buffer, font, 0, 0, makecol(0, 0, 0), makecol(255, 255, 255),
-                  "FPS-%i", fps);
-  }
 
   // Cursor
   draw_sprite(buffer, cursor, (SCREEN_W - cursor->w) / 2,
@@ -648,38 +596,34 @@ int main(int argc, char* args[]) {
   // Setup game
   setup(true);
 
-  // Starts Game
-  while (!closeGame) {
-    // Runs FPS system
-    while (ticks == 0) {
-      rest(1);
-    }
-    while (ticks > 0) {
-      int old_ticks = ticks;
-      // Update while in tick
-      if (!key[KEY_1])
+  // 120 Updates per second
+  const constexpr double dt = 1000.0 / 120.0;
+
+  double time = 0.0;
+  double accumulator = 0.0;
+  double current_time = ticks;
+  double new_time = 0.0;
+  double frame_time = 0.0;
+
+  while (!closeGame && !key[KEY_ESC]) {
+    new_time = ticks;
+    frame_time = new_time - current_time;
+    current_time = new_time;
+
+    accumulator += frame_time;
+
+    while (accumulator >= dt) {
+      if (!key[KEY_1]) {
         game();
-      ticks--;
-      if (old_ticks <= ticks)
-        break;
-    }
-    if (game_time >= old_time + 1) {
-      fps -= frames_array[frame_index];  // decrement the fps by the frames done
-                                         // a second ago
-      frames_array[frame_index] =
-          frames_done;     // store the number of frames done this 0.1 second
-      fps += frames_done;  // increment the fps by the newly done frames
+      }
 
-      frame_index = (frame_index + 1) %
-                    10;  // increment the frame index and snap it to 10
-
-      frames_done = 0;
-      old_time += 1;
+      accumulator -= dt;
+      time += dt;
     }
-    // Update every tick
+
     draw();
-    frames_done++;
   }
+
   allegro_exit();
 
   return 0;

@@ -41,16 +41,9 @@
 #define BIOME_LAKE 6
 #define BIOME_RIVER 7
 
-// Define all of the possible game screens
-#define SPLASH 0
-#define TITLE 1
-#define MENU 2
-#define LEVELSELECT 3
-#define INGAME 4
-
 #define DEFAULT_MAP_HEIGHT 16
-#define DEFAULT_MAP_WIDTH 32
-#define DEFAULT_MAP_LENGTH 32
+#define DEFAULT_MAP_WIDTH 128
+#define DEFAULT_MAP_LENGTH 128
 
 #define WORLD_HEIGHT 2
 #define WORLD_WIDTH 6
