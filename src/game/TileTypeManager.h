@@ -15,17 +15,9 @@
 
 class TileTypeManager {
  public:
-  TileTypeManager();
-  virtual ~TileTypeManager();
-
-  // Load tile types
-  void load(std::string newFile);
-
-  // Allows communication
-  int getNumberTiles() { return tile_defs.size(); }
+  void load(const std::string& newFile);
   TileType* getTileByType(int tileID);
 
- protected:
  private:
   std::vector<TileType> tile_defs;
 };

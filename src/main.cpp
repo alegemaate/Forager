@@ -295,7 +295,6 @@ void setup(bool first) {
 
     gameTiles = new TileMap(buffer);
     gameTiles->theSky.skyboxSampler = samplerRef;
-    gameTiles->load_images();
     gameTiles->generateMap();
 
     sunX = -1.5;

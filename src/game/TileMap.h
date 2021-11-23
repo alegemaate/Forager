@@ -11,22 +11,16 @@
 #include <allegro.h>
 #include <string>
 
-#include <glm/glm.hpp>
-#include <glm/gtx/string_cast.hpp>
-
 #include "BiomeManager.h"
 #include "Chunk.h"
 #include "Skybox.h"
 #include "Tile.h"
 #include "TileTypeManager.h"
 
-typedef glm::tvec3<GLbyte> byte3;
-
 class TileMap {
  public:
-  TileMap(BITMAP* tempBuffer);
+  explicit TileMap(BITMAP* tempBuffer);
 
-  void load_images();
   void update();
   void generateMap();
   void draw(int newAnimationFrame);
@@ -44,7 +38,6 @@ class TileMap {
   void quickPeek(const std::string& currentPhase);
   long checkBiomeNumber(char biomeToCheck);
 
-  BITMAP* overlay_images[20];
   BITMAP* buffPoint;
 
   TileTypeManager all_tile_defs;

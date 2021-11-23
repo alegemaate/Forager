@@ -10,7 +10,7 @@
 
 class Chunk {
  public:
-  Chunk(int newX, int newY, int newZ);
+  Chunk(int x, int y, int z);
 
   // Fill array with given data
   void fillArray(glm::vec3 posVec,
@@ -38,11 +38,11 @@ class Chunk {
   int index_x, index_y, index_z;
 
   uint8_t blk[CX][CY][CZ]{};
-  bool changed;
+  bool changed = false;
 
   // Data
-  GLuint geometry_array;
-  GLuint indices_array;
+  GLuint geometry_array = 0;
+  GLuint indices_array = 0;
 
   unsigned long num_indices;
   unsigned long num_geometry;

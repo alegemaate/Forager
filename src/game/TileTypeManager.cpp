@@ -5,19 +5,10 @@
 #include <sstream>
 
 #include "../rapidxml/rapidxml.hpp"
-#include "../rapidxml/rapidxml_print.hpp"
 #include "../utils/utils.h"
 
-TileTypeManager::TileTypeManager() {
-  // ctor
-}
-
-TileTypeManager::~TileTypeManager() {
-  // dtor
-}
-
 // Load tiles
-void TileTypeManager::load(std::string newFile) {
+void TileTypeManager::load(const std::string& newFile) {
   // Load biomes from file
   rapidxml::xml_document<> doc;
   std::ifstream file;

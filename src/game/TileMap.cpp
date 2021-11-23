@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+#include "../core/SimplexNoise.h"
 #include "../utils/utils.h"
 
 // Construct
@@ -22,6 +23,8 @@ TileMap::TileMap(BITMAP* tempBuffer) {
   // Load tiles
   all_tile_defs.load("data/tiles.xml");
 
+
+
   // Make a map full of tiles
   for (int i = 0; i < DEFAULT_MAP_WIDTH; i++) {
     for (int t = 0; t < DEFAULT_MAP_LENGTH; t++) {
@@ -35,34 +38,12 @@ TileMap::TileMap(BITMAP* tempBuffer) {
   for (int i = 0; i < WORLD_WIDTH; i++) {
     for (int t = 0; t < WORLD_LENGTH; t++) {
       for (int n = 0; n < WORLD_HEIGHT; n++) {
-        if (!allChunks[i][n][t])
+        if (!allChunks[i][n][t]) {
           allChunks[i][n][t] = new Chunk(i, n, t);
+        }
       }
     }
   }
-}
-
-// Load images for tiles
-void TileMap::load_images() {
-  // In case of error
-  for (int i = 0; i < 20; i++) {
-    overlay_images[i] = nullptr;
-  }
-
-  // Overlays
-  overlay_images[OVERLAY_NONE] = nullptr;
-  overlay_images[OVERLAY_FOG_10] =
-      load_bitmap("images/tiles/OVERLAY_FOG_10.png", nullptr);
-  overlay_images[OVERLAY_FOG_25] =
-      load_bitmap("images/tiles/OVERLAY_FOG_25.png", nullptr);
-  overlay_images[OVERLAY_FOG_50] =
-      load_bitmap("images/tiles/OVERLAY_FOG_50.png", nullptr);
-  overlay_images[OVERLAY_FOG_75] =
-      load_bitmap("images/tiles/OVERLAY_FOG_75.png", nullptr);
-  overlay_images[OVERLAY_FOG_100] =
-      load_bitmap("images/tiles/OVERLAY_FOG_100.png", nullptr);
-  overlay_images[OVERLAY_SELECTED] =
-      load_bitmap("images/tiles/selected_overlay.png", nullptr);
 }
 
 // Update map
@@ -455,14 +436,15 @@ void TileMap::generateMap() {
       for (int u = 0; u < DEFAULT_MAP_HEIGHT; u++) {
         // Dirt, to sand or rock or snow
         if (map_tiles[i][t][u]->getType() == TILE_GRASS) {
-          if (map_tiles[i][t][u]->getBiome() == BIOME_TUNDRA)
+          if (map_tiles[i][t][u]->getBiome() == BIOME_TUNDRA) {
             map_tiles[i][t][u]->setType(
                 all_tile_defs.getTileByType(TILE_GRASS_SNOW));
-          else if (map_tiles[i][t][u]->getBiome() == BIOME_BARREN)
+          } else if (map_tiles[i][t][u]->getBiome() == BIOME_BARREN) {
             map_tiles[i][t][u]->setType(
                 all_tile_defs.getTileByType(TILE_STONE));
-          else if (map_tiles[i][t][u]->getBiome() == BIOME_DESERT)
+          } else if (map_tiles[i][t][u]->getBiome() == BIOME_DESERT) {
             map_tiles[i][t][u]->setType(all_tile_defs.getTileByType(TILE_SAND));
+          }
         }
       }
     }
@@ -489,9 +471,6 @@ long TileMap::checkBiomeNumber(char biomeToCheck) {
 void TileMap::quickPeek(const std::string& currentPhase) {
   // Send to console
   std::cout << "PHASE:" << currentPhase.c_str() << "\n";
-
-  // Tessellate
-  // tessellate();
 
   // View matrix
   glMatrixMode(GL_MODELVIEW);
@@ -542,7 +521,7 @@ void TileMap::draw(int newAnimationFrame) {
     for (int t = 0; t < WORLD_LENGTH; t++) {
       for (int n = 0; n < WORLD_HEIGHT; n++) {
         if (allChunks[i][n][t]) {
-          // allChunks[i][n][t] -> render();
+          // allChunks[i][n][t]->render();
         }
       }
     }

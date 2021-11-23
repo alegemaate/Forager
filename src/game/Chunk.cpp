@@ -11,19 +11,7 @@
 #include "../utils/utils.h"
 
 // Construct
-Chunk::Chunk(int newX, int newY, int newZ) {
-  // Set pos
-  index_x = newX;
-  index_y = newY;
-  index_z = newZ;
-
-  // memset(blk, 0, sizeof blk);
-  changed = true;
-
-  // Set to 0
-  geometry_array = 0;
-  indices_array = 0;
-
+Chunk::Chunk(int x, int y, int z) : index_x(x), index_y(y), index_z(z) {
   // Stores vertices
   num_geometry = CX * CY * CZ * 6 * 6;
   num_indices = num_geometry;
@@ -74,8 +62,9 @@ void Chunk::tessellate() {
         unsigned char type = blk[i][t][k];
 
         // Empty block?
-        if (!type)
+        if (!type) {
           continue;
+        }
 
         // LEFT (-x)
         if (i == 0 || (i > 0 && blk[i - 1][t][k] == 0)) {
@@ -83,10 +72,12 @@ void Chunk::tessellate() {
                     glm::vec2(0, 0), geometry, j * 9);
           indices[j] = j;
           j++;
+
           fillArray(glm::vec3(i - 0.5, t - 0.5, k + 0.5), glm::vec3(-1, 0, 0),
                     glm::vec2(1, 0), geometry, j * 9);
           indices[j] = j;
           j++;
+
           fillArray(glm::vec3(i - 0.5, t + 0.5, k + 0.5), glm::vec3(-1, 0, 0),
                     glm::vec2(1, 1), geometry, j * 9);
           indices[j] = j;
@@ -96,10 +87,12 @@ void Chunk::tessellate() {
                     glm::vec2(0, 0), geometry, j * 9);
           indices[j] = j;
           j++;
+
           fillArray(glm::vec3(i - 0.5, t - 0.5, k - 0.5), glm::vec3(-1, 0, 0),
                     glm::vec2(1, 1), geometry, j * 9);
           indices[j] = j;
           j++;
+
           fillArray(glm::vec3(i - 0.5, t - 0.5, k + 0.5), glm::vec3(-1, 0, 0),
                     glm::vec2(0, 1), geometry, j * 9);
           indices[j] = j;
@@ -116,6 +109,7 @@ void Chunk::tessellate() {
                     glm::vec2(1, 0), geometry, j * 9);
           indices[j] = j;
           j++;
+
           fillArray(glm::vec3(i + 0.5, t - 0.5, k - 0.5), glm::vec3(1, 0, 0),
                     glm::vec2(1, 1), geometry, j * 9);
           indices[j] = j;
@@ -125,10 +119,12 @@ void Chunk::tessellate() {
                     glm::vec2(0, 0), geometry, j * 9);
           indices[j] = j;
           j++;
+
           fillArray(glm::vec3(i + 0.5, t - 0.5, k - 0.5), glm::vec3(1, 0, 0),
                     glm::vec2(1, 1), geometry, j * 9);
           indices[j] = j;
           j++;
+
           fillArray(glm::vec3(i + 0.5, t + 0.5, k - 0.5), glm::vec3(1, 0, 0),
                     glm::vec2(0, 1), geometry, j * 9);
           indices[j] = j;
@@ -141,10 +137,12 @@ void Chunk::tessellate() {
                     glm::vec2(0, 0), geometry, j * 9);
           indices[j] = j;
           j++;
+
           fillArray(glm::vec3(i - 0.5, t - 0.5, k - 0.5), glm::vec3(0, -1, 0),
                     glm::vec2(1, 0), geometry, j * 9);
           indices[j] = j;
           j++;
+
           fillArray(glm::vec3(i + 0.5, t - 0.5, k - 0.5), glm::vec3(0, -1, 0),
                     glm::vec2(1, 1), geometry, j * 9);
           indices[j] = j;
@@ -154,10 +152,12 @@ void Chunk::tessellate() {
                     glm::vec2(0, 0), geometry, j * 9);
           indices[j] = j;
           j++;
+
           fillArray(glm::vec3(i + 0.5, t - 0.5, k - 0.5), glm::vec3(0, -1, 0),
                     glm::vec2(1, 1), geometry, j * 9);
           indices[j] = j;
           j++;
+
           fillArray(glm::vec3(i + 0.5, t - 0.5, k + 0.5), glm::vec3(0, -1, 0),
                     glm::vec2(0, 1), geometry, j * 9);
           indices[j] = j;
@@ -170,10 +170,12 @@ void Chunk::tessellate() {
                     glm::vec2(0, 0), geometry, j * 9);
           indices[j] = j;
           j++;
+
           fillArray(glm::vec3(i - 0.5, t + 0.5, k + 0.5), glm::vec3(0, 1, 0),
                     glm::vec2(1, 0), geometry, j * 9);
           indices[j] = j;
           j++;
+
           fillArray(glm::vec3(i + 0.5, t + 0.5, k + 0.5), glm::vec3(0, 1, 0),
                     glm::vec2(1, 1), geometry, j * 9);
           indices[j] = j;
@@ -183,10 +185,12 @@ void Chunk::tessellate() {
                     glm::vec2(0, 0), geometry, j * 9);
           indices[j] = j;
           j++;
+
           fillArray(glm::vec3(i + 0.5, t + 0.5, k + 0.5), glm::vec3(0, 1, 0),
                     glm::vec2(1, 1), geometry, j * 9);
           indices[j] = j;
           j++;
+
           fillArray(glm::vec3(i + 0.5, t + 0.5, k - 0.5), glm::vec3(0, 1, 0),
                     glm::vec2(0, 1), geometry, j * 9);
           indices[j] = j;
@@ -199,10 +203,12 @@ void Chunk::tessellate() {
                     glm::vec2(0, 0), geometry, j * 9);
           indices[j] = j;
           j++;
+
           fillArray(glm::vec3(i - 0.5, t - 0.5, k - 0.5), glm::vec3(0, 0, -1),
                     glm::vec2(1, 0), geometry, j * 9);
           indices[j] = j;
           j++;
+
           fillArray(glm::vec3(i + 0.5, t + 0.5, k - 0.5), glm::vec3(0, 0, -1),
                     glm::vec2(1, 1), geometry, j * 9);
           indices[j] = j;
@@ -212,10 +218,12 @@ void Chunk::tessellate() {
                     glm::vec2(0, 0), geometry, j * 9);
           indices[j] = j;
           j++;
+
           fillArray(glm::vec3(i - 0.5, t - 0.5, k - 0.5), glm::vec3(0, 0, -1),
                     glm::vec2(1, 1), geometry, j * 9);
           indices[j] = j;
           j++;
+
           fillArray(glm::vec3(i - 0.5, t + 0.5, k - 0.5), glm::vec3(0, 0, -1),
                     glm::vec2(0, 1), geometry, j * 9);
           indices[j] = j;
@@ -228,10 +236,12 @@ void Chunk::tessellate() {
                     glm::vec2(0, 0), geometry, j * 9);
           indices[j] = j;
           j++;
+
           fillArray(glm::vec3(i - 0.5, t - 0.5, k + 0.5), glm::vec3(0, 0, 1),
                     glm::vec2(1, 0), geometry, j * 9);
           indices[j] = j;
           j++;
+
           fillArray(glm::vec3(i + 0.5, t - 0.5, k + 0.5), glm::vec3(0, 0, 1),
                     glm::vec2(1, 1), geometry, j * 9);
           indices[j] = j;
@@ -241,10 +251,12 @@ void Chunk::tessellate() {
                     glm::vec2(0, 0), geometry, j * 9);
           indices[j] = j;
           j++;
+
           fillArray(glm::vec3(i + 0.5, t - 0.5, k + 0.5), glm::vec3(0, 0, 1),
                     glm::vec2(1, 1), geometry, j * 9);
           indices[j] = j;
           j++;
+
           fillArray(glm::vec3(i + 0.5, t + 0.5, k + 0.5), glm::vec3(0, 0, 1),
                     glm::vec2(0, 1), geometry, j * 9);
           indices[j] = j;
@@ -284,8 +296,9 @@ void Chunk::update() {
 
 void Chunk::render() {
   // Tessellate when modified
-  if (changed)
+  if (changed) {
     update();
+  }
 
   // Go into model view matrix
   glPushMatrix();
