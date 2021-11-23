@@ -301,7 +301,7 @@ void setup(bool first) {
     sunX = -1.5;
     sunY = 1.5;
     sunTile =
-        new Tile(sunX, sunY, sunZ, gameTiles->getManager()->getTileByType(1));
+        new Tile(sunX, sunY, sunZ, TileTypeManager::getTileByType(TILE_GRASS));
 
     // Load them models
     if (!quick_primitives::load_models()) {
@@ -437,7 +437,7 @@ void draw() {
 
   // Draw map
   if (!key[KEY_TILDE]) {
-    gameTiles->draw(frameOn);
+    gameTiles->draw();
   }
 
   // Back to init shader

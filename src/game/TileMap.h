@@ -23,24 +23,20 @@ class TileMap {
 
   void update();
   void generateMap();
-  void draw(int newAnimationFrame);
+  void draw();
 
-  Tile* map_tiles[DEFAULT_MAP_WIDTH][DEFAULT_MAP_LENGTH][DEFAULT_MAP_HEIGHT];
+  Tile* getTile(int x, int y, int z);
 
-  TileTypeManager* getManager() { return &all_tile_defs; }
-
-  Skybox theSky;
+  Skybox theSky{};
 
  private:
   // All chunks
-  Chunk* allChunks[WORLD_LENGTH][WORLD_HEIGHT][WORLD_WIDTH];
+  Chunk* allChunks[WORLD_LENGTH][WORLD_WIDTH]{};
 
   void quickPeek(const std::string& currentPhase);
-  long checkBiomeNumber(char biomeToCheck);
 
   BITMAP* buffPoint;
 
-  TileTypeManager all_tile_defs;
   BiomeManager biomes;
 };
 

@@ -62,44 +62,43 @@ void Player::logic(TileMap* newMap) {
     for (int i = 0; i < DEFAULT_MAP_WIDTH; i++) {
       for (int t = 0; t < DEFAULT_MAP_LENGTH; t++) {
         for (int n = 0; n < DEFAULT_MAP_HEIGHT; n++) {
-          if (newMap->map_tiles[i][t][n]->getTile()->getAttribute() !=
+          if (newMap->getTile(i, t, n)->getTile()->getAttribute() !=
                   ATTRIBUTE_GAS &&
-              newMap->map_tiles[i][t][n]->getTile()->getAttribute() !=
+              newMap->getTile(i, t, n)->getTile()->getAttribute() !=
                   ATTRIBUTE_LIQUID) {
             // Check if near first
             if (distanceTo3D(x, y + y_velocity, z,
-                             newMap->map_tiles[i][t][n]->getX(),
-                             newMap->map_tiles[i][t][n]->getY(),
-                             newMap->map_tiles[i][t][n]->getZ()) <= 2) {
-              if (collision3d(x, 0.5f, newMap->map_tiles[i][t][n]->getX(), 0.5f,
+                             newMap->getTile(i, t, n)->getX(),
+                             newMap->getTile(i, t, n)->getY(),
+                             newMap->getTile(i, t, n)->getZ()) <= 2) {
+              if (collision3d(x, 0.5f, newMap->getTile(i, t, n)->getX(), 0.5f,
                               y + y_velocity, 1.6f,
-                              newMap->map_tiles[i][t][n]->getY(), 0.5f, z, 0.5f,
-                              newMap->map_tiles[i][t][n]->getZ(), 0.5f)) {
+                              newMap->getTile(i, t, n)->getY(), 0.5f, z, 0.5f,
+                              newMap->getTile(i, t, n)->getZ(), 0.5f)) {
                 // Y Coords
                 // Top
                 if (collisionOverlap(y + y_velocity, 1.6f,
-                                     newMap->map_tiles[i][t][n]->getY(),
-                                     0.5f)) {
+                                     newMap->getTile(i, t, n)->getY(), 0.5f)) {
                   canFall = false;
-                  if (newMap->map_tiles[i][t][n]->getY() + 0.5f < y - 1.5f) {
-                    y = newMap->map_tiles[i][t][n]->getY() + 0.5f + 1.5f;
+                  if (newMap->getTile(i, t, n)->getY() + 0.5f < y - 1.5f) {
+                    y = newMap->getTile(i, t, n)->getY() + 0.5f + 1.5f;
                   }
                 }
               }
-              if (collision3d(x, 0.3, newMap->map_tiles[i][t][n]->getX(), 0.5,
+              if (collision3d(x, 0.3, newMap->getTile(i, t, n)->getX(), 0.5,
                               y + y_velocity, 1.5,
-                              newMap->map_tiles[i][t][n]->getY(), 0.5, z, 0.3,
-                              newMap->map_tiles[i][t][n]->getZ(), 0.5)) {
+                              newMap->getTile(i, t, n)->getY(), 0.5, z, 0.3,
+                              newMap->getTile(i, t, n)->getZ(), 0.5)) {
                 // X Coords
                 // Left
                 double buffer = 0.2f;
                 if (collisionOverlap(x - buffer, 0.3,
-                                     newMap->map_tiles[i][t][n]->getX(), 0.5)) {
+                                     newMap->getTile(i, t, n)->getX(), 0.5)) {
                   canMoveXMINUS = false;
                   x += 0.005f;
                 }
                 // Right
-                if (collisionOverlap(newMap->map_tiles[i][t][n]->getX(), 0.5,
+                if (collisionOverlap(newMap->getTile(i, t, n)->getX(), 0.5,
                                      x + buffer, 0.3)) {
                   canMoveXPLUS = false;
                   x -= 0.005f;
@@ -108,12 +107,12 @@ void Player::logic(TileMap* newMap) {
                 // Z Coords
                 // Front
                 if (collisionOverlap(z - buffer, 0.3,
-                                     newMap->map_tiles[i][t][n]->getZ(), 0.5)) {
+                                     newMap->getTile(i, t, n)->getZ(), 0.5)) {
                   canMoveZMINUS = false;
                   z += 0.005f;
                 }
                 // Back
-                if (collisionOverlap(newMap->map_tiles[i][t][n]->getZ(), 0.5,
+                if (collisionOverlap(newMap->getTile(i, t, n)->getZ(), 0.5,
                                      z + buffer, 0.3)) {
                   canMoveZPLUS = false;
                   z -= 0.005f;
@@ -123,12 +122,12 @@ void Player::logic(TileMap* newMap) {
                 if ((!canMoveZMINUS || !canMoveZPLUS || !canMoveXMINUS ||
                      !canMoveXPLUS)) {
                   if (mouse_b & 1) {
-                    newMap->map_tiles[i][t][n]->setType(
-                        newMap->getManager()->getTileByType(TILE_GRASS));
+                    newMap->getTile(i, t, n)->setType(
+                        TileTypeManager::getTileByType(TILE_GRASS));
                   }
                   if (mouse_b & 2) {
-                    newMap->map_tiles[i][t][n]->setType(
-                        newMap->getManager()->getTileByType(TILE_AIR));
+                    newMap->getTile(i, t, n)->setType(
+                        TileTypeManager::getTileByType(TILE_AIR));
                   }
                 }
               }

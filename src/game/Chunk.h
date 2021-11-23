@@ -2,31 +2,31 @@
 #define CHUNK_H
 
 #include <alleggl.h>
-#include <glm/glm.hpp>
 
-#define CX 16
-#define CY 16
-#define CZ 16
+#include "../constants/ids.h"
+#include "Tile.h"
 
 class Chunk {
  public:
-  Chunk(int x, int y, int z);
+  Chunk(int x, int z);
 
   // Fill array with given data
-  void fillArray(glm::vec3 posVec,
-                 glm::vec3 normVec,
-                 glm::vec2 texVec,
-                 GLfloat* newArray,
-                 unsigned long index);
+  static void fillArray(glm::vec3 posVec,
+                        glm::vec3 normVec,
+                        glm::vec2 texVec,
+                        GLfloat* newArray,
+                        unsigned long index);
 
   // Tessellate chunk
   void tessellate();
 
+  void generate(int seed);
+
   // Get block
-  uint8_t get(int x, int y, int z);
+  Tile* get(int x, int y, int z);
 
   // Set block
-  void set(int x, int y, int z, uint8_t type);
+  void set(int x, int y, int z, unsigned char type);
 
   // Tessellate and such
   void update();
@@ -35,17 +35,16 @@ class Chunk {
   void render();
 
  private:
-  int index_x, index_y, index_z;
+  int index_x, index_z;
 
-  uint8_t blk[CX][CY][CZ]{};
+  Tile* blk[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH]{};
   bool changed = false;
 
   // Data
   GLuint geometry_array = 0;
   GLuint indices_array = 0;
 
-  unsigned long num_indices;
-  unsigned long num_geometry;
+  int num_indices;
 
   GLfloat* geometry;
   unsigned long* indices;
