@@ -11,7 +11,6 @@
 class chunk {
  public:
   chunk(int newX, int newY, int newZ);
-  virtual ~chunk();
 
   // Fill array with given data
   void fillArray(glm::vec3 posVec,
@@ -20,7 +19,7 @@ class chunk {
                  GLfloat* newArray,
                  unsigned long index);
 
-  // Tessilate chunk
+  // Tessellate chunk
   void tessellate();
 
   // Get block
@@ -29,18 +28,16 @@ class chunk {
   // Set block
   void set(int x, int y, int z, uint8_t type);
 
-  // Tessilate and such
+  // Tessellate and such
   void update();
 
   // Render it all
   void render();
 
- protected:
  private:
   int index_x, index_y, index_z;
 
   uint8_t blk[CX][CY][CZ];
-  int elements;
   bool changed;
 
   // Data

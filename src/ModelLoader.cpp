@@ -1,20 +1,13 @@
-#include "model_loader.h"
+#include "ModelLoader.h"
 
-#include <stdio.h>
+#include <cstdio>
+#include <cstring>
 #include <iostream>
 
-model_loader::model_loader() {
-  // ctor
-}
-
-model_loader::~model_loader() {
-  // dtor
-}
-
-bool model_loader::load_model(const char* path,
-                              std::vector<glm::vec3>& out_vertices,
-                              std::vector<glm::vec2>& out_uvs,
-                              std::vector<glm::vec3>& out_normals) {
+bool ModelLoader::load_model(const char* path,
+                             std::vector<glm::vec3>& out_vertices,
+                             std::vector<glm::vec2>& out_uvs,
+                             std::vector<glm::vec3>& out_normals) {
   std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
   std::vector<glm::vec3> temp_vertices;
   std::vector<glm::vec2> temp_uvs;

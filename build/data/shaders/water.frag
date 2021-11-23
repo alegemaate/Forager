@@ -10,8 +10,7 @@
 varying vec3 lightDir,normal;
 uniform sampler2D texture1,texture2;
 
-void main()
-{
+void main() {
 	// Variables
 	vec3 texture_color, material_color, light_color;
 	vec4 texture_info;
@@ -22,8 +21,7 @@ void main()
 	intensity = max(dot(lightDir,normalize(normal)),0.0);
 	
 	// Fetch material color and alpha 
-	material_color = intensity * (gl_FrontMaterial.diffuse).rgb + 
-								  gl_FrontMaterial.ambient.rgb;
+	material_color = intensity * (gl_FrontMaterial.diffuse).rgb + gl_FrontMaterial.ambient.rgb;
 	material_alpha = gl_FrontMaterial.diffuse.a;
 
 	// Light info
@@ -31,8 +29,7 @@ void main()
 	light_alpha = gl_LightSource[0].diffuse.a;
 	
 	// Get texture info
-	texture_info = texture2D(texture1,gl_TexCoord[0].st) + 
-			texture2D(texture2,gl_TexCoord[0].st);
+	texture_info = texture2D(texture1,gl_TexCoord[0].st) + texture2D(texture2,gl_TexCoord[0].st);
 	
 	// Fetch texture color and alpha 
 	texture_color = texture_info.rgb;

@@ -1,13 +1,11 @@
-#include "tile_map.h"
+#include "TileMap.h"
 
 #include <iostream>
 
-#include "globals.h"
-#include "ids.h"
-#include "tools.h"
+#include "utils/utils.h"
 
 // Construct
-tile_map::tile_map(BITMAP* tempBuffer) {
+TileMap::TileMap(BITMAP* tempBuffer) {
   // Start in view mode
   gameMode = false;
 
@@ -24,7 +22,7 @@ tile_map::tile_map(BITMAP* tempBuffer) {
   // Load tiles
   all_tile_defs.load("data/tiles.xml");
 
-  // Make a mapful of tiles
+  // Make a map full of tiles
   for (int i = 0; i < DEFAULT_MAP_WIDTH; i++) {
     for (int t = 0; t < DEFAULT_MAP_LENGTH; t++) {
       for (int u = 0; u < DEFAULT_MAP_HEIGHT; u++) {
@@ -33,7 +31,7 @@ tile_map::tile_map(BITMAP* tempBuffer) {
     }
   }
 
-  // Make lotsa chunkz
+  // Make lots of chunk
   for (int i = 0; i < WORLD_WIDTH; i++) {
     for (int t = 0; t < WORLD_LENGTH; t++) {
       for (int n = 0; n < WORLD_HEIGHT; n++) {
@@ -44,46 +42,31 @@ tile_map::tile_map(BITMAP* tempBuffer) {
   }
 }
 
-// Deconstruct
-tile_map::~tile_map() {
-  // dtor
-}
-
-// Check if tile is on screen
-bool tile_map::onScreen(int tile_x, int tile_y, int tile_z) {
-  /*if(((tile_x + tile_z) + x) >= -120 * zoom &&
-     ((tile_x  + tile_z) + x) <= SCREEN_W * zoom &&
-     ((tile_x/2 - tile_z/2) + y - tile_y) >= -120 * zoom &&
-     ((tile_x/2 - tile_z/2) + y - tile_y) <= SCREEN_H * zoom)
-      return true;
-  return false;*/
-}
-
 // Load images for tiles
-void tile_map::load_images() {
+void TileMap::load_images() {
   // In case of error
   for (int i = 0; i < 20; i++) {
-    overlay_images[i] = NULL;
+    overlay_images[i] = nullptr;
   }
 
   // Overlays
-  overlay_images[OVERLAY_NONE] = NULL;
+  overlay_images[OVERLAY_NONE] = nullptr;
   overlay_images[OVERLAY_FOG_10] =
-      load_bitmap("images/tiles/OVERLAY_FOG_10.png", NULL);
+      load_bitmap("images/tiles/OVERLAY_FOG_10.png", nullptr);
   overlay_images[OVERLAY_FOG_25] =
-      load_bitmap("images/tiles/OVERLAY_FOG_25.png", NULL);
+      load_bitmap("images/tiles/OVERLAY_FOG_25.png", nullptr);
   overlay_images[OVERLAY_FOG_50] =
-      load_bitmap("images/tiles/OVERLAY_FOG_50.png", NULL);
+      load_bitmap("images/tiles/OVERLAY_FOG_50.png", nullptr);
   overlay_images[OVERLAY_FOG_75] =
-      load_bitmap("images/tiles/OVERLAY_FOG_75.png", NULL);
+      load_bitmap("images/tiles/OVERLAY_FOG_75.png", nullptr);
   overlay_images[OVERLAY_FOG_100] =
-      load_bitmap("images/tiles/OVERLAY_FOG_100.png", NULL);
+      load_bitmap("images/tiles/OVERLAY_FOG_100.png", nullptr);
   overlay_images[OVERLAY_SELECTED] =
-      load_bitmap("images/tiles/selected_overlay.png", NULL);
+      load_bitmap("images/tiles/selected_overlay.png", nullptr);
 }
 
 // Update map
-void tile_map::update() {
+void TileMap::update() {
   // Gen
   if (key[KEY_R]) {
     generateMap();
@@ -91,7 +74,7 @@ void tile_map::update() {
 }
 
 // Procedural Generation of map
-void tile_map::generateMap() {
+void TileMap::generateMap() {
   // GENERATE MAP
   std::cout << "GENERATING MAP\n--------------\n";
 
@@ -145,7 +128,7 @@ void tile_map::generateMap() {
   // Quick Peek
   quickPeek("Filling Biomes");
 
-  // Spread thoe biomes
+  // Spread those biomes
   while (checkBiomeNumber(BIOME_NONE) > 0) {
     for (int i = 0; i < DEFAULT_MAP_WIDTH; i++) {
       for (int t = 0; t < DEFAULT_MAP_LENGTH; t++) {
@@ -179,7 +162,6 @@ void tile_map::generateMap() {
         }
       }
     }
-    // std::cout << "Tiles Remaining:" << checkBiomeNumber( BIOME_NONE) << "\n";
   }
 
   // Quick Peek
@@ -213,8 +195,8 @@ void tile_map::generateMap() {
 
     bool pathFound = false;
 
-    int random_x = 0;
-    int random_y = 0;
+    int random_x;
+    int random_y;
 
     // Find current rivers and make path
     while (!pathFound && checkBiomeNumber(BIOME_LAKE) > 0) {
@@ -242,17 +224,16 @@ void tile_map::generateMap() {
       }
 
       // Shift river
-      // Zero in on final destiantionposition_mouse_z( 0);
-      if (random(1, 10) == 1 || random(1, 2) == 1 && river_x < river_end_x) {
+      if (random(1, 10) == 1 || (random(1, 2) == 1 && river_x < river_end_x)) {
         river_x += 1;
       }
-      if (random(1, 10) == 1 || random(1, 2) == 1 && river_x > river_end_x) {
+      if (random(1, 10) == 1 || (random(1, 2) == 1 && river_x > river_end_x)) {
         river_x -= 1;
       }
-      if (random(1, 10) == 1 || random(1, 2) == 1 && river_y < river_end_y) {
+      if (random(1, 10) == 1 || (random(1, 2) == 1 && river_y < river_end_y)) {
         river_y += 1;
       }
-      if (random(1, 5) == 1 || random(1, 2) == 1 && river_y > river_end_y) {
+      if (random(1, 5) == 1 || (random(1, 2) == 1 && river_y > river_end_y)) {
         river_y -= 1;
       }
     }
@@ -291,10 +272,10 @@ void tile_map::generateMap() {
   // Raise land
   quickPeek("Creating height");
 
-  int mountain_frequency = 0;
-  int mountain_height = 0;
-  int mountain_radius = 0;
-  int mountain_steepness = 10;
+  int mountain_frequency;
+  int mountain_height;
+  int mountain_radius;
+  int mountain_steepness;
 
   for (int i = 0; i < DEFAULT_MAP_WIDTH; i++) {
     for (int t = 0; t < DEFAULT_MAP_LENGTH; t++) {
@@ -312,18 +293,18 @@ void tile_map::generateMap() {
         // Make those mountains
         if (random(0, mountain_frequency) == 1 &&
             map_tiles[i][t][u - 1]->getType() == TILE_GRASS) {
-          int mountainRaduis = random(1, mountain_radius);
+          int mountainRadius = random(1, mountain_radius);
           int mountainHeight = random(1, mountain_height);
 
           for (int w = 0; w < mountainHeight; w++) {
             if (u + w < DEFAULT_MAP_HEIGHT) {
-              for (int q = -mountainRaduis; q < mountainRaduis; q++) {
-                for (int r = -mountainRaduis; r < mountainRaduis; r++) {
+              for (int q = -mountainRadius; q < mountainRadius; q++) {
+                for (int r = -mountainRadius; r < mountainRadius; r++) {
                   if (i + q < DEFAULT_MAP_WIDTH && i + q >= 0 &&
                       t + r < DEFAULT_MAP_LENGTH && t + r >= 0) {
                     // Round mountains!
                     if (distanceTo2D(i, t, i + q, t + r) <
-                        (mountainRaduis -
+                        (mountainRadius -
                          ceil(pow(double(mountain_steepness) / 10, w)))) {
                       map_tiles[i + q][t + r][u + w]->setType(
                           all_tile_defs.getTileByType(TILE_GRASS));
@@ -491,18 +472,21 @@ void tile_map::generateMap() {
   quickPeek("Done!");
 }
 
-// Checks how many tiles dont have a biome
-long tile_map::checkBiomeNumber(char biomeToCheck) {
+// Checks how many tiles don't have a biome
+long TileMap::checkBiomeNumber(char biomeToCheck) {
   long numberOfBiome = 0;
-  for (int i = 0; i < DEFAULT_MAP_WIDTH; i++)
-    for (int t = 0; t < DEFAULT_MAP_LENGTH; t++)
-      if (map_tiles[i][t][0]->getBiome() == biomeToCheck)
+  for (int i = 0; i < DEFAULT_MAP_WIDTH; i++) {
+    for (int t = 0; t < DEFAULT_MAP_LENGTH; t++) {
+      if (map_tiles[i][t][0]->getBiome() == biomeToCheck) {
         numberOfBiome++;
+      }
+    }
+  }
   return numberOfBiome;
 }
 
 // Quick Peek
-void tile_map::quickPeek(std::string currentPhase) {
+void TileMap::quickPeek(const std::string& currentPhase) {
   // Send to console
   std::cout << "PHASE:" << currentPhase.c_str() << "\n";
 
@@ -539,7 +523,7 @@ void tile_map::quickPeek(std::string currentPhase) {
 }
 
 // Draw map
-void tile_map::draw(int newAnimationFrame) {
+void TileMap::draw(int newAnimationFrame) {
   // Skybox
   glUseProgram(skyShader);
   theSky.renderSkybox();

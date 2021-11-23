@@ -15,27 +15,19 @@
 
 class skybox {
  public:
-  skybox();
-  virtual ~skybox();
-
-  void loadSkybox(std::string a_sDirectory,
-                  std::string a_sFront,
-                  std::string a_sBack,
-                  std::string a_sLeft,
-                  std::string a_sRight,
-                  std::string a_sTop,
-                  std::string a_sBottom);
+  void loadSkybox(const std::string& a_sDirectory,
+                  const std::string& a_sFront,
+                  const std::string& a_sBack,
+                  const std::string& a_sLeft,
+                  const std::string& a_sRight,
+                  const std::string& a_sTop,
+                  const std::string& a_sBottom);
   void renderSkybox();
 
-  int skyboxSampler;
+  GLuint skyboxSampler;
 
- protected:
  private:
-  BITMAP* texture[6];
-  int textureRef[6];
-
-  GLuint vbo;
-  GLuint vao;
+  GLuint textureRef[6];
 };
 
 #endif  // SKYBOX_H

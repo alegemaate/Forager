@@ -1,4 +1,4 @@
-#include "material_manager.h"
+#include "MaterialManager.h"
 
 #include <alleggl.h>
 

@@ -14,11 +14,8 @@
 
 #include "biome.h"
 
-class biome_manager {
+class BiomeManager {
  public:
-  biome_manager();
-  virtual ~biome_manager();
-
   // Load biomes
   void load(std::string newFile);
 

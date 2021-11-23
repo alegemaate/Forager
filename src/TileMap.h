@@ -14,20 +14,17 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/string_cast.hpp>
 
-#include "biome_manager.h"
+#include "BiomeManager.h"
+#include "TileTypeManager.h"
 #include "chunk.h"
 #include "skybox.h"
 #include "tile.h"
-#include "tile_type_manager.h"
 
 typedef glm::tvec3<GLbyte> byte3;
 
-class tile_map {
+class TileMap {
  public:
-  tile_map(BITMAP* tempBuffer);
-  virtual ~tile_map();
-
-  bool onScreen(int tile_x, int tile_y, int tile_z);
+  TileMap(BITMAP* tempBuffer);
 
   void load_images();
   void update();
@@ -36,23 +33,22 @@ class tile_map {
 
   tile* map_tiles[DEFAULT_MAP_WIDTH][DEFAULT_MAP_LENGTH][DEFAULT_MAP_HEIGHT];
 
-  tile_type_manager* getManager() { return &all_tile_defs; }
+  TileTypeManager* getManager() { return &all_tile_defs; }
 
   skybox theSky;
 
- protected:
  private:
   // All chunks
   chunk* allChunks[WORLD_LENGTH][WORLD_HEIGHT][WORLD_WIDTH];
 
-  void quickPeek(std::string currentPhase);
+  void quickPeek(const std::string& currentPhase);
   long checkBiomeNumber(char biomeToCheck);
 
   BITMAP* overlay_images[20];
   BITMAP* buffPoint;
 
-  tile_type_manager all_tile_defs;
-  biome_manager biomes;
+  TileTypeManager all_tile_defs;
+  BiomeManager biomes;
 };
 
 #endif  // TILE_MAP_H

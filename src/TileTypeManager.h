@@ -11,23 +11,23 @@
 #include <string>
 #include <vector>
 
-#include "tile_type.h"
+#include "TileType.h"
 
-class tile_type_manager {
+class TileTypeManager {
  public:
-  tile_type_manager();
-  virtual ~tile_type_manager();
+  TileTypeManager();
+  virtual ~TileTypeManager();
 
   // Load tile types
   void load(std::string newFile);
 
   // Allows communication
   int getNumberTiles() { return tile_defs.size(); }
-  tile_type* getTileByType(int tileID);
+  TileType* getTileByType(int tileID);
 
  protected:
  private:
-  std::vector<tile_type> tile_defs;
+  std::vector<TileType> tile_defs;
 };
 
 #endif  // TILE_TYPE_MANAGER_H

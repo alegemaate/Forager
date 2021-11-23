@@ -1,26 +1,19 @@
-#include "biome_manager.h"
+#include "BiomeManager.h"
 
 #include <fstream>
 #include <iostream>
 #include <sstream>
 
 #include "rapidxml/rapidxml.hpp"
-#include "rapidxml/rapidxml_print.hpp"
-#include "tools.h"
-
-biome_manager::biome_manager() {}
-
-biome_manager::~biome_manager() {
-  // dtor
-}
+#include "utils/utils.h"
 
 // Load biomes from file
-void biome_manager::load(std::string newFile) {
+void BiomeManager::load(std::string newFile) {
   rapidxml::xml_document<> doc;
   std::ifstream file;
 
   // Check exist
-  if (fexists(newFile.c_str())) {
+  if (fileExists(newFile.c_str())) {
     file.open(newFile.c_str());
   } else {
     abort_on_error(std::string("Cannot find file " + newFile +
@@ -45,7 +38,7 @@ void biome_manager::load(std::string newFile) {
     int biomeID = atoi(cBiome->first_attribute("id")->value());
     std::string name = cBiome->first_node("name")->value();
 
-    // Spawn chacne
+    // Spawn chance
     int chance = atoi(cBiome->first_node("chance")->value());
 
     // Mountains
@@ -59,11 +52,6 @@ void biome_manager::load(std::string newFile) {
         atoi(cBiome->first_node("mountain")->first_node("steepness")->value());
 
     // Draw to screen (debug)
-    // textprintf_centre_ex(screen,font,640,700,makecol(0,0,0),makecol(255,255,255),"Loading
-    // Biome:%s ID:%i",name.c_str(), biomeID);
-    // textprintf_centre_ex(screen,font,640,760,makecol(0,0,0),makecol(255,255,255),"%i
-    // %i %i %i", mountain_frequency, mountain_height, mountain_radius,
-    // mountain_steepness);
     std::cout << "-> Loading Biome:" << name << " ID:" << biomeID
               << " CHANCE:" << chance << "\n   "
               << " MtnFreq:" << mountain_frequency
@@ -87,9 +75,6 @@ void biome_manager::load(std::string newFile) {
       newBiome.addTileFrequency(
           atoi(cResource->first_attribute("tileID")->value()),
           atoi(cResource->value()));
-      // textprintf_centre_ex(screen,font,640,760,makecol(0,0,0),makecol(255,255,255),"%s
-      // %i %i", name.c_str(), atoi(cResource -> first_attribute("id") ->
-      // value()), atoi(cResource -> value()));
     }
 
     // Calc spawn stuff
@@ -103,6 +88,6 @@ void biome_manager::load(std::string newFile) {
   std::cout << "\n";
 }
 
-biome biome_manager::getBiome(int biomeID) {
+biome BiomeManager::getBiome(int biomeID) {
   return biomes.at(biomeID);
 }

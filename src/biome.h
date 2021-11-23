@@ -14,14 +14,13 @@
 
 class biome {
  public:
-  biome(std::string newName, int newID);
-  virtual ~biome();
+  biome(const std::string& name, int id);
 
   // Get mountain info
-  int getMountainFrequency() { return mountain_frequency; }
-  int getMountainHeight() { return mountain_height; }
-  int getMountainRadius() { return mountain_radius; }
-  int getMountainSteepness() { return mountian_steepness; }
+  int getMountainFrequency() const { return mountain_frequency; }
+  int getMountainHeight() const { return mountain_height; }
+  int getMountainRadius() const { return mountain_radius; }
+  int getMountainSteepness() const { return mountain_steepness; }
 
   // Get spawn rate
   int getSpawnRate(int tileID) { return tileSpawnRates[tileID]; }
@@ -30,20 +29,14 @@ class biome {
   std::string getName() { return name; }
 
   // Get ID
-  int getID() { return ID; }
+  int getID() const { return ID; }
 
   // Get/Set spawn chance
   void setChance(int newChance) { spawnChance = newChance; }
-  int getChance() { return spawnChance; }
-
-  // Temperature info
-  int getTemperature() { return 1; }
+  int getChance() const { return spawnChance; }
 
   // Mountain info
-  void setMountainRates(int newFrequency,
-                        int newHeight,
-                        int newRadius,
-                        int newSteepness);
+  void setMountainRates(int frequency, int height, int radius, int steepness);
 
   // Adds tile (by id) to the creation list
   void addTileFrequency(int tileID, int frequency);
@@ -59,18 +52,16 @@ class biome {
   std::string name;
   int ID;
 
-  int tileSpawnRates[NUMBER_TILE_IDS];
-  int tilesSpawnable[NUMBER_TILE_IDS];
-  int numberSpawnableResources;
+  int tileSpawnRates[NUMBER_TILE_IDS]{};
+  int tilesSpawnable[NUMBER_TILE_IDS]{};
+  int numberSpawnableResources = 0;
 
-  int mountain_frequency;
-  int mountain_height;
-  int mountain_radius;
-  int mountian_steepness;
+  int mountain_frequency = 0;
+  int mountain_height = 0;
+  int mountain_radius = 0;
+  int mountain_steepness = 0;
 
-  int spawnChance;
-
-  int temperature;
+  int spawnChance = 0;
 };
 
 #endif  // BIOME_H

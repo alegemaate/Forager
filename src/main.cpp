@@ -13,22 +13,18 @@
 #include <allegro.h>
 #include <loadpng.h>
 
-#include <math.h>
-#include <stdio.h>
-#include <time.h>
-#include <fstream>
+#include <cmath>
+#include <ctime>
 #include <iostream>
-#include <sstream>
 #include <string>
 
-#include "audio_3d.h"
-#include "globals.h"
-#include "ids.h"
-#include "material_manager.h"
+#include "Audio3d.h"
+#include "MaterialManager.h"
+#include "TileMap.h"
 #include "player.h"
-#include "tile.h"
-#include "tile_map.h"
-#include "tools.h"
+#include "utils/loaders.h"
+#include "utils/shader.h"
+#include "utils/utils.h"
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846264338327950288
@@ -37,7 +33,6 @@
 // Create variables
 int animationFrame;
 bool closeGame;
-bool showFPS;
 
 // Water
 GLfloat waveTime, waveWidth, waveHeight, waveFreq;
@@ -49,7 +44,6 @@ GLint waveHeightLoc;
 GLint skyTimeLoc;
 
 // Create fonts
-FONT *f1, *f2, *f3, *f4, *f5;
 FONT* ARIAL_BLACK;
 
 // Create images
@@ -57,7 +51,7 @@ BITMAP* buffer;
 BITMAP* cursor;
 
 // Sounds
-audio_3d* dinner;
+Audio3d* dinner;
 
 tile* sunTile;
 
@@ -77,113 +71,11 @@ void animationTicker() {
 }
 END_OF_FUNCTION(animationTicker)
 
-tile_map* gameTiles;
+TileMap* gameTiles;
 player* jimmy;
 
-/******************
- * KILLMESHADERS! *
- ******************/
-unsigned long getFileLength(std::ifstream& file) {
-  if (!file.good()) {
-    return 0;
-  }
-
-  file.seekg(0, std::ios::end);
-  unsigned long len = file.tellg();
-  file.seekg(std::ios::beg);
-  return len;
-}
-
-int loadshader(char* filename, GLchar** ShaderSource, GLint* len) {
-  std::ifstream file;
-  file.open(filename, std::ios::in);  // opens as ASCII!
-
-  if (!fexists(filename))
-    return -1;
-
-  GLint fileLength = getFileLength(file);
-  *len = fileLength;
-
-  if (*len == 0)
-    return -2;  // Error: Empty File
-
-  char* tShaderSource = (GLchar*)new char[*len + 1]();
-
-  // can't reserve memory
-  if (tShaderSource == 0)
-    return -3;
-
-  // len isn't always strlen cause some characters are stripped in ascii read...
-  // it is important to 0-terminate the real length later, len is just max
-  // possible value...
-  tShaderSource[*len] = '\0';
-
-  unsigned int i = 0;
-  while (file.good()) {
-    tShaderSource[i] = file.get();  // get character from file.
-    if (!file.eof())
-      i++;
-  }
-  tShaderSource[i] = '\0';  // 0-terminate it at the correct position
-
-  file.close();
-
-  *ShaderSource = tShaderSource;
-
-  return 0;  // No Error
-}
-
-void setupShader(std::string shaderFile, GLuint newShader) {
-  // Load them!
-  GLchar* shaderSource;
-  GLint shaderFileLength;
-
-  // Convert from string to char*
-  char* charShaderFile = const_cast<char*>(shaderFile.c_str());
-
-  if (loadshader(charShaderFile, &shaderSource, &shaderFileLength) != 0)
-    abort_on_error((shaderFile + " NOT found!").c_str());
-  else
-    std::cout << shaderFile << " found\n";
-
-  glShaderSource(newShader, 1, const_cast<const GLcharARB**>(&shaderSource),
-                 &shaderFileLength);
-
-  // Compile them
-  glCompileShaderARB(newShader);
-
-  // Check success
-  GLint compiled;
-  glGetShaderiv(newShader, GL_COMPILE_STATUS, &compiled);
-  if (!compiled)
-    abort_on_error(("Dude, " + shaderFile + " didnt compile...").c_str());
-  else
-    std::cout << shaderFile << " shader compiled!\n";
-}
-
-// Setup program
-void setupProgram(GLuint newProgram) {
-  glLinkProgram(newProgram);
-
-  GLint linked;
-  glGetProgramiv(newProgram, GL_LINK_STATUS, &linked);
-
-  if (!linked)
-    abort_on_error(
-        ("Program " + convertIntToString(newProgram) + "didnt link...")
-            .c_str());
-  else
-    std::cout << "Program " << newProgram << " linked!\n\n";
-}
-
-/*********************
- * ENDKILLMESHADERS! *
- *********************/
-
-// Load all ingame content
+// Load all in game content
 void setup(bool first) {
-  showFPS = true;
-
   if (first) {
     /****************
      * SOME ALLEGRO *
@@ -194,8 +86,9 @@ void setup(bool first) {
     install_keyboard();
     install_timer();
     install_mouse();
-    if (install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, "."))
+    if (install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, ".")) {
       abort_on_error(allegro_error);
+    }
 
     set_color_depth(32);
     set_window_title("Forager");
@@ -208,7 +101,7 @@ void setup(bool first) {
     allegro_gl_set(AGL_SUGGEST, AGL_Z_DEPTH | AGL_COLOR_DEPTH);
     allegro_gl_set(AGL_REQUIRE, AGL_DOUBLEBUFFER);
 
-    // Set screenmode
+    // Set screen mode
     int monitor_width = 0;
     int monitor_height = 0;
     get_desktop_resolution(&monitor_width, &monitor_height);
@@ -254,7 +147,7 @@ void setup(bool first) {
     glCullFace(GL_BACK);
 
     // TEXTURING
-    // Enable texturing and blending (all tiles use this so lets just call it
+    // Enable texturing and blending (all tiles use this so let us just call it
     // once)
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
     glEnable(GL_TEXTURE_2D);
@@ -267,7 +160,7 @@ void setup(bool first) {
      * SOME GLEW *
      *************/
     if (glewInit()) {
-      abort_on_error("Crap bukkits! Glew init failed.");
+      abort_on_error("Glew init failed.");
     } else {
       std::cout << "Glew initialized \n\n";
     }
@@ -324,7 +217,7 @@ void setup(bool first) {
 
     setupProgram(skyShader);
 
-    // Wave shader stuffz
+    // Wave shader stuff
     waveTime = 1.5;
     waveWidth = 0.1;
     waveHeight = 0.8;
@@ -336,14 +229,6 @@ void setup(bool first) {
     // Sky shader stuff
     skyTime = 0.4;
     skyTimeLoc = glGetUniformLocation(skyShader, "timer");
-
-    BITMAP* sampler;
-    GLint samplerRef;
-    if (!(sampler = load_bitmap("images/skybox/sample.png", NULL))) {
-      abort_on_error("Could not load image images/skybox/sample.png");
-    }
-    samplerRef = allegro_gl_make_texture_ex(
-        AGL_TEXTURE_HAS_ALPHA | AGL_TEXTURE_FLIP, sampler, GL_RGBA);
 
     // Sampler
     glUseProgram(skyShader);
@@ -375,21 +260,21 @@ void setup(bool first) {
 
     // FPS STUFF
     // Creates a random number generator (based on time)
-    srand(time(NULL));
+    srand(time(nullptr));
 
     // Setup fNULLor FPS system
-    LOCK_VARIABLE(ticks);
-    LOCK_FUNCTION(ticker);
+    LOCK_VARIABLE(ticks)
+    LOCK_FUNCTION(ticker)
     install_int_ex(ticker, BPS_TO_TIMER(1000));
 
-    LOCK_VARIABLE(animationFrame);
-    LOCK_FUNCTION(animationTicker);
+    LOCK_VARIABLE(animationFrame)
+    LOCK_FUNCTION(animationTicker)
     install_int_ex(animationTicker, SECS_TO_TIMER(1));
 
     // Creates a buffer
     buffer = create_bitmap(SCREEN_W, SCREEN_H);
 
-    cursor = load_bitmap("images/cursor2.png", NULL);
+    cursor = load_bitmap("images/cursor2.png", nullptr);
 
     // Mouse sensitivity
     set_mouse_speed(3, 3);
@@ -398,22 +283,18 @@ void setup(bool first) {
     jimmy = new player(0, 15, 0, 45, 135);
 
     // Sounds
-    dinner = new audio_3d("sounds/dinner.wav", 0, 0, 0);
+    dinner = new Audio3d("sounds/dinner.wav", 0, 0, 0);
 
     // Sets Font
-    f1 = load_font("images/fonts/arial_black.pcx", NULL, NULL);
-    f2 = extract_font_range(f1, ' ', 'A' - 1);
-    f3 = extract_font_range(f1, 'A', 'Z');
-    f4 = extract_font_range(f1, 'Z' + 1, 'z');
-
-    // Merge fonts
-    ARIAL_BLACK = merge_fonts(f4, f5 = merge_fonts(f2, f3));
+    ARIAL_BLACK = load_font("images/fonts/arial_black.pcx", nullptr, nullptr);
 
     // normal map
     // TRANSFORMS
     jimmy->transformWorld();
 
-    gameTiles = new tile_map(buffer);
+    GLuint samplerRef = loaders::loadTexture("images/skybox/sample.png");
+
+    gameTiles = new TileMap(buffer);
     gameTiles->theSky.skyboxSampler = samplerRef;
     gameTiles->load_images();
     gameTiles->generateMap();
@@ -424,8 +305,8 @@ void setup(bool first) {
         new tile(sunX, sunY, sunZ, gameTiles->getManager()->getTileByType(1));
 
     // Load them models
-    if (!quick_primatives::load_models()) {
-      abort_on_error("quick_primatives couldnt load the damn model!");
+    if (!quick_primitives::load_models()) {
+      abort_on_error("quick_primitives couldn't load the damn model!");
     }
   }
 }
@@ -435,10 +316,11 @@ void game() {
   gameTiles->update();
   jimmy->logic(gameTiles);
 
-  if (key[KEY_M])
-    dinner->play3D(jimmy->getPointX(), jimmy->getPointY(), jimmy->getPointZ(),
-                   255, 127, 1000, true);
-  dinner->update();
+  if (key[KEY_M]) {
+    dinner->play();
+  }
+
+  dinner->update(jimmy->getX(), jimmy->getY(), jimmy->getZ());
 
   /// Water Shader
   glUseProgram(waterShader);
@@ -489,27 +371,27 @@ void game() {
   // Back to normal shader
   glUseProgram(defaultShader);
 
-  // Orbit sun around world (i know.. i know.. thats not how it works)
-  sunY = -1 * cos(2 * M_PI * skyTime);
-  sunX = 1 * cos(2 * M_PI * skyTime);
-  sunZ = -1 * sin(2 * M_PI * skyTime);
+  // Orbit sun around world (i know.. i know.. that's not how it works)
+  sunY = -1.0f * cosf(2.0f * M_PI * skyTime);
+  sunX = 1.0f * cosf(2.0f * M_PI * skyTime);
+  sunZ = -1.0f * sinf(2.0f * M_PI * skyTime);
 
   // Change light according to time (using cos! and parabolas!)
   // Red uses a parabola to simulate sunrise (more red so pink) and night
   // (less red so blue)
   // DAY
   float newRVal, newGVal, newBVal;
-  newRVal = (-1 * pow((2.4 * skyTime) - 1.2, 2) + 1) + 0.1;
-  newGVal = -0.5 * (cos(2 * M_PI * skyTime) - 1) + 0.1;
-  newBVal = -0.5 * (cos(2 * M_PI * skyTime) - 1) + 0.1;
+  newRVal = (-1.0f * powf((2.4f * skyTime) - 1.2f, 2) + 1.0f) + 0.1f;
+  newGVal = -0.5f * (cosf(2.0f * M_PI * skyTime) - 1) + 0.1f;
+  newBVal = -0.5f * (cosf(2.0f * M_PI * skyTime) - 1) + 0.1f;
 
   // Light color
   GLfloat light_ambient[] = {newRVal, newGVal, newBVal, 1.0f};
   glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
 
-  // Sun light intensity
-  GLfloat light_diffuse[] = {(0.6 + sunY) / 2, (0.6 + sunY) / 2,
-                             (0.6 + sunY) / 2, 1.0f};
+  // Sunlight intensity
+  GLfloat light_diffuse[] = {(0.6f + sunY) / 2, (0.6f + sunY) / 2,
+                             (0.6f + sunY) / 2, 1.0f};
   glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
 
   // Exit game
@@ -592,18 +474,17 @@ void draw() {
   allegro_gl_flip();
 }
 
-int main(int argc, char* args[]) {
+int main() {
   // Setup game
   setup(true);
 
   // 120 Updates per second
   const constexpr double dt = 1000.0 / 120.0;
 
-  double time = 0.0;
   double accumulator = 0.0;
   double current_time = ticks;
-  double new_time = 0.0;
-  double frame_time = 0.0;
+  double new_time;
+  double frame_time;
 
   while (!closeGame && !key[KEY_ESC]) {
     new_time = ticks;
@@ -618,7 +499,6 @@ int main(int argc, char* args[]) {
       }
 
       accumulator -= dt;
-      time += dt;
     }
 
     draw();
@@ -628,4 +508,4 @@ int main(int argc, char* args[]) {
 
   return 0;
 }
-END_OF_MAIN();
+END_OF_MAIN()

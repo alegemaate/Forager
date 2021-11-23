@@ -1,42 +1,27 @@
 #include "tile.h"
 
-#include "ids.h"
-
 // Constructor
-tile::tile(unsigned char newX,
-           unsigned char newY,
-           unsigned char newZ,
-           tile_type* newType) {
-  x = newX;
-  y = newY;
-  z = newZ;
-
-  xJiggle = 0;
-  yJiggle = 0;
-  zJiggle = 0;
-
-  biome = 0;
-
-  setType(newType);
+tile::tile(unsigned char x, unsigned char y, unsigned char z, TileType* type)
+    : x(x), y(y), z(z) {
+  setType(type);
 }
 
-// Deconstructor
-tile::~tile() {}
-
 // Jiggle them tiles
-void tile::jiggle(char newxJiggle, char newyJiggle, char newzJiggle) {
-  xJiggle = newxJiggle;
-  yJiggle = newyJiggle;
-  zJiggle = newzJiggle;
+void tile::jiggle(char newXJiggle, char newYJiggle, char newZJiggle) {
+  xJiggle = newXJiggle;
+  yJiggle = newYJiggle;
+  zJiggle = newZJiggle;
 }
 
 // Set tile type
-void tile::setType(tile_type* val) {
+void tile::setType(TileType* val) {
   tileImpl = val;
 }
 
 // Draw tile
-void tile::draw(int newTick) {
-  tileImpl->draw(x + double(xJiggle) / 100, y + double(yJiggle) / 100,
-                 z + double(zJiggle) / 100, newTick);
+void tile::draw(int tick) {
+  tileImpl->draw(static_cast<float>(x) + static_cast<float>(xJiggle) / 100.0f,
+                 static_cast<float>(y) + static_cast<float>(yJiggle) / 100.0f,
+                 static_cast<float>(z) + static_cast<float>(zJiggle) / 100.0f,
+                 tick);
 }

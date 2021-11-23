@@ -1,4 +1,4 @@
-#include "tile_type_manager.h"
+#include "TileTypeManager.h"
 
 #include <fstream>
 #include <iostream>
@@ -6,24 +6,24 @@
 
 #include "rapidxml/rapidxml.hpp"
 #include "rapidxml/rapidxml_print.hpp"
-#include "tools.h"
+#include "utils/utils.h"
 
-tile_type_manager::tile_type_manager() {
+TileTypeManager::TileTypeManager() {
   // ctor
 }
 
-tile_type_manager::~tile_type_manager() {
+TileTypeManager::~TileTypeManager() {
   // dtor
 }
 
 // Load tiles
-void tile_type_manager::load(std::string newFile) {
+void TileTypeManager::load(std::string newFile) {
   // Load biomes from file
   rapidxml::xml_document<> doc;
   std::ifstream file;
 
   // Check exist
-  if (fexists(newFile.c_str())) {
+  if (fileExists(newFile.c_str())) {
     file.open(newFile.c_str());
   } else {
     abort_on_error(std::string("Cannot find file " + newFile +
@@ -55,24 +55,27 @@ void tile_type_manager::load(std::string newFile) {
     std::string model = cTile->first_node("model")->value();
     int randomness = atoi(cTile->first_node("random")->value());
 
-    std::string attrubite_string = cTile->first_node("attrubite")->value();
-    int attrubite = ATTRIBUTE_GAS;
+    std::string attribute_string = cTile->first_node("attribute")->value();
+    int attribute = ATTRIBUTE_GAS;
 
-    // Get attrubite
-    if (attrubite_string == "ATTRIBUTE_GAS")
-      attrubite = ATTRIBUTE_GAS;
-    else if (attrubite_string == "ATTRIBUTE_SOLID")
-      attrubite = ATTRIBUTE_SOLID;
-    else if (attrubite_string == "ATTRIBUTE_LIQUID")
-      attrubite = ATTRIBUTE_LIQUID;
+    std::cout << attribute_string;
+
+    // Get attribute
+    if (attribute_string == "ATTRIBUTE_GAS") {
+      attribute = ATTRIBUTE_GAS;
+    } else if (attribute_string == "ATTRIBUTE_SOLID") {
+      attribute = ATTRIBUTE_SOLID;
+    } else if (attribute_string == "ATTRIBUTE_LIQUID") {
+      attribute = ATTRIBUTE_LIQUID;
+    }
 
     // Draw to screen (debug)
     std::cout << "-> Loading Tile:" << name << "  ID:" << tileID
-              << "  MODEL:" << model << "  ATTRIBUTE:" << attrubite_string
+              << "  MODEL:" << model << "  ATTRIBUTE:" << attribute_string
               << "  RANDOMNESS:" << randomness << "\n";
 
     // Create tile, set variables and add it to the tile list
-    tile_type newTileType(name, tileID, NULL, model, attrubite, randomness);
+    TileType newTileType(name, tileID, model, attribute, randomness);
 
     // Set images
     newTileType.setImages(image1, image2);
@@ -84,6 +87,6 @@ void tile_type_manager::load(std::string newFile) {
   std::cout << "\n\n";
 }
 
-tile_type* tile_type_manager::getTileByType(int tileID) {
+TileType* TileTypeManager::getTileByType(int tileID) {
   return &tile_defs.at(tileID);
 }

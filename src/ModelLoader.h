@@ -8,22 +8,16 @@
 #ifndef MODEL_LOADER_H
 #define MODEL_LOADER_H
 
-#include <string.h>
 #include <glm/glm.hpp>
+#include <string>
 #include <vector>
 
-class model_loader {
+class ModelLoader {
  public:
-  model_loader();
-  virtual ~model_loader();
-
   static bool load_model(const char* path,
                          std::vector<glm::vec3>& out_vertices,
                          std::vector<glm::vec2>& out_uvs,
                          std::vector<glm::vec3>& out_normals);
-
- protected:
- private:
 };
 
 #endif  // MODEL_LOADER_H

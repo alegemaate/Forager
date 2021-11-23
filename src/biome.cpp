@@ -1,41 +1,18 @@
 #include "biome.h"
 
-#include "tools.h"
+#include "utils/utils.h"
 
-biome::biome(std::string newName, int newID) {
-  name = newName;
-  ID = newID;
-
-  // Set spawn rates to 0
-  for (int i = 0; i < 100; i++) {
-    tileSpawnRates[i] = 0;
-    tilesSpawnable[i] = 0;
-  }
-
-  // Set mountain rates to 0
-  int mountain_frequency = 0;
-  int mountain_height = 0;
-  int mountain_radius = 0;
-  int mountian_steepness = 0;
-
-  numberSpawnableResources = 0;
-
-  spawnChance = 0;
-}
-
-biome::~biome() {
-  // dtor
-}
+biome::biome(const std::string& name, int id) : name(name), ID(id) {}
 
 // Set mountain rates
-void biome::setMountainRates(int newFrequency,
-                             int newHeight,
-                             int newRadius,
-                             int newSteepness) {
-  mountain_frequency = newFrequency;
-  mountain_height = newHeight;
-  mountain_radius = newRadius;
-  mountian_steepness = newSteepness;
+void biome::setMountainRates(int frequency,
+                             int height,
+                             int radius,
+                             int steepness) {
+  mountain_frequency = frequency;
+  mountain_height = height;
+  mountain_radius = radius;
+  mountain_steepness = steepness;
 }
 
 // Add spawnable tile

@@ -1,79 +1,34 @@
 #include "skybox.h"
 
-#include "globals.h"
-#include "ids.h"
-#include "tools.h"
+#include "constants/ids.h"
+#include "utils/utils.h"
 
-// Init
-skybox::skybox() {}
-
-// Destory
-skybox::~skybox() {}
+#include "utils/loaders.h"
 
 // Load the skybox
-void skybox::loadSkybox(std::string a_sDirectory,
-                        std::string a_sFront,
-                        std::string a_sBack,
-                        std::string a_sLeft,
-                        std::string a_sRight,
-                        std::string a_sTop,
-                        std::string a_sBottom) {
-  if (!(texture[0] =
-            load_bitmap(std::string(a_sDirectory + a_sFront).c_str(), NULL)))
-    abort_on_error(
-        (std::string("Could not load image ") + a_sDirectory + a_sFront)
-            .c_str());
-  textureRef[0] = allegro_gl_make_texture_ex(
-      AGL_TEXTURE_HAS_ALPHA | AGL_TEXTURE_FLIP, texture[0], GL_RGBA);
-
-  if (!(texture[1] =
-            load_bitmap(std::string(a_sDirectory + a_sBack).c_str(), NULL)))
-    abort_on_error(
-        (std::string("Could not load image ") + a_sDirectory + a_sBack)
-            .c_str());
-  textureRef[1] = allegro_gl_make_texture_ex(
-      AGL_TEXTURE_HAS_ALPHA | AGL_TEXTURE_FLIP, texture[1], GL_RGBA);
-
-  if (!(texture[2] =
-            load_bitmap(std::string(a_sDirectory + a_sLeft).c_str(), NULL)))
-    abort_on_error(
-        (std::string("Could not load image ") + a_sDirectory + a_sLeft)
-            .c_str());
-  textureRef[2] = allegro_gl_make_texture_ex(
-      AGL_TEXTURE_HAS_ALPHA | AGL_TEXTURE_FLIP, texture[2], GL_RGBA);
-
-  if (!(texture[3] =
-            load_bitmap(std::string(a_sDirectory + a_sRight).c_str(), NULL)))
-    abort_on_error(
-        (std::string("Could not load image ") + a_sDirectory + a_sRight)
-            .c_str());
-  textureRef[3] = allegro_gl_make_texture_ex(
-      AGL_TEXTURE_HAS_ALPHA | AGL_TEXTURE_FLIP, texture[3], GL_RGBA);
-
-  if (!(texture[4] =
-            load_bitmap(std::string(a_sDirectory + a_sTop).c_str(), NULL)))
-    abort_on_error(
-        (std::string("Could not load image ") + a_sDirectory + a_sTop).c_str());
-  textureRef[4] = allegro_gl_make_texture_ex(
-      AGL_TEXTURE_HAS_ALPHA | AGL_TEXTURE_FLIP, texture[4], GL_RGBA);
-
-  if (!(texture[5] =
-            load_bitmap(std::string(a_sDirectory + a_sBottom).c_str(), NULL)))
-    abort_on_error(
-        (std::string("Could not load image ") + a_sDirectory + a_sBottom)
-            .c_str());
-  textureRef[5] = allegro_gl_make_texture_ex(
-      AGL_TEXTURE_HAS_ALPHA | AGL_TEXTURE_FLIP, texture[5], GL_RGBA);
+void skybox::loadSkybox(const std::string& a_sDirectory,
+                        const std::string& a_sFront,
+                        const std::string& a_sBack,
+                        const std::string& a_sLeft,
+                        const std::string& a_sRight,
+                        const std::string& a_sTop,
+                        const std::string& a_sBottom) {
+  textureRef[0] = loaders::loadTexture(a_sDirectory + a_sFront);
+  textureRef[1] = loaders::loadTexture(a_sDirectory + a_sBack);
+  textureRef[2] = loaders::loadTexture(a_sDirectory + a_sLeft);
+  textureRef[3] = loaders::loadTexture(a_sDirectory + a_sRight);
+  textureRef[4] = loaders::loadTexture(a_sDirectory + a_sTop);
+  textureRef[5] = loaders::loadTexture(a_sDirectory + a_sBottom);
 }
 
 // Render skybox
 void skybox::renderSkybox() {
-  // Go into modelview matrix
+  // Go into model view matrix
   glPushMatrix();
 
   // Translate in
-  glTranslatef(DEFAULT_MAP_LENGTH / 2, DEFAULT_MAP_HEIGHT / 2,
-               DEFAULT_MAP_WIDTH / 2);
+  glTranslatef(DEFAULT_MAP_LENGTH / 2.0f, DEFAULT_MAP_HEIGHT / 2.0f,
+               DEFAULT_MAP_WIDTH / 2.0f);
 
   // FRONT
   glActiveTexture(GL_TEXTURE0 + 0);
@@ -116,7 +71,8 @@ void skybox::renderSkybox() {
   glVertex3f(DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // H
   glNormal3f(0, 0, -1);
   glTexCoord2f(0, 0);
-  glVertex3f(-DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // E
+  glVertex3f(-DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT,
+             -DEFAULT_MAP_WIDTH);  // E
   glNormal3f(0, 0, -1);
   glTexCoord2f(1, 0);
   glVertex3f(DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // F
@@ -129,7 +85,8 @@ void skybox::renderSkybox() {
   glVertex3f(-DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // G
   glNormal3f(0, 0, -1);
   glTexCoord2f(0, 0);
-  glVertex3f(-DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // E
+  glVertex3f(-DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT,
+             -DEFAULT_MAP_WIDTH);  // E
   glEnd();
 
   // LEFT
@@ -146,7 +103,8 @@ void skybox::renderSkybox() {
   glVertex3f(-DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // A
   glNormal3f(1, 0, 0);
   glTexCoord2f(1, 0);
-  glVertex3f(-DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // E
+  glVertex3f(-DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT,
+             -DEFAULT_MAP_WIDTH);  // E
 
   glNormal3f(1, 0, 0);
   glTexCoord2f(1, 1);
@@ -227,7 +185,8 @@ void skybox::renderSkybox() {
   glVertex3f(DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // F
   glNormal3f(0, 1, 0);
   glTexCoord2f(1, 0);
-  glVertex3f(-DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // E
+  glVertex3f(-DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT,
+             -DEFAULT_MAP_WIDTH);  // E
 
   glNormal3f(0, 1, 0);
   glTexCoord2f(1, 1);
