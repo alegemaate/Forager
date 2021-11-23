@@ -7,6 +7,8 @@
 #include "../rapidxml/rapidxml.hpp"
 #include "../utils/utils.h"
 
+std::vector<TileType> TileTypeManager::tile_defs;
+
 // Load tiles
 void TileTypeManager::load(const std::string& newFile) {
   // Load biomes from file

@@ -7,27 +7,25 @@
 
 #include "Chunk.h"
 
-#include <iostream>
-#include "../utils/utils.h"
+#include "../core/SimplexNoise.h"
+#include "TileTypeManager.h"
 
 // Construct
-Chunk::Chunk(int x, int y, int z) : index_x(x), index_y(y), index_z(z) {
+Chunk::Chunk(int x, int z) : index_x(x), index_z(z) {
   // Stores vertices
-  num_geometry = CX * CY * CZ * 6 * 6;
-  num_indices = num_geometry;
-
-  std::cout << num_geometry << "\n";
-  geometry = new GLfloat[9 * num_geometry];
+  num_indices = CHUNK_WIDTH * CHUNK_HEIGHT * CHUNK_LENGTH * 6 * 6;
+  geometry = new GLfloat[9 * num_indices];
   indices = new unsigned long[num_indices];
 
   // Make vbo
   glGenBuffers(1, &geometry_array);
   glGenBuffers(1, &indices_array);
 
-  for (int i = 0; i < CX; i++) {
-    for (int t = 0; t < CY; t++) {
-      for (int k = 0; k < CZ; k++) {
-        blk[i][t][k] = random(0, 3);
+  for (int i = 0; i < CHUNK_WIDTH; i++) {
+    for (int t = 0; t < CHUNK_HEIGHT; t++) {
+      for (int u = 0; u < CHUNK_LENGTH; u++) {
+        blk[i][t][u] =
+            new Tile(i, t, u, TileTypeManager::getTileByType(TILE_AIR));
       }
     }
   }
@@ -37,18 +35,18 @@ Chunk::Chunk(int x, int y, int z) : index_x(x), index_y(y), index_z(z) {
 void Chunk::fillArray(glm::vec3 posVec,
                       glm::vec3 normVec,
                       glm::vec2 texVec,
-                      GLfloat* newArray,
+                      GLfloat* arr,
                       unsigned long index) {
-  newArray[index] = posVec.x;
-  newArray[index + 1] = posVec.y;
-  newArray[index + 2] = posVec.z;
+  arr[index] = posVec.x;
+  arr[index + 1] = posVec.y;
+  arr[index + 2] = posVec.z;
 
-  newArray[index + 3] = normVec.x;
-  newArray[index + 4] = normVec.y;
-  newArray[index + 5] = normVec.z;
+  arr[index + 3] = normVec.x;
+  arr[index + 4] = normVec.y;
+  arr[index + 5] = normVec.z;
 
-  newArray[index + 6] = texVec.x;
-  newArray[index + 7] = texVec.y;
+  arr[index + 6] = texVec.x;
+  arr[index + 7] = texVec.y;
 }
 
 // Tessellate chunk
@@ -56,10 +54,10 @@ void Chunk::tessellate() {
   // Vertex counter
   unsigned long j = 0;
 
-  for (int i = 0; i < CX; i++) {
-    for (int t = 0; t < CY; t++) {
-      for (int k = 0; k < CZ; k++) {
-        unsigned char type = blk[i][t][k];
+  for (int i = 0; i < CHUNK_WIDTH; i++) {
+    for (int t = 0; t < CHUNK_HEIGHT; t++) {
+      for (int k = 0; k < CHUNK_LENGTH; k++) {
+        auto type = blk[i][t][k]->getType();
 
         // Empty block?
         if (!type) {
@@ -67,7 +65,7 @@ void Chunk::tessellate() {
         }
 
         // LEFT (-x)
-        if (i == 0 || (i > 0 && blk[i - 1][t][k] == 0)) {
+        if (i == 0 || (i > 0 && blk[i - 1][t][k]->getType() == 0)) {
           fillArray(glm::vec3(i - 0.5, t + 0.5, k - 0.5), glm::vec3(-1, 0, 0),
                     glm::vec2(0, 0), geometry, j * 9);
           indices[j] = j;
@@ -100,7 +98,8 @@ void Chunk::tessellate() {
         }
 
         // RIGHT (+x)
-        if (i == CX - 1 || (i < CX && blk[i + 1][t][k] == 0)) {
+        if (i == CHUNK_WIDTH - 1 ||
+            (i < CHUNK_WIDTH && blk[i + 1][t][k]->getType() == 0)) {
           fillArray(glm::vec3(i + 0.5, t + 0.5, k + 0.5), glm::vec3(1, 0, 0),
                     glm::vec2(0, 0), geometry, j * 9);
           indices[j] = j;
@@ -132,7 +131,7 @@ void Chunk::tessellate() {
         }
 
         // BOTTOM (-y)
-        if (t == 0 || (t > 0 && blk[i][t - 1][k] == 0)) {
+        if (t == 0 || (t > 0 && blk[i][t - 1][k]->getType() == 0)) {
           fillArray(glm::vec3(i - 0.5, t - 0.5, k + 0.5), glm::vec3(0, -1, 0),
                     glm::vec2(0, 0), geometry, j * 9);
           indices[j] = j;
@@ -165,7 +164,8 @@ void Chunk::tessellate() {
         }
 
         // TOP (+y)
-        if (t == CY - 1 || (t < CY && blk[i][t + 1][k] == 0)) {
+        if (t == CHUNK_HEIGHT - 1 ||
+            (t < CHUNK_HEIGHT && blk[i][t + 1][k]->getType() == 0)) {
           fillArray(glm::vec3(i - 0.5, t + 0.5, k - 0.5), glm::vec3(0, 1, 0),
                     glm::vec2(0, 0), geometry, j * 9);
           indices[j] = j;
@@ -198,7 +198,7 @@ void Chunk::tessellate() {
         }
 
         // BACK(-z)
-        if (k == 0 || (k > 0 && blk[i][t][k - 1] == 0)) {
+        if (k == 0 || (k > 0 && blk[i][t][k - 1]->getType() == 0)) {
           fillArray(glm::vec3(i + 0.5, t - 0.5, k - 0.5), glm::vec3(0, 0, -1),
                     glm::vec2(0, 0), geometry, j * 9);
           indices[j] = j;
@@ -231,7 +231,8 @@ void Chunk::tessellate() {
         }
 
         // FRONT (+z)
-        if (k == CZ - 1 || (k < CZ && blk[i][t][k + 1] == 0)) {
+        if (k == CHUNK_LENGTH - 1 ||
+            (k < CHUNK_LENGTH && blk[i][t][k + 1]->getType() == 0)) {
           fillArray(glm::vec3(i - 0.5, t + 0.5, k + 0.5), glm::vec3(0, 0, 1),
                     glm::vec2(0, 0), geometry, j * 9);
           indices[j] = j;
@@ -278,20 +279,59 @@ void Chunk::tessellate() {
                   sizeof(unsigned long) * num_indices, indices);
 }
 
-uint8_t Chunk::get(int x, int y, int z) {
+void Chunk::generate(int seed) {
+  // Height
+  auto* sn_h = new SimplexNoise(1.0f, 1.0f, 2.0f, 0.47f);
+
+  // STEP 1:
+  // Start with air
+  for (auto& i : blk) {
+    for (auto& t : i) {
+      for (auto& u : t) {
+        u->setType(TileTypeManager::getTileByType(TILE_AIR));
+        u->setBiome(BIOME_NONE);
+        u->jiggle(0, 0, 0);
+      }
+    }
+  }
+
+  // STEP 2:
+  // Fill with dirt
+  for (int i = 0; i < CHUNK_WIDTH; i++) {
+    for (int u = 0; u < CHUNK_LENGTH; u++) {
+      auto noiseX =
+          static_cast<float>(seed + i + index_x * CHUNK_WIDTH) / 500.0f;
+      auto noiseZ =
+          static_cast<float>(seed + u + index_z * CHUNK_LENGTH) / 500.0f;
+      auto val = sn_h->fractal(10, noiseX, noiseZ);
+      auto height = (val + 1.0f) * (CHUNK_HEIGHT / 2.0f);
+
+      for (int t = 0; t < CHUNK_HEIGHT; t++) {
+        if (static_cast<float>(t) < height) {
+          blk[i][t][u]->setType(TileTypeManager::getTileByType(TILE_GRASS));
+        }
+      }
+    }
+  }
+
+  changed = true;
+}
+
+Tile* Chunk::get(int x, int y, int z) {
   return blk[x][y][z];
 }
 
-void Chunk::set(int x, int y, int z, uint8_t type) {
-  blk[x][y][z] = type;
+void Chunk::set(int x, int y, int z, unsigned char type) {
+  blk[x][y][z]->setType(TileTypeManager::getTileByType(type));
   changed = true;
 }
 
 void Chunk::update() {
-  changed = false;
+  if (changed) {
+    tessellate();
+  }
 
-  // Fill in the VBO here
-  tessellate();
+  changed = false;
 }
 
 void Chunk::render() {
@@ -304,10 +344,10 @@ void Chunk::render() {
   glPushMatrix();
 
   // Translate in
-  glTranslatef(index_x * CX, index_y * CY, index_z * CZ);
+  glTranslatef(index_x * CHUNK_WIDTH, 0.0f, index_z * CHUNK_LENGTH);
 
   // Render
-  //  Step 1
+  // Step 1
   glBindBuffer(GL_ARRAY_BUFFER, geometry_array);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_array);
 
@@ -322,12 +362,12 @@ void Chunk::render() {
   glTexCoordPointer(2, GL_FLOAT, sizeof(GLfloat) * 9,
                     (float*)(sizeof(GLfloat) * 6));
 
-  glBindTexture(GL_TEXTURE_2D, 9);
+  glBindTexture(GL_TEXTURE_2D, 8);
 
-  // Step 4
+  //  Step 4
   glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_INT, nullptr);
 
-  // Step 5
+  //   Step 5
   glDisableClientState(GL_TEXTURE_COORD_ARRAY);
   glDisableClientState(GL_VERTEX_ARRAY);
   glDisableClientState(GL_NORMAL_ARRAY);

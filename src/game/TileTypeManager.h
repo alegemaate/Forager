@@ -15,11 +15,11 @@
 
 class TileTypeManager {
  public:
-  void load(const std::string& newFile);
-  TileType* getTileByType(int tileID);
+  static void load(const std::string& newFile);
+  static TileType* getTileByType(int tileID);
 
  private:
-  std::vector<TileType> tile_defs;
+  static std::vector<TileType> tile_defs;
 };
 
 #endif  // TILE_TYPE_MANAGER_H
