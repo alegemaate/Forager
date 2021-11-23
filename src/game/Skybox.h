@@ -13,7 +13,7 @@
 #include <alleggl.h>
 #include <string>
 
-class skybox {
+class Skybox {
  public:
   void loadSkybox(const std::string& a_sDirectory,
                   const std::string& a_sFront,

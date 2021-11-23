@@ -12,7 +12,7 @@
 #include <string>
 #include <vector>
 
-#include "biome.h"
+#include "Biome.h"
 
 class BiomeManager {
  public:
@@ -21,11 +21,11 @@ class BiomeManager {
 
   // Allows communication
   int getNumberBiomes() { return biomes.size(); };
-  biome getBiome(int biomeID);
+  Biome getBiome(int biomeID);
 
  protected:
  private:
-  std::vector<biome> biomes;
+  std::vector<Biome> biomes;
 };
 
 #endif  // BIOME_MANAGER_H

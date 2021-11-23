@@ -10,9 +10,9 @@
 
 #include "TileMap.h"
 
-class player {
+class Player {
  public:
-  player(float x, float y, float z, float xRot, float yRot);
+  Player(float x, float y, float z, float xRot, float yRot);
 
   float getX() const { return x; }
   float getY() const { return y; }

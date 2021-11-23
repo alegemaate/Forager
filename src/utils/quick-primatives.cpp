@@ -1,6 +1,6 @@
 #include "quick-primatives.h"
 
-model quick_primitives::test_model;
+Model quick_primitives::test_model;
 
 bool quick_primitives::load_models() {
   return test_model.load("models/rock.obj", "models/rock_uv.png");
@@ -475,7 +475,7 @@ void quick_primitives::double_plane_tall() {
 
 // Model
 void quick_primitives::model_render(float primitive_size,
-                                    const model& new_model) {
+                                    const Model& new_model) {
   // Push in case of scale
   glPushMatrix();
   // Scale

@@ -1,12 +1,12 @@
-#include "skybox.h"
+#include "Skybox.h"
 
-#include "constants/ids.h"
-#include "utils/utils.h"
+#include "../constants/ids.h"
+#include "../utils/utils.h"
 
-#include "utils/loaders.h"
+#include "../utils/loaders.h"
 
 // Load the skybox
-void skybox::loadSkybox(const std::string& a_sDirectory,
+void Skybox::loadSkybox(const std::string& a_sDirectory,
                         const std::string& a_sFront,
                         const std::string& a_sBack,
                         const std::string& a_sLeft,
@@ -22,7 +22,7 @@ void skybox::loadSkybox(const std::string& a_sDirectory,
 }
 
 // Render skybox
-void skybox::renderSkybox() {
+void Skybox::renderSkybox() {
   // Go into model view matrix
   glPushMatrix();
 

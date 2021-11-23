@@ -2,15 +2,15 @@
 #define CHUNK_H
 
 #include <alleggl.h>
-#include <GLM/GLM.hpp>
+#include <glm/glm.hpp>
 
 #define CX 16
 #define CY 16
 #define CZ 16
 
-class chunk {
+class Chunk {
  public:
-  chunk(int newX, int newY, int newZ);
+  Chunk(int newX, int newY, int newZ);
 
   // Fill array with given data
   void fillArray(glm::vec3 posVec,
@@ -37,12 +37,12 @@ class chunk {
  private:
   int index_x, index_y, index_z;
 
-  uint8_t blk[CX][CY][CZ];
+  uint8_t blk[CX][CY][CZ]{};
   bool changed;
 
   // Data
   GLuint geometry_array;
-  GLuint indice_array;
+  GLuint indices_array;
 
   unsigned long num_indices;
   unsigned long num_geometry;

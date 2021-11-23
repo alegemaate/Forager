@@ -15,10 +15,10 @@
 
 #include <GL/glu.h>
 
+#include "../constants/globals.h"
+#include "../constants/ids.h"
+#include "../utils/quick-primatives.h"
 #include "MaterialManager.h"
-#include "constants/ids.h"
-#include "globals.h"
-#include "utils/quick-primatives.h"
 
 class TileType {
  public:

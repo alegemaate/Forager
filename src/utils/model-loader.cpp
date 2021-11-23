@@ -1,25 +1,25 @@
-#include "ModelLoader.h"
+#include "model-loader.h"
 
 #include <cstdio>
 #include <cstring>
 #include <iostream>
 
-bool ModelLoader::load_model(const char* path,
-                             std::vector<glm::vec3>& out_vertices,
-                             std::vector<glm::vec2>& out_uvs,
-                             std::vector<glm::vec3>& out_normals) {
+bool loaders::load_model(const std::string& path,
+                         std::vector<glm::vec3>& out_vertices,
+                         std::vector<glm::vec2>& out_uvs,
+                         std::vector<glm::vec3>& out_normals) {
   std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
   std::vector<glm::vec3> temp_vertices;
   std::vector<glm::vec2> temp_uvs;
   std::vector<glm::vec3> temp_normals;
 
-  FILE* file = fopen(path, "r");
-  if (file == NULL) {
+  FILE* file = fopen(path.c_str(), "r");
+  if (file == nullptr) {
     printf("Impossible to open the file !\n");
     return false;
   }
 
-  while (1) {
+  while (true) {
     char lineHeader[128];
     // read the first word of the line
     int res = fscanf(file, "%s", lineHeader);
@@ -50,8 +50,6 @@ bool ModelLoader::load_model(const char* path,
                            &vertexIndex[1], &uvIndex[1], &normalIndex[1],
                            &vertexIndex[2], &uvIndex[2], &normalIndex[2]);
       if (matches == 9) {
-        // std::cout << path << " read with vertex texture and normal.\n";
-
         vertexIndices.push_back(vertexIndex[0]);
         vertexIndices.push_back(vertexIndex[1]);
         vertexIndices.push_back(vertexIndex[2]);
@@ -67,26 +65,19 @@ bool ModelLoader::load_model(const char* path,
         matches = fscanf(file, "%d//%d %d//%d %d//%d\n", &vertexIndex[0],
                          &normalIndex[0], &vertexIndex[1], &normalIndex[1],
                          &vertexIndex[2], &normalIndex[2]);
-        if (matches == 6) {
-          // std::cout << path << " read with vertex and normal.\n";
-        }
+
         // Method 3 (vertex and uv)
-        else {
+        if (matches != 6) {
           matches = fscanf(file, "%d/%d %d/%d %d/%d\n", &vertexIndex[0],
                            &uvIndex[0], &vertexIndex[1], &uvIndex[1],
                            &vertexIndex[2], &uvIndex[2]);
-          if (matches == 6) {
-            // std::cout << path << " read with vertex and texture.\n";
-          }
+
           // Method 4 (vertex)
-          else {
+          if (matches != 6) {
             matches = fscanf(file, "%d %d %d\n", &vertexIndex[0],
                              &vertexIndex[1], &vertexIndex[2]);
-            if (matches == 3) {
-              // std::cout << path << " read with vertex.\n";
-            }
-            // None :(
-            else {
+
+            if (matches != 3) {
               printf(
                   "File can't be read by our simple parser : ( Try exporting "
                   "with other options\n");
@@ -103,10 +94,6 @@ bool ModelLoader::load_model(const char* path,
     unsigned int vertexIndex = vertexIndices[i];
     glm::vec3 vertex = temp_vertices[vertexIndex - 1];
     out_vertices.push_back(vertex);
-
-    // std::cout << vertexIndex << " " << temp_vertices[ vertexIndex-1 ].x << "
-    // " << temp_vertices[ vertexIndex-1 ].y << " " << temp_vertices[
-    // vertexIndex-1 ].z << "\n";
   }
 
   // For each uv of each triangle
@@ -114,9 +101,6 @@ bool ModelLoader::load_model(const char* path,
     unsigned int uvIndex = uvIndices[i];
     glm::vec2 uv = temp_uvs[uvIndex - 1];
     out_uvs.push_back(uv);
-
-    // std::cout << uvIndex << " " << temp_uvs[ uvIndex-1 ].x << " " <<
-    // temp_uvs[ uvIndex-1 ].y << "\n";
   }
 
   // For each normal of each triangle
@@ -124,10 +108,7 @@ bool ModelLoader::load_model(const char* path,
     unsigned int normalIndex = normalIndices[i];
     glm::vec3 normal = temp_normals[normalIndex - 1];
     out_normals.push_back(normal);
-
-    // std::cout << normalIndex << " " << temp_normals[ normalIndex-1 ].x << " "
-    // << temp_normals[ normalIndex-1 ].y << " " << temp_normals[ normalIndex-1
-    // ].z << "\n";
   }
+
   return true;
 }

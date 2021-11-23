@@ -12,9 +12,9 @@
 
 #include "TileType.h"
 
-class tile {
+class Tile {
  public:
-  tile(unsigned char x, unsigned char y, unsigned char z, TileType* type);
+  Tile(unsigned char x, unsigned char y, unsigned char z, TileType* type);
 
   unsigned short getType() { return tileImpl->getType(); }
   TileType* getTile() { return tileImpl; }

@@ -13,7 +13,7 @@
 #include <GL/glu.h>
 #include <glm/glm.hpp>
 
-#include "../model.h"
+#include "../core/Model.h"
 
 class quick_primitives {
  public:
@@ -23,9 +23,9 @@ class quick_primitives {
   static void cube_flat(float primitive_size);
   static void double_plane();
   static void double_plane_tall();
-  static void model_render(float primitive_size, const model& new_model);
+  static void model_render(float primitive_size, const Model& new_model);
 
-  static model test_model;
+  static Model test_model;
 };
 
 #endif  // QUICK_PRIMITIVES_H

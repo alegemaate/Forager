@@ -4,8 +4,8 @@
 #include <iostream>
 #include <sstream>
 
-#include "rapidxml/rapidxml.hpp"
-#include "utils/utils.h"
+#include "../rapidxml/rapidxml.hpp"
+#include "../utils/utils.h"
 
 // Load biomes from file
 void BiomeManager::load(std::string newFile) {
@@ -59,7 +59,7 @@ void BiomeManager::load(std::string newFile) {
               << " MtnSteep:" << mountain_steepness << "\n";
 
     // Create biome, set variables and add it to the biome list
-    biome newBiome(name, biomeID);
+    Biome newBiome(name, biomeID);
 
     // Chance of spawn
     newBiome.setChance(chance);
@@ -88,6 +88,6 @@ void BiomeManager::load(std::string newFile) {
   std::cout << "\n";
 }
 
-biome BiomeManager::getBiome(int biomeID) {
+Biome BiomeManager::getBiome(int biomeID) {
   return biomes.at(biomeID);
 }

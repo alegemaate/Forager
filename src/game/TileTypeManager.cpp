@@ -4,9 +4,9 @@
 #include <iostream>
 #include <sstream>
 
-#include "rapidxml/rapidxml.hpp"
-#include "rapidxml/rapidxml_print.hpp"
-#include "utils/utils.h"
+#include "../rapidxml/rapidxml.hpp"
+#include "../rapidxml/rapidxml_print.hpp"
+#include "../utils/utils.h"
 
 TileTypeManager::TileTypeManager() {
   // ctor

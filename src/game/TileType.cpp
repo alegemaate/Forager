@@ -1,6 +1,6 @@
 #include "TileType.h"
 
-#include "utils/loaders.h"
+#include "../utils/loaders.h"
 
 // Init tile
 TileType::TileType(const std::string& newName,

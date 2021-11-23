@@ -15,10 +15,10 @@
 #include <glm/gtx/string_cast.hpp>
 
 #include "BiomeManager.h"
+#include "Chunk.h"
+#include "Skybox.h"
+#include "Tile.h"
 #include "TileTypeManager.h"
-#include "chunk.h"
-#include "skybox.h"
-#include "tile.h"
 
 typedef glm::tvec3<GLbyte> byte3;
 
@@ -31,15 +31,15 @@ class TileMap {
   void generateMap();
   void draw(int newAnimationFrame);
 
-  tile* map_tiles[DEFAULT_MAP_WIDTH][DEFAULT_MAP_LENGTH][DEFAULT_MAP_HEIGHT];
+  Tile* map_tiles[DEFAULT_MAP_WIDTH][DEFAULT_MAP_LENGTH][DEFAULT_MAP_HEIGHT];
 
   TileTypeManager* getManager() { return &all_tile_defs; }
 
-  skybox theSky;
+  Skybox theSky;
 
  private:
   // All chunks
-  chunk* allChunks[WORLD_LENGTH][WORLD_HEIGHT][WORLD_WIDTH];
+  Chunk* allChunks[WORLD_LENGTH][WORLD_HEIGHT][WORLD_WIDTH];
 
   void quickPeek(const std::string& currentPhase);
   long checkBiomeNumber(char biomeToCheck);

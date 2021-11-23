@@ -1,6 +1,6 @@
 #include "Audio3d.h"
 
-#include "utils/utils.h"
+#include "../utils/utils.h"
 
 Audio3d::Audio3d(const std::string& path, float x, float y, float z)
     : x(x), y(y), z(z) {

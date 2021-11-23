@@ -12,9 +12,9 @@
 
 #define NUMBER_TILE_IDS 100
 
-class biome {
+class Biome {
  public:
-  biome(const std::string& name, int id);
+  Biome(const std::string& name, int id);
 
   // Get mountain info
   int getMountainFrequency() const { return mountain_frequency; }

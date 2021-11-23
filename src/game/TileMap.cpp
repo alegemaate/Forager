@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "utils/utils.h"
+#include "../utils/utils.h"
 
 // Construct
 TileMap::TileMap(BITMAP* tempBuffer) {
@@ -26,7 +26,7 @@ TileMap::TileMap(BITMAP* tempBuffer) {
   for (int i = 0; i < DEFAULT_MAP_WIDTH; i++) {
     for (int t = 0; t < DEFAULT_MAP_LENGTH; t++) {
       for (int u = 0; u < DEFAULT_MAP_HEIGHT; u++) {
-        map_tiles[i][t][u] = new tile(i, u, t, all_tile_defs.getTileByType(0));
+        map_tiles[i][t][u] = new Tile(i, u, t, all_tile_defs.getTileByType(0));
       }
     }
   }
@@ -36,7 +36,7 @@ TileMap::TileMap(BITMAP* tempBuffer) {
     for (int t = 0; t < WORLD_LENGTH; t++) {
       for (int n = 0; n < WORLD_HEIGHT; n++) {
         if (!allChunks[i][n][t])
-          allChunks[i][n][t] = new chunk(i, n, t);
+          allChunks[i][n][t] = new Chunk(i, n, t);
       }
     }
   }

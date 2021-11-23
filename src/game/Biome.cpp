@@ -1,11 +1,11 @@
-#include "biome.h"
+#include "Biome.h"
 
-#include "utils/utils.h"
+#include "../utils/utils.h"
 
-biome::biome(const std::string& name, int id) : name(name), ID(id) {}
+Biome::Biome(const std::string& name, int id) : name(name), ID(id) {}
 
 // Set mountain rates
-void biome::setMountainRates(int frequency,
+void Biome::setMountainRates(int frequency,
                              int height,
                              int radius,
                              int steepness) {
@@ -16,12 +16,12 @@ void biome::setMountainRates(int frequency,
 }
 
 // Add spawnable tile
-void biome::addTileFrequency(int tileID, int frequency) {
+void Biome::addTileFrequency(int tileID, int frequency) {
   tileSpawnRates[tileID] = frequency;
 }
 
 // Spawn resources randomly according to parameters
-int biome::spawnResource() {
+int Biome::spawnResource() {
   // Place some stuff
   bool objectPlaced = false;
   int randomGenerateSpawn = 0;
@@ -35,7 +35,7 @@ int biome::spawnResource() {
 }
 
 // Calc spawn rates
-void biome::finish() {
+void Biome::finish() {
   for (int i = 0; i < NUMBER_TILE_IDS; i++) {
     if (tileSpawnRates[i] > 0) {
       tilesSpawnable[numberSpawnableResources] = i;

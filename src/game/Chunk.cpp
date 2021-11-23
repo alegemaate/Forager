@@ -5,13 +5,13 @@
   Block of blocks!
 */
 
-#include "chunk.h"
+#include "Chunk.h"
 
 #include <iostream>
-#include "utils/utils.h"
+#include "../utils/utils.h"
 
 // Construct
-chunk::chunk(int newX, int newY, int newZ) {
+Chunk::Chunk(int newX, int newY, int newZ) {
   // Set pos
   index_x = newX;
   index_y = newY;
@@ -22,7 +22,7 @@ chunk::chunk(int newX, int newY, int newZ) {
 
   // Set to 0
   geometry_array = 0;
-  indice_array = 0;
+  indices_array = 0;
 
   // Stores vertices
   num_geometry = CX * CY * CZ * 6 * 6;
@@ -34,7 +34,7 @@ chunk::chunk(int newX, int newY, int newZ) {
 
   // Make vbo
   glGenBuffers(1, &geometry_array);
-  glGenBuffers(1, &indice_array);
+  glGenBuffers(1, &indices_array);
 
   for (int i = 0; i < CX; i++) {
     for (int t = 0; t < CY; t++) {
@@ -46,7 +46,7 @@ chunk::chunk(int newX, int newY, int newZ) {
 }
 
 // Fill array with given data
-void chunk::fillArray(glm::vec3 posVec,
+void Chunk::fillArray(glm::vec3 posVec,
                       glm::vec3 normVec,
                       glm::vec2 texVec,
                       GLfloat* newArray,
@@ -64,7 +64,7 @@ void chunk::fillArray(glm::vec3 posVec,
 }
 
 // Tessellate chunk
-void chunk::tessellate() {
+void Chunk::tessellate() {
   // Vertex counter
   unsigned long j = 0;
 
@@ -259,30 +259,30 @@ void chunk::tessellate() {
                GL_DYNAMIC_DRAW);
   glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * 9 * j, geometry);
 
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indice_array);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_array);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned long) * num_indices,
                nullptr, GL_STATIC_DRAW);
   glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0,
                   sizeof(unsigned long) * num_indices, indices);
 }
 
-uint8_t chunk::get(int x, int y, int z) {
+uint8_t Chunk::get(int x, int y, int z) {
   return blk[x][y][z];
 }
 
-void chunk::set(int x, int y, int z, uint8_t type) {
+void Chunk::set(int x, int y, int z, uint8_t type) {
   blk[x][y][z] = type;
   changed = true;
 }
 
-void chunk::update() {
+void Chunk::update() {
   changed = false;
 
   // Fill in the VBO here
   tessellate();
 }
 
-void chunk::render() {
+void Chunk::render() {
   // Tessellate when modified
   if (changed)
     update();
@@ -296,7 +296,7 @@ void chunk::render() {
   // Render
   //  Step 1
   glBindBuffer(GL_ARRAY_BUFFER, geometry_array);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indice_array);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_array);
 
   // Step 2
   glEnableClientState(GL_NORMAL_ARRAY);

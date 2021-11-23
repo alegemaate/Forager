@@ -1,25 +1,25 @@
-#include "player.h"
+#include "Player.h"
 
-#include "utils/utils.h"
+#include "../utils/utils.h"
 
-player::player(float x, float y, float z, float xRotation, float yRotation)
+Player::Player(float x, float y, float z, float xRotation, float yRotation)
     : x(x), y(y), z(z), xRotation(xRotation), yRotation(yRotation) {}
 
 // Apply world transformations to players
 // Perspective
-void player::transformWorld() const {
+void Player::transformWorld() const {
   glRotatef(xRotation, 1.0, 0.0, 0.0);
   glRotatef(yRotation, 0.0, 1.0, 0.0);
   glTranslatef(-x, -y, -z);
 }
 
 // Draw tile
-void player::render() {
+void Player::render() {
   // Nothing.. YET
 }
 
 // Move character and such
-void player::logic(TileMap* newMap) {
+void Player::logic(TileMap* newMap) {
   // Move, slower in game mode
   // Sprint
   if (key[KEY_LSHIFT]) {

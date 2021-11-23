@@ -1,11 +1,11 @@
-#include "model.h"
+#include "Model.h"
 
-#include "ModelLoader.h"
-#include "utils/loaders.h"
-#include "utils/utils.h"
+#include "../utils/loaders.h"
+#include "../utils/model-loader.h"
+#include "../utils/utils.h"
 
 // Init
-model::model() {
+Model::Model() {
   // Set to 0
   vertex_buffer = 0;
   normal_buffer = 0;
@@ -15,8 +15,8 @@ model::model() {
 }
 
 // Load model
-bool model::load(const char* path, const char* uv_path) {
-  if (!ModelLoader::load_model(path, vertices, uvs, normals)) {
+bool Model::load(const char* path, const char* uv_path) {
+  if (!loaders::load_model(path, vertices, uvs, normals)) {
     return false;
   }
 

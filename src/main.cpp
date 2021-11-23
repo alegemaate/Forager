@@ -18,10 +18,10 @@
 #include <iostream>
 #include <string>
 
-#include "Audio3d.h"
-#include "MaterialManager.h"
-#include "TileMap.h"
-#include "player.h"
+#include "core/Audio3d.h"
+#include "game/MaterialManager.h"
+#include "game/Player.h"
+#include "game/TileMap.h"
 #include "utils/loaders.h"
 #include "utils/shader.h"
 #include "utils/utils.h"
@@ -53,7 +53,7 @@ BITMAP* cursor;
 // Sounds
 Audio3d* dinner;
 
-tile* sunTile;
+Tile* sunTile;
 
 volatile int ticks = 0;
 void ticker() {
@@ -72,7 +72,7 @@ void animationTicker() {
 END_OF_FUNCTION(animationTicker)
 
 TileMap* gameTiles;
-player* jimmy;
+Player* jimmy;
 
 // Load all in game content
 void setup(bool first) {
@@ -280,7 +280,7 @@ void setup(bool first) {
     set_mouse_speed(3, 3);
 
     // Character
-    jimmy = new player(0, 15, 0, 45, 135);
+    jimmy = new Player(0, 15, 0, 45, 135);
 
     // Sounds
     dinner = new Audio3d("sounds/dinner.wav", 0, 0, 0);
@@ -302,7 +302,7 @@ void setup(bool first) {
     sunX = -1.5;
     sunY = 1.5;
     sunTile =
-        new tile(sunX, sunY, sunZ, gameTiles->getManager()->getTileByType(1));
+        new Tile(sunX, sunY, sunZ, gameTiles->getManager()->getTileByType(1));
 
     // Load them models
     if (!quick_primitives::load_models()) {

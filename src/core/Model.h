@@ -8,14 +8,14 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#include <GLM/GLM.hpp>
+#include <glm/glm.hpp>
 #include <vector>
 
 #include <alleggl.h>
 
-class model {
+class Model {
  public:
-  model();
+  Model();
 
   std::vector<glm::vec3> vertices;
   std::vector<glm::vec2> uvs;
