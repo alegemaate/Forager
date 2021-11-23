@@ -21,7 +21,6 @@
 #include "core/Audio3d.h"
 #include "game/MaterialManager.h"
 #include "game/Player.h"
-#include "game/TileMap.h"
 #include "utils/loaders.h"
 #include "utils/shader.h"
 #include "utils/utils.h"
@@ -431,9 +430,9 @@ void draw() {
 
   bool frameOn = int(skyTime * 60) % 2;
 
-  sunTile->setX(sunX);
-  sunTile->setY(sunY);
-  sunTile->setZ(sunZ);
+  sunTile->setX(static_cast<char>(sunX));
+  sunTile->setY(static_cast<char>(sunY));
+  sunTile->setZ(static_cast<char>(sunZ));
   sunTile->draw(frameOn);
 
   // Draw map

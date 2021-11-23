@@ -20,11 +20,20 @@
 #include "../utils/quick-primatives.h"
 #include "MaterialManager.h"
 
+enum class ModelType {
+  MODEL_NONE,
+  MODEL_CUBE,
+  MODEL_CUBE_SMALL,
+  MODEL_FLAT,
+  MODEL_DOUBLE_PLANE,
+  MODEL_DOUBLE_PLANE_TALL,
+};
+
 class TileType {
  public:
   TileType(const std::string& newName,
            unsigned char newType,
-           const std::string& newModel,
+           ModelType newModel,
            unsigned char newAttribute = 0,
            char newRandomness = 0);
 
@@ -44,14 +53,13 @@ class TileType {
   void draw(float x, float y, float z, bool newTick);
 
  private:
+  std::string name;
   unsigned char type;
   unsigned char attribute;
-
+  ModelType model;
   char randomness;
 
-  GLuint image_reference_number[2];
-
-  std::string model;
+  GLuint image_reference_number[2] = {};
 };
 
 #endif  // TILE_TYPE_H

@@ -74,8 +74,23 @@ void TileTypeManager::load(std::string newFile) {
               << "  MODEL:" << model << "  ATTRIBUTE:" << attribute_string
               << "  RANDOMNESS:" << randomness << "\n";
 
+    ModelType modelType;
+    if (model == "MODEL_CUBE_SMALL") {
+      modelType = ModelType::MODEL_CUBE_SMALL;
+    } else if (model == "MODEL_FLAT") {
+      modelType = ModelType::MODEL_FLAT;
+    } else if (model == "MODEL_DOUBLE_PLANE") {
+      modelType = ModelType::MODEL_DOUBLE_PLANE;
+    } else if (model == "MODEL_DOUBLE_PLANE_TALL") {
+      modelType = ModelType::MODEL_DOUBLE_PLANE_TALL;
+    } else if (model == "MODEL_CUBE") {
+      modelType = ModelType::MODEL_CUBE;
+    } else {
+      modelType = ModelType::MODEL_NONE;
+    }
+
     // Create tile, set variables and add it to the tile list
-    TileType newTileType(name, tileID, model, attribute, randomness);
+    TileType newTileType(name, tileID, modelType, attribute, randomness);
 
     // Set images
     newTileType.setImages(image1, image2);
