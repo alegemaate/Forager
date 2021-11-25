@@ -32,7 +32,7 @@ void Player::logic(TileMap* newMap) {
   yRotation -= SCREEN_W / 2.0f - static_cast<float>(mouse_x);
   xRotation -= SCREEN_H / 2.0f - static_cast<float>(mouse_y);
 
-  // No backflip
+  // No flipping back
   if (xRotation > 90) {
     xRotation = 90;
   } else if (xRotation < -90) {
@@ -59,9 +59,9 @@ void Player::logic(TileMap* newMap) {
   bool canMoveZMINUS = true;
 
   if (gameMode) {
-    for (int i = 0; i < DEFAULT_MAP_WIDTH; i++) {
-      for (int t = 0; t < DEFAULT_MAP_LENGTH; t++) {
-        for (int n = 0; n < DEFAULT_MAP_HEIGHT; n++) {
+    for (unsigned int i = 0; i < DEFAULT_MAP_WIDTH; i++) {
+      for (unsigned int t = 0; t < DEFAULT_MAP_LENGTH; t++) {
+        for (unsigned int n = 0; n < DEFAULT_MAP_HEIGHT; n++) {
           if (newMap->getTile(i, t, n)->getTile()->getAttribute() !=
                   ATTRIBUTE_GAS &&
               newMap->getTile(i, t, n)->getTile()->getAttribute() !=
@@ -167,12 +167,12 @@ void Player::logic(TileMap* newMap) {
   }
 
   // Vars
-  float yChange = -((float)sin(xRotation / 180 * M_PI) / (5 + 10 * gameMode) *
-                    (sprinting + 1));
-  float xChange = (float)sin(yRotation / 180 * M_PI) / (5 + 10 * gameMode) *
-                  (sprinting + 1);
-  float zChange = -(float)cos(yRotation / 180 * M_PI) / (5 + 10 * gameMode) *
-                  (sprinting + 1);
+  float yChange =
+      -sinf(xRotation / 180 * PI_F) / (5 + 10 * gameMode) * (sprinting + 1);
+  float xChange =
+      sinf(yRotation / 180 * PI_F) / (5 + 10 * gameMode) * (sprinting + 1);
+  float zChange =
+      -cosf(yRotation / 180 * PI_F) / (5 + 10 * gameMode) * (sprinting + 1);
 
   // Forward
   if (key[KEY_W] || key[KEY_UP]) {

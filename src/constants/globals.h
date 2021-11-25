@@ -1,12 +1,30 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
-#ifndef M_PI
-#define M_PI 3.14159265358979323846264338327950288
-#endif
+#include "../core/GpuProgram.h"
 
 extern bool gameMode;
-extern int defaultShader, waterShader, skyShader;
-extern float skyTime, sunX, sunY, sunZ;
+
+extern GpuProgram* defaultShader;
+extern GpuProgram* waterShader;
+extern GpuProgram* skyShader;
+
+extern const float PI_F;
+
+extern float skyTime;
+extern float sunX;
+extern float sunY;
+extern float sunZ;
+
+constexpr size_t CHUNK_WIDTH = 16;
+constexpr size_t CHUNK_HEIGHT = 16;
+constexpr size_t CHUNK_LENGTH = 16;
+
+constexpr size_t WORLD_WIDTH = 16;
+constexpr size_t WORLD_LENGTH = 16;
+
+constexpr size_t DEFAULT_MAP_HEIGHT = CHUNK_HEIGHT;
+constexpr size_t DEFAULT_MAP_WIDTH = CHUNK_WIDTH * WORLD_WIDTH;
+constexpr size_t DEFAULT_MAP_LENGTH = CHUNK_LENGTH * WORLD_LENGTH;
 
 #endif  // GLOBALS_H

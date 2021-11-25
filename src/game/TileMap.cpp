@@ -23,8 +23,8 @@ TileMap::TileMap(BITMAP* tempBuffer) {
   TileTypeManager::load("assets/data/tiles.xml");
 
   // Make lots of chunk
-  for (int i = 0; i < WORLD_WIDTH; i++) {
-    for (int t = 0; t < WORLD_LENGTH; t++) {
+  for (unsigned int i = 0; i < WORLD_WIDTH; i++) {
+    for (unsigned int t = 0; t < WORLD_LENGTH; t++) {
       if (!allChunks[i][t]) {
         allChunks[i][t] = new Chunk(i, t);
       }
@@ -47,8 +47,8 @@ void TileMap::generateMap() {
 
   auto seed = random(0, 10000);
 
-  for (int i = 0; i < WORLD_WIDTH; i++) {
-    for (int t = 0; t < WORLD_LENGTH; t++) {
+  for (unsigned int i = 0; i < WORLD_WIDTH; i++) {
+    for (unsigned int t = 0; t < WORLD_LENGTH; t++) {
       quickPeek("Generating Chunk " + std::to_string(i * WORLD_WIDTH + t + 1) +
                 "/" + std::to_string(WORLD_WIDTH * WORLD_LENGTH));
 
@@ -94,20 +94,20 @@ void TileMap::quickPeek(const std::string& currentPhase) {
 // Draw map
 void TileMap::draw() {
   // Skybox
-  glUseProgram(skyShader);
+  skyShader->activate();
   theSky.renderSkybox();
-  glUseProgram(defaultShader);
+  defaultShader->activate();
 
-  for (int i = 0; i < WORLD_WIDTH; i++) {
-    for (int t = 0; t < WORLD_LENGTH; t++) {
-      if (allChunks[i][t]) {
-        allChunks[i][t]->render();
+  for (auto& allChunk : allChunks) {
+    for (auto& t : allChunk) {
+      if (t) {
+        t->render();
       }
     }
   }
 }
 
-Tile* TileMap::getTile(int x, int y, int z) {
+Tile* TileMap::getTile(unsigned int x, unsigned int y, unsigned int z) {
   auto chunkX = x / CHUNK_WIDTH;
   auto chunkZ = z / CHUNK_LENGTH;
 

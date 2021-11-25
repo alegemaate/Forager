@@ -21,9 +21,9 @@ Chunk::Chunk(int x, int z) : index_x(x), index_z(z) {
   glGenBuffers(1, &geometry_array);
   glGenBuffers(1, &indices_array);
 
-  for (int i = 0; i < CHUNK_WIDTH; i++) {
-    for (int t = 0; t < CHUNK_HEIGHT; t++) {
-      for (int u = 0; u < CHUNK_LENGTH; u++) {
+  for (unsigned int i = 0; i < CHUNK_WIDTH; i++) {
+    for (unsigned int t = 0; t < CHUNK_HEIGHT; t++) {
+      for (unsigned int u = 0; u < CHUNK_LENGTH; u++) {
         blk[i][t][u] =
             new Tile(i, t, u, TileTypeManager::getTileByType(TILE_AIR));
       }
@@ -54,9 +54,9 @@ void Chunk::tessellate() {
   // Vertex counter
   unsigned long j = 0;
 
-  for (int i = 0; i < CHUNK_WIDTH; i++) {
-    for (int t = 0; t < CHUNK_HEIGHT; t++) {
-      for (int k = 0; k < CHUNK_LENGTH; k++) {
+  for (unsigned int i = 0; i < CHUNK_WIDTH; i++) {
+    for (unsigned int t = 0; t < CHUNK_HEIGHT; t++) {
+      for (unsigned int k = 0; k < CHUNK_LENGTH; k++) {
         auto type = blk[i][t][k]->getType();
 
         // Empty block?
@@ -297,8 +297,8 @@ void Chunk::generate(int seed) {
 
   // STEP 2:
   // Fill with dirt
-  for (int i = 0; i < CHUNK_WIDTH; i++) {
-    for (int u = 0; u < CHUNK_LENGTH; u++) {
+  for (unsigned int i = 0; i < CHUNK_WIDTH; i++) {
+    for (unsigned int u = 0; u < CHUNK_LENGTH; u++) {
       auto noiseX =
           static_cast<float>(seed + i + index_x * CHUNK_WIDTH) / 500.0f;
       auto noiseZ =
@@ -306,7 +306,7 @@ void Chunk::generate(int seed) {
       auto val = sn_h->fractal(10, noiseX, noiseZ);
       auto height = (val + 1.0f) * (CHUNK_HEIGHT / 2.0f);
 
-      for (int t = 0; t < CHUNK_HEIGHT; t++) {
+      for (unsigned int t = 0; t < CHUNK_HEIGHT; t++) {
         if (static_cast<float>(t) < height) {
           blk[i][t][u]->setType(TileTypeManager::getTileByType(TILE_GRASS));
         }
@@ -317,11 +317,14 @@ void Chunk::generate(int seed) {
   changed = true;
 }
 
-Tile* Chunk::get(int x, int y, int z) {
+Tile* Chunk::get(unsigned int x, unsigned int y, unsigned int z) {
   return blk[x][y][z];
 }
 
-void Chunk::set(int x, int y, int z, unsigned char type) {
+void Chunk::set(unsigned int x,
+                unsigned int y,
+                unsigned int z,
+                unsigned char type) {
   blk[x][y][z]->setType(TileTypeManager::getTileByType(type));
   changed = true;
 }

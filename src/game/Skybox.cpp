@@ -1,6 +1,6 @@
 #include "Skybox.h"
 
-#include "../constants/ids.h"
+#include "../constants/globals.h"
 #include "../utils/utils.h"
 
 #include "../utils/loaders.h"
