@@ -20,8 +20,8 @@ constexpr size_t CHUNK_WIDTH = 16;
 constexpr size_t CHUNK_HEIGHT = 16;
 constexpr size_t CHUNK_LENGTH = 16;
 
-constexpr size_t WORLD_WIDTH = 16;
-constexpr size_t WORLD_LENGTH = 16;
+constexpr size_t WORLD_WIDTH = 4;
+constexpr size_t WORLD_LENGTH = 4;
 
 constexpr size_t DEFAULT_MAP_HEIGHT = CHUNK_HEIGHT;
 constexpr size_t DEFAULT_MAP_WIDTH = CHUNK_WIDTH * WORLD_WIDTH;

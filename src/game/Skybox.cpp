@@ -26,177 +26,182 @@ void Skybox::renderSkybox() {
   // Go into model view matrix
   glPushMatrix();
 
-  // Translate in
-  glTranslatef(DEFAULT_MAP_LENGTH / 2.0f, DEFAULT_MAP_HEIGHT / 2.0f,
-               DEFAULT_MAP_WIDTH / 2.0f);
+  // Bounds
+  const int BOUND_X = static_cast<int>(DEFAULT_MAP_WIDTH);
+  const int BOUND_Y = static_cast<int>(DEFAULT_MAP_HEIGHT);
+  const int BOUND_Z = static_cast<int>(DEFAULT_MAP_LENGTH);
 
-  // FRONT
-  glActiveTexture(GL_TEXTURE0 + 0);
-  glBindTexture(GL_TEXTURE_2D, textureRef[0]);
+  // Translate in
+  glTranslatef(DEFAULT_MAP_LENGTH / 2.0f, BOUND_Y / 2.0f,
+               BOUND_X / 2.0f);
 
   glActiveTexture(GL_TEXTURE0 + 1);
   glBindTexture(GL_TEXTURE_2D, skyboxSampler);
+
+  // FRONT
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, textureRef[0]);
 
   glBegin(GL_TRIANGLES);
   glColor4ub(255, 255, 255, 255);
   glNormal3f(0, 0, 1);
   glTexCoord2f(1, 1);
-  glVertex3f(-DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // C
+  glVertex3f(-BOUND_Z, BOUND_Y, BOUND_X);  // C
   glNormal3f(0, 0, 1);
   glTexCoord2f(0, 0);
-  glVertex3f(DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // B
+  glVertex3f(BOUND_Z, -BOUND_Y, BOUND_X);  // B
   glNormal3f(0, 0, 1);
   glTexCoord2f(1, 0);
-  glVertex3f(-DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // A
+  glVertex3f(-BOUND_Z, -BOUND_Y, BOUND_X);  // A
 
   glNormal3f(0, 0, 1);
   glTexCoord2f(1, 1);
-  glVertex3f(-DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // C
+  glVertex3f(-BOUND_Z, BOUND_Y, BOUND_X);  // C
   glNormal3f(0, 0, 1);
   glTexCoord2f(0, 1);
-  glVertex3f(DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // D
+  glVertex3f(BOUND_Z, BOUND_Y, BOUND_X);  // D
   glNormal3f(0, 0, 1);
   glTexCoord2f(0, 0);
-  glVertex3f(DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // B
+  glVertex3f(BOUND_Z, -BOUND_Y, BOUND_X);  // B
   glEnd();
 
   // BACK
-  glActiveTexture(GL_TEXTURE0 + 0);
+  glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, textureRef[1]);
 
   glBegin(GL_TRIANGLES);
   glColor4ub(255, 255, 255, 255);
   glNormal3f(0, 0, -1);
   glTexCoord2f(1, 1);
-  glVertex3f(DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // H
+  glVertex3f(BOUND_Z, BOUND_Y, -BOUND_X);  // H
   glNormal3f(0, 0, -1);
   glTexCoord2f(0, 0);
-  glVertex3f(-DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT,
-             -DEFAULT_MAP_WIDTH);  // E
+  glVertex3f(-BOUND_Z, -BOUND_Y,
+             -BOUND_X);  // E
   glNormal3f(0, 0, -1);
   glTexCoord2f(1, 0);
-  glVertex3f(DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // F
+  glVertex3f(BOUND_Z, -BOUND_Y, -BOUND_X);  // F
 
   glNormal3f(0, 0, -1);
   glTexCoord2f(1, 1);
-  glVertex3f(DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // H
+  glVertex3f(BOUND_Z, BOUND_Y, -BOUND_X);  // H
   glNormal3f(0, 0, -1);
   glTexCoord2f(0, 1);
-  glVertex3f(-DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // G
+  glVertex3f(-BOUND_Z, BOUND_Y, -BOUND_X);  // G
   glNormal3f(0, 0, -1);
   glTexCoord2f(0, 0);
-  glVertex3f(-DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT,
-             -DEFAULT_MAP_WIDTH);  // E
+  glVertex3f(-BOUND_Z, -BOUND_Y,
+             -BOUND_X);  // E
   glEnd();
 
   // LEFT
-  glActiveTexture(GL_TEXTURE0 + 0);
+  glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, textureRef[2]);
 
   glBegin(GL_TRIANGLES);
   glColor4ub(255, 255, 255, 255);
   glNormal3f(1, 0, 0);
   glTexCoord2f(1, 1);
-  glVertex3f(-DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // G
+  glVertex3f(-BOUND_Z, BOUND_Y, -BOUND_X);  // G
   glNormal3f(1, 0, 0);
   glTexCoord2f(0, 0);
-  glVertex3f(-DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // A
+  glVertex3f(-BOUND_Z, -BOUND_Y, BOUND_X);  // A
   glNormal3f(1, 0, 0);
   glTexCoord2f(1, 0);
-  glVertex3f(-DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT,
-             -DEFAULT_MAP_WIDTH);  // E
+  glVertex3f(-BOUND_Z, -BOUND_Y,
+             -BOUND_X);  // E
 
   glNormal3f(1, 0, 0);
   glTexCoord2f(1, 1);
-  glVertex3f(-DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // G
+  glVertex3f(-BOUND_Z, BOUND_Y, -BOUND_X);  // G
   glNormal3f(1, 0, 0);
   glTexCoord2f(0, 1);
-  glVertex3f(-DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // C
+  glVertex3f(-BOUND_Z, BOUND_Y, BOUND_X);  // C
   glNormal3f(1, 0, 0);
   glTexCoord2f(0, 0);
-  glVertex3f(-DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // A
+  glVertex3f(-BOUND_Z, -BOUND_Y, BOUND_X);  // A
   glEnd();
 
   // RIGHT
-  glActiveTexture(GL_TEXTURE0 + 0);
+  glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, textureRef[3]);
 
   glBegin(GL_TRIANGLES);
   glColor4ub(255, 255, 255, 255);
   glNormal3f(-1, 0, 0);
   glTexCoord2f(1, 1);
-  glVertex3f(DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // D
+  glVertex3f(BOUND_Z, BOUND_Y, BOUND_X);  // D
   glNormal3f(-1, 0, 0);
   glTexCoord2f(0, 0);
-  glVertex3f(DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // F
+  glVertex3f(BOUND_Z, -BOUND_Y, -BOUND_X);  // F
   glNormal3f(-1, 0, 0);
   glTexCoord2f(1, 0);
-  glVertex3f(DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // B
+  glVertex3f(BOUND_Z, -BOUND_Y, BOUND_X);  // B
 
   glNormal3f(-1, 0, 0);
   glTexCoord2f(1, 1);
-  glVertex3f(DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // D
+  glVertex3f(BOUND_Z, BOUND_Y, BOUND_X);  // D
   glNormal3f(-1, 0, 0);
   glTexCoord2f(0, 1);
-  glVertex3f(DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // H
+  glVertex3f(BOUND_Z, BOUND_Y, -BOUND_X);  // H
   glNormal3f(-1, 0, 0);
   glTexCoord2f(0, 0);
-  glVertex3f(DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // F
+  glVertex3f(BOUND_Z, -BOUND_Y, -BOUND_X);  // F
   glEnd();
 
   // TOP
-  glActiveTexture(GL_TEXTURE0 + 0);
+  glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, textureRef[4]);
 
   glBegin(GL_TRIANGLES);
   glColor4ub(255, 255, 255, 255);
   glNormal3f(0, -1, 0);
   glTexCoord2f(1, 1);
-  glVertex3f(-DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // G
+  glVertex3f(-BOUND_Z, BOUND_Y, -BOUND_X);  // G
   glNormal3f(0, -1, 0);
   glTexCoord2f(0, 0);
-  glVertex3f(DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // D
+  glVertex3f(BOUND_Z, BOUND_Y, BOUND_X);  // D
   glNormal3f(0, -1, 0);
   glTexCoord2f(1, 0);
-  glVertex3f(-DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // C
+  glVertex3f(-BOUND_Z, BOUND_Y, BOUND_X);  // C
 
   glNormal3f(0, -1, 0);
   glTexCoord2f(1, 1);
-  glVertex3f(-DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // G
+  glVertex3f(-BOUND_Z, BOUND_Y, -BOUND_X);  // G
   glNormal3f(0, -1, 0);
   glTexCoord2f(0, 1);
-  glVertex3f(DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // H
+  glVertex3f(BOUND_Z, BOUND_Y, -BOUND_X);  // H
   glNormal3f(0, -1, 0);
   glTexCoord2f(0, 0);
-  glVertex3f(DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // D
+  glVertex3f(BOUND_Z, BOUND_Y, BOUND_X);  // D
   glEnd();
 
   // BOTTOM
-  glActiveTexture(GL_TEXTURE0 + 0);
+  glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, textureRef[5]);
 
   glBegin(GL_TRIANGLES);
   glColor4ub(255, 255, 255, 255);
   glNormal3f(0, 1, 0);
   glTexCoord2f(1, 1);
-  glVertex3f(-DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // A
+  glVertex3f(-BOUND_Z, -BOUND_Y, BOUND_X);  // A
   glNormal3f(0, 1, 0);
   glTexCoord2f(0, 0);
-  glVertex3f(DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // F
+  glVertex3f(BOUND_Z, -BOUND_Y, -BOUND_X);  // F
   glNormal3f(0, 1, 0);
   glTexCoord2f(1, 0);
-  glVertex3f(-DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT,
-             -DEFAULT_MAP_WIDTH);  // E
+  glVertex3f(-BOUND_Z, -BOUND_Y,
+             -BOUND_X);  // E
 
   glNormal3f(0, 1, 0);
   glTexCoord2f(1, 1);
-  glVertex3f(-DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // A
+  glVertex3f(-BOUND_Z, -BOUND_Y, BOUND_X);  // A
   glNormal3f(0, 1, 0);
   glTexCoord2f(0, 1);
-  glVertex3f(DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // B
+  glVertex3f(BOUND_Z, -BOUND_Y, BOUND_X);  // B
   glNormal3f(0, 1, 0);
   glTexCoord2f(0, 0);
-  glVertex3f(DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // F
+  glVertex3f(BOUND_Z, -BOUND_Y, -BOUND_X);  // F
   glEnd();
 
   // Cool, back to normal
