@@ -22,12 +22,11 @@ class Skybox {
                   const std::string& a_sRight,
                   const std::string& a_sTop,
                   const std::string& a_sBottom);
-  void renderSkybox();
-
-  GLuint skyboxSampler;
+  void render();
 
  private:
   GLuint textureRef[6];
+  GLuint skyboxSampler;
 };
 
 #endif  // SKYBOX_H

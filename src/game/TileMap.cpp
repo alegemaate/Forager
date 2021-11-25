@@ -9,10 +9,6 @@ TileMap::TileMap(BITMAP* tempBuffer) {
   // Start in view mode
   gameMode = false;
 
-  // Load sky
-  theSky.loadSkybox("assets/images/skybox/", "front.png", "back.png",
-                    "left.png", "right.png", "top.png", "bottom.png");
-
   // Buffer
   buffPoint = tempBuffer;
 
@@ -93,11 +89,6 @@ void TileMap::quickPeek(const std::string& currentPhase) {
 
 // Draw map
 void TileMap::draw() {
-  // Skybox
-  skyShader->activate();
-  theSky.renderSkybox();
-  defaultShader->activate();
-
   for (auto& allChunk : allChunks) {
     for (auto& t : allChunk) {
       if (t) {

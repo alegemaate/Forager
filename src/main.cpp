@@ -19,7 +19,6 @@
 #include "core/GpuProgram.h"
 #include "game/MaterialManager.h"
 #include "game/Player.h"
-#include "utils/loaders.h"
 #include "utils/utils.h"
 
 // Create variables
@@ -57,6 +56,7 @@ END_OF_FUNCTION(animationTicker)
 
 TileMap* gameTiles;
 Player* jimmy;
+Skybox* theSky;
 
 void allegroInit() {
   allegro_init();
@@ -180,10 +180,6 @@ void loadShaders() {
       new GpuProgram("assets/shaders/water.vert", "assets/shaders/water.frag");
   skyShader =
       new GpuProgram("assets/shaders/sky.vert", "assets/shaders/sky.frag");
-
-  // Sampler
-  skyShader->setInt("sampler", 1);
-  skyShader->setInt("tex", 0);
 }
 
 void gameInit() {
@@ -194,13 +190,15 @@ void gameInit() {
   ARIAL_BLACK =
       load_font("assets/images/fonts/arial_black.pcx", nullptr, nullptr);
 
+  // Load sky
+  theSky = new Skybox();
+  theSky->loadSkybox("assets/images/skybox/", "front.png", "back.png",
+                     "left.png", "right.png", "top.png", "bottom.png");
+
   // TRANSFORMS
   jimmy->transformWorld();
 
-  GLuint samplerRef = loaders::loadTexture("assets/images/skybox/sample.png");
-
   gameTiles = new TileMap(buffer);
-  gameTiles->theSky.skyboxSampler = samplerRef;
   gameTiles->generateMap();
 
   // Load them models
@@ -233,18 +231,18 @@ void game() {
   // Change time
   skyShader->setFloat("timer", skyTime);
 
-  if (skyTime > 1) {
-    skyTime = 0;
-  } else if (skyTime < 0) {
-    skyTime = 1;
+  if (skyTime > 1.0f) {
+    skyTime = 0.0f;
+  } else if (skyTime < 0.0f) {
+    skyTime = 1.0f;
   }
 
-  skyTime += 0.000005;
+  skyTime += 0.000005f;
 
   if (key[KEY_PLUS_PAD]) {
-    skyTime += 0.005;
+    skyTime += 0.005f;
   } else if (key[KEY_MINUS_PAD]) {
-    skyTime -= 0.005;
+    skyTime -= 0.005f;
   }
 
   // Back to normal shader
@@ -302,6 +300,9 @@ void draw() {
   // Place light 0 Back to normal
   GLfloat light_position[] = {sunX, sunY, sunZ, 0.0f};
   glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+
+  // Draw skybox
+  theSky->render();
 
   // Draw map
   gameTiles->draw();

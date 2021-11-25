@@ -19,10 +19,14 @@ void Skybox::loadSkybox(const std::string& a_sDirectory,
   textureRef[3] = loaders::loadTexture(a_sDirectory + a_sRight);
   textureRef[4] = loaders::loadTexture(a_sDirectory + a_sTop);
   textureRef[5] = loaders::loadTexture(a_sDirectory + a_sBottom);
+
+  skyboxSampler = loaders::loadTexture("assets/images/skybox/sample.png");
 }
 
 // Render skybox
-void Skybox::renderSkybox() {
+void Skybox::render() {
+  skyShader->activate();
+
   // Go into model view matrix
   glPushMatrix();
 
@@ -32,8 +36,7 @@ void Skybox::renderSkybox() {
   const int BOUND_Z = static_cast<int>(DEFAULT_MAP_LENGTH);
 
   // Translate in
-  glTranslatef(DEFAULT_MAP_LENGTH / 2.0f, BOUND_Y / 2.0f,
-               BOUND_X / 2.0f);
+  glTranslatef(DEFAULT_MAP_LENGTH / 2.0f, BOUND_Y / 2.0f, BOUND_X / 2.0f);
 
   glActiveTexture(GL_TEXTURE0 + 1);
   glBindTexture(GL_TEXTURE_2D, skyboxSampler);
@@ -44,6 +47,7 @@ void Skybox::renderSkybox() {
 
   glBegin(GL_TRIANGLES);
   glColor4ub(255, 255, 255, 255);
+
   glNormal3f(0, 0, 1);
   glTexCoord2f(1, 1);
   glVertex3f(-BOUND_Z, BOUND_Y, BOUND_X);  // C
@@ -209,4 +213,6 @@ void Skybox::renderSkybox() {
   glMaterialfv(GL_FRONT, GL_AMBIENT, mat_old_ambient);
 
   glPopMatrix();
+
+  defaultShader->activate();
 }
