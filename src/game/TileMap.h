@@ -27,8 +27,6 @@ class TileMap {
 
   Tile* getTile(unsigned int x, unsigned int y, unsigned int z);
 
-  Skybox theSky{};
-
  private:
   // All chunks
   Chunk* allChunks[WORLD_LENGTH][WORLD_WIDTH]{};
