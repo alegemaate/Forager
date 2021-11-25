@@ -25,7 +25,7 @@ class TileMap {
   void generateMap();
   void draw();
 
-  Tile* getTile(int x, int y, int z);
+  Tile* getTile(unsigned int x, unsigned int y, unsigned int z);
 
   Skybox theSky{};
 

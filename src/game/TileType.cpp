@@ -46,7 +46,7 @@ void TileType::draw(float x, float y, float z, bool newTick) {
 
   // Shader
   if (type == TILE_WATER) {
-    glUseProgram(waterShader);
+    waterShader->activate();
     changeMaterial(MATERIAL_WATER);
   }
 
@@ -81,7 +81,7 @@ void TileType::draw(float x, float y, float z, bool newTick) {
   // Shader back
   if (currentMaterial != MATERIAL_DEFAULT) {
     changeMaterial(MATERIAL_DEFAULT);
-    glUseProgram(defaultShader);
+    defaultShader->activate();
   }
 
   // Back

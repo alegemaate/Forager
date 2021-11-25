@@ -3,7 +3,7 @@
 
 #include <alleggl.h>
 
-#include "../constants/ids.h"
+#include "../constants/globals.h"
 #include "Tile.h"
 
 class Chunk {
@@ -23,10 +23,10 @@ class Chunk {
   void generate(int seed);
 
   // Get block
-  Tile* get(int x, int y, int z);
+  Tile* get(unsigned int x, unsigned int y, unsigned int z);
 
   // Set block
-  void set(int x, int y, int z, unsigned char type);
+  void set(unsigned int x, unsigned int y, unsigned int z, unsigned char type);
 
   // Tessellate and such
   void update();
