@@ -17,17 +17,12 @@
 
 #include "core/GpuProgram.h"
 #include "game/Player.h"
+#include "game/Skybox.h"
 #include "utils/utils.h"
 
 // Create variables
 int animationFrame = 0;
 bool closeGame = false;
-
-// Water
-GLfloat waveTime = 1.5;
-GLfloat waveWidth = 0.1;
-GLfloat waveHeight = 0.8;
-GLfloat waveFreq = 0.01;
 
 // Create fonts
 FONT* ARIAL_BLACK;
@@ -71,7 +66,7 @@ void allegroInit() {
   set_color_depth(32);
   set_window_title("Forager");
 
-  allegro_gl_set(AGL_Z_DEPTH, 8);
+  allegro_gl_set(AGL_Z_DEPTH, 32);
   allegro_gl_set(AGL_COLOR_DEPTH, 32);
   allegro_gl_set(AGL_SUGGEST, AGL_Z_DEPTH | AGL_COLOR_DEPTH);
   allegro_gl_set(AGL_REQUIRE, AGL_DOUBLEBUFFER);
@@ -116,6 +111,10 @@ void openGlInit() {
   glViewport(0, 0, SCREEN_W, SCREEN_H);
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
+
+  // Culling
+  glEnable(GL_CULL_FACE);
+  glCullFace(GL_BACK);
 }
 
 void loadShaders() {
@@ -129,7 +128,8 @@ void loadShaders() {
 
 void gameInit() {
   // Camera
-  camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
+  camera = new Camera(glm::vec3(0.0f, 20.0f, 60.0f),
+                      glm::vec3(0.0f, 1.0f, 0.0f), -22.5f, -45.0f);
 
   // Character
   jimmy = new Player();
@@ -147,11 +147,6 @@ void gameInit() {
 
   gameTiles = new TileMap(buffer);
   gameTiles->generateMap();
-
-  // Load them models
-  //  if (!quick_primitives::load_models()) {
-  //    abort_on_error("quick_primitives couldn't load the damn model!");
-  //  }
 }
 
 // Load all in game content
@@ -168,14 +163,6 @@ void game() {
   jimmy->update();
 
   // Change time
-  //  waterShader->setFloat("waveTime", waveTime);
-  //  waterShader->setFloat("waveWidth", waveWidth);
-  //  waterShader->setFloat("waveHeight", waveHeight);
-
-  // Update wave variable
-  //  waveTime += waveFreq;
-
-  // Change time
   skyTime += 0.000005f;
 
   if (key[KEY_PLUS_PAD]) {
@@ -190,6 +177,14 @@ void game() {
     skyTime = 1.0f;
   }
 
+  lightDir.y = -100.0f * cosf(2.0f * M_PI * skyTime);
+  lightDir.x = 100.0f * cosf(2.0f * M_PI * skyTime);
+  lightDir.z = -100.0f * sinf(2.0f * M_PI * skyTime);
+
+  lightColor.x = (-1.0f * powf((2.4f * skyTime) - 1.2f, 2) + 1.0f) + 0.1f;
+  lightColor.y = -0.5f * (cosf(2.0f * M_PI * skyTime) - 1) + 0.1f;
+  lightColor.z = -0.5f * (cosf(2.0f * M_PI * skyTime) - 1) + 0.1f;
+
   theSky->setTime(skyTime);
 
   // Exit game
@@ -198,15 +193,14 @@ void game() {
   }
 }
 
-// Draw images
 void draw() {
+  /**********************
+   * OPEN GL DRAWING *
+   **********************/
+
   // Clear screen
   glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-  // Place light 0 Back to normal
-  //  GLfloat light_position[] = {sunX, sunY, sunZ, 0.0f};
-  //  glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
   // Draw skybox
   theSky->render();
@@ -233,15 +227,15 @@ void draw() {
       buffer, ARIAL_BLACK, 20, 20, makecol(0, 0, 0), makecol(255, 255, 255),
       "Camera X:%.1f Y:%.1f Z:%.1f RotX:%.1f RotY:%.1f ", camera->position.x,
       camera->position.y, camera->position.z, camera->pitch, camera->yaw);
-  textprintf_ex(
-      buffer, ARIAL_BLACK, 20, 60, makecol(0, 0, 0), makecol(255, 255, 255),
-      "Sun X:%1.2f Y:%1.2f Z:%1.2f Time:%1.3f ", sunX, sunY, sunZ, skyTime);
+  textprintf_ex(buffer, ARIAL_BLACK, 20, 60, makecol(0, 0, 0),
+                makecol(255, 255, 255),
+                "Light Direction X:%1.2f Y:%1.2f Z:%1.2f Time:%1.3f ",
+                lightDir.x, lightDir.y, lightDir.z, skyTime);
 
   // Draws buffer
   draw_sprite(screen, buffer, 0, 0);
 
   allegro_gl_unset_allegro_mode();
-
   allegro_gl_flip();
 }
 
@@ -266,7 +260,6 @@ int main() {
 
     while (accumulator >= dt) {
       game();
-
       accumulator -= dt;
     }
 

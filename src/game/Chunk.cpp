@@ -7,11 +7,20 @@
 
 #include "Chunk.h"
 
+#include "../constants/ids.h"
 #include "../core/SimplexNoise.h"
-#include "./TileTypeManager.h"
+#include "../utils/loaders.h"
+#include "TileTypeManager.h"
+
+GLuint Chunk::atlas = 0;
 
 // Construct
 Chunk::Chunk(int x, int z) : index_x(x), index_z(z) {
+  // Check atlas
+  if (atlas == 0) {
+    atlas = loaders::loadTexture("images/textures/atlas.png");
+  }
+
   // 6 sides of cube * 6 indices per cube
   maxIndices = CHUNK_WIDTH * CHUNK_HEIGHT * CHUNK_LENGTH * 6 * 6;
 
@@ -38,11 +47,17 @@ Chunk::Chunk(int x, int z) : index_x(x), index_z(z) {
 }
 
 // Fill array with given data
-void Chunk::fillFace(FaceDefenition face[6], glm::vec3 offset) {
-  for (unsigned int i = 0; i < 6; i++) {
-    const unsigned int index = numIndices * 8;
+void Chunk::fillFace(FaceDefenition face[6],
+                     glm::vec3 offset,
+                     GLuint atlasPos) {
+  const unsigned int atlasSize = 8;
+  const auto atlasX = static_cast<float>(atlasPos % atlasSize);
+  const auto atlasY = floorf(static_cast<float>(atlasPos) / atlasSize);
 
+  for (unsigned int i = 0; i < 6; i++) {
     glm::vec3 pos = face[i].position + offset;
+
+    const auto index = numIndices * 8;
 
     vertices[index] = pos.x;
     vertices[index + 1] = pos.y;
@@ -52,8 +67,8 @@ void Chunk::fillFace(FaceDefenition face[6], glm::vec3 offset) {
     vertices[index + 4] = face[i].normal.y;
     vertices[index + 5] = face[i].normal.z;
 
-    vertices[index + 6] = face[i].texture.x;
-    vertices[index + 7] = face[i].texture.y;
+    vertices[index + 6] = (face[i].texture.x + atlasX) / atlasSize;
+    vertices[index + 7] = (face[i].texture.y + atlasY) / atlasSize;
 
     indices[numIndices] = numIndices;
     numIndices++;
@@ -77,35 +92,35 @@ void Chunk::tessellate() {
 
         // LEFT (-x)
         if (i == 0 || (i > 0 && blk[i - 1][t][k]->getType() == 0)) {
-          fillFace(leftFace, glm::vec3(i, t, k));
+          fillFace(leftFace, glm::vec3(i, t, k), 2);
         }
 
         // RIGHT (+x)
         if (i == CHUNK_WIDTH - 1 ||
             (i < CHUNK_WIDTH && blk[i + 1][t][k]->getType() == 0)) {
-          fillFace(rightFace, glm::vec3(i, t, k));
+          fillFace(rightFace, glm::vec3(i, t, k), 2);
         }
 
         // BOTTOM (-y)
         if (t == 0 || (t > 0 && blk[i][t - 1][k]->getType() == 0)) {
-          fillFace(bottomFace, glm::vec3(i, t, k));
+          fillFace(bottomFace, glm::vec3(i, t, k), 1);
         }
 
         // TOP (+y)
         if (t == CHUNK_HEIGHT - 1 ||
             (t < CHUNK_HEIGHT && blk[i][t + 1][k]->getType() == 0)) {
-          fillFace(topFace, glm::vec3(i, t, k));
+          fillFace(topFace, glm::vec3(i, t, k), 0);
         }
 
         // BACK(-z)
         if (k == 0 || (k > 0 && blk[i][t][k - 1]->getType() == 0)) {
-          fillFace(backFace, glm::vec3(i, t, k));
+          fillFace(backFace, glm::vec3(i, t, k), 2);
         }
 
         // FRONT (+z)
         if (k == CHUNK_LENGTH - 1 ||
             (k < CHUNK_LENGTH && blk[i][t][k + 1]->getType() == 0)) {
-          fillFace(frontFace, glm::vec3(i, t, k));
+          fillFace(frontFace, glm::vec3(i, t, k), 2);
         }
       }
     }
@@ -115,11 +130,11 @@ void Chunk::tessellate() {
 
   glBindBuffer(GL_ARRAY_BUFFER, chunkVBO);
   glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 8 * numIndices, vertices,
-               GL_DYNAMIC_DRAW);
+               GL_STATIC_DRAW);
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, chunkEBO);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * numIndices, indices,
-               GL_DYNAMIC_DRAW);
+               GL_STATIC_DRAW);
 
   // position attribute
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), nullptr);
@@ -201,7 +216,7 @@ void Chunk::render() {
   }
 
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, 1);
+  glBindTexture(GL_TEXTURE_2D, atlas);
 
   glm::mat4 model = glm::mat4(1.0f);
   model = glm::translate(

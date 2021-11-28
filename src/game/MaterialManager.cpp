@@ -1,6 +1,6 @@
 #include "MaterialManager.h"
 
-#include <alleggl.h>
+#include <GL/glew.h>
 
 int currentMaterial = 0;
 

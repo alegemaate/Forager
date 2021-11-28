@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 
+#include "../constants/ids.h"
 #include "../rapidxml/rapidxml.hpp"
 #include "../utils/utils.h"
 

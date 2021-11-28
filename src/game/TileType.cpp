@@ -1,6 +1,10 @@
 #include "TileType.h"
 
+#include "../constants/globals.h"
+#include "../constants/ids.h"
 #include "../utils/loaders.h"
+#include "../utils/quick-primatives.h"
+#include "MaterialManager.h"
 
 // Init tile
 TileType::TileType(const std::string& name,

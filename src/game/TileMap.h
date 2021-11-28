@@ -13,9 +13,7 @@
 
 #include "BiomeManager.h"
 #include "Chunk.h"
-#include "Skybox.h"
 #include "Tile.h"
-#include "TileTypeManager.h"
 
 class TileMap {
  public:

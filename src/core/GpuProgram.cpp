@@ -2,6 +2,7 @@
 
 #include "GpuProgram.h"
 
+#include <cstring>
 #include <fstream>
 #include <iostream>
 

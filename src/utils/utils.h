@@ -8,7 +8,6 @@
 #ifndef TOOLS_H
 #define TOOLS_H
 
-#include <allegro.h>
 #include <string>
 
 extern bool collisionOverlap(double x1, double width, double x2, double width2);

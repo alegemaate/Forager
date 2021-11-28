@@ -3,7 +3,7 @@
 #ifndef FORAGER_GPU_PROGRAM_H
 #define FORAGER_GPU_PROGRAM_H
 
-#include <alleggl.h>
+#include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <string>
 
