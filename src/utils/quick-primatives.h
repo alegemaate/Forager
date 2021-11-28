@@ -8,11 +8,6 @@
 #ifndef QUICK_PRIMITIVES_H
 #define QUICK_PRIMITIVES_H
 
-#include <alleggl.h>
-
-#include <GL/glu.h>
-#include <glm/glm.hpp>
-
 #include "../core/Model.h"
 
 class quick_primitives {

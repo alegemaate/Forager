@@ -1,8 +1,10 @@
 #include "TileMap.h"
 
+#include <alleggl.h>
 #include <iostream>
 
 #include "../utils/utils.h"
+#include "TileTypeManager.h"
 
 // Construct
 TileMap::TileMap(BITMAP* tempBuffer) {
@@ -88,16 +90,20 @@ void TileMap::quickPeek(const std::string& currentPhase) {
 void TileMap::draw() {
   defaultShader->activate();
 
-  // pass projection matrix to shader (note that in this case it could change
-  // every frame)
+  // Pass projection matrix to shader
   glm::mat4 projection =
       glm::perspective(glm::radians(camera->zoom),
                        (float)SCREEN_W / (float)SCREEN_H, 0.1f, 100.0f);
   defaultShader->setMat4("projection", projection);
 
-  // camera/view transformation
+  // Pass camera/view transformation
   glm::mat4 view = camera->getViewMatrix();
   defaultShader->setMat4("view", view);
+
+  // Light position
+  defaultShader->setVec3("light.direction", lightDir);
+  defaultShader->setVec3("light.ambient", lightColor);
+  defaultShader->setFloat("skyTime", skyTime);
 
   for (auto& allChunk : allChunks) {
     for (auto& t : allChunk) {

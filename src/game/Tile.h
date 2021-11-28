@@ -8,8 +8,6 @@
 #ifndef TILE_H
 #define TILE_H
 
-#include <allegro.h>
-
 #include "TileType.h"
 
 class Tile {

@@ -8,17 +8,8 @@
 #ifndef TILE_TYPE_H
 #define TILE_TYPE_H
 
-#include <allegro.h>
-
-#include <alleggl.h>
+#include <GL/glew.h>
 #include <string>
-
-#include <GL/glu.h>
-
-#include "../constants/globals.h"
-#include "../constants/ids.h"
-#include "../utils/quick-primatives.h"
-#include "MaterialManager.h"
 
 enum class ModelType {
   MODEL_NONE,

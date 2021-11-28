@@ -1,8 +1,9 @@
 #ifndef TEXTURE_LOADER_H_
 #define TEXTURE_LOADER_H_
 
-#include <alleggl.h>
+#include <GL/glew.h>
 
+#include <GL/gl.h>
 #include <allegro.h>
 #include <string>
 

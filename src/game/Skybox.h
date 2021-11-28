@@ -8,9 +8,9 @@
 #ifndef SKYBOX_H
 #define SKYBOX_H
 
-#include <allegro.h>
+#include <GL/glew.h>
 
-#include <alleggl.h>
+#include <allegro.h>
 #include <string>
 #include <vector>
 

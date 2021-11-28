@@ -6,9 +6,8 @@ GpuProgram* skyShader = nullptr;
 
 Camera* camera = nullptr;
 
-const float PI_F = 3.14159265358979323846264338327950288f;
+float skyTime = 0.4f;
 
-float skyTime = 0.4;
-float sunX = 0.0f;
-float sunY = 0.0f;
-float sunZ = 0.0f;
+glm::vec3 lightDir(0.0f, 0.0f, 0.0f);
+
+glm::vec3 lightColor(0.0f, 0.0f, 0.0f);

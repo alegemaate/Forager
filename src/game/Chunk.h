@@ -1,8 +1,6 @@
 #ifndef CHUNK_H
 #define CHUNK_H
 
-#include <alleggl.h>
-
 #include "../constants/globals.h"
 #include "CubeFaces.h"
 #include "Tile.h"
@@ -12,7 +10,7 @@ class Chunk {
   Chunk(int x, int z);
 
   // Fill a given face
-  void fillFace(FaceDefenition face[6], glm::vec3 offset);
+  void fillFace(FaceDefenition face[6], glm::vec3 offset, GLuint atlasPos);
 
   // Tessellate chunk
   void tessellate();
@@ -47,6 +45,8 @@ class Chunk {
 
   GLfloat* vertices;
   GLuint* indices;
+
+  static GLuint atlas;
 };
 
 #endif  // CHUNK_H

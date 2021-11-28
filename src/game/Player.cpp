@@ -10,19 +10,19 @@ void Player::update() {
 
   // Forward
   if (key[KEY_W] || key[KEY_UP]) {
-    camera->processKeyboard(Camera_Movement::FORWARD, 1.0f);
+    camera->processKeyboard(CameraMovement::FORWARD, 1.0f);
   }
   // Backward
   if (key[KEY_S] || key[KEY_DOWN]) {
-    camera->processKeyboard(Camera_Movement::BACKWARD, 1.0f);
+    camera->processKeyboard(CameraMovement::BACKWARD, 1.0f);
   }
   // Left
   if (key[KEY_A] || key[KEY_LEFT]) {
-    camera->processKeyboard(Camera_Movement::LEFT, 1.0f);
+    camera->processKeyboard(CameraMovement::LEFT, 1.0f);
   }
   // Right
   if (key[KEY_D] || key[KEY_RIGHT]) {
-    camera->processKeyboard(Camera_Movement::RIGHT, 1.0f);
+    camera->processKeyboard(CameraMovement::RIGHT, 1.0f);
   }
 
   // Reset mouse pos

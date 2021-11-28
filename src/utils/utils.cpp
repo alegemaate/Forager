@@ -1,5 +1,6 @@
 #include "utils.h"
 
+#include <allegro.h>
 #include <cmath>
 #include <fstream>
 #include <iostream>

@@ -10,12 +10,10 @@ extern GpuProgram* skyShader;
 
 extern Camera* camera;
 
-extern const float PI_F;
-
 extern float skyTime;
-extern float sunX;
-extern float sunY;
-extern float sunZ;
+
+extern glm::vec3 lightDir;
+extern glm::vec3 lightColor;
 
 constexpr size_t CHUNK_WIDTH = 16;
 constexpr size_t CHUNK_HEIGHT = 16;
