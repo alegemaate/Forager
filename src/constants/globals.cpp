@@ -1,10 +1,10 @@
 #include "globals.h"
 
-bool gameMode = false;
-
 GpuProgram* defaultShader = nullptr;
 GpuProgram* waterShader = nullptr;
 GpuProgram* skyShader = nullptr;
+
+Camera* camera = nullptr;
 
 const float PI_F = 3.14159265358979323846264338327950288f;
 

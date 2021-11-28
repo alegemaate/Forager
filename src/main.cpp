@@ -12,12 +12,10 @@
 #include <allegro.h>
 #include <loadpng.h>
 
-#include <cmath>
 #include <iostream>
 #include <string>
 
 #include "core/GpuProgram.h"
-#include "game/MaterialManager.h"
 #include "game/Player.h"
 #include "utils/utils.h"
 
@@ -67,7 +65,7 @@ void allegroInit() {
   install_mouse();
 
   if (install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, ".")) {
-    abort_on_error(allegro_error);
+    abortOnError(allegro_error);
   }
 
   set_color_depth(32);
@@ -85,7 +83,7 @@ void allegroInit() {
 
   if (set_gfx_mode(GFX_OPENGL_WINDOWED, 1280, 960, 0, 0) != 0) {
     set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
-    abort_on_error("Unable to go into any graphic mode\n%s\n");
+    abortOnError("Unable to go into any graphic mode\n%s\n");
   }
 
   // Setup fNULLor FPS system
@@ -107,70 +105,17 @@ void allegroInit() {
 }
 
 void openGlInit() {
-  // I am setting a state where I am editing the projection matrix.
-  glMatrixMode(GL_PROJECTION);
-
-  // Clearing the projection matrix...
-  glLoadIdentity();
-
-  // set the perspective with the appropriate aspect ratio
-  gluPerspective(55.0f, (GLfloat)SCREEN_W / (GLfloat)SCREEN_H, 0.1f, 200.0f);
-
-  // Now editing the model-view matrix.
-  glMatrixMode(GL_MODELVIEW);
-
-  // Clearing the model-view matrix.
-  glLoadIdentity();
-
-  // Viewport
-  glViewport(0, 0, SCREEN_W, SCREEN_H);
-
-  // Alpha (remove pixels less than 0.5)
-  glAlphaFunc(GL_GREATER, 0.5);
-  glEnable(GL_ALPHA_TEST);
-  glShadeModel(GL_SMOOTH);
-
-  // Set default material
-  changeMaterial(MATERIAL_DEFAULT);
-
-  glEnable(GL_DEPTH_TEST);
-
-  // Cull back faces
-  glEnable(GL_CULL_FACE);
-  glCullFace(GL_BACK);
-
-  // TEXTURING
-  // Enable texturing and blending (all tiles use this so let us just call it
-  // once)
-  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-  glEnable(GL_TEXTURE_2D);
-
-  // Alpha blending
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
   // Glew
   if (glewInit()) {
-    abort_on_error("Glew init failed.");
+    abortOnError("Glew init failed.");
   } else {
     std::cout << "Glew initialized \n\n";
   }
 
-  // Enable lights
-  glEnable(GL_LIGHTING);  // turns the "lights" on
-  glEnable(GL_LIGHT0);
-
-  // Lighting
-  GLfloat light_ambient[] = {0.4f, 0.4f, 0.4f, 1.0f};
-  GLfloat light_diffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
-  GLfloat light_specular[] = {0.0f, 0.0f, 0.0f, 1.0f};
-  GLfloat light_position[] = {1.5f, 2.0f, 1.0f, 0.0f};
-
-  // Light 0
-  glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
-  glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
-  glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-  glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+  // Viewport
+  glViewport(0, 0, SCREEN_W, SCREEN_H);
+  glEnable(GL_DEPTH_TEST);
+  glDepthFunc(GL_LESS);
 }
 
 void loadShaders() {
@@ -183,8 +128,11 @@ void loadShaders() {
 }
 
 void gameInit() {
+  // Camera
+  camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
+
   // Character
-  jimmy = new Player(0, 15, 0, 45, 135);
+  jimmy = new Player();
 
   // Sets Font
   ARIAL_BLACK =
@@ -192,19 +140,18 @@ void gameInit() {
 
   // Load sky
   theSky = new Skybox();
-  theSky->loadSkybox("assets/images/skybox/", "front.png", "back.png",
-                     "left.png", "right.png", "top.png", "bottom.png");
-
-  // TRANSFORMS
-  jimmy->transformWorld();
+  theSky->loadSkybox(
+      "assets/images/skybox/front.png", "assets/images/skybox/back.png",
+      "assets/images/skybox/left.png", "assets/images/skybox/right.png",
+      "assets/images/skybox/top.png", "assets/images/skybox/bottom.png");
 
   gameTiles = new TileMap(buffer);
   gameTiles->generateMap();
 
   // Load them models
-  if (!quick_primitives::load_models()) {
-    abort_on_error("quick_primitives couldn't load the damn model!");
-  }
+  //  if (!quick_primitives::load_models()) {
+  //    abort_on_error("quick_primitives couldn't load the damn model!");
+  //  }
 }
 
 // Load all in game content
@@ -218,25 +165,17 @@ void setup() {
 // Run the game loops
 void game() {
   gameTiles->update();
-  jimmy->logic(gameTiles);
+  jimmy->update();
 
   // Change time
-  waterShader->setFloat("waveTime", waveTime);
-  waterShader->setFloat("waveWidth", waveWidth);
-  waterShader->setFloat("waveHeight", waveHeight);
+  //  waterShader->setFloat("waveTime", waveTime);
+  //  waterShader->setFloat("waveWidth", waveWidth);
+  //  waterShader->setFloat("waveHeight", waveHeight);
 
   // Update wave variable
-  waveTime += waveFreq;
+  //  waveTime += waveFreq;
 
   // Change time
-  skyShader->setFloat("timer", skyTime);
-
-  if (skyTime > 1.0f) {
-    skyTime = 0.0f;
-  } else if (skyTime < 0.0f) {
-    skyTime = 1.0f;
-  }
-
   skyTime += 0.000005f;
 
   if (key[KEY_PLUS_PAD]) {
@@ -245,30 +184,13 @@ void game() {
     skyTime -= 0.005f;
   }
 
-  // Back to normal shader
-  defaultShader->activate();
+  if (skyTime > 1.0f) {
+    skyTime = 0.0f;
+  } else if (skyTime < 0.0f) {
+    skyTime = 1.0f;
+  }
 
-  // Orbit sun around world (i know.. i know.. that's not how it works)
-  sunY = -1.0f * cosf(2.0f * PI_F * skyTime);
-  sunX = 1.0f * cosf(2.0f * PI_F * skyTime);
-  sunZ = -1.0f * sinf(2.0f * PI_F * skyTime);
-
-  // Change light according to time (using cos! and parabolas!)
-  // Red uses a parabola to simulate sunrise (more red so pink) and night
-  // (less red so blue)
-  // DAY
-  float newRVal = (-1.0f * powf((2.4f * skyTime) - 1.2f, 2) + 1.0f) + 0.1f;
-  float newGVal = -0.5f * (cosf(2.0f * PI_F * skyTime) - 1) + 0.1f;
-  float newBVal = -0.5f * (cosf(2.0f * PI_F * skyTime) - 1) + 0.1f;
-
-  // Light color
-  GLfloat light_ambient[] = {newRVal, newGVal, newBVal, 1.0f};
-  glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
-
-  // Sunlight intensity
-  GLfloat light_diffuse[] = {(0.6f + sunY) / 2, (0.6f + sunY) / 2,
-                             (0.6f + sunY) / 2, 1.0f};
-  glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+  theSky->setTime(skyTime);
 
   // Exit game
   if (key[KEY_ESC]) {
@@ -278,28 +200,13 @@ void game() {
 
 // Draw images
 void draw() {
-  // View matrix
-  glMatrixMode(GL_MODELVIEW);
-
   // Clear screen
-  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+  glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  // Reset transforms
-  glLoadIdentity();
-
-  // Default shader
-  defaultShader->activate();
-
-  // Transform world to players view
-  jimmy->transformWorld();
-
-  // Draw player
-  jimmy->render();
-
   // Place light 0 Back to normal
-  GLfloat light_position[] = {sunX, sunY, sunZ, 0.0f};
-  glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+  //  GLfloat light_position[] = {sunX, sunY, sunZ, 0.0f};
+  //  glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
   // Draw skybox
   theSky->render();
@@ -307,7 +214,6 @@ void draw() {
   // Draw map
   gameTiles->draw();
 
-  // Back to init shader
   GpuProgram::deactivate();
 
   /**********************
@@ -323,11 +229,10 @@ void draw() {
               (SCREEN_H - cursor->h) / 2);
 
   // Debug text
-  textprintf_ex(buffer, ARIAL_BLACK, 20, 20, makecol(0, 0, 0),
-                makecol(255, 255, 255),
-                "Camera X:%4.1f Y:%4.1f Z:%4.1f RotX:%4.1f RotY:%4.1f ",
-                jimmy->getX(), jimmy->getY(), jimmy->getZ(),
-                jimmy->getXRotation(), jimmy->getYRotation());
+  textprintf_ex(
+      buffer, ARIAL_BLACK, 20, 20, makecol(0, 0, 0), makecol(255, 255, 255),
+      "Camera X:%.1f Y:%.1f Z:%.1f RotX:%.1f RotY:%.1f ", camera->position.x,
+      camera->position.y, camera->position.z, camera->pitch, camera->yaw);
   textprintf_ex(
       buffer, ARIAL_BLACK, 20, 60, makecol(0, 0, 0), makecol(255, 255, 255),
       "Sun X:%1.2f Y:%1.2f Z:%1.2f Time:%1.3f ", sunX, sunY, sunZ, skyTime);

@@ -6,9 +6,6 @@
 
 // Construct
 TileMap::TileMap(BITMAP* tempBuffer) {
-  // Start in view mode
-  gameMode = false;
-
   // Buffer
   buffPoint = tempBuffer;
 
@@ -89,6 +86,19 @@ void TileMap::quickPeek(const std::string& currentPhase) {
 
 // Draw map
 void TileMap::draw() {
+  defaultShader->activate();
+
+  // pass projection matrix to shader (note that in this case it could change
+  // every frame)
+  glm::mat4 projection =
+      glm::perspective(glm::radians(camera->zoom),
+                       (float)SCREEN_W / (float)SCREEN_H, 0.1f, 100.0f);
+  defaultShader->setMat4("projection", projection);
+
+  // camera/view transformation
+  glm::mat4 view = camera->getViewMatrix();
+  defaultShader->setMat4("view", view);
+
   for (auto& allChunk : allChunks) {
     for (auto& t : allChunk) {
       if (t) {
@@ -96,6 +106,8 @@ void TileMap::draw() {
       }
     }
   }
+
+  GpuProgram::deactivate();
 }
 
 Tile* TileMap::getTile(unsigned int x, unsigned int y, unsigned int z) {
