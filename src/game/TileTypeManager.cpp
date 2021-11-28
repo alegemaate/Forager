@@ -1,9 +1,9 @@
 #include "TileTypeManager.h"
 
 #include <fstream>
-#include <iostream>
 #include <nlohmann/json.hpp>
 
+#include "../core/Logger.h"
 #include "../utils/utils.h"
 
 std::vector<TileType> TileTypeManager::tile_defs;
@@ -17,7 +17,7 @@ void TileTypeManager::load(const std::string& path) {
   }
 
   // Loading
-  std::cout << "   TILES\n-------------\n";
+  Logger::heading("TILES");
 
   // Create buffer
   nlohmann::json doc = nlohmann::json::parse(file);
@@ -29,7 +29,7 @@ void TileTypeManager::load(const std::string& path) {
     int id = tile["id"];
 
     // Atlas
-    AtlasLookup atlasIds;
+    AtlasLookup atlasIds{};
     atlasIds.top = tile["atlas"]["top"];
     atlasIds.bottom = tile["atlas"]["bottom"];
     atlasIds.left = tile["atlas"]["left"];
@@ -38,13 +38,13 @@ void TileTypeManager::load(const std::string& path) {
     atlasIds.back = tile["atlas"]["back"];
 
     // Log
-    std::cout << "-> Loading Tile:" << name << "  ID:" << id << std::endl;
+    Logger::point("Loading Tile:" + name + "  ID:" + std::to_string(id));
 
     // Add the tile
     tile_defs.emplace_back(id, atlasIds);
   }
 
-  std::cout << "\n\n";
+  Logger::log("");
 }
 
 TileType* TileTypeManager::getTileByType(int tileID) {

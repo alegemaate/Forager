@@ -1,9 +1,9 @@
 #include "BiomeManager.h"
 
 #include <fstream>
-#include <iostream>
 #include <nlohmann/json.hpp>
 
+#include "../core/Logger.h"
 #include "../utils/utils.h"
 
 // Load biomes from file
@@ -15,7 +15,7 @@ void BiomeManager::load(std::string path) {
   }
 
   // Load biomes from xml
-  std::cout << "   BIOMES\n-------------\n";
+  Logger::heading("BIOMES");
 
   // Create buffer
   nlohmann::json doc = nlohmann::json::parse(file);
@@ -37,11 +37,12 @@ void BiomeManager::load(std::string path) {
     int mountain_steepness = biome["mountain"]["steepness"];
 
     // Draw to screen (debug)
-    std::cout << "-> Loading Biome:" << name << " ID:" << biomeID
-              << " CHANCE:" << chance << "\n   "
-              << " MtnFreq:" << mountain_frequency
-              << " MtnHt:" << mountain_height << " MtnRad:" << mountain_radius
-              << " MtnSteep:" << mountain_steepness << "\n";
+    Logger::point("Loading Biome:" + name + " ID:" + std::to_string(biomeID) +
+                  " Chance:" + std::to_string(chance) +
+                  " MtnFreq:" + std::to_string(mountain_frequency) +
+                  " MtnHt:" + std::to_string(mountain_height) +
+                  " MtnRad:" + std::to_string(mountain_radius) +
+                  " MtnSteep:" + std::to_string(mountain_steepness));
 
     // Create biome, set variables and add it to the biome list
     Biome newBiome(name, biomeID);
@@ -66,7 +67,7 @@ void BiomeManager::load(std::string path) {
   }
 
   // Done
-  std::cout << "\n";
+  Logger::log("");
 }
 
 Biome BiomeManager::getBiome(int biomeID) {

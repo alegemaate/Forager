@@ -8,9 +8,9 @@
 #include <string>
 
 class GpuProgram {
-  unsigned int program_id = 0;
-  unsigned int shader_vp = 0;
-  unsigned int shader_fp = 0;
+  unsigned int id = 0;
+  unsigned int vertex = 0;
+  unsigned int fragment = 0;
 
  public:
   GpuProgram() = default;
@@ -20,13 +20,13 @@ class GpuProgram {
   }
 
   ~GpuProgram() {
-    glDetachShader(program_id, shader_vp);
-    glDeleteShader(shader_vp);
+    glDetachShader(id, vertex);
+    glDeleteShader(vertex);
 
-    glDetachShader(program_id, shader_fp);
-    glDeleteShader(shader_fp);
+    glDetachShader(id, fragment);
+    glDeleteShader(fragment);
 
-    glDeleteProgram(program_id);
+    glDeleteProgram(id);
   }
 
   void initFromFile(const std::string& vsFile, const std::string& fsFile);
@@ -36,33 +36,33 @@ class GpuProgram {
             const std::string& vsFilename,
             const std::string& fsFilename);
 
-  void activate() const { glUseProgram(program_id); }
+  void activate() const { glUseProgram(id); }
 
   static void deactivate() { glUseProgram(0); }
 
   void setMat4(const std::string& name, glm::mat4& M) const {
-    glUniformMatrix4fv(glGetUniformLocation(program_id, name.c_str()), 1,
+    glUniformMatrix4fv(glGetUniformLocation(id, name.c_str()), 1,
                        GL_FALSE, &M[0][0]);
   }
 
   void setVec3(const std::string& name, glm::vec3 v) const {
-    glUniform3fv(glGetUniformLocation(program_id, name.c_str()), 1, &v[0]);
+    glUniform3fv(glGetUniformLocation(id, name.c_str()), 1, &v[0]);
   }
 
   void setVec2(const std::string& name, glm::vec2 v) const {
-    glUniform2fv(glGetUniformLocation(program_id, name.c_str()), 1, &v[0]);
+    glUniform2fv(glGetUniformLocation(id, name.c_str()), 1, &v[0]);
   }
 
   void setVec4(const std::string& name, glm::vec4 v) const {
-    glUniform4fv(glGetUniformLocation(program_id, name.c_str()), 1, &v[0]);
+    glUniform4fv(glGetUniformLocation(id, name.c_str()), 1, &v[0]);
   }
 
   void setFloat(const std::string& name, float f) const {
-    glUniform1f(glGetUniformLocation(program_id, name.c_str()), f);
+    glUniform1f(glGetUniformLocation(id, name.c_str()), f);
   }
 
   void setInt(const std::string& name, int i) const {
-    glUniform1i(glGetUniformLocation(program_id, name.c_str()), i);
+    glUniform1i(glGetUniformLocation(id, name.c_str()), i);
   }
 
   static std::string textFileRead(const std::string& fileName);
