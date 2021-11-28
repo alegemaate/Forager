@@ -16,9 +16,8 @@ void BiomeManager::load(std::string newFile) {
   if (fileExists(newFile.c_str())) {
     file.open(newFile.c_str());
   } else {
-    abort_on_error(std::string("Cannot find file " + newFile +
-                               " \n Please check your files and try again")
-                       .c_str());
+    abortOnError("Cannot find file " + newFile +
+                 " \n Please check your files and try again");
   }
 
   std::stringstream buffer;

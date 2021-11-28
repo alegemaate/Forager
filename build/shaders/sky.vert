@@ -1,12 +1,15 @@
-/* 
-	Skybox Day Night Shader
-	Allan Legemaate
-	05/01/16
-	Changes with TIMER
-*/
-#version 120
+#version 330 core
+layout (location = 0) in vec3 aPos;
 
-void main() {
-    gl_TexCoord[0] = gl_MultiTexCoord0;
-    gl_TexCoord[1] = gl_MultiTexCoord1;
+out vec3 TexCoords;
+
+uniform mat4 projection;
+uniform mat4 view;
+
+void main()
+{
+    TexCoords = aPos;
+    vec4 pos = projection * view * vec4(aPos, 1.0);
+    gl_Position = pos.xyww;
 }
+

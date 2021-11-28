@@ -12,7 +12,7 @@ void Audio3d::loadSound(const std::string& newFileName) {
   a3d_file = load_sample(newFileName.c_str());
 
   if (!a3d_file) {
-    abort_on_error(("Could not load sample " + newFileName + ".").c_str());
+    abortOnError("Could not load sample " + newFileName + ".");
   }
 }
 

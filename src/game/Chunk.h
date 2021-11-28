@@ -4,18 +4,15 @@
 #include <alleggl.h>
 
 #include "../constants/globals.h"
+#include "CubeFaces.h"
 #include "Tile.h"
 
 class Chunk {
  public:
   Chunk(int x, int z);
 
-  // Fill array with given data
-  static void fillArray(glm::vec3 posVec,
-                        glm::vec3 normVec,
-                        glm::vec2 texVec,
-                        GLfloat* newArray,
-                        unsigned long index);
+  // Fill a given face
+  void fillFace(FaceDefenition face[6], glm::vec3 offset);
 
   // Tessellate chunk
   void tessellate();
@@ -41,13 +38,15 @@ class Chunk {
   bool changed = false;
 
   // Data
-  GLuint geometry_array = 0;
-  GLuint indices_array = 0;
+  GLuint chunkVAO = 0;
+  GLuint chunkVBO = 0;
+  GLuint chunkEBO = 0;
 
-  int num_indices;
+  GLint maxIndices = 0;
+  GLuint numIndices = 0;
 
-  GLfloat* geometry;
-  unsigned long* indices;
+  GLfloat* vertices;
+  GLuint* indices;
 };
 
 #endif  // CHUNK_H

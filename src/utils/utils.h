@@ -45,6 +45,6 @@ extern float distanceTo3D(float x1,
                           float z2);
 
 // Error reporting
-extern void abort_on_error(const char* message);
+extern void abortOnError(const std::string& message);
 
 #endif  // TOOLS_H
