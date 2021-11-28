@@ -2,53 +2,39 @@
 
 #include <fstream>
 #include <iostream>
-#include <sstream>
+#include <nlohmann/json.hpp>
 
-#include "../rapidxml/rapidxml.hpp"
 #include "../utils/utils.h"
 
 // Load biomes from file
-void BiomeManager::load(std::string newFile) {
-  rapidxml::xml_document<> doc;
-  std::ifstream file;
-
-  // Check exist
-  if (fileExists(newFile.c_str())) {
-    file.open(newFile.c_str());
-  } else {
-    abortOnError("Cannot find file " + newFile +
+void BiomeManager::load(std::string path) {
+  std::ifstream file(path);
+  if (!file.is_open()) {
+    abortOnError("Cannot find file " + path +
                  " \n Please check your files and try again");
   }
-
-  std::stringstream buffer;
-  buffer << file.rdbuf();
-  std::string content(buffer.str());
-  doc.parse<0>(&content[0]);
-
-  rapidxml::xml_node<>* allBiomes = doc.first_node();
 
   // Load biomes from xml
   std::cout << "   BIOMES\n-------------\n";
 
-  for (rapidxml::xml_node<>* cBiome = allBiomes->first_node("biome"); cBiome;
-       cBiome = cBiome->next_sibling()) {
+  // Create buffer
+  nlohmann::json doc = nlohmann::json::parse(file);
+
+  // Parse data
+  for (auto const& biome : doc) {
     // Read xml variables
     // General
-    int biomeID = atoi(cBiome->first_attribute("id")->value());
-    std::string name = cBiome->first_node("name")->value();
+    int biomeID = biome["id"];
+    std::string name = biome["name"];
 
     // Spawn chance
-    int chance = atoi(cBiome->first_node("chance")->value());
+    int chance = biome["chance"];
 
     // Mountains
-    int mountain_frequency =
-        atoi(cBiome->first_node("mountain")->first_node("frequency")->value());
-    int mountain_height =
-        atoi(cBiome->first_node("mountain")->first_node("height")->value());
-    int mountain_radius =
-        atoi(cBiome->first_node("mountain")->first_node("radius")->value());
-    int mountain_steepness =
-        atoi(cBiome->first_node("mountain")->first_node("steepness")->value());
+    int mountain_frequency = biome["mountain"]["frequency"];
+    int mountain_height = biome["mountain"]["height"];
+    int mountain_radius = biome["mountain"]["radius"];
+    int mountain_steepness = biome["mountain"]["steepness"];
 
     // Draw to screen (debug)
     std::cout << "-> Loading Biome:" << name << " ID:" << biomeID
@@ -68,12 +54,8 @@ void BiomeManager::load(std::string newFile) {
                               mountain_radius, mountain_steepness);
 
     // Resources
-    for (rapidxml::xml_node<>* cResource =
-             cBiome->first_node("resources")->first_node("resource");
-         cResource; cResource = cResource->next_sibling()) {
-      newBiome.addTileFrequency(
-          atoi(cResource->first_attribute("tileID")->value()),
-          atoi(cResource->value()));
+    for (auto const& resource : biome["resources"]) {
+      newBiome.addTileFrequency(resource["id"], resource["chance"]);
     }
 
     // Calc spawn stuff
