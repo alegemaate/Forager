@@ -18,7 +18,7 @@ GLuint Chunk::atlas = 0;
 Chunk::Chunk(int x, int z) : index_x(x), index_z(z) {
   // Check atlas
   if (atlas == 0) {
-    atlas = loaders::loadTexture("images/textures/atlas.png");
+    atlas = loaders::loadTexture("assets/images/textures/atlas.png");
   }
 
   // 6 sides of cube * 6 indices per cube
@@ -84,6 +84,7 @@ void Chunk::tessellate() {
     for (unsigned int t = 0; t < CHUNK_HEIGHT; t++) {
       for (unsigned int k = 0; k < CHUNK_LENGTH; k++) {
         auto type = blk[i][t][k]->getType();
+        auto atlas = blk[i][t][k]->getTile()->getAtlasIds();
 
         // Empty block?
         if (!type) {
@@ -92,35 +93,35 @@ void Chunk::tessellate() {
 
         // LEFT (-x)
         if (i == 0 || (i > 0 && blk[i - 1][t][k]->getType() == 0)) {
-          fillFace(leftFace, glm::vec3(i, t, k), 2);
+          fillFace(leftFace, glm::vec3(i, t, k), atlas[2]);
         }
 
         // RIGHT (+x)
         if (i == CHUNK_WIDTH - 1 ||
             (i < CHUNK_WIDTH && blk[i + 1][t][k]->getType() == 0)) {
-          fillFace(rightFace, glm::vec3(i, t, k), 2);
+          fillFace(rightFace, glm::vec3(i, t, k), atlas[3]);
         }
 
         // BOTTOM (-y)
         if (t == 0 || (t > 0 && blk[i][t - 1][k]->getType() == 0)) {
-          fillFace(bottomFace, glm::vec3(i, t, k), 1);
+          fillFace(bottomFace, glm::vec3(i, t, k), atlas[1]);
         }
 
         // TOP (+y)
         if (t == CHUNK_HEIGHT - 1 ||
             (t < CHUNK_HEIGHT && blk[i][t + 1][k]->getType() == 0)) {
-          fillFace(topFace, glm::vec3(i, t, k), 0);
+          fillFace(topFace, glm::vec3(i, t, k), atlas[0]);
         }
 
         // BACK(-z)
         if (k == 0 || (k > 0 && blk[i][t][k - 1]->getType() == 0)) {
-          fillFace(backFace, glm::vec3(i, t, k), 2);
+          fillFace(backFace, glm::vec3(i, t, k), atlas[5]);
         }
 
         // FRONT (+z)
         if (k == CHUNK_LENGTH - 1 ||
             (k < CHUNK_LENGTH && blk[i][t][k + 1]->getType() == 0)) {
-          fillFace(frontFace, glm::vec3(i, t, k), 2);
+          fillFace(frontFace, glm::vec3(i, t, k), atlas[4]);
         }
       }
     }
@@ -169,14 +170,17 @@ void Chunk::generate(int seed) {
 
   // STEP 2:
   // Fill with dirt
+  const unsigned int HALF_HEIGHT = CHUNK_HEIGHT / 2.0f;
+
   for (unsigned int i = 0; i < CHUNK_WIDTH; i++) {
+    auto noiseX = static_cast<float>(seed + i + index_x * CHUNK_WIDTH) / 500.0f;
+
     for (unsigned int u = 0; u < CHUNK_LENGTH; u++) {
-      auto noiseX =
-          static_cast<float>(seed + i + index_x * CHUNK_WIDTH) / 500.0f;
       auto noiseZ =
           static_cast<float>(seed + u + index_z * CHUNK_LENGTH) / 500.0f;
+
       auto val = sn_h->fractal(10, noiseX, noiseZ);
-      auto height = (val + 1.0f) * (CHUNK_HEIGHT / 2.0f);
+      auto height = (val + 1.0f) * HALF_HEIGHT;
 
       for (unsigned int t = 0; t < CHUNK_HEIGHT; t++) {
         if (static_cast<float>(t) < height) {

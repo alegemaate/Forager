@@ -3,10 +3,7 @@
     <!--Air-->
     <tile id="0">
         <name>Air</name>
-        <images>
-            <image>NULL</image>
-            <image2>NULL</image2>
-        </images>
+        <atlas top="0" bottom="0" left="0" right="0" front="0" back="0"/>
         <model>MODEL_NONE</model>
         <attribute>ATTRIBUTE_GAS</attribute>
         <random>0</random>
@@ -14,10 +11,7 @@
     <!--Grass-->
     <tile id="1">
         <name>Grass</name>
-        <images>
-            <image>assets/images/textures/grass.png</image>
-            <image2>NULL</image2>
-        </images>
+        <atlas top="0" bottom="1" left="2" right="2" front="2" back="2"/>
         <model>MODEL_CUBE</model>
         <attribute>ATTRIBUTE_SOLID</attribute>
         <random>0</random>
@@ -25,10 +19,7 @@
     <!--Sand-->
     <tile id="2">
         <name>Sand</name>
-        <images>
-            <image>assets/images/textures/sand.png</image>
-            <image2>NULL</image2>
-        </images>
+        <atlas top="0" bottom="0" left="0" right="0" front="0" back="0"/>
         <model>MODEL_CUBE</model>
         <attribute>ATTRIBUTE_SOLID</attribute>
         <random>0</random>
@@ -36,10 +27,7 @@
     <!--Snow-->
     <tile id="3">
         <name>Snow</name>
-        <images>
-            <image>assets/images/textures/snow.png</image>
-            <image2>NULL</image2>
-        </images>
+        <atlas top="0" bottom="0" left="0" right="0" front="0" back="0"/>
         <model>MODEL_FLAT</model>
         <attribute>ATTRIBUTE_GAS</attribute>
         <random>0</random>
@@ -47,10 +35,7 @@
     <!--Stone-->
     <tile id="4">
         <name>Stone</name>
-        <images>
-            <image>assets/images/textures/stone.png</image>
-            <image2>NULL</image2>
-        </images>
+        <atlas top="0" bottom="0" left="0" right="0" front="0" back="0"/>
         <model>MODEL_CUBE</model>
         <attribute>ATTRIBUTE_SOLID</attribute>
         <random>0</random>
@@ -58,10 +43,7 @@
     <!--Tree-->
     <tile id="5">
         <name>Tree</name>
-        <images>
-            <image>assets/images/textures/tree1.png</image>
-            <image2>assets/images/textures/tree2.png</image2>
-        </images>
+        <atlas top="0" bottom="0" left="0" right="0" front="0" back="0"/>
         <model>MODEL_DOUBLE_PLANE_TALL</model>
         <attribute>ATTRIBUTE_GAS</attribute>
         <random>80</random>
@@ -69,10 +51,7 @@
     <!--Rock-->
     <tile id="6">
         <name>Rock</name>
-        <images>
-            <image>assets/images/textures/rock.png</image>
-            <image2>NULL</image2>
-        </images>
+        <atlas top="0" bottom="0" left="0" right="0" front="0" back="0"/>
         <model>MODEL_CUBE_SMALL</model>
         <attribute>ATTRIBUTE_GAS</attribute>
         <random>100</random>
@@ -80,10 +59,7 @@
     <!--Water-->
     <tile id="7">
         <name>Water</name>
-        <images>
-            <image>assets/images/textures/water1.png</image>
-            <image2>assets/images/textures/water2.png</image2>
-        </images>
+        <atlas top="0" bottom="0" left="0" right="0" front="0" back="0"/>
         <model>MODEL_CUBE</model>
         <attribute>ATTRIBUTE_LIQUID</attribute>
         <random>0</random>
@@ -91,10 +67,7 @@
     <!--Ice-->
     <tile id="8">
         <name>Ice</name>
-        <images>
-            <image>assets/images/textures/ice.png</image>
-            <image2>NULL</image2>
-        </images>
+        <atlas top="0" bottom="0" left="0" right="0" front="0" back="0"/>
         <model>MODEL_CUBE</model>
         <attribute>ATTRIBUTE_SOLID</attribute>
         <random>0</random>
@@ -102,10 +75,7 @@
     <!--Cactus-->
     <tile id="9">
         <name>Cactus</name>
-        <images>
-            <image>assets/images/textures/cactus.png</image>
-            <image2>NULL</image2>
-        </images>
+        <atlas top="0" bottom="0" left="0" right="0" front="0" back="0"/>
         <model>MODEL_DOUBLE_PLANE_TALL</model>
         <attribute>ATTRIBUTE_GAS</attribute>
         <random>100</random>
@@ -113,10 +83,7 @@
     <!--Lava-->
     <tile id="10">
         <name>Lava</name>
-        <images>
-            <image>assets/images/textures/lava.png</image>
-            <image2>NULL</image2>
-        </images>
+        <atlas top="0" bottom="0" left="0" right="0" front="0" back="0"/>
         <model>MODEL_CUBE</model>
         <attribute>ATTRIBUTE_SOLID</attribute>
         <random>0</random>
@@ -124,10 +91,7 @@
     <!--Tall Grass-->
     <tile id="11">
         <name>Tall Grass</name>
-        <images>
-            <image>assets/images/textures/tallgrass.png</image>
-            <image2>NULL</image2>
-        </images>
+        <atlas top="0" bottom="0" left="0" right="0" front="0" back="0"/>
         <model>MODEL_DOUBLE_PLANE</model>
         <attribute>ATTRIBUTE_GAS</attribute>
         <random>100</random>
@@ -135,10 +99,7 @@
     <!--Grass Snow-->
     <tile id="12">
         <name>Grass Snow</name>
-        <images>
-            <image>assets/images/textures/grass_snow.png</image>
-            <image2>NULL</image2>
-        </images>
+        <atlas top="0" bottom="0" left="0" right="0" front="0" back="0"/>
         <model>MODEL_CUBE</model>
         <attribute>ATTRIBUTE_SOLID</attribute>
         <random>0</random>
@@ -146,10 +107,7 @@
     <!--Tree Pine-->
     <tile id="13">
         <name>Pine Tree</name>
-        <images>
-            <image>assets/images/textures/tree_pine_1.png</image>
-            <image2>NULL</image2>
-        </images>
+        <atlas top="0" bottom="0" left="0" right="0" front="0" back="0"/>
         <model>MODEL_DOUBLE_PLANE_TALL</model>
         <attribute>ATTRIBUTE_GAS</attribute>
         <random>80</random>
@@ -157,10 +115,7 @@
     <!--Temp Water-->
     <tile id="14">
         <name>Temp Water</name>
-        <images>
-            <image>NULL</image>
-            <image2>NULL</image2>
-        </images>
+        <atlas top="0" bottom="0" left="0" right="0" front="0" back="0"/>
         <model>MODEL_CUBE</model>
         <attribute>ATTRIBUTE_GAS</attribute>
         <random>0</random>
@@ -168,10 +123,7 @@
     <!--Wood -->
     <tile id="15">
         <name>Wood</name>
-        <images>
-            <image>assets/images/textures/wood.png</image>
-            <image2>NULL</image2>
-        </images>
+        <atlas top="0" bottom="0" left="0" right="0" front="0" back="0"/>
         <model>MODEL_CUBE</model>
         <attribute>ATTRIBUTE_SOLID</attribute>
         <random>0</random>
@@ -179,10 +131,7 @@
     <!--Leaves -->
     <tile id="16">
         <name>Leaves</name>
-        <images>
-            <image>assets/images/textures/leaves.png</image>
-            <image2>NULL</image2>
-        </images>
+        <atlas top="0" bottom="0" left="0" right="0" front="0" back="0"/>
         <model>MODEL_CUBE</model>
         <attribute>ATTRIBUTE_SOLID</attribute>
         <random>0</random>
