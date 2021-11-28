@@ -12,10 +12,10 @@ TileMap::TileMap(BITMAP* tempBuffer) {
   buffPoint = tempBuffer;
 
   // Load biomes
-  biomes.load("data/biomes.xml");
+  biomes.load("data/biomes.json");
 
   // Load tiles
-  TileTypeManager::load("data/tiles.xml");
+  TileTypeManager::load("data/tiles.json");
 
   // Make lots of chunk
   for (unsigned int i = 0; i < WORLD_WIDTH; i++) {

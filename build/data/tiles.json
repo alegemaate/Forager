@@ -1,0 +1,258 @@
+[
+  {
+    "id": 0,
+    "name": "Air",
+    "atlas": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0,
+      "front": 0,
+      "back": 0
+    },
+    "model": "MODEL_NONE",
+    "attribute": "ATTRIBUTE_GAS",
+    "random": 0
+  },
+  {
+    "id": 1,
+    "name": "Grass",
+    "atlas": {
+      "top": 0,
+      "bottom": 1,
+      "left": 2,
+      "right": 2,
+      "front": 2,
+      "back": 2
+    },
+    "model": "MODEL_CUBE",
+    "attribute": "ATTRIBUTE_SOLID",
+    "random": 0
+  },
+  {
+    "id": 2,
+    "name": "Sand",
+    "atlas": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0,
+      "front": 0,
+      "back": 0
+    },
+    "model": "MODEL_CUBE",
+    "attribute": "ATTRIBUTE_SOLID",
+    "random": 0
+  },
+  {
+    "id": 3,
+    "name": "Snow",
+    "atlas": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0,
+      "front": 0,
+      "back": 0
+    },
+    "model": "MODEL_FLAT",
+    "attribute": "ATTRIBUTE_GAS",
+    "random": 0
+  },
+  {
+    "id": 4,
+    "name": "Stone",
+    "atlas": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0,
+      "front": 0,
+      "back": 0
+    },
+    "model": "MODEL_CUBE",
+    "attribute": "ATTRIBUTE_SOLID",
+    "random": 0
+  },
+  {
+    "id": 5,
+    "name": "Tree",
+    "atlas": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0,
+      "front": 0,
+      "back": 0
+    },
+    "model": "MODEL_DOUBLE_PLANE_TALL",
+    "attribute": "ATTRIBUTE_GAS",
+    "random": 80
+  },
+  {
+    "id": 6,
+    "name": "Rock",
+    "atlas": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0,
+      "front": 0,
+      "back": 0
+    },
+    "model": "MODEL_CUBE_SMALL",
+    "attribute": "ATTRIBUTE_GAS",
+    "random": 100
+  },
+  {
+    "id": 7,
+    "name": "Water",
+    "atlas": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0,
+      "front": 0,
+      "back": 0
+    },
+    "model": "MODEL_CUBE",
+    "attribute": "ATTRIBUTE_LIQUID",
+    "random": 0
+  },
+  {
+    "id": 8,
+    "name": "Ice",
+    "atlas": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0,
+      "front": 0,
+      "back": 0
+    },
+    "model": "MODEL_CUBE",
+    "attribute": "ATTRIBUTE_SOLID",
+    "random": 0
+  },
+  {
+    "id": 9,
+    "name": "Cactus",
+    "atlas": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0,
+      "front": 0,
+      "back": 0
+    },
+    "model": "MODEL_DOUBLE_PLANE_TALL",
+    "attribute": "ATTRIBUTE_GAS",
+    "random": 100
+  },
+  {
+    "id": 10,
+    "name": "Lava",
+    "atlas": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0,
+      "front": 0,
+      "back": 0
+    },
+    "model": "MODEL_CUBE",
+    "attribute": "ATTRIBUTE_SOLID",
+    "random": 0
+  },
+  {
+    "id": 11,
+    "name": "Tall Grass",
+    "atlas": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0,
+      "front": 0,
+      "back": 0
+    },
+    "model": "MODEL_DOUBLE_PLANE",
+    "attribute": "ATTRIBUTE_GAS",
+    "random": 100
+  },
+  {
+    "id": 12,
+    "name": "Grass Snow",
+    "atlas": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0,
+      "front": 0,
+      "back": 0
+    },
+    "model": "MODEL_CUBE",
+    "attribute": "ATTRIBUTE_SOLID",
+    "random": 0
+  },
+  {
+    "id": 13,
+    "name": "Pine Tree",
+    "atlas": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0,
+      "front": 0,
+      "back": 0
+    },
+    "model": "MODEL_DOUBLE_PLANE_TALL",
+    "attribute": "ATTRIBUTE_GAS",
+    "random": 80
+  },
+  {
+    "id": 14,
+    "name": "Temp Water",
+    "atlas": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0,
+      "front": 0,
+      "back": 0
+    },
+    "model": "MODEL_CUBE",
+    "attribute": "ATTRIBUTE_GAS",
+    "random": 0
+  },
+  {
+    "id": 15,
+    "name": "Wood",
+    "atlas": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0,
+      "front": 0,
+      "back": 0
+    },
+    "model": "MODEL_CUBE",
+    "attribute": "ATTRIBUTE_SOLID",
+    "random": 0
+  },
+  {
+    "id": 16,
+    "name": "Leaves",
+    "atlas": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0,
+      "front": 0,
+      "back": 0
+    },
+    "model": "MODEL_CUBE",
+    "attribute": "ATTRIBUTE_SOLID",
+    "random": 0
+  }
+]
+

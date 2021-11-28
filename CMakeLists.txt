@@ -13,6 +13,7 @@ find_library(ALLEGRO_GL_LIBRARY NAMES liballeggl.dll.a liballeggl.so liballeggl.
 
 find_package(OpenGL REQUIRED COMPONENTS OpenGL)
 find_package(GLEW REQUIRED)
+find_package(nlohmann_json 3.2.0 REQUIRED)
 
 # Source code
 file(GLOB_RECURSE SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
@@ -34,4 +35,5 @@ target_link_libraries(${PROJECT_NAME} ${ALLEGRO_PNG_LIBRARY})
 target_link_libraries(${PROJECT_NAME} ${ALLEGRO_GL_LIBRARY})
 target_link_libraries(${PROJECT_NAME} OpenGL::GL)
 target_link_libraries(${PROJECT_NAME} GLEW::GLEW)
+target_link_libraries(${PROJECT_NAME} nlohmann_json::nlohmann_json)
 target_link_libraries(${PROJECT_NAME} -static-libgcc -static-libstdc++ -lm)

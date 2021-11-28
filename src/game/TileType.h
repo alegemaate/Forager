@@ -11,7 +11,14 @@
 #include <array>
 #include <string>
 
-using AtlasLookup = std::array<unsigned int, 6>;
+struct AtlasLookup {
+  unsigned int top;
+  unsigned int bottom;
+  unsigned int left;
+  unsigned int right;
+  unsigned int front;
+  unsigned int back;
+};
 
 class TileType {
  public:

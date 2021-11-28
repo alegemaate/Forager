@@ -93,35 +93,35 @@ void Chunk::tessellate() {
 
         // LEFT (-x)
         if (i == 0 || (i > 0 && blk[i - 1][t][k]->getType() == 0)) {
-          fillFace(leftFace, glm::vec3(i, t, k), atlas[2]);
+          fillFace(leftFace, glm::vec3(i, t, k), atlas.left);
         }
 
         // RIGHT (+x)
         if (i == CHUNK_WIDTH - 1 ||
             (i < CHUNK_WIDTH && blk[i + 1][t][k]->getType() == 0)) {
-          fillFace(rightFace, glm::vec3(i, t, k), atlas[3]);
+          fillFace(rightFace, glm::vec3(i, t, k), atlas.right);
         }
 
         // BOTTOM (-y)
         if (t == 0 || (t > 0 && blk[i][t - 1][k]->getType() == 0)) {
-          fillFace(bottomFace, glm::vec3(i, t, k), atlas[1]);
+          fillFace(bottomFace, glm::vec3(i, t, k), atlas.bottom);
         }
 
         // TOP (+y)
         if (t == CHUNK_HEIGHT - 1 ||
             (t < CHUNK_HEIGHT && blk[i][t + 1][k]->getType() == 0)) {
-          fillFace(topFace, glm::vec3(i, t, k), atlas[0]);
+          fillFace(topFace, glm::vec3(i, t, k), atlas.top);
         }
 
         // BACK(-z)
         if (k == 0 || (k > 0 && blk[i][t][k - 1]->getType() == 0)) {
-          fillFace(backFace, glm::vec3(i, t, k), atlas[5]);
+          fillFace(backFace, glm::vec3(i, t, k), atlas.back);
         }
 
         // FRONT (+z)
         if (k == CHUNK_LENGTH - 1 ||
             (k < CHUNK_LENGTH && blk[i][t][k + 1]->getType() == 0)) {
-          fillFace(frontFace, glm::vec3(i, t, k), atlas[4]);
+          fillFace(frontFace, glm::vec3(i, t, k), atlas.front);
         }
       }
     }
