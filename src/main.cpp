@@ -12,7 +12,6 @@
 #include <allegro.h>
 #include <loadpng.h>
 
-#include <iostream>
 #include <string>
 
 #include "core/GpuProgram.h"
@@ -76,9 +75,12 @@ void allegroInit() {
   int monitor_height = 0;
   get_desktop_resolution(&monitor_width, &monitor_height);
 
-  if (set_gfx_mode(GFX_OPENGL_WINDOWED, 1280, 960, 0, 0) != 0) {
-    set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
-    abortOnError("Unable to go into any graphic mode\n%s\n");
+  if (set_gfx_mode(GFX_OPENGL_WINDOWED, monitor_width, monitor_height, 0, 0) !=
+      0) {
+    if (set_gfx_mode(GFX_OPENGL_WINDOWED, 1280, 960, 0, 0) != 0) {
+      set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
+      abortOnError("Unable to go into any graphic mode\n%s\n");
+    }
   }
 
   // Setup fNULLor FPS system
@@ -103,8 +105,6 @@ void openGlInit() {
   // Glew
   if (glewInit()) {
     abortOnError("Glew init failed.");
-  } else {
-    std::cout << "Glew initialized \n\n";
   }
 
   // Viewport

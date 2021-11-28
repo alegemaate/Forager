@@ -2,12 +2,17 @@
 
 #include "GpuProgram.h"
 
-#include <cstring>
 #include <fstream>
-#include <iostream>
+#include "../core/Logger.h"
+#include "../utils/utils.h"
 
-std::string GpuProgram::textFileRead(const std::string& fileName) {
-  std::ifstream file(fileName);
+std::string GpuProgram::textFileRead(const std::string& path) {
+  std::ifstream file(path);
+  if (!file.is_open()) {
+    abortOnError("Cannot find file " + path +
+                 " \n Please check your files and try again");
+  }
+
   std::string str;
 
   file.seekg(0, std::ios::end);
@@ -21,40 +26,30 @@ std::string GpuProgram::textFileRead(const std::string& fileName) {
 }
 
 static void validateShader(GLuint shader, const std::string& filePath = "") {
-  const unsigned int BUFFER_SIZE = 512;
-  char buffer[BUFFER_SIZE];
-  memset(buffer, 0, BUFFER_SIZE);
-  GLsizei length = 0;
+  GLint success;
+  glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
 
-  glGetShaderInfoLog(shader, BUFFER_SIZE, &length, buffer);
+  if (!success) {
+    const unsigned int BUFFER_SIZE = 1024;
+    GLchar infoLog[BUFFER_SIZE];
+    glGetShaderInfoLog(shader, BUFFER_SIZE, nullptr, infoLog);
 
-  if (length > 0) {
-    std::cout << "Shader " << shader << " (" << filePath
-              << ") compile log: " << std::endl
-              << buffer << std::endl;
+    Logger::log("Shader " + std::to_string(shader) + " (" + filePath +
+                ") compile log: \n" + infoLog);
   }
 }
 
 static void validateProgram(GLuint program) {
-  const unsigned int BUFFER_SIZE = 512;
-  char buffer[BUFFER_SIZE];
-  memset(buffer, 0, BUFFER_SIZE);
-  GLsizei length = 0;
+  GLint success;
+  glGetProgramiv(program, GL_LINK_STATUS, &success);
 
-  memset(buffer, 0, BUFFER_SIZE);
+  if (!success) {
+    const unsigned int BUFFER_SIZE = 1024;
+    GLchar infoLog[BUFFER_SIZE];
+    glGetProgramInfoLog(program, BUFFER_SIZE, nullptr, infoLog);
 
-  glGetProgramInfoLog(program, BUFFER_SIZE, &length, buffer);
-
-  if (length > 0)
-    std::cout << "Program " << program << " link log: " << buffer << std::endl;
-
-  glValidateProgram(program);
-
-  GLint status;
-  glGetProgramiv(program, GL_VALIDATE_STATUS, &status);
-
-  if (status == GL_FALSE) {
-    std::cout << "Error validating program " << program << std::endl;
+    Logger::log("Program " + std::to_string(program) + " compile log: \n" +
+                infoLog);
   }
 }
 
@@ -63,16 +58,15 @@ void GpuProgram::initFromFile(const std::string& vsFile,
   std::string vsText = textFileRead(vsFile);
 
   if (vsText.empty()) {
-    std::cerr << "Vertex shader file '" << vsFile << "' not found."
-              << std::endl;
+    Logger::log("Vertex shader file '" + vsFile + "' not found.");
     return;
   }
 
   std::string fsText = textFileRead(fsFile);
 
   if (fsText.empty()) {
-    std::cerr << "Fragment shader file '" << fsFile << "' not found."
-              << std::endl;
+    Logger::log("Fragment shader file '" + fsFile + "' not found.");
+
     return;
   }
 
@@ -84,21 +78,21 @@ void GpuProgram::init(const std::string& vsText,
                       const std::string& vsFilename,
                       const std::string& fsFilename) {
   // Vertex shader
-  shader_vp = glCreateShader(GL_VERTEX_SHADER);
-  glShaderSource(shader_vp, 1, (const char**)&vsText, nullptr);
-  glCompileShader(shader_vp);
-  validateShader(shader_vp, vsFilename);
+  vertex = glCreateShader(GL_VERTEX_SHADER);
+  glShaderSource(vertex, 1, (const char**)&vsText, nullptr);
+  glCompileShader(vertex);
+  validateShader(vertex, vsFilename);
 
   // Fragment shader
-  shader_fp = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(shader_fp, 1, (const char**)&fsText, nullptr);
-  glCompileShader(shader_fp);
-  validateShader(shader_fp, fsFilename);
+  fragment = glCreateShader(GL_FRAGMENT_SHADER);
+  glShaderSource(fragment, 1, (const char**)&fsText, nullptr);
+  glCompileShader(fragment);
+  validateShader(fragment, fsFilename);
 
   // GLSL program
-  program_id = glCreateProgram();
-  glAttachShader(program_id, shader_vp);
-  glAttachShader(program_id, shader_fp);
-  glLinkProgram(program_id);
-  validateProgram(program_id);
+  id = glCreateProgram();
+  glAttachShader(id, vertex);
+  glAttachShader(id, fragment);
+  glLinkProgram(id);
+  validateProgram(id);
 }

@@ -4,7 +4,6 @@
 #include <asw/asw.h>
 #include <cmath>
 #include <fstream>
-#include <iostream>
 #include <sstream>
 
 bool collisionOverlap(double x1, double width1, double x2, double width2) {

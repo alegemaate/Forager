@@ -2,12 +2,12 @@
 
 #include <cstdio>
 #include <cstring>
-#include <iostream>
+#include "utils.h"
 
 bool loaders::load_model(const std::string& path,
-                         std::vector<glm::vec3>& out_vertices,
-                         std::vector<glm::vec2>& out_uvs,
-                         std::vector<glm::vec3>& out_normals) {
+                         std::vector<glm::vec3>& vertices,
+                         std::vector<glm::vec2>& uvs,
+                         std::vector<glm::vec3>& normals) {
   std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
   std::vector<glm::vec3> temp_vertices;
   std::vector<glm::vec2> temp_uvs;
@@ -15,7 +15,9 @@ bool loaders::load_model(const std::string& path,
 
   FILE* file = fopen(path.c_str(), "r");
   if (file == nullptr) {
-    printf("Impossible to open the file !\n");
+    abortOnError("Cannot find file " + path +
+                 " \n Please check your files and try again");
+
     return false;
   }
 
@@ -90,24 +92,21 @@ bool loaders::load_model(const std::string& path,
   }
 
   // For each vertex of each triangle
-  for (unsigned int i = 0; i < vertexIndices.size(); i++) {
-    unsigned int vertexIndex = vertexIndices[i];
+  for (unsigned int vertexIndex : vertexIndices) {
     glm::vec3 vertex = temp_vertices[vertexIndex - 1];
-    out_vertices.push_back(vertex);
+    vertices.push_back(vertex);
   }
 
   // For each uv of each triangle
-  for (unsigned int i = 0; i < uvIndices.size(); i++) {
-    unsigned int uvIndex = uvIndices[i];
+  for (unsigned int uvIndex : uvIndices) {
     glm::vec2 uv = temp_uvs[uvIndex - 1];
-    out_uvs.push_back(uv);
+    uvs.push_back(uv);
   }
 
   // For each normal of each triangle
-  for (unsigned int i = 0; i < normalIndices.size(); i++) {
-    unsigned int normalIndex = normalIndices[i];
+  for (unsigned int normalIndex : normalIndices) {
     glm::vec3 normal = temp_normals[normalIndex - 1];
-    out_normals.push_back(normal);
+    normals.push_back(normal);
   }
 
   return true;

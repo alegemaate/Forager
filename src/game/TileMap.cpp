@@ -1,8 +1,8 @@
 #include "TileMap.h"
 
 #include <alleggl.h>
-#include <iostream>
 
+#include "../core/Logger.h"
 #include "../utils/utils.h"
 #include "TileTypeManager.h"
 
@@ -38,7 +38,7 @@ void TileMap::update() {
 // Procedural Generation of map
 void TileMap::generateMap() {
   // GENERATE MAP
-  std::cout << "GENERATING MAP\n--------------\n";
+  Logger::heading("GENERATING MAP");
 
   auto seed = random(0, 10000);
 
@@ -55,7 +55,7 @@ void TileMap::generateMap() {
 // Quick Peek
 void TileMap::quickPeek(const std::string& currentPhase) {
   // Send to console
-  std::cout << currentPhase << std::endl;
+  Logger::point(currentPhase);
 
   // View matrix
   glMatrixMode(GL_MODELVIEW);
