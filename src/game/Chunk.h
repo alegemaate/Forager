@@ -7,7 +7,7 @@
 
 class Chunk {
  public:
-  Chunk(int x, int z);
+  Chunk(unsigned int x, unsigned int z);
 
   // Fill a given face
   void fillFace(FaceDefenition face[6], glm::vec3 offset, GLuint atlasPos);
@@ -30,7 +30,8 @@ class Chunk {
   void render();
 
  private:
-  int index_x, index_z;
+  unsigned int index_x;
+  unsigned int index_z;
 
   Tile* blk[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH]{};
   bool changed = false;
@@ -40,7 +41,7 @@ class Chunk {
   GLuint chunkVBO = 0;
   GLuint chunkEBO = 0;
 
-  GLint maxIndices = 0;
+  GLuint maxIndices = 0;
   GLuint numIndices = 0;
 
   GLfloat* vertices;

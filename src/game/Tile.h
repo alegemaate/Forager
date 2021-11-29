@@ -9,40 +9,26 @@
 #define TILE_H
 
 #include "TileType.h"
+#include "glm/glm.hpp"
 
 class Tile {
  public:
-  Tile(unsigned char x, unsigned char y, unsigned char z, TileType* type);
+  Tile(glm::u8vec3 position, TileType* type);
 
   unsigned short getType() { return tileImpl->getType(); }
   TileType* getTile() { return tileImpl; }
 
   void setType(TileType* val);
-  void draw(int newTick);
 
   // Get X value
-  unsigned char getX() const { return x; }
-  unsigned char getY() const { return y; }
-  unsigned char getZ() const { return z; }
-
-  void setX(unsigned char newVal) { x = newVal; }
-  void setY(unsigned char newVal) { y = newVal; }
-  void setZ(unsigned char newVal) { z = newVal; }
-
-  void jiggle(char xJiggle, char yJiggle, char zJiggle);
+  glm::u8vec3 getPosition() const { return position; }
 
   // Set/Get biome
   void setBiome(int id) { biome = id; }
   unsigned char getBiome() const { return biome; }
 
  private:
-  unsigned char x;
-  unsigned char y;
-  unsigned char z;
-
-  char xJiggle = 0;
-  char yJiggle = 0;
-  char zJiggle = 0;
+  glm::u8vec3 position;
 
   unsigned char biome = 0;
 
