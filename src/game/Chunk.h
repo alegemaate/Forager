@@ -2,23 +2,19 @@
 #define CHUNK_H
 
 #include "../constants/globals.h"
+#include "ChunkMesh.h"
 #include "CubeFaces.h"
-#include "Tile.h"
+#include "Voxel.h"
 
 class Chunk {
  public:
   Chunk(unsigned int x, unsigned int z);
 
-  // Fill a given face
-  void fillFace(FaceDefenition face[6], glm::vec3 offset, GLuint atlasPos);
-
-  // Tessellate chunk
-  void tessellate();
-
+  // Generate chunk voxels
   void generate(int seed);
 
   // Get block
-  Tile* get(unsigned int x, unsigned int y, unsigned int z);
+  Voxel* get(unsigned int x, unsigned int y, unsigned int z);
 
   // Set block
   void set(unsigned int x, unsigned int y, unsigned int z, unsigned char type);
@@ -33,21 +29,11 @@ class Chunk {
   unsigned int index_x;
   unsigned int index_z;
 
-  Tile* blk[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH]{};
+  Voxel* blk[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH]{};
   bool changed = false;
 
   // Data
-  GLuint chunkVAO = 0;
-  GLuint chunkVBO = 0;
-  GLuint chunkEBO = 0;
-
-  GLuint maxIndices = 0;
-  GLuint numIndices = 0;
-
-  GLfloat* vertices;
-  GLuint* indices;
-
-  static GLuint atlas;
+  ChunkMesh mesh;
 };
 
 #endif  // CHUNK_H

@@ -46,7 +46,7 @@ void animationTicker() {
 }
 END_OF_FUNCTION(animationTicker)
 
-TileMap* gameTiles;
+ChunkMap* gameTiles;
 Player* jimmy;
 Skybox* theSky;
 
@@ -141,7 +141,7 @@ void gameInit() {
                      "images/skybox/left.png", "images/skybox/right.png",
                      "images/skybox/top.png", "images/skybox/bottom.png");
 
-  gameTiles = new TileMap();
+  gameTiles = new ChunkMap();
   gameTiles->generateMap(buffer);
 }
 
@@ -182,9 +182,9 @@ void game() {
   lightDir.x = 100.0f * cosf(2.0f * M_PI * skyTime);
   lightDir.z = -100.0f * sinf(2.0f * M_PI * skyTime);
 
-  lightColor.x = (-1.0f * powf((2.4f * skyTime) - 1.2f, 2) + 1.0f) + 0.1f;
-  lightColor.y = -0.5f * (cosf(2.0f * M_PI * skyTime) - 1) + 0.1f;
-  lightColor.z = -0.5f * (cosf(2.0f * M_PI * skyTime) - 1) + 0.1f;
+  lightColor.x = -1.0f * powf((2.0f * skyTime) - 1, 2) + 1.15f;
+  lightColor.y = -0.6f * (cosf(2.0f * M_PI * skyTime) - 1) + 0.05f;
+  lightColor.z = -0.6f * (cosf(2.0f * M_PI * skyTime) - 1) + 0.05f;
 
   theSky->setTime(skyTime);
 

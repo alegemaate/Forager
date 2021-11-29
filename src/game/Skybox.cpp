@@ -1,5 +1,7 @@
 #include "Skybox.h"
 
+#include <iostream>
+
 #include "../constants/globals.h"
 #include "../utils/utils.h"
 
@@ -35,6 +37,7 @@ void Skybox::loadSkybox(const std::string& pathFront,
                                  pathBottom, pathFront, pathBack};
 
   cubemapTexture = loadCubemap(faces);
+  std::cout << "Cubemap" << cubemapTexture << std::endl;
 
   glGenVertexArrays(1, &skyboxVAO);
   glGenBuffers(1, &skyboxVBO);
@@ -62,7 +65,7 @@ void Skybox::render() const {
 
   skyShader->setMat4("view", view);
   skyShader->setMat4("projection", projection);
-  skyShader->setFloat("timer", timeOfDay);
+  skyShader->setVec3("ambient", lightColor);
 
   glBindVertexArray(skyboxVAO);
   glActiveTexture(GL_TEXTURE0);

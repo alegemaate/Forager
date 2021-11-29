@@ -11,9 +11,9 @@
 #include "TileType.h"
 #include "glm/glm.hpp"
 
-class Tile {
+class Voxel {
  public:
-  Tile(glm::u8vec3 position, TileType* type);
+  Voxel(glm::u8vec3 position, TileType* type);
 
   unsigned short getType() { return tileImpl->getType(); }
   TileType* getTile() { return tileImpl; }

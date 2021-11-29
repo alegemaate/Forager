@@ -10,11 +10,11 @@ in vec2 TexCoord;
 in vec3 Normal;
 in vec3 FragPos;
 
-uniform sampler2D texture1;
-
-uniform vec3 lightPos;
-uniform vec3 viewPos;
 uniform Light light;
+uniform vec3 viewPos;
+uniform vec3 cameraPos;
+uniform samplerCube skybox;
+uniform sampler2D texture1;
 
 float near = 0.1;
 float far  = 100.0;
@@ -40,8 +40,9 @@ void main() {
     // depth
     float depth = 1.0f - (LinearizeDepth(gl_FragCoord.z) / far);
 
+
     // final color
-    vec3 result = (ambient + diffuse) * texture(texture1, TexCoord).rgb * vec3(depth);
+    vec3 result = texture(texture1, TexCoord).rgb * vec3(depth) * (ambient + diffuse);
     FragColor = vec4(result, 1.0);
 }
 

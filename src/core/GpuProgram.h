@@ -41,8 +41,8 @@ class GpuProgram {
   static void deactivate() { glUseProgram(0); }
 
   void setMat4(const std::string& name, glm::mat4& M) const {
-    glUniformMatrix4fv(glGetUniformLocation(id, name.c_str()), 1,
-                       GL_FALSE, &M[0][0]);
+    glUniformMatrix4fv(glGetUniformLocation(id, name.c_str()), 1, GL_FALSE,
+                       &M[0][0]);
   }
 
   void setVec3(const std::string& name, glm::vec3 v) const {

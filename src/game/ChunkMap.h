@@ -13,21 +13,23 @@
 
 #include "BiomeManager.h"
 #include "Chunk.h"
-#include "Tile.h"
+#include "Voxel.h"
 
-class TileMap {
+class ChunkMap {
  public:
-  explicit TileMap();
+  explicit ChunkMap();
 
   void update();
+
   void generateMap(BITMAP* buffer);
+  
   void draw();
 
-  Tile* getTile(unsigned int x, unsigned int y, unsigned int z);
+  Voxel* getTile(unsigned int x, unsigned int y, unsigned int z);
 
  private:
   // All chunks
-  Chunk* allChunks[WORLD_WIDTH][WORLD_LENGTH]{};
+  Chunk* chunks[WORLD_WIDTH][WORLD_LENGTH]{};
 
   void quickPeek(BITMAP* buffer, const std::string& currentPhase);
 
