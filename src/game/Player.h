@@ -8,7 +8,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "TileMap.h"
+#include "ChunkMap.h"
 
 class Player {
  public:

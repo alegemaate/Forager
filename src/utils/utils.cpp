@@ -3,8 +3,6 @@
 #include <allegro.h>
 #include <asw/asw.h>
 #include <cmath>
-#include <fstream>
-#include <sstream>
 
 bool collisionOverlap(double x1, double width1, double x2, double width2) {
   if (x1 - width1 < x2 + width2 && x1 - width1 > x2 - width2) {
@@ -39,22 +37,9 @@ bool collision3d(double x1,
   return false;
 }
 
-// Checks if file exists
-bool fileExists(const char* filename) {
-  std::ifstream ifile(filename);
-  return !ifile.fail();
-}
-
 // Random number generator. Use int random(lowest,highest);
 int random(int newLowest, int newHighest) {
   return asw::random::between(newLowest, newHighest);
-}
-
-// Convert int to string
-std::string convertIntToString(int number) {
-  std::stringstream ss;
-  ss << number;
-  return ss.str();
 }
 
 // Returns distance 2D

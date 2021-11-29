@@ -1,4 +1,4 @@
-#include "TileMap.h"
+#include "ChunkMap.h"
 
 #include <alleggl.h>
 
@@ -7,7 +7,7 @@
 #include "TileTypeManager.h"
 
 // Construct
-TileMap::TileMap() {
+ChunkMap::ChunkMap() {
   // Load biomes
   biomes.load("assets/data/biomes.json");
 
@@ -17,18 +17,26 @@ TileMap::TileMap() {
   // Make lots of chunk
   for (unsigned int i = 0; i < WORLD_WIDTH; i++) {
     for (unsigned int t = 0; t < WORLD_LENGTH; t++) {
-      if (!allChunks[i][t]) {
-        allChunks[i][t] = new Chunk(i, t);
+      if (!chunks[i][t]) {
+        chunks[i][t] = new Chunk(i, t);
       }
     }
   }
 }
 
 // Update map
-void TileMap::update() {}
+void ChunkMap::update() {
+  for (auto& chunk : chunks) {
+    for (auto& t : chunk) {
+      if (t) {
+        t->update();
+      }
+    }
+  }
+}
 
 // Procedural Generation of map
-void TileMap::generateMap(BITMAP* buffer) {
+void ChunkMap::generateMap(BITMAP* buffer) {
   // GENERATE MAP
   Logger::heading("GENERATING MAP");
 
@@ -40,13 +48,13 @@ void TileMap::generateMap(BITMAP* buffer) {
                             std::to_string(i * WORLD_LENGTH + t + 1) + "/" +
                             std::to_string(WORLD_WIDTH * WORLD_LENGTH));
 
-      allChunks[i][t]->generate(seed);
+      chunks[i][t]->generate(seed);
     }
   }
 }
 
 // Quick Peek
-void TileMap::quickPeek(BITMAP* buffer, const std::string& currentPhase) {
+void ChunkMap::quickPeek(BITMAP* buffer, const std::string& currentPhase) {
   // Send to console
   Logger::point(currentPhase);
 
@@ -80,7 +88,7 @@ void TileMap::quickPeek(BITMAP* buffer, const std::string& currentPhase) {
 }
 
 // Draw map
-void TileMap::draw() {
+void ChunkMap::draw() {
   defaultShader->activate();
 
   // Pass projection matrix to shader
@@ -98,7 +106,14 @@ void TileMap::draw() {
   defaultShader->setVec3("light.ambient", lightColor);
   defaultShader->setFloat("skyTime", skyTime);
 
-  for (auto& allChunk : allChunks) {
+  // Camera position
+  defaultShader->setVec3("cameraPos", camera->position);
+
+  // Cubemap
+  glActiveTexture(GL_TEXTURE1);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, 1);
+
+  for (auto& allChunk : chunks) {
     for (auto& t : allChunk) {
       if (t) {
         t->render();
@@ -109,15 +124,15 @@ void TileMap::draw() {
   GpuProgram::deactivate();
 }
 
-Tile* TileMap::getTile(unsigned int x, unsigned int y, unsigned int z) {
+Voxel* ChunkMap::getTile(unsigned int x, unsigned int y, unsigned int z) {
   auto chunkX = x / CHUNK_WIDTH;
   auto chunkZ = z / CHUNK_LENGTH;
 
-  if (allChunks[chunkX][chunkZ]) {
+  if (chunks[chunkX][chunkZ]) {
     auto tileX = x % CHUNK_WIDTH;
     auto tileZ = z % CHUNK_LENGTH;
 
-    return allChunks[chunkX][chunkZ]->get(tileX, y, tileZ);
+    return chunks[chunkX][chunkZ]->get(tileX, y, tileZ);
   }
 
   return nullptr;

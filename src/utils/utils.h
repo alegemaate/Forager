@@ -26,14 +26,8 @@ extern bool collision3d(double x1,
                         double z2,
                         double depth2);
 
-// Checks if file exists
-extern bool fileExists(const char* filename);
-
 // Random number generator
 extern int random(int newLowest, int newHighest);
-
-// Convert int to string
-extern std::string convertIntToString(int number);
 
 extern float distanceTo2D(float x1, float y1, float x2, float y2);
 extern float distanceTo3D(float x1,
