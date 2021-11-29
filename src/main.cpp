@@ -145,8 +145,8 @@ void gameInit() {
       "assets/images/skybox/left.png", "assets/images/skybox/right.png",
       "assets/images/skybox/top.png", "assets/images/skybox/bottom.png");
 
-  gameTiles = new TileMap(buffer);
-  gameTiles->generateMap();
+  gameTiles = new TileMap();
+  gameTiles->generateMap(buffer);
 }
 
 // Load all in game content
@@ -161,6 +161,11 @@ void setup() {
 void game() {
   gameTiles->update();
   jimmy->update();
+
+  // Gen
+  if (key[KEY_R]) {
+    gameTiles->generateMap(buffer);
+  }
 
   // Change time
   skyTime += 0.000005f;

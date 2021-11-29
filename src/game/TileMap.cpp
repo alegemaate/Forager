@@ -7,10 +7,7 @@
 #include "TileTypeManager.h"
 
 // Construct
-TileMap::TileMap(BITMAP* tempBuffer) {
-  // Buffer
-  buffPoint = tempBuffer;
-
+TileMap::TileMap() {
   // Load biomes
   biomes.load("assets/data/biomes.json");
 
@@ -28,15 +25,10 @@ TileMap::TileMap(BITMAP* tempBuffer) {
 }
 
 // Update map
-void TileMap::update() {
-  // Gen
-  if (key[KEY_R]) {
-    generateMap();
-  }
-}
+void TileMap::update() {}
 
 // Procedural Generation of map
-void TileMap::generateMap() {
+void TileMap::generateMap(BITMAP* buffer) {
   // GENERATE MAP
   Logger::heading("GENERATING MAP");
 
@@ -44,8 +36,9 @@ void TileMap::generateMap() {
 
   for (unsigned int i = 0; i < WORLD_WIDTH; i++) {
     for (unsigned int t = 0; t < WORLD_LENGTH; t++) {
-      quickPeek("Generating Chunk " + std::to_string(i * WORLD_WIDTH + t + 1) +
-                "/" + std::to_string(WORLD_WIDTH * WORLD_LENGTH));
+      quickPeek(buffer, "Generating Chunk " +
+                            std::to_string(i * WORLD_LENGTH + t + 1) + "/" +
+                            std::to_string(WORLD_WIDTH * WORLD_LENGTH));
 
       allChunks[i][t]->generate(seed);
     }
@@ -53,7 +46,7 @@ void TileMap::generateMap() {
 }
 
 // Quick Peek
-void TileMap::quickPeek(const std::string& currentPhase) {
+void TileMap::quickPeek(BITMAP* buffer, const std::string& currentPhase) {
   // Send to console
   Logger::point(currentPhase);
 
@@ -72,15 +65,15 @@ void TileMap::quickPeek(const std::string& currentPhase) {
   allegro_gl_set_allegro_mode();
 
   // Transparent buffer
-  rectfill(buffPoint, 0, 0, SCREEN_W, SCREEN_H, makecol(255, 0, 255));
+  rectfill(buffer, 0, 0, SCREEN_W, SCREEN_H, makecol(255, 0, 255));
 
   // Info
-  textprintf_centre_ex(buffPoint, font, SCREEN_W / 2, SCREEN_H / 2,
+  textprintf_centre_ex(buffer, font, SCREEN_W / 2, SCREEN_H / 2,
                        makecol(0, 0, 0), makecol(255, 255, 255), "%s",
                        currentPhase.c_str());
 
   // Draw to screen
-  draw_sprite(screen, buffPoint, 0, 0);
+  draw_sprite(screen, buffer, 0, 0);
 
   allegro_gl_unset_allegro_mode();
   allegro_gl_flip();

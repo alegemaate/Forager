@@ -17,21 +17,19 @@
 
 class TileMap {
  public:
-  explicit TileMap(BITMAP* tempBuffer);
+  explicit TileMap();
 
   void update();
-  void generateMap();
+  void generateMap(BITMAP* buffer);
   void draw();
 
   Tile* getTile(unsigned int x, unsigned int y, unsigned int z);
 
  private:
   // All chunks
-  Chunk* allChunks[WORLD_LENGTH][WORLD_WIDTH]{};
+  Chunk* allChunks[WORLD_WIDTH][WORLD_LENGTH]{};
 
-  void quickPeek(const std::string& currentPhase);
-
-  BITMAP* buffPoint;
+  void quickPeek(BITMAP* buffer, const std::string& currentPhase);
 
   BiomeManager biomes;
 };
