@@ -1,10 +1,7 @@
 
 #include "ChunkMesh.h"
 
-#include "../constants/ids.h"
-#include "../core/SimplexNoise.h"
 #include "../utils/loaders.h"
-#include "TileTypeManager.h"
 
 GLuint ChunkMesh::atlas = 0;
 
@@ -15,23 +12,23 @@ ChunkMesh::ChunkMesh() {
     atlas = loaders::loadTexture("assets/images/textures/atlas.png");
   }
 
-  // 6 sides of cube * 6 indices per cube
-  maxIndices = CHUNK_WIDTH * CHUNK_HEIGHT * CHUNK_LENGTH * 6 * 6;
-
-  // 8 info per vertices (vec3 pos, vec3 norm, vec2 tex)
-  vertices = new GLfloat[8 * maxIndices];
-  indices = new GLuint[maxIndices];
-
   // Make vbo
   glGenVertexArrays(1, &chunkVAO);
   glGenBuffers(1, &chunkVBO);
   glGenBuffers(1, &chunkEBO);
 }
 
+ChunkMesh::~ChunkMesh() {
+  glDeleteVertexArrays(1, &chunkVAO);
+  glDeleteBuffers(1, &chunkVBO);
+  glDeleteBuffers(1, &chunkEBO);
+}
+
 // Fill array with given data
 void ChunkMesh::fillFace(FaceDefenition face[6],
                          glm::vec3 offset,
-                         GLuint atlasPos) {
+                         GLuint atlasPos,
+                         VoxelNeighbours neighbours) {
   const unsigned int atlasSize = 8;
   const auto atlasX = static_cast<float>(atlasPos % atlasSize);
   const auto atlasY = floorf(static_cast<float>(atlasPos) / atlasSize);
@@ -39,34 +36,38 @@ void ChunkMesh::fillFace(FaceDefenition face[6],
   for (unsigned int i = 0; i < 6; i++) {
     glm::vec3 pos = face[i].position + offset;
 
-    const auto index = numIndices * 8;
+    vertices.push_back(pos.x);
+    vertices.push_back(pos.y);
+    vertices.push_back(pos.z);
 
-    vertices[index] = pos.x;
-    vertices[index + 1] = pos.y;
-    vertices[index + 2] = pos.z;
+    vertices.push_back(face[i].normal.x);
+    vertices.push_back(face[i].normal.y);
+    vertices.push_back(face[i].normal.z);
 
-    vertices[index + 3] = face[i].normal.x;
-    vertices[index + 4] = face[i].normal.y;
-    vertices[index + 5] = face[i].normal.z;
+    vertices.push_back((face[i].texture.x + atlasX) / atlasSize);
+    vertices.push_back((face[i].texture.y + atlasY) / atlasSize);
 
-    vertices[index + 6] = (face[i].texture.x + atlasX) / atlasSize;
-    vertices[index + 7] = (face[i].texture.y + atlasY) / atlasSize;
+    vertices.push_back(0);
 
-    indices[numIndices] = numIndices;
-    numIndices++;
+    indices.push_back(indices.size());
   }
+}
+
+unsigned int ChunkMesh::vertexAO(bool side1, bool side2, bool corner) {
+  if (side1 && side2) {
+    return 0;
+  }
+
+  return 3 - (side1 + side2 + corner);
 }
 
 // Tessellate chunk
 void ChunkMesh::tessellate(
-    Voxel* blk[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH]) {
-  // Vertex counter
-  numIndices = 0;
-
+    Voxel (&blk)[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH]) {
   for (unsigned int i = 0; i < CHUNK_WIDTH; i++) {
     for (unsigned int t = 0; t < CHUNK_HEIGHT; t++) {
       for (unsigned int k = 0; k < CHUNK_LENGTH; k++) {
-        auto* parent = blk[i][t][k]->getTile();
+        auto* parent = blk[i][t][k].getTile();
         auto type = parent->getType();
         auto atlasIds = parent->getAtlasIds();
 
@@ -75,34 +76,39 @@ void ChunkMesh::tessellate(
           continue;
         }
 
-        // LEFT (-x)
-        if (i == 0 || blk[i - 1][t][k]->getType() == 0) {
-          fillFace(leftFace, glm::vec3(i, t, k), atlasIds.left);
+        VoxelNeighbours neighbours{};
+        neighbours.top =
+            t == CHUNK_HEIGHT - 1 || blk[i][t + 1][k].getType() == 0;
+        neighbours.bottom = t == 0 || blk[i][t - 1][k].getType() == 0;
+        neighbours.left = i == 0 || blk[i - 1][t][k].getType() == 0;
+        neighbours.right =
+            i == CHUNK_WIDTH - 1 || blk[i + 1][t][k].getType() == 0;
+        neighbours.front =
+            k == CHUNK_LENGTH - 1 || blk[i][t][k + 1].getType() == 0;
+        neighbours.back = k == 0 || blk[i][t][k - 1].getType() == 0;
+
+        if (!neighbours.top) {
+          fillFace(topFace, glm::vec3(i, t, k), atlasIds.top, neighbours);
         }
 
-        // RIGHT (+x)
-        if (i == CHUNK_WIDTH - 1 || blk[i + 1][t][k]->getType() == 0) {
-          fillFace(rightFace, glm::vec3(i, t, k), atlasIds.right);
+        if (!neighbours.bottom) {
+          fillFace(bottomFace, glm::vec3(i, t, k), atlasIds.bottom, neighbours);
         }
 
-        // BOTTOM (-y)
-        if (t == 0 || blk[i][t - 1][k]->getType() == 0) {
-          fillFace(bottomFace, glm::vec3(i, t, k), atlasIds.bottom);
+        if (!neighbours.left) {
+          fillFace(leftFace, glm::vec3(i, t, k), atlasIds.left, neighbours);
         }
 
-        // TOP (+y)
-        if (t == CHUNK_HEIGHT - 1 || blk[i][t + 1][k]->getType() == 0) {
-          fillFace(topFace, glm::vec3(i, t, k), atlasIds.top);
+        if (!neighbours.right) {
+          fillFace(rightFace, glm::vec3(i, t, k), atlasIds.right, neighbours);
         }
 
-        // BACK(-z)
-        if (k == 0 || blk[i][t][k - 1]->getType() == 0) {
-          fillFace(backFace, glm::vec3(i, t, k), atlasIds.back);
+        if (!neighbours.front) {
+          fillFace(frontFace, glm::vec3(i, t, k), atlasIds.front, neighbours);
         }
 
-        // FRONT (+z)
-        if (k == CHUNK_LENGTH - 1 || blk[i][t][k + 1]->getType() == 0) {
-          fillFace(frontFace, glm::vec3(i, t, k), atlasIds.front);
+        if (!neighbours.back) {
+          fillFace(backFace, glm::vec3(i, t, k), atlasIds.back, neighbours);
         }
       }
     }
@@ -111,35 +117,48 @@ void ChunkMesh::tessellate(
   glBindVertexArray(chunkVAO);
 
   glBindBuffer(GL_ARRAY_BUFFER, chunkVBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 8 * numIndices, vertices,
+  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * vertices.size(), &vertices[0],
                GL_STATIC_DRAW);
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, chunkEBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * numIndices, indices,
-               GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(),
+               &indices[0], GL_STATIC_DRAW);
 
   // position attribute
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), nullptr);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), nullptr);
   glEnableVertexAttribArray(0);
 
   // normal attribute
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
-                        (void*)(3 * sizeof(float)));
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat),
+                        (void*)(3 * sizeof(GLfloat)));
   glEnableVertexAttribArray(1);
 
   // texture coord attribute
-  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
-                        (void*)(6 * sizeof(float)));
+  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat),
+                        (void*)(6 * sizeof(GLfloat)));
   glEnableVertexAttribArray(2);
+
+  // ao coord attribute
+  glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat),
+                        (void*)(8 * sizeof(GLfloat)));
+  glEnableVertexAttribArray(3);
+
+  // Clear mesh
+  numIndices = indices.size();
+  vertices.clear();
+  indices.clear();
 }
 
-void ChunkMesh::render(unsigned int offsetX, unsigned int offsetZ) {
+void ChunkMesh::render(unsigned int offsetX,
+                       unsigned int offsetY,
+                       unsigned int offsetZ) {
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, atlas);
 
-  glm::mat4 model = glm::mat4(1.0f);
-  model = glm::translate(
-      model, glm::vec3(offsetX * CHUNK_WIDTH, 0.0f, offsetZ * CHUNK_LENGTH));
+  glm::mat4 model = glm::translate(
+      glm::mat4(1.0f), glm::vec3(offsetX * CHUNK_WIDTH, offsetY * CHUNK_HEIGHT,
+                                 offsetZ * CHUNK_LENGTH));
+
   defaultShader->setMat4("model", model);
 
   // Render

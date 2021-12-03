@@ -9,7 +9,9 @@
 #define TILE_MAP_H
 
 #include <allegro.h>
+#include <memory>
 #include <string>
+#include <vector>
 
 #include "BiomeManager.h"
 #include "Chunk.h"
@@ -22,14 +24,14 @@ class ChunkMap {
   void update();
 
   void generateMap(BITMAP* buffer);
-  
+
   void draw();
 
-  Voxel* getTile(unsigned int x, unsigned int y, unsigned int z);
+  Voxel& getTile(unsigned int x, unsigned int y, unsigned int z);
 
  private:
   // All chunks
-  Chunk* chunks[WORLD_WIDTH][WORLD_LENGTH]{};
+  std::vector<std::unique_ptr<Chunk>> chunks{};
 
   void quickPeek(BITMAP* buffer, const std::string& currentPhase);
 

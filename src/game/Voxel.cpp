@@ -1,11 +1,5 @@
 #include "Voxel.h"
 
-// Constructor
-Voxel::Voxel(glm::u8vec3 position, TileType* type) : position(position) {
-  setType(type);
-}
+Voxel::Voxel() : tileImpl(nullptr) {}
 
-// Set tile type
-void Voxel::setType(TileType* val) {
-  tileImpl = val;
-}
+Voxel::Voxel(TileType* type) : tileImpl(type) {}
