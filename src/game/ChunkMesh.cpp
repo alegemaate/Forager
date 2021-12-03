@@ -78,14 +78,14 @@ void ChunkMesh::tessellate(
 
         VoxelNeighbours neighbours{};
         neighbours.top =
-            t == CHUNK_HEIGHT - 1 || blk[i][t + 1][k].getType() == 0;
-        neighbours.bottom = t == 0 || blk[i][t - 1][k].getType() == 0;
-        neighbours.left = i == 0 || blk[i - 1][t][k].getType() == 0;
+            t != CHUNK_HEIGHT - 1 && blk[i][t + 1][k].getType() != 0;
+        neighbours.bottom = t != 0 && blk[i][t - 1][k].getType() != 0;
+        neighbours.left = i != 0 && blk[i - 1][t][k].getType() != 0;
         neighbours.right =
-            i == CHUNK_WIDTH - 1 || blk[i + 1][t][k].getType() == 0;
+            i != CHUNK_WIDTH - 1 && blk[i + 1][t][k].getType() != 0;
         neighbours.front =
-            k == CHUNK_LENGTH - 1 || blk[i][t][k + 1].getType() == 0;
-        neighbours.back = k == 0 || blk[i][t][k - 1].getType() == 0;
+            k != CHUNK_LENGTH - 1 && blk[i][t][k + 1].getType() != 0;
+        neighbours.back = k != 0 && blk[i][t][k - 1].getType() != 0;
 
         if (!neighbours.top) {
           fillFace(topFace, glm::vec3(i, t, k), atlasIds.top, neighbours);
