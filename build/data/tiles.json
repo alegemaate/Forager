@@ -63,12 +63,12 @@
     "id": 4,
     "name": "Stone",
     "atlas": {
-      "top": 0,
-      "bottom": 0,
-      "left": 0,
-      "right": 0,
-      "front": 0,
-      "back": 0
+      "top": 3,
+      "bottom": 3,
+      "left": 3,
+      "right": 3,
+      "front": 3,
+      "back": 3
     },
     "model": "MODEL_CUBE",
     "attribute": "ATTRIBUTE_SOLID",

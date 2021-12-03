@@ -13,25 +13,15 @@
 
 class Voxel {
  public:
-  Voxel(glm::u8vec3 position, TileType* type);
+  Voxel();
+  explicit Voxel(TileType* type);
 
   unsigned short getType() { return tileImpl->getType(); }
+  void setType(TileType* type) { tileImpl = type; }
+
   TileType* getTile() { return tileImpl; }
 
-  void setType(TileType* val);
-
-  // Get X value
-  glm::u8vec3 getPosition() const { return position; }
-
-  // Set/Get biome
-  void setBiome(int id) { biome = id; }
-  unsigned char getBiome() const { return biome; }
-
  private:
-  glm::u8vec3 position;
-
-  unsigned char biome = 0;
-
   TileType* tileImpl = nullptr;
 };
 

@@ -21,5 +21,6 @@ constexpr size_t CHUNK_LENGTH = 16;
 
 constexpr size_t WORLD_WIDTH = 4;
 constexpr size_t WORLD_LENGTH = 4;
+constexpr size_t WORLD_HEIGHT = 4;
 
 #endif  // GLOBALS_H
