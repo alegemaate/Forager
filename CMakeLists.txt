@@ -35,5 +35,7 @@ target_link_libraries(${PROJECT_NAME} ${ALLEGRO_PNG_LIBRARY})
 target_link_libraries(${PROJECT_NAME} ${ALLEGRO_GL_LIBRARY})
 target_link_libraries(${PROJECT_NAME} OpenGL::GL)
 target_link_libraries(${PROJECT_NAME} GLEW::GLEW)
+
 target_link_libraries(${PROJECT_NAME} nlohmann_json::nlohmann_json)
+target_link_libraries(${PROJECT_NAME} -lGLU)
 target_link_libraries(${PROJECT_NAME} -static-libgcc -static-libstdc++ -lm)

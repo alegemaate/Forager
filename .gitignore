@@ -47,6 +47,7 @@ Temporary Items
 
 CMakeFiles
 *.exe
+build/Forager
 
 Makefile
 CMakeCache.txt
