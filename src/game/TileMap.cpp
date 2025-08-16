@@ -11,19 +11,17 @@ TileMap::TileMap(BITMAP* tempBuffer) {
   gameMode = false;
 
   // Load sky
-  theSky.loadSkybox("images/skybox/", "front.png", "back.png", "left.png",
-                    "right.png", "top.png", "bottom.png");
+  theSky.loadSkybox("assets/images/skybox/", "front.png", "back.png",
+                    "left.png", "right.png", "top.png", "bottom.png");
 
   // Buffer
   buffPoint = tempBuffer;
 
   // Load biomes
-  biomes.load("data/biomes.xml");
+  biomes.load("assets/data/biomes.xml");
 
   // Load tiles
-  all_tile_defs.load("data/tiles.xml");
-
-
+  all_tile_defs.load("assets/data/tiles.xml");
 
   // Make a map full of tiles
   for (int i = 0; i < DEFAULT_MAP_WIDTH; i++) {

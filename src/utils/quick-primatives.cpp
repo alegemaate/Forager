@@ -3,7 +3,7 @@
 Model quick_primitives::test_model;
 
 bool quick_primitives::load_models() {
-  return test_model.load("models/rock.obj", "models/rock_uv.png");
+  return test_model.load("assets/models/rock.obj", "assets/models/rock_uv.png");
 }
 
 // Resizable Cube

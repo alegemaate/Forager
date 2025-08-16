@@ -1,5 +1,6 @@
 #include "utils.h"
 
+#include <asw/asw.h>
 #include <cmath>
 #include <fstream>
 #include <iostream>
@@ -46,13 +47,7 @@ bool fileExists(const char* filename) {
 
 // Random number generator. Use int random(lowest,highest);
 int random(int newLowest, int newHighest) {
-  if (newHighest < newLowest)
-    return -1;
-
-  int lowest = newLowest, highest = newHighest;
-  int range = (highest - lowest) + 1;
-  int randomNumber = lowest + int(range * rand() / (RAND_MAX + 1.0));
-  return randomNumber;
+  return asw::random::between(newLowest, newHighest);
 }
 
 // Convert int to string
