@@ -8,7 +8,7 @@
 #ifndef AUDIO_3D_H
 #define AUDIO_3D_H
 
-#include <allegro.h>
+#include <asw/asw.h>
 #include <string>
 
 class Audio3d {
@@ -35,7 +35,7 @@ class Audio3d {
   int frequency = 1000;
   bool loop = false;
 
-  SAMPLE* a3d_file = nullptr;
+  asw::Sample a3d_file = nullptr;
 };
 
 #endif  // AUDIO_3D_H

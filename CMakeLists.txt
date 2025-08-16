@@ -14,10 +14,6 @@ CPMAddPackage("gh:adsgames/asw@0.5.10")
 CPMAddPackage("gh:nlohmann/json@3.11.3")
 CPMAddPackage("gh:g-truc/glm#1.0.1")
 
-
-find_library(ALLEGRO_LIBRARY NAMES liballeg44.dll.a liballeg.dll.a liballeg.so liballeg.dylib)
-find_library(ALLEGRO_PNG_LIBRARY NAMES libloadpng.dll.a libloadpng.so libloadpng.dylib)
-find_library(ALLEGRO_GL_LIBRARY NAMES liballeggl.dll.a liballeggl.so liballeggl.dylib)
 find_package(OpenGL REQUIRED COMPONENTS OpenGL)
 find_package(GLEW REQUIRED)
 
@@ -33,9 +29,6 @@ target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -pedantic)
 
 # Link Libs
 target_link_libraries(${PROJECT_NAME} PRIVATE 
-  ${ALLEGRO_LIBRARY}
-  ${ALLEGRO_PNG_LIBRARY}
-  ${ALLEGRO_GL_LIBRARY}
   asw
   nlohmann_json::nlohmann_json
   OpenGL::GL

@@ -8,7 +8,6 @@
 #ifndef TILE_MAP_H
 #define TILE_MAP_H
 
-#include <allegro.h>
 #include <memory>
 #include <string>
 #include <vector>
@@ -23,7 +22,7 @@ class ChunkMap {
 
   void update();
 
-  void generateMap(BITMAP* buffer);
+  void generateMap();
 
   void draw();
 
@@ -33,7 +32,7 @@ class ChunkMap {
   // All chunks
   std::vector<std::unique_ptr<Chunk>> chunks{};
 
-  void quickPeek(BITMAP* buffer, const std::string& currentPhase);
+  void quickPeek(const std::string& currentPhase);
 
   BiomeManager biomes;
 };

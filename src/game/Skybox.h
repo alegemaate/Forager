@@ -10,7 +10,6 @@
 
 #include <GL/glew.h>
 
-#include <allegro.h>
 #include <string>
 #include <vector>
 
@@ -24,17 +23,11 @@ class Skybox {
                   const std::string& pathBottom);
   void render() const;
 
-  void setTime(float time) { timeOfDay = time; }
-
  private:
-  static float skyboxVertices[108];
+  GLuint cubemapTexture{0};
 
-  GLuint cubemapTexture;
-
-  GLuint skyboxVAO;
-  GLuint skyboxVBO;
-
-  float timeOfDay = 0.0f;
+  GLuint vao{0};
+  GLuint vbo{0};
 
   static GLuint loadCubemap(std::vector<std::string> faces);
 };

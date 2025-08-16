@@ -1,6 +1,6 @@
 #include "ChunkMap.h"
 
-#include <alleggl.h>
+#include <asw/asw.h>
 
 #include "../core/Logger.h"
 #include "../utils/utils.h"
@@ -23,7 +23,7 @@ void ChunkMap::update() {
 }
 
 // Procedural Generation of map
-void ChunkMap::generateMap(BITMAP* buffer) {
+void ChunkMap::generateMap() {
   // GENERATE MAP
   Logger::heading("GENERATING MAP");
 
@@ -46,9 +46,8 @@ void ChunkMap::generateMap(BITMAP* buffer) {
   for (unsigned int i = 0; i < WORLD_WIDTH; i++) {
     for (unsigned int t = 0; t < WORLD_HEIGHT; t++) {
       for (unsigned int j = 0; j < WORLD_LENGTH; j++) {
-        quickPeek(buffer, "Generating Chunk " +
-                              std::to_string(currentChunk + 1) + "/" +
-                              std::to_string(worldSize));
+        quickPeek("Generating Chunk " + std::to_string(currentChunk + 1) + "/" +
+                  std::to_string(worldSize));
         auto& chunk = chunks.emplace_back(std::make_unique<Chunk>(i, t, j));
         chunk->generate(seed);
         currentChunk++;
@@ -58,7 +57,9 @@ void ChunkMap::generateMap(BITMAP* buffer) {
 }
 
 // Quick Peek
-void ChunkMap::quickPeek(BITMAP* buffer, const std::string& currentPhase) {
+void ChunkMap::quickPeek(const std::string& currentPhase) {
+  const auto screenSize = asw::display::getLogicalSize();
+
   // Send to console
   Logger::point(currentPhase);
 
@@ -72,33 +73,38 @@ void ChunkMap::quickPeek(BITMAP* buffer, const std::string& currentPhase) {
   // Draw tiles
   draw();
 
-  // Allegro drawing
-  glUseProgram(0);
-  allegro_gl_set_allegro_mode();
+  // SDL drawing
+  // glUseProgram(0);
+  // allegro_gl_set_allegro_mode();
 
   // Transparent buffer
-  rectfill(buffer, 0, 0, SCREEN_W, SCREEN_H, makecol(255, 0, 255));
+  // asw::draw::rectFill(
+  //     asw::Quad<float>{0.0F, 0.0F, static_cast<float>(screenSize.x),
+  //                      static_cast<float>(screenSize.y)},
+  //     asw::util::makeColor(255, 0, 255));
 
-  // Info
-  textprintf_centre_ex(buffer, font, SCREEN_W / 2, SCREEN_H / 2,
-                       makecol(0, 0, 0), makecol(255, 255, 255), "%s",
-                       currentPhase.c_str());
+  // Info TODO
+  // textprintf_centre_ex(buffer, font, SCREEN_W / 2, SCREEN_H / 2,
+  //                      makecol(0, 0, 0), makecol(255, 255, 255), "%s",
+  //                      currentPhase.c_str());
 
-  // Draw to screen
-  draw_sprite(screen, buffer, 0, 0);
+  // // Draw to screen
+  // draw_sprite(screen, buffer, 0, 0);
 
-  allegro_gl_unset_allegro_mode();
-  allegro_gl_flip();
+  // allegro_gl_unset_allegro_mode();
+  // allegro_gl_flip();
 }
 
 // Draw map
 void ChunkMap::draw() {
+  auto screenSize = asw::display::getLogicalSize();
+
   defaultShader->activate();
 
   // Pass projection matrix to shader
   glm::mat4 projection =
       glm::perspective(glm::radians(camera->zoom),
-                       (float)SCREEN_W / (float)SCREEN_H, 0.1f, 100.0f);
+                       (float)screenSize.x / (float)screenSize.y, 0.1f, 100.0f);
   defaultShader->setMat4("projection", projection);
 
   // Pass camera/view transformation

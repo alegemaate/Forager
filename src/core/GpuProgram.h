@@ -65,6 +65,10 @@ class GpuProgram {
     glUniform1i(glGetUniformLocation(id, name.c_str()), i);
   }
 
+  GLint getUniformLocation(const std::string& name) const {
+    return glGetUniformLocation(id, name.c_str());
+  }
+
   static std::string textFileRead(const std::string& fileName);
 };
 

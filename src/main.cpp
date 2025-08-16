@@ -8,9 +8,7 @@
 // Includes
 #include <GL/glew.h>
 
-#include <alleggl.h>
-#include <allegro.h>
-#include <loadpng.h>
+#include <asw/asw.h>
 
 #include <string>
 
@@ -19,97 +17,97 @@
 #include "game/Skybox.h"
 #include "utils/utils.h"
 
-// Create variables
-int animationFrame = 0;
-bool closeGame = false;
+// Context
+SDL_GLContext glcontext;
 
 // Create fonts
-FONT* ARIAL_BLACK;
+asw::Font ARIAL_BLACK;
 
 // Create images
-BITMAP* buffer;
-BITMAP* cursor;
-
-volatile int ticks = 0;
-void ticker() {
-  ticks++;
-}
-END_OF_FUNCTION(ticker)
-
-// Animations
-void animationTicker() {
-  if (animationFrame == 0) {
-    animationFrame = 1;
-  } else if (animationFrame == 1) {
-    animationFrame = 0;
-  }
-}
-END_OF_FUNCTION(animationTicker)
+asw::Texture cursor;
 
 ChunkMap* gameTiles;
 Player* jimmy;
 Skybox* theSky;
 
-void allegroInit() {
-  allegro_init();
-  loadpng_init();
-  install_allegro_gl();
-  install_keyboard();
-  install_timer();
-  install_mouse();
-
-  if (install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, ".")) {
-    abortOnError(allegro_error);
+void aswInit() {
+  if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMEPAD)) {
+    asw::util::abortOnError("SDL_Init");
   }
 
-  set_color_depth(32);
-  set_window_title("Forager");
-
-  allegro_gl_set(AGL_Z_DEPTH, 32);
-  allegro_gl_set(AGL_COLOR_DEPTH, 32);
-  allegro_gl_set(AGL_SUGGEST, AGL_Z_DEPTH | AGL_COLOR_DEPTH);
-  allegro_gl_set(AGL_REQUIRE, AGL_DOUBLEBUFFER);
-
-  // Set screen mode
-  int monitor_width = 0;
-  int monitor_height = 0;
-  get_desktop_resolution(&monitor_width, &monitor_height);
-
-  //  if (set_gfx_mode(GFX_OPENGL_WINDOWED, monitor_width, monitor_height, 0, 0)
-  //  !=
-  //      0) {
-  if (set_gfx_mode(GFX_OPENGL_WINDOWED, 1280, 960, 0, 0) != 0) {
-    set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
-    abortOnError("Unable to go into any graphic mode\n%s\n");
+  if (!TTF_Init()) {
+    asw::util::abortOnError("TTF_Init");
   }
-  //  }
 
-  // Setup fNULLor FPS system
-  LOCK_VARIABLE(ticks)
-  LOCK_FUNCTION(ticker)
-  install_int_ex(ticker, BPS_TO_TIMER(1000));
+  // --- Set GL attributes before creating the window ---
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);  // Request OpenGL 3.x
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-  LOCK_VARIABLE(animationFrame)
-  LOCK_FUNCTION(animationTicker)
-  install_int_ex(animationTicker, SECS_TO_TIMER(1));
+  // Initialize SDL_mixer
+  SDL_AudioSpec spec;
+  spec.format = SDL_AUDIO_S16LE;
+  spec.freq = 44100;
+  spec.channels = 2;
 
-  // Creates a buffer
-  buffer = create_bitmap(SCREEN_W, SCREEN_H);
+  if (!Mix_OpenAudio(0, &spec)) {
+    asw::util::abortOnError("Mix_OpenAudio");
+  }
 
-  cursor = load_bitmap("assets/images/cursor2.png", nullptr);
+  asw::display::window =
+      SDL_CreateWindow("", 1280, 960, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 
-  // Mouse sensitivity
-  set_mouse_speed(3, 3);
+  if (asw::display::window == nullptr) {
+    asw::util::abortOnError("WINDOW");
+  }
+
+  // Get window surface
+  asw::display::renderer = SDL_CreateRenderer(asw::display::window, nullptr);
+
+  SDL_SetRenderLogicalPresentation(asw::display::renderer, 1280, 960,
+                                   SDL_LOGICAL_PRESENTATION_LETTERBOX);
+
+  glcontext = SDL_GL_CreateContext(asw::display::window);
+  if (glcontext == nullptr) {
+    asw::util::abortOnError("SDL_GL_CreateContext");
+  }
+
+  if (SDL_GL_MakeCurrent(asw::display::window, glcontext) < 0) {
+    asw::util::abortOnError("SDL_GL_MakeCurrent");
+  }
+
+  asw::display::setTitle("Forager");
+  asw::display::setIcon("assets/images/Forager.ico");
+
+  cursor = asw::assets::loadTexture("assets/images/cursor2.png");
+
+  // Hints
+  SDL_GL_SetSwapInterval(1);
+  // // Mouse sensitivity
+  // set_mouse_speed(3, 3);
 }
 
 void openGlInit() {
+  glewExperimental = GL_TRUE;
+
   // Glew
-  if (glewInit()) {
+  GLenum err = glewInit();
+  // GLEW can generate a benign GL_INVALID_ENUM right after init; clear it:
+  glGetError();
+
+  if (err != GLEW_OK) {
     abortOnError("Glew init failed.");
   }
 
+  std::cout << "GL Vendor  : " << glGetString(GL_VENDOR) << std::endl;
+  std::cout << "GL Renderer: " << glGetString(GL_RENDERER) << std::endl;
+  std::cout << "GL Version : " << glGetString(GL_VERSION) << std::endl;
+  std::cout << "GLEW       : " << glewGetString(GLEW_VERSION) << std::endl;
+
   // Viewport
-  glViewport(0, 0, SCREEN_W, SCREEN_H);
+
+  glViewport(0, 0, 1280, 960);
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
 
@@ -136,8 +134,8 @@ void gameInit() {
   jimmy = new Player();
 
   // Sets Font
-  ARIAL_BLACK =
-      load_font("assets/images/fonts/arial_black.pcx", nullptr, nullptr);
+  // ARIAL_BLACK =
+  //     asw::assets::loadFont("assets/images/fonts/arial_black.pcx", 16);
 
   // Load sky
   theSky = new Skybox();
@@ -147,12 +145,12 @@ void gameInit() {
       "assets/images/skybox/top.png", "assets/images/skybox/bottom.png");
 
   gameTiles = new ChunkMap();
-  gameTiles->generateMap(buffer);
+  gameTiles->generateMap();
 }
 
 // Load all in game content
 void setup() {
-  allegroInit();
+  aswInit();
   openGlInit();
   loadShaders();
   gameInit();
@@ -160,20 +158,22 @@ void setup() {
 
 // Run the game loops
 void game() {
+  asw::core::update();
+
   gameTiles->update();
   jimmy->update();
 
   // Gen
-  if (key[KEY_R]) {
-    gameTiles->generateMap(buffer);
+  if (asw::input::wasKeyPressed(asw::input::Key::R)) {
+    gameTiles->generateMap();
   }
 
   // Change time
   skyTime += 0.000005f;
 
-  if (key[KEY_PLUS_PAD]) {
+  if (asw::input::wasKeyPressed(asw::input::Key::KP_PLUS)) {
     skyTime += 0.005f;
-  } else if (key[KEY_MINUS_PAD]) {
+  } else if (asw::input::wasKeyPressed(asw::input::Key::KP_MINUS)) {
     skyTime -= 0.005f;
   }
 
@@ -183,23 +183,18 @@ void game() {
     skyTime = 1.0f;
   }
 
-  lightDir.y = -100.0f * cosf(2.0f * M_PI * skyTime);
-  lightDir.x = 100.0f * cosf(2.0f * M_PI * skyTime);
-  lightDir.z = -100.0f * sinf(2.0f * M_PI * skyTime);
+  lightDir.y = -100.0f * cosf(2.0F * M_PI * skyTime);
+  lightDir.x = 100.0f * cosf(2.0F * M_PI * skyTime);
+  lightDir.z = -100.0f * sinf(2.0F * M_PI * skyTime);
 
-  lightColor.x = -1.0f * powf((2.0f * skyTime) - 1, 2) + 1.15f;
-  lightColor.y = -0.6f * (cosf(2.0f * M_PI * skyTime) - 1) + 0.05f;
-  lightColor.z = -0.6f * (cosf(2.0f * M_PI * skyTime) - 1) + 0.05f;
-
-  theSky->setTime(skyTime);
-
-  // Exit game
-  if (key[KEY_ESC]) {
-    closeGame = true;
-  }
+  lightColor.x = -1.0f * powf((2.0F * skyTime) - 1, 2) + 1.15f;
+  lightColor.y = -0.6f * (cosf(2.0F * M_PI * skyTime) - 1) + 0.05f;
+  lightColor.z = -0.6f * (cosf(2.0F * M_PI * skyTime) - 1) + 0.05f;
 }
 
 void draw() {
+  // const auto screenSize = asw::display::getLogicalSize();
+
   /**********************
    * OPEN GL DRAWING *
    **********************/
@@ -216,64 +211,51 @@ void draw() {
 
   GpuProgram::deactivate();
 
+  SDL_GL_SwapWindow(asw::display::window);
+
   /**********************
    * ALLEGRO GL DRAWING *
    **********************/
-  allegro_gl_set_allegro_mode();
+  // allegro_gl_set_allegro_mode();
 
   // Transparent buffer
-  rectfill(buffer, 0, 0, SCREEN_W, SCREEN_H, makecol(255, 0, 255));
+  // asw::draw::rectFill(asw::Quad<float>(0.0F, 0.0F, screenSize.x,
+  // screenSize.y),
+  //                     asw::util::makeColor(255, 0, 255));
 
-  // Cursor
-  draw_sprite(buffer, cursor, (SCREEN_W - cursor->w) / 2,
-              (SCREEN_H - cursor->h) / 2);
+  // // Cursor
+  // asw::draw::sprite(cursor, asw::Vec2<float>((screenSize.x - 32) / 2,
+  //                                            (screenSize.y - 32) / 2));
 
   // Debug text
-  textprintf_ex(
-      buffer, ARIAL_BLACK, 20, 20, makecol(0, 0, 0), makecol(255, 255, 255),
-      "Camera X:%.1f Y:%.1f Z:%.1f RotX:%.1f RotY:%.1f ", camera->position.x,
-      camera->position.y, camera->position.z, camera->pitch, camera->yaw);
-  textprintf_ex(buffer, ARIAL_BLACK, 20, 60, makecol(0, 0, 0),
-                makecol(255, 255, 255),
-                "Light Direction X:%1.2f Y:%1.2f Z:%1.2f Time:%1.3f ",
-                lightDir.x, lightDir.y, lightDir.z, skyTime);
+  // textprintf_ex(
+  //     buffer, ARIAL_BLACK, 20, 20, makecol(0, 0, 0), makecol(255, 255, 255),
+  //     "Camera X:%.1f Y:%.1f Z:%.1f RotX:%.1f RotY:%.1f ", camera->position.x,
+  //     camera->position.y, camera->position.z, camera->pitch, camera->yaw);
+  // textprintf_ex(buffer, ARIAL_BLACK, 20, 60, makecol(0, 0, 0),
+  //               makecol(255, 255, 255),
+  //               "Light Direction X:%1.2f Y:%1.2f Z:%1.2f Time:%1.3f ",
+  //               lightDir.x, lightDir.y, lightDir.z, skyTime);
 
   // Draws buffer
-  draw_sprite(screen, buffer, 0, 0);
 
-  allegro_gl_unset_allegro_mode();
-  allegro_gl_flip();
+  // allegro_gl_unset_allegro_mode();
+  // allegro_gl_flip();
 }
 
 int main() {
   // Setup game
   setup();
 
-  // 120 Updates per second
-  const constexpr double dt = 1000.0 / 120.0;
-
-  double accumulator = 0.0;
-  double current_time = ticks;
-  double new_time;
-  double frame_time;
-
-  while (!closeGame && !key[KEY_ESC]) {
-    new_time = ticks;
-    frame_time = new_time - current_time;
-    current_time = new_time;
-
-    accumulator += frame_time;
-
-    while (accumulator >= dt) {
-      game();
-      accumulator -= dt;
-    }
-
+  while (!asw::core::exit &&
+         !asw::input::wasKeyPressed(asw::input::Key::ESCAPE)) {
+    game();
     draw();
   }
 
-  allegro_exit();
+  SDL_GL_DestroyContext(glcontext);
+  SDL_DestroyWindow(asw::display::window);
+  SDL_Quit();
 
   return 0;
 }
-END_OF_MAIN()

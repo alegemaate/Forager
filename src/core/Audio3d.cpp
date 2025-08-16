@@ -7,9 +7,9 @@ Audio3d::Audio3d(const std::string& path, float x, float y, float z)
   loadSound(path);
 }
 
-// Load audio into allegro sample
+// Load audio into asw sample
 void Audio3d::loadSound(const std::string& newFileName) {
-  a3d_file = load_sample(newFileName.c_str());
+  a3d_file = asw::assets::loadSample(newFileName);
 
   if (!a3d_file) {
     abortOnError("Could not load sample " + newFileName + ".");
@@ -17,8 +17,7 @@ void Audio3d::loadSound(const std::string& newFileName) {
 }
 
 void Audio3d::play() {
-  stop_sample(a3d_file);
-  play_sample(a3d_file, volume, pan, frequency, loop);
+  asw::sound::play(a3d_file, volume, pan, loop);
 }
 
 void Audio3d::update(float listenerX, float listenerY, float listenerZ) {
@@ -30,5 +29,5 @@ void Audio3d::update(float listenerX, float listenerY, float listenerZ) {
     volume3D = 0;
   }
 
-  adjust_sample(a3d_file, volume3D, pan, frequency, loop);
+  // adjust_sample(a3d_file, volume3D, pan, loop); TODO
 }

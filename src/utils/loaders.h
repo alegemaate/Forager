@@ -4,14 +4,14 @@
 #include <GL/glew.h>
 
 #include <GL/gl.h>
-#include <allegro.h>
 #include <string>
+#include <vector>
 
 namespace loaders {
 
 extern GLuint loadTexture(const std::string& path);
 
-extern BITMAP* loadImage(const std::string& path);
+extern GLuint loadCubemap(std::vector<std::string> faces);
 
 }  // namespace loaders
 

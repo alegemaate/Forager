@@ -1,5 +1,7 @@
 #include "Model.h"
 
+#include <cstring>
+
 #include "../utils/loaders.h"
 #include "../utils/model-loader.h"
 #include "../utils/utils.h"
