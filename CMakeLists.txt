@@ -1,16 +1,23 @@
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.22)
 
-set(CMAKE_CXX_STANDARD 14)
+project(Forager VERSION 0.1.0 LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/target)
 
-project(Forager)
 
 # Find libs
+include(cmake/get_cpm.cmake)
+CPMAddPackage("gh:adsgames/asw@0.5.10")
+CPMAddPackage("gh:nlohmann/json@3.11.3")
+CPMAddPackage("gh:g-truc/glm#1.0.1")
+
+
 find_library(ALLEGRO_LIBRARY NAMES liballeg44.dll.a liballeg.dll.a liballeg.so liballeg.dylib)
 find_library(ALLEGRO_PNG_LIBRARY NAMES libloadpng.dll.a libloadpng.so libloadpng.dylib)
 find_library(ALLEGRO_GL_LIBRARY NAMES liballeggl.dll.a liballeggl.so liballeggl.dylib)
-
 find_package(OpenGL REQUIRED COMPONENTS OpenGL)
 find_package(GLEW REQUIRED)
 
@@ -25,14 +32,16 @@ add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -pedantic)
 
 # Link Libs
-if (MINGW)
-    target_link_libraries(${PROJECT_NAME} -lmingw32)
-endif (MINGW)
+target_link_libraries(${PROJECT_NAME} PRIVATE 
+  ${ALLEGRO_LIBRARY}
+  ${ALLEGRO_PNG_LIBRARY}
+  ${ALLEGRO_GL_LIBRARY}
+  asw
+  nlohmann_json::nlohmann_json
+  OpenGL::GL
+  GLEW::GLEW
+  glm::glm
+  -lGLU
+)
 
-target_link_libraries(${PROJECT_NAME} ${ALLEGRO_LIBRARY})
-target_link_libraries(${PROJECT_NAME} ${ALLEGRO_PNG_LIBRARY})
-target_link_libraries(${PROJECT_NAME} ${ALLEGRO_GL_LIBRARY})
-target_link_libraries(${PROJECT_NAME} OpenGL::GL)
-target_link_libraries(${PROJECT_NAME} GLEW::GLEW)
-target_link_libraries(${PROJECT_NAME} -lGLU)
-target_link_libraries(${PROJECT_NAME} -static-libgcc -static-libstdc++ -lm)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/assets/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/assets/)

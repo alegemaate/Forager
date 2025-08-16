@@ -173,8 +173,8 @@ void setup(bool first) {
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
     fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
-    setupShader("data/shaders/textured.vert", vertexShader);
-    setupShader("data/shaders/textured.frag", fragmentShader);
+    setupShader("assets/data/shaders/textured.vert", vertexShader);
+    setupShader("assets/data/shaders/textured.frag", fragmentShader);
 
     // Make program
     defaultShader = glCreateProgram();
@@ -189,8 +189,8 @@ void setup(bool first) {
     waterVertexShader = glCreateShader(GL_VERTEX_SHADER);
     waterFragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
-    setupShader("data/shaders/water.vert", waterVertexShader);
-    setupShader("data/shaders/water.frag", waterFragmentShader);
+    setupShader("assets/data/shaders/water.vert", waterVertexShader);
+    setupShader("assets/data/shaders/water.frag", waterFragmentShader);
 
     // Make program
     waterShader = glCreateProgram();
@@ -205,8 +205,8 @@ void setup(bool first) {
     skyVertexShader = glCreateShader(GL_VERTEX_SHADER);
     skyFragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
-    setupShader("data/shaders/sky.vert", skyVertexShader);
-    setupShader("data/shaders/sky.frag", skyFragmentShader);
+    setupShader("assets/data/shaders/sky.vert", skyVertexShader);
+    setupShader("assets/data/shaders/sky.frag", skyFragmentShader);
 
     // Make program
     skyShader = glCreateProgram();
@@ -273,7 +273,7 @@ void setup(bool first) {
     // Creates a buffer
     buffer = create_bitmap(SCREEN_W, SCREEN_H);
 
-    cursor = load_bitmap("images/cursor2.png", nullptr);
+    cursor = load_bitmap("assets/images/cursor2.png", nullptr);
 
     // Mouse sensitivity
     set_mouse_speed(3, 3);
@@ -282,16 +282,17 @@ void setup(bool first) {
     jimmy = new Player(0, 15, 0, 45, 135);
 
     // Sounds
-    dinner = new Audio3d("sounds/dinner.wav", 0, 0, 0);
+    dinner = new Audio3d("assets/sounds/dinner.wav", 0, 0, 0);
 
     // Sets Font
-    ARIAL_BLACK = load_font("images/fonts/arial_black.pcx", nullptr, nullptr);
+    ARIAL_BLACK =
+        load_font("assets/images/fonts/arial_black.pcx", nullptr, nullptr);
 
     // normal map
     // TRANSFORMS
     jimmy->transformWorld();
 
-    GLuint samplerRef = loaders::loadTexture("images/skybox/sample.png");
+    GLuint samplerRef = loaders::loadTexture("assets/images/skybox/sample.png");
 
     gameTiles = new TileMap(buffer);
     gameTiles->theSky.skyboxSampler = samplerRef;

@@ -15,7 +15,7 @@
     <tile id="1">
         <name>Grass</name>
         <images>
-            <image>images/textures/grass.png</image>
+            <image>assets/images/textures/grass.png</image>
             <image2>NULL</image2>
         </images>
         <model>MODEL_CUBE</model>
@@ -26,7 +26,7 @@
     <tile id="2">
         <name>Sand</name>
         <images>
-            <image>images/textures/sand.png</image>
+            <image>assets/images/textures/sand.png</image>
             <image2>NULL</image2>
         </images>
         <model>MODEL_CUBE</model>
@@ -37,7 +37,7 @@
     <tile id="3">
         <name>Snow</name>
         <images>
-            <image>images/textures/snow.png</image>
+            <image>assets/images/textures/snow.png</image>
             <image2>NULL</image2>
         </images>
         <model>MODEL_FLAT</model>
@@ -48,7 +48,7 @@
     <tile id="4">
         <name>Stone</name>
         <images>
-            <image>images/textures/stone.png</image>
+            <image>assets/images/textures/stone.png</image>
             <image2>NULL</image2>
         </images>
         <model>MODEL_CUBE</model>
@@ -59,8 +59,8 @@
     <tile id="5">
         <name>Tree</name>
         <images>
-            <image>images/textures/tree1.png</image>
-            <image2>images/textures/tree2.png</image2>
+            <image>assets/images/textures/tree1.png</image>
+            <image2>assets/images/textures/tree2.png</image2>
         </images>
         <model>MODEL_DOUBLE_PLANE_TALL</model>
         <attribute>ATTRIBUTE_GAS</attribute>
@@ -70,7 +70,7 @@
     <tile id="6">
         <name>Rock</name>
         <images>
-            <image>images/textures/rock.png</image>
+            <image>assets/images/textures/rock.png</image>
             <image2>NULL</image2>
         </images>
         <model>MODEL_CUBE_SMALL</model>
@@ -81,8 +81,8 @@
     <tile id="7">
         <name>Water</name>
         <images>
-            <image>images/textures/water1.png</image>
-            <image2>images/textures/water2.png</image2>
+            <image>assets/images/textures/water1.png</image>
+            <image2>assets/images/textures/water2.png</image2>
         </images>
         <model>MODEL_CUBE</model>
         <attribute>ATTRIBUTE_LIQUID</attribute>
@@ -92,7 +92,7 @@
     <tile id="8">
         <name>Ice</name>
         <images>
-            <image>images/textures/ice.png</image>
+            <image>assets/images/textures/ice.png</image>
             <image2>NULL</image2>
         </images>
         <model>MODEL_CUBE</model>
@@ -103,7 +103,7 @@
     <tile id="9">
         <name>Cactus</name>
         <images>
-            <image>images/textures/cactus.png</image>
+            <image>assets/images/textures/cactus.png</image>
             <image2>NULL</image2>
         </images>
         <model>MODEL_DOUBLE_PLANE_TALL</model>
@@ -114,7 +114,7 @@
     <tile id="10">
         <name>Lava</name>
         <images>
-            <image>images/textures/lava.png</image>
+            <image>assets/images/textures/lava.png</image>
             <image2>NULL</image2>
         </images>
         <model>MODEL_CUBE</model>
@@ -125,7 +125,7 @@
     <tile id="11">
         <name>Tall Grass</name>
         <images>
-            <image>images/textures/tallgrass.png</image>
+            <image>assets/images/textures/tallgrass.png</image>
             <image2>NULL</image2>
         </images>
         <model>MODEL_DOUBLE_PLANE</model>
@@ -136,7 +136,7 @@
     <tile id="12">
         <name>Grass Snow</name>
         <images>
-            <image>images/textures/grass_snow.png</image>
+            <image>assets/images/textures/grass_snow.png</image>
             <image2>NULL</image2>
         </images>
         <model>MODEL_CUBE</model>
@@ -147,7 +147,7 @@
     <tile id="13">
         <name>Pine Tree</name>
         <images>
-            <image>images/textures/tree_pine_1.png</image>
+            <image>assets/images/textures/tree_pine_1.png</image>
             <image2>NULL</image2>
         </images>
         <model>MODEL_DOUBLE_PLANE_TALL</model>
@@ -169,7 +169,7 @@
     <tile id="15">
         <name>Wood</name>
         <images>
-            <image>images/textures/wood.png</image>
+            <image>assets/images/textures/wood.png</image>
             <image2>NULL</image2>
         </images>
         <model>MODEL_CUBE</model>
@@ -180,7 +180,7 @@
     <tile id="16">
         <name>Leaves</name>
         <images>
-            <image>images/textures/leaves.png</image>
+            <image>assets/images/textures/leaves.png</image>
             <image2>NULL</image2>
         </images>
         <model>MODEL_CUBE</model>
