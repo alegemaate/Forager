@@ -1,207 +1,101 @@
 #include "Skybox.h"
 
-#include "../constants/ids.h"
+#include <iostream>
+
+#include "../constants/globals.h"
 #include "../utils/utils.h"
 
 #include "../utils/loaders.h"
 
+float Skybox::skyboxVertices[108] = {
+    -1.0f, 1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  -1.0f, -1.0f,
+    1.0f,  -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, -1.0f, 1.0f,  -1.0f,
+
+    -1.0f, -1.0f, 1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  -1.0f,
+    -1.0f, 1.0f,  -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, -1.0f, 1.0f,
+
+    1.0f,  -1.0f, -1.0f, 1.0f,  -1.0f, 1.0f,  1.0f,  1.0f,  1.0f,
+    1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  -1.0f, 1.0f,  -1.0f, -1.0f,
+
+    -1.0f, -1.0f, 1.0f,  -1.0f, 1.0f,  1.0f,  1.0f,  1.0f,  1.0f,
+    1.0f,  1.0f,  1.0f,  1.0f,  -1.0f, 1.0f,  -1.0f, -1.0f, 1.0f,
+
+    -1.0f, 1.0f,  -1.0f, 1.0f,  1.0f,  -1.0f, 1.0f,  1.0f,  1.0f,
+    1.0f,  1.0f,  1.0f,  -1.0f, 1.0f,  1.0f,  -1.0f, 1.0f,  -1.0f,
+
+    -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, -1.0f,
+    1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, 1.0f};
+
 // Load the skybox
-void Skybox::loadSkybox(const std::string& a_sDirectory,
-                        const std::string& a_sFront,
-                        const std::string& a_sBack,
-                        const std::string& a_sLeft,
-                        const std::string& a_sRight,
-                        const std::string& a_sTop,
-                        const std::string& a_sBottom) {
-  textureRef[0] = loaders::loadTexture(a_sDirectory + a_sFront);
-  textureRef[1] = loaders::loadTexture(a_sDirectory + a_sBack);
-  textureRef[2] = loaders::loadTexture(a_sDirectory + a_sLeft);
-  textureRef[3] = loaders::loadTexture(a_sDirectory + a_sRight);
-  textureRef[4] = loaders::loadTexture(a_sDirectory + a_sTop);
-  textureRef[5] = loaders::loadTexture(a_sDirectory + a_sBottom);
+void Skybox::loadSkybox(const std::string& pathFront,
+                        const std::string& pathBack,
+                        const std::string& pathLeft,
+                        const std::string& pathRight,
+                        const std::string& pathTop,
+                        const std::string& pathBottom) {
+  std::vector<std::string> faces{pathRight,  pathLeft,  pathTop,
+                                 pathBottom, pathFront, pathBack};
+
+  cubemapTexture = loadCubemap(faces);
+  std::cout << "Cubemap" << cubemapTexture << std::endl;
+
+  glGenVertexArrays(1, &skyboxVAO);
+  glGenBuffers(1, &skyboxVBO);
+  glBindVertexArray(skyboxVAO);
+  glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &Skybox::skyboxVertices,
+               GL_STATIC_DRAW);
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
+  skyShader->activate();
+  skyShader->setInt("skybox", 0);
 }
 
 // Render skybox
-void Skybox::renderSkybox() {
-  // Go into model view matrix
-  glPushMatrix();
+void Skybox::render() const {
+  glDepthFunc(GL_LEQUAL);
 
-  // Translate in
-  glTranslatef(DEFAULT_MAP_LENGTH / 2.0f, DEFAULT_MAP_HEIGHT / 2.0f,
-               DEFAULT_MAP_WIDTH / 2.0f);
+  skyShader->activate();
 
-  // FRONT
-  glActiveTexture(GL_TEXTURE0 + 0);
-  glBindTexture(GL_TEXTURE_2D, textureRef[0]);
+  glm::mat4 view = glm::mat4(glm::mat3(camera->getViewMatrix()));
+  glm::mat4 projection =
+      glm::perspective(glm::radians(camera->zoom),
+                       (float)SCREEN_W / (float)SCREEN_H, 0.1f, 100.0f);
 
-  glActiveTexture(GL_TEXTURE0 + 1);
-  glBindTexture(GL_TEXTURE_2D, skyboxSampler);
+  skyShader->setMat4("view", view);
+  skyShader->setMat4("projection", projection);
+  skyShader->setVec3("ambient", lightColor);
 
-  glBegin(GL_TRIANGLES);
-  glColor4ub(255, 255, 255, 255);
-  glNormal3f(0, 0, 1);
-  glTexCoord2f(1, 1);
-  glVertex3f(-DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // C
-  glNormal3f(0, 0, 1);
-  glTexCoord2f(0, 0);
-  glVertex3f(DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // B
-  glNormal3f(0, 0, 1);
-  glTexCoord2f(1, 0);
-  glVertex3f(-DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // A
+  glBindVertexArray(skyboxVAO);
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+  glDrawArrays(GL_TRIANGLES, 0, 36);
+  glBindVertexArray(0);
 
-  glNormal3f(0, 0, 1);
-  glTexCoord2f(1, 1);
-  glVertex3f(-DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // C
-  glNormal3f(0, 0, 1);
-  glTexCoord2f(0, 1);
-  glVertex3f(DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // D
-  glNormal3f(0, 0, 1);
-  glTexCoord2f(0, 0);
-  glVertex3f(DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // B
-  glEnd();
+  glDepthFunc(GL_LESS);
+}
 
-  // BACK
-  glActiveTexture(GL_TEXTURE0 + 0);
-  glBindTexture(GL_TEXTURE_2D, textureRef[1]);
+GLuint Skybox::loadCubemap(std::vector<std::string> faces) {
+  unsigned int textureID;
+  glGenTextures(1, &textureID);
+  glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
 
-  glBegin(GL_TRIANGLES);
-  glColor4ub(255, 255, 255, 255);
-  glNormal3f(0, 0, -1);
-  glTexCoord2f(1, 1);
-  glVertex3f(DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // H
-  glNormal3f(0, 0, -1);
-  glTexCoord2f(0, 0);
-  glVertex3f(-DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT,
-             -DEFAULT_MAP_WIDTH);  // E
-  glNormal3f(0, 0, -1);
-  glTexCoord2f(1, 0);
-  glVertex3f(DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // F
+  for (unsigned int i = 0; i < faces.size(); i++) {
+    BITMAP* data = loaders::loadImage(faces[i]);
 
-  glNormal3f(0, 0, -1);
-  glTexCoord2f(1, 1);
-  glVertex3f(DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // H
-  glNormal3f(0, 0, -1);
-  glTexCoord2f(0, 1);
-  glVertex3f(-DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // G
-  glNormal3f(0, 0, -1);
-  glTexCoord2f(0, 0);
-  glVertex3f(-DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT,
-             -DEFAULT_MAP_WIDTH);  // E
-  glEnd();
+    if (data) {
+      glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, data->w,
+                   data->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data->dat);
+    } else {
+      abortOnError("Cubemap texture failed to load at path: " + faces[i]);
+    }
+  }
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-  // LEFT
-  glActiveTexture(GL_TEXTURE0 + 0);
-  glBindTexture(GL_TEXTURE_2D, textureRef[2]);
-
-  glBegin(GL_TRIANGLES);
-  glColor4ub(255, 255, 255, 255);
-  glNormal3f(1, 0, 0);
-  glTexCoord2f(1, 1);
-  glVertex3f(-DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // G
-  glNormal3f(1, 0, 0);
-  glTexCoord2f(0, 0);
-  glVertex3f(-DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // A
-  glNormal3f(1, 0, 0);
-  glTexCoord2f(1, 0);
-  glVertex3f(-DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT,
-             -DEFAULT_MAP_WIDTH);  // E
-
-  glNormal3f(1, 0, 0);
-  glTexCoord2f(1, 1);
-  glVertex3f(-DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // G
-  glNormal3f(1, 0, 0);
-  glTexCoord2f(0, 1);
-  glVertex3f(-DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // C
-  glNormal3f(1, 0, 0);
-  glTexCoord2f(0, 0);
-  glVertex3f(-DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // A
-  glEnd();
-
-  // RIGHT
-  glActiveTexture(GL_TEXTURE0 + 0);
-  glBindTexture(GL_TEXTURE_2D, textureRef[3]);
-
-  glBegin(GL_TRIANGLES);
-  glColor4ub(255, 255, 255, 255);
-  glNormal3f(-1, 0, 0);
-  glTexCoord2f(1, 1);
-  glVertex3f(DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // D
-  glNormal3f(-1, 0, 0);
-  glTexCoord2f(0, 0);
-  glVertex3f(DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // F
-  glNormal3f(-1, 0, 0);
-  glTexCoord2f(1, 0);
-  glVertex3f(DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // B
-
-  glNormal3f(-1, 0, 0);
-  glTexCoord2f(1, 1);
-  glVertex3f(DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // D
-  glNormal3f(-1, 0, 0);
-  glTexCoord2f(0, 1);
-  glVertex3f(DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // H
-  glNormal3f(-1, 0, 0);
-  glTexCoord2f(0, 0);
-  glVertex3f(DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // F
-  glEnd();
-
-  // TOP
-  glActiveTexture(GL_TEXTURE0 + 0);
-  glBindTexture(GL_TEXTURE_2D, textureRef[4]);
-
-  glBegin(GL_TRIANGLES);
-  glColor4ub(255, 255, 255, 255);
-  glNormal3f(0, -1, 0);
-  glTexCoord2f(1, 1);
-  glVertex3f(-DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // G
-  glNormal3f(0, -1, 0);
-  glTexCoord2f(0, 0);
-  glVertex3f(DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // D
-  glNormal3f(0, -1, 0);
-  glTexCoord2f(1, 0);
-  glVertex3f(-DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // C
-
-  glNormal3f(0, -1, 0);
-  glTexCoord2f(1, 1);
-  glVertex3f(-DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // G
-  glNormal3f(0, -1, 0);
-  glTexCoord2f(0, 1);
-  glVertex3f(DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // H
-  glNormal3f(0, -1, 0);
-  glTexCoord2f(0, 0);
-  glVertex3f(DEFAULT_MAP_LENGTH, DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // D
-  glEnd();
-
-  // BOTTOM
-  glActiveTexture(GL_TEXTURE0 + 0);
-  glBindTexture(GL_TEXTURE_2D, textureRef[5]);
-
-  glBegin(GL_TRIANGLES);
-  glColor4ub(255, 255, 255, 255);
-  glNormal3f(0, 1, 0);
-  glTexCoord2f(1, 1);
-  glVertex3f(-DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // A
-  glNormal3f(0, 1, 0);
-  glTexCoord2f(0, 0);
-  glVertex3f(DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // F
-  glNormal3f(0, 1, 0);
-  glTexCoord2f(1, 0);
-  glVertex3f(-DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT,
-             -DEFAULT_MAP_WIDTH);  // E
-
-  glNormal3f(0, 1, 0);
-  glTexCoord2f(1, 1);
-  glVertex3f(-DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // A
-  glNormal3f(0, 1, 0);
-  glTexCoord2f(0, 1);
-  glVertex3f(DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, DEFAULT_MAP_WIDTH);  // B
-  glNormal3f(0, 1, 0);
-  glTexCoord2f(0, 0);
-  glVertex3f(DEFAULT_MAP_LENGTH, -DEFAULT_MAP_HEIGHT, -DEFAULT_MAP_WIDTH);  // F
-  glEnd();
-
-  // Cool, back to normal
-  GLfloat mat_old_ambient[] = {0.3f, 0.3f, 0.3f, 1.0f};
-  glMaterialfv(GL_FRONT, GL_AMBIENT, mat_old_ambient);
-
-  glPopMatrix();
+  return textureID;
 }

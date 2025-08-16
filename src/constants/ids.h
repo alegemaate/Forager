@@ -41,23 +41,4 @@
 #define BIOME_LAKE 6
 #define BIOME_RIVER 7
 
-#define DEFAULT_MAP_HEIGHT 16
-#define DEFAULT_MAP_WIDTH 128
-#define DEFAULT_MAP_LENGTH 128
-
-#define WORLD_HEIGHT 2
-#define WORLD_WIDTH 6
-#define WORLD_LENGTH 6
-
-// Overlays
-#define OVERLAY_NONE 0
-#define OVERLAY_FOG_10 1
-#define OVERLAY_FOG_25 2
-#define OVERLAY_FOG_50 3
-#define OVERLAY_FOG_75 4
-#define OVERLAY_FOG_100 5
-#define OVERLAY_SELECTED 6
-
-#define VIEW_MODE 1
-
 #endif

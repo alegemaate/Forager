@@ -8,26 +8,35 @@
 #ifndef SKYBOX_H
 #define SKYBOX_H
 
-#include <allegro.h>
+#include <GL/glew.h>
 
-#include <alleggl.h>
+#include <allegro.h>
 #include <string>
+#include <vector>
 
 class Skybox {
  public:
-  void loadSkybox(const std::string& a_sDirectory,
-                  const std::string& a_sFront,
-                  const std::string& a_sBack,
-                  const std::string& a_sLeft,
-                  const std::string& a_sRight,
-                  const std::string& a_sTop,
-                  const std::string& a_sBottom);
-  void renderSkybox();
+  void loadSkybox(const std::string& pathFront,
+                  const std::string& pathBack,
+                  const std::string& pathLeft,
+                  const std::string& pathRight,
+                  const std::string& pathTop,
+                  const std::string& pathBottom);
+  void render() const;
 
-  GLuint skyboxSampler;
+  void setTime(float time) { timeOfDay = time; }
 
  private:
-  GLuint textureRef[6];
+  static float skyboxVertices[108];
+
+  GLuint cubemapTexture;
+
+  GLuint skyboxVAO;
+  GLuint skyboxVBO;
+
+  float timeOfDay = 0.0f;
+
+  static GLuint loadCubemap(std::vector<std::string> faces);
 };
 
 #endif  // SKYBOX_H

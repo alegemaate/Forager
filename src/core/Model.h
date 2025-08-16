@@ -8,10 +8,9 @@
 #ifndef MODEL_H
 #define MODEL_H
 
+#include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <vector>
-
-#include <alleggl.h>
 
 class Model {
  public:

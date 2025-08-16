@@ -1,32 +1,25 @@
 #ifndef CHUNK_H
 #define CHUNK_H
 
-#include <alleggl.h>
 #include <glm/glm.hpp>
 
-#define CX 16
-#define CY 16
-#define CZ 16
+#include "../constants/globals.h"
+#include "ChunkMesh.h"
+#include "CubeFaces.h"
+#include "Voxel.h"
 
 class Chunk {
  public:
-  Chunk(int x, int y, int z);
+  Chunk(unsigned int x, unsigned int y, unsigned int z);
 
-  // Fill array with given data
-  void fillArray(glm::vec3 posVec,
-                 glm::vec3 normVec,
-                 glm::vec2 texVec,
-                 GLfloat* newArray,
-                 unsigned long index);
-
-  // Tessellate chunk
-  void tessellate();
+  // Generate chunk voxels
+  void generate(int seed);
 
   // Get block
-  uint8_t get(int x, int y, int z);
+  Voxel& get(unsigned int x, unsigned int y, unsigned int z);
 
   // Set block
-  void set(int x, int y, int z, uint8_t type);
+  void set(unsigned int x, unsigned int y, unsigned int z, unsigned char type);
 
   // Tessellate and such
   void update();
@@ -34,21 +27,21 @@ class Chunk {
   // Render it all
   void render();
 
- private:
-  int index_x, index_y, index_z;
+  // Position
+  unsigned int getX() { return index_x; }
+  unsigned int getY() { return index_y; }
+  unsigned int getZ() { return index_z; }
 
-  uint8_t blk[CX][CY][CZ]{};
+ private:
+  unsigned int index_x;
+  unsigned int index_y;
+  unsigned int index_z;
+
+  Voxel blk[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH]{};
   bool changed = false;
 
   // Data
-  GLuint geometry_array = 0;
-  GLuint indices_array = 0;
-
-  unsigned long num_indices;
-  unsigned long num_geometry;
-
-  GLfloat* geometry;
-  unsigned long* indices;
+  ChunkMesh mesh;
 };
 
 #endif  // CHUNK_H
