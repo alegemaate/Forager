@@ -57,7 +57,7 @@ void Skybox::render() const {
   skyShader->activate();
   skyShader->setInt("skybox", 0);
 
-  const auto screenSize = asw::display::getLogicalSize();
+  const auto screenSize = asw::display::getSize();
 
   glm::mat4 view = glm::mat4(glm::mat3(camera->getViewMatrix()));
   glm::mat4 projection =

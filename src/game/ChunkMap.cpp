@@ -46,6 +46,9 @@ void ChunkMap::generateMap() {
   for (unsigned int i = 0; i < WORLD_WIDTH; i++) {
     for (unsigned int t = 0; t < WORLD_HEIGHT; t++) {
       for (unsigned int j = 0; j < WORLD_LENGTH; j++) {
+        std::string currentPhase = "Generating Chunk " +
+                                   std::to_string(currentChunk + 1) + "/" +
+                                   std::to_string(worldSize);
         quickPeek("Generating Chunk " + std::to_string(currentChunk + 1) + "/" +
                   std::to_string(worldSize));
         auto& chunk = chunks.emplace_back(std::make_unique<Chunk>(i, t, j));
@@ -58,7 +61,7 @@ void ChunkMap::generateMap() {
 
 // Quick Peek
 void ChunkMap::quickPeek(const std::string& currentPhase) {
-  const auto screenSize = asw::display::getLogicalSize();
+  const auto screenSize = asw::display::getSize();
 
   // Send to console
   Logger::point(currentPhase);
@@ -97,7 +100,7 @@ void ChunkMap::quickPeek(const std::string& currentPhase) {
 
 // Draw map
 void ChunkMap::draw() {
-  auto screenSize = asw::display::getLogicalSize();
+  auto screenSize = asw::display::getSize();
 
   defaultShader->activate();
 

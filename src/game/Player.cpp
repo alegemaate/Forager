@@ -6,7 +6,7 @@
 
 // Move character and such
 void Player::update() {
-  auto screenSize = asw::display::getLogicalSize();
+  auto screenSize = asw::display::getSize();
 
   // Update camera
   camera->processMouseMovement(-((screenSize.x / 2) - asw::input::mouse.x),

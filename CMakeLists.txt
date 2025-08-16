@@ -10,7 +10,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/target)
 
 # Find libs
 include(cmake/get_cpm.cmake)
-CPMAddPackage("gh:adsgames/asw@0.5.10")
+CPMAddPackage("gh:adsgames/asw@0.5.11")
 CPMAddPackage("gh:nlohmann/json@3.11.3")
 CPMAddPackage("gh:g-truc/glm#1.0.1")
 
