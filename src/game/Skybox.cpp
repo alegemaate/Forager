@@ -56,16 +56,8 @@ void Skybox::render() const {
 
   skyShader->activate();
   skyShader->setInt("skybox", 0);
-
-  const auto screenSize = asw::display::getSize();
-
-  glm::mat4 view = glm::mat4(glm::mat3(camera->getViewMatrix()));
-  glm::mat4 projection =
-      glm::perspective(glm::radians(camera->zoom),
-                       (float)screenSize.x / (float)screenSize.y, 0.1f, 100.0f);
-
-  skyShader->setMat4("view", view);
-  skyShader->setMat4("projection", projection);
+  skyShader->setMat4("view", glm::mat4(glm::mat3(camera.getViewMatrix())));
+  skyShader->setMat4("projection", camera.getProjectionMatrix());
   skyShader->setVec3("ambient", lightColor);
 
   glBindVertexArray(vao);

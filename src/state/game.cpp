@@ -63,45 +63,26 @@ void Game::draw() {
   GpuProgram::deactivate();
 
   SDL_GL_SwapWindow(asw::display::window);
-
-  /**********************
-   * ALLEGRO GL DRAWING *
-   **********************/
-  // allegro_gl_set_allegro_mode();
-
-  // Transparent buffer
-  // asw::draw::rectFill(asw::Quad<float>(0.0F, 0.0F, screenSize.x,
-  // screenSize.y),
-  //                     asw::util::makeColor(255, 0, 255));
-
-  // // Cursor
-  // asw::draw::sprite(cursor, asw::Vec2<float>((screenSize.x - 32) / 2,
-  //                                            (screenSize.y - 32) / 2));
-
-  // Debug text
-  // textprintf_ex(
-  //     buffer, ARIAL_BLACK, 20, 20, makecol(0, 0, 0), makecol(255, 255, 255),
-  //     "Camera X:%.1f Y:%.1f Z:%.1f RotX:%.1f RotY:%.1f ", camera->position.x,
-  //     camera->position.y, camera->position.z, camera->pitch, camera->yaw);
-  // textprintf_ex(buffer, ARIAL_BLACK, 20, 60, makecol(0, 0, 0),
-  //               makecol(255, 255, 255),
-  //               "Light Direction X:%1.2f Y:%1.2f Z:%1.2f Time:%1.3f ",
-  //               lightDir.x, lightDir.y, lightDir.z, skyTime);
 }
 
 void Game::loadShaders() {
-  defaultShader = new GpuProgram("assets/shaders/textured.vert",
-                                 "assets/shaders/textured.frag");
-  waterShader =
-      new GpuProgram("assets/shaders/water.vert", "assets/shaders/water.frag");
-  skyShader =
-      new GpuProgram("assets/shaders/sky.vert", "assets/shaders/sky.frag");
+#ifdef EMSCRIPTEN
+  defaultShader = new GpuProgram("assets/shaders/es/textured.vert",
+                                 "assets/shaders/es/textured.frag");
+  skyShader = new GpuProgram("assets/shaders/es/sky.vert",
+                             "assets/shaders/es/sky.frag");
+#else
+  defaultShader = new GpuProgram("assets/shaders/core/textured.vert",
+                                 "assets/shaders/core/textured.frag");
+  skyShader = new GpuProgram("assets/shaders/core/sky.vert",
+                             "assets/shaders/core/sky.frag");
+#endif
 }
 
 void Game::gameInit() {
   // Camera
-  camera = new Camera(glm::vec3(0.0f, 20.0f, 60.0f),
-                      glm::vec3(0.0f, 1.0f, 0.0f), -22.5f, -45.0f);
+  camera = Camera(glm::vec3(0.0f, 20.0f, 60.0f), glm::vec3(0.0f, 1.0f, 0.0f),
+                  -22.5f, -45.0f);
 
   // Character
   jimmy = new Player();

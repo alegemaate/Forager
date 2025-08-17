@@ -57,7 +57,7 @@ class TileType {
   TileID getType() const { return type; }
 
   // Get atlas ids
-  AtlasLookup getAtlasIds() const { return atlasIds; }
+  const AtlasLookup& getAtlasIds() const { return atlasIds; }
 
  private:
   TileID type;

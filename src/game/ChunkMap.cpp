@@ -54,9 +54,6 @@ void ChunkMap::quickPeek(const std::string& currentPhase) {
   // Send to console
   Logger::point(currentPhase);
 
-  // View matrix
-  glMatrixMode(GL_MODELVIEW);
-
   // Clear screen
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -85,26 +82,12 @@ void ChunkMap::quickPeek(const std::string& currentPhase) {
 
 // Draw map
 void ChunkMap::draw() {
-  auto screenSize = asw::display::getSize();
-
   defaultShader->activate();
-
-  // Pass projection matrix to shader
-  glm::mat4 projection =
-      glm::perspective(glm::radians(camera->zoom),
-                       (float)screenSize.x / (float)screenSize.y, 0.1f, 100.0f);
-  defaultShader->setMat4("projection", projection);
-
-  // Pass camera/view transformation
-  glm::mat4 view = camera->getViewMatrix();
-  defaultShader->setMat4("view", view);
-
-  // Light position
+  defaultShader->setMat4("projection", camera.getProjectionMatrix());
+  defaultShader->setMat4("view", camera.getViewMatrix());
   defaultShader->setVec3("light.direction", lightDir);
   defaultShader->setVec3("light.ambient", lightColor);
-
-  // Camera position
-  defaultShader->setVec3("cameraPos", camera->position);
+  defaultShader->setVec3("light.color", lightColor);
 
   // Cube map
   glActiveTexture(GL_TEXTURE1);
@@ -114,7 +97,7 @@ void ChunkMap::draw() {
     chunk->render();
   }
 
-  GpuProgram::deactivate();
+  defaultShader->deactivate();
 }
 
 Voxel& ChunkMap::getTile(unsigned int x, unsigned int y, unsigned int z) {

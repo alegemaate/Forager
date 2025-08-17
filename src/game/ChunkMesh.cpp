@@ -125,7 +125,7 @@ void ChunkMesh::tessellate(
           continue;
         }
 
-        auto atlasIds = parent->getAtlasIds();
+        auto& atlasIds = parent->getAtlasIds();
         glm::ivec3 base(i, t, k);
 
         auto solid = [&](int x, int y, int z) {

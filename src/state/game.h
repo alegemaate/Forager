@@ -29,4 +29,6 @@ class Game : public asw::scene::Scene<ProgramState> {
   ChunkMap* gameTiles{nullptr};
   Player* jimmy{nullptr};
   Skybox* theSky{nullptr};
+
+  float skyTime{0.4f};
 };
