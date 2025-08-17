@@ -1,6 +1,5 @@
 
-#ifndef FORAGER_LOGGER_H
-#define FORAGER_LOGGER_H
+#pragma once
 
 #include <string>
 
@@ -10,5 +9,3 @@ class Logger {
   static void point(const std::string& msg);
   static void log(const std::string& msg);
 };
-
-#endif  // FORAGER_LOGGER_H

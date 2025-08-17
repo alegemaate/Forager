@@ -86,7 +86,8 @@
     "stdfloat": "cpp",
     "text_encoding": "cpp",
     "queue": "cpp",
-    "stack": "cpp"
+    "stack": "cpp",
+    "*.def": "cpp"
   },
   "cmake.configureOnOpen": true
 }

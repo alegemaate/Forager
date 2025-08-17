@@ -59,29 +59,14 @@ void ChunkMap::quickPeek(const std::string& currentPhase) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   // Draw tiles
-  draw();
-
-  // SDL drawing
-  // glUseProgram(0);
-  // allegro_gl_set_allegro_mode();
-
-  // Transparent buffer
-  // asw::draw::rectFill(
-  //     asw::Quad<float>{0.0F, 0.0F, static_cast<float>(screenSize.x),
-  //                      static_cast<float>(screenSize.y)},
-  //     asw::util::makeColor(255, 0, 255));
-
-  // Info TODO
-  // textprintf_centre_ex(buffer, font, SCREEN_W / 2, SCREEN_H / 2,
-  //                      makecol(0, 0, 0), makecol(255, 255, 255), "%s",
-  //                      currentPhase.c_str());
+  render();
 
   // Draw to screen
   SDL_GL_SwapWindow(asw::display::window);
 }
 
 // Draw map
-void ChunkMap::draw() {
+void ChunkMap::render() {
   // Activate shader
   defaultShader.activate();
   defaultShader.setMat4("projection", camera.getProjectionMatrix());

@@ -8,8 +8,19 @@
 #include "../constants/globals.h"
 
 void Game::init() {
-  loadShaders();
-  gameInit();
+  defaultShader.initProgramFromFiles({"textured.vert", "textured.frag"});
+
+  // Camera
+  camera = Camera(glm::vec3(0.0f, 20.0f, 60.0f), glm::vec3(0.0f, 1.0f, 0.0f),
+                  -22.5f, -45.0f);
+
+  // Load sky
+  theSky.loadSkybox(
+      "assets/images/skybox/front.png", "assets/images/skybox/back.png",
+      "assets/images/skybox/left.png", "assets/images/skybox/right.png",
+      "assets/images/skybox/top.png", "assets/images/skybox/bottom.png");
+
+  gameTiles.generateMap();
 }
 
 void Game::update(float dt) {
@@ -60,30 +71,7 @@ void Game::draw() {
   theSky.render();
 
   // Draw map
-  gameTiles.draw();
-
-  GpuProgram::deactivate();
+  gameTiles.render();
 
   SDL_GL_SwapWindow(asw::display::window);
-}
-
-void Game::loadShaders() {
-  defaultShader.initProgramFromFiles({"textured.vert", "textured.frag"});
-}
-
-void Game::gameInit() {
-  // Camera
-  camera = Camera(glm::vec3(0.0f, 20.0f, 60.0f), glm::vec3(0.0f, 1.0f, 0.0f),
-                  -22.5f, -45.0f);
-
-  // Sets Font
-  // font = asw::assets::loadFont("assets/images/fonts/arial_black.pcx", 16);
-
-  // Load sky
-  theSky.loadSkybox(
-      "assets/images/skybox/front.png", "assets/images/skybox/back.png",
-      "assets/images/skybox/left.png", "assets/images/skybox/right.png",
-      "assets/images/skybox/top.png", "assets/images/skybox/bottom.png");
-
-  gameTiles.generateMap();
 }

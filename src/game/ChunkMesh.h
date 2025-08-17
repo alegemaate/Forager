@@ -1,6 +1,5 @@
 
-#ifndef FORAGER_CHUNK_MESH_H
-#define FORAGER_CHUNK_MESH_H
+#pragma once
 
 #include <array>
 #include <functional>
@@ -48,5 +47,3 @@ class ChunkMesh {
 
   static GLuint atlas;  // Texture atlas
 };
-
-#endif  // FORAGER_CHUNK_MESH_H

@@ -5,14 +5,9 @@
   The controllable player
 */
 
-#ifndef PLAYER_H
-#define PLAYER_H
-
-#include "ChunkMap.h"
+#pragma once
 
 class Player {
  public:
   void update();
 };
-
-#endif  // PLAYER_H

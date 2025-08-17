@@ -22,5 +22,6 @@ Checks: |
   -misc-include-cleaner
   -misc-non-private-member-variables-in-classes
   -readability-uppercase-literal-suffix
+  -cppcoreguidelines-pro-type-union-access
 WarningsAsErrors: true
 HeaderFilterRegex: ".*"

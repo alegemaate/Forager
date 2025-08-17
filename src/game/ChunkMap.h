@@ -5,8 +5,7 @@
   Manages all the tiles
 */
 
-#ifndef TILE_MAP_H
-#define TILE_MAP_H
+#pragma once
 
 #include <memory>
 #include <string>
@@ -24,7 +23,7 @@ class ChunkMap {
 
   void generateMap();
 
-  void draw();
+  void render();
 
   Voxel& getTile(unsigned int x, unsigned int y, unsigned int z);
 
@@ -36,5 +35,3 @@ class ChunkMap {
 
   BiomeManager biomes;
 };
-
-#endif  // TILE_MAP_H

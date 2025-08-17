@@ -56,10 +56,10 @@ void ChunkMesh::fillFace(const std::array<FaceDefenition, 6>& face,
 
   // Determine the face’s major axis from its normal (all 6 verts share it)
   const glm::vec3 n = face[0].normal;
-  int major = (fabsf(n.x) > 0.5f) ? 0 : ((fabsf(n.y) > 0.5f) ? 1 : 2);
-  int aAxis = (major + 1) % 3;
-  int bAxis = (major + 2) % 3;
-  int nSign = ((&n.x)[major] > 0.f) ? +1 : -1;
+  const int major = (fabsf(n.x) > 0.5f) ? 0 : ((fabsf(n.y) > 0.5f) ? 1 : 2);
+  const int aAxis = (major + 1) % 3;
+  const int bAxis = (major + 2) % 3;
+  const int nSign = ((&n.x)[major] > 0.f) ? +1 : -1;
 
   // Integer vectors for offset along major/tangent axes
   auto ivec = [](int ax, int s) {
@@ -76,8 +76,8 @@ void ChunkMesh::fillFace(const std::array<FaceDefenition, 6>& face,
 
     // Choose side directions along the two tangents based on whether the
     // vertex is min/max on that axis
-    int sA = ((&pLocal.x)[aAxis] > 0.5f) ? +1 : -1;
-    int sB = ((&pLocal.x)[bAxis] > 0.5f) ? +1 : -1;
+    const int sA = ((&pLocal.x)[aAxis] > 0.5f) ? +1 : -1;
+    const int sB = ((&pLocal.x)[bAxis] > 0.5f) ? +1 : -1;
 
     const glm::ivec3 tA = ivec(aAxis, sA);
     const glm::ivec3 tB = ivec(bAxis, sB);

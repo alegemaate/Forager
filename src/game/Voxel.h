@@ -5,11 +5,10 @@
   Class for the tile data (for images see TextureLoader.h)
 */
 
-#ifndef TILE_H
-#define TILE_H
+#pragma once
 
+#include <glm/glm.hpp>
 #include "TileType.h"
-#include "glm/glm.hpp"
 
 class Voxel {
  public:
@@ -24,5 +23,3 @@ class Voxel {
  private:
   TileType* tileImpl = nullptr;
 };
-
-#endif  // TILE_H

@@ -28,7 +28,7 @@ class GpuProgram {
   /// Shader management
   void activate() const { glUseProgram(programId); }
 
-  static void deactivate() { glUseProgram(0); }
+  void deactivate() const { glUseProgram(0); }
 
   /// Value setters
   void setMat4(const std::string& name, const glm::mat4& M) const {

@@ -2,6 +2,7 @@
 
 #include <asw/asw.h>
 
+#include "../constants/globals.h"
 #include "../utils/utils.h"
 
 // Move character and such
