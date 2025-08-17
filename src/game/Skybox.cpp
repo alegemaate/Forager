@@ -48,23 +48,29 @@ void Skybox::loadSkybox(const std::string& pathFront,
   glEnableVertexAttribArray(0);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
   glBindVertexArray(0);
+
+  // Load shader
+  skyShader.initProgramFromFiles({"sky.vert", "sky.frag"});
 }
 
 // Render skybox
 void Skybox::render() const {
+  // Shader activation
   glDepthFunc(GL_LEQUAL);
+  skyShader.activate();
+  skyShader.setInt("skybox", 0);
+  skyShader.setMat4("view", glm::mat4(glm::mat3(camera.getViewMatrix())));
+  skyShader.setMat4("projection", camera.getProjectionMatrix());
+  skyShader.setVec3("ambient", lightColor);
 
-  skyShader->activate();
-  skyShader->setInt("skybox", 0);
-  skyShader->setMat4("view", glm::mat4(glm::mat3(camera.getViewMatrix())));
-  skyShader->setMat4("projection", camera.getProjectionMatrix());
-  skyShader->setVec3("ambient", lightColor);
-
+  // Render the skybox
   glBindVertexArray(vao);
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
   glDrawArrays(GL_TRIANGLES, 0, 36);
   glBindVertexArray(0);
 
+  // Deactivate shader
+  skyShader.deactivate();
   glDepthFunc(GL_LESS);
 }

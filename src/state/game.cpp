@@ -1,5 +1,7 @@
 #include "game.h"
 
+#include <cmath>
+#include <numbers>
 #include <string>
 #include <vector>
 
@@ -8,8 +10,6 @@
 void Game::init() {
   loadShaders();
   gameInit();
-
-  // cursor = asw::assets::loadTexture("assets/images/cursor2.png");
 }
 
 void Game::update(float dt) {
@@ -17,12 +17,12 @@ void Game::update(float dt) {
     asw::core::exit = true;
   }
 
-  gameTiles->update();
-  jimmy->update();
+  gameTiles.update();
+  jimmy.update();
 
   // Gen
   if (asw::input::wasKeyPressed(asw::input::Key::R)) {
-    gameTiles->generateMap();
+    gameTiles.generateMap();
   }
 
   // Change time
@@ -40,13 +40,15 @@ void Game::update(float dt) {
     skyTime = 1.0f;
   }
 
-  lightDir.y = -100.0f * cosf(2.0F * M_PI * skyTime);
-  lightDir.x = 100.0f * cosf(2.0F * M_PI * skyTime);
-  lightDir.z = -100.0f * sinf(2.0F * M_PI * skyTime);
+  lightDir.y = -100.0f * std::cosf(2.0F * std::numbers::pi * skyTime);
+  lightDir.x = 100.0f * std::cosf(2.0F * std::numbers::pi * skyTime);
+  lightDir.z = -100.0f * std::sinf(2.0F * std::numbers::pi * skyTime);
 
-  lightColor.x = -1.0f * powf((2.0F * skyTime) - 1, 2) + 1.15f;
-  lightColor.y = -0.6f * (cosf(2.0F * M_PI * skyTime) - 1) + 0.05f;
-  lightColor.z = -0.6f * (cosf(2.0F * M_PI * skyTime) - 1) + 0.05f;
+  lightColor.x = -1.0f * std::powf((2.0F * skyTime) - 1, 2) + 1.15f;
+  lightColor.y =
+      -0.6f * (std::cosf(2.0F * std::numbers::pi * skyTime) - 1) + 0.05f;
+  lightColor.z =
+      -0.6f * (std::cosf(2.0F * std::numbers::pi * skyTime) - 1) + 0.05f;
 }
 
 void Game::draw() {
@@ -55,10 +57,10 @@ void Game::draw() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   // Draw skybox
-  theSky->render();
+  theSky.render();
 
   // Draw map
-  gameTiles->draw();
+  gameTiles.draw();
 
   GpuProgram::deactivate();
 
@@ -66,17 +68,7 @@ void Game::draw() {
 }
 
 void Game::loadShaders() {
-#ifdef EMSCRIPTEN
-  defaultShader = new GpuProgram("assets/shaders/es/textured.vert",
-                                 "assets/shaders/es/textured.frag");
-  skyShader = new GpuProgram("assets/shaders/es/sky.vert",
-                             "assets/shaders/es/sky.frag");
-#else
-  defaultShader = new GpuProgram("assets/shaders/core/textured.vert",
-                                 "assets/shaders/core/textured.frag");
-  skyShader = new GpuProgram("assets/shaders/core/sky.vert",
-                             "assets/shaders/core/sky.frag");
-#endif
+  defaultShader.initProgramFromFiles({"textured.vert", "textured.frag"});
 }
 
 void Game::gameInit() {
@@ -84,19 +76,14 @@ void Game::gameInit() {
   camera = Camera(glm::vec3(0.0f, 20.0f, 60.0f), glm::vec3(0.0f, 1.0f, 0.0f),
                   -22.5f, -45.0f);
 
-  // Character
-  jimmy = new Player();
-
   // Sets Font
   // font = asw::assets::loadFont("assets/images/fonts/arial_black.pcx", 16);
 
   // Load sky
-  theSky = new Skybox();
-  theSky->loadSkybox(
+  theSky.loadSkybox(
       "assets/images/skybox/front.png", "assets/images/skybox/back.png",
       "assets/images/skybox/left.png", "assets/images/skybox/right.png",
       "assets/images/skybox/top.png", "assets/images/skybox/bottom.png");
 
-  gameTiles = new ChunkMap();
-  gameTiles->generateMap();
+  gameTiles.generateMap();
 }

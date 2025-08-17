@@ -3,8 +3,7 @@
 #include "../core/Camera.h"
 #include "../core/GpuProgram.h"
 
-extern GpuProgram* defaultShader;
-extern GpuProgram* skyShader;
+extern GpuProgram defaultShader;
 
 extern Camera camera;
 

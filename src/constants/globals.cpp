@@ -1,8 +1,6 @@
 #include "globals.h"
 
-GpuProgram* defaultShader = nullptr;
-GpuProgram* waterShader = nullptr;
-GpuProgram* skyShader = nullptr;
+GpuProgram defaultShader;
 
 Camera camera;
 

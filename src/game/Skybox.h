@@ -11,7 +11,7 @@
 #include <GL/glew.h>
 
 #include <string>
-#include <vector>
+#include "../core/GpuProgram.h"
 
 class Skybox {
  public:
@@ -28,6 +28,8 @@ class Skybox {
 
   GLuint vao{0};
   GLuint vbo{0};
+
+  GpuProgram skyShader;
 
   static GLuint loadCubemap(std::vector<std::string> faces);
 };

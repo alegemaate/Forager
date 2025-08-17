@@ -26,9 +26,9 @@ class Game : public asw::scene::Scene<ProgramState> {
   // Create images
   asw::Texture cursor;
 
-  ChunkMap* gameTiles{nullptr};
-  Player* jimmy{nullptr};
-  Skybox* theSky{nullptr};
+  ChunkMap gameTiles{};
+  Player jimmy{};
+  Skybox theSky{};
 
   float skyTime{0.4f};
 };

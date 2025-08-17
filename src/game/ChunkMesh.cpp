@@ -214,7 +214,7 @@ void ChunkMesh::render(unsigned int offsetX,
       glm::mat4(1.0f), glm::vec3(offsetX * CHUNK_WIDTH, offsetY * CHUNK_HEIGHT,
                                  offsetZ * CHUNK_LENGTH));
 
-  defaultShader->setMat4("model", model);
+  defaultShader.setMat4("model", model);
 
   // Render
   glBindVertexArray(vao);

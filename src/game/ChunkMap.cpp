@@ -82,12 +82,13 @@ void ChunkMap::quickPeek(const std::string& currentPhase) {
 
 // Draw map
 void ChunkMap::draw() {
-  defaultShader->activate();
-  defaultShader->setMat4("projection", camera.getProjectionMatrix());
-  defaultShader->setMat4("view", camera.getViewMatrix());
-  defaultShader->setVec3("light.direction", lightDir);
-  defaultShader->setVec3("light.ambient", lightColor);
-  defaultShader->setVec3("light.color", lightColor);
+  // Activate shader
+  defaultShader.activate();
+  defaultShader.setMat4("projection", camera.getProjectionMatrix());
+  defaultShader.setMat4("view", camera.getViewMatrix());
+  defaultShader.setVec3("light.direction", lightDir);
+  defaultShader.setVec3("light.ambient", lightColor);
+  defaultShader.setVec3("light.color", lightColor);
 
   // Cube map
   glActiveTexture(GL_TEXTURE1);
@@ -97,7 +98,8 @@ void ChunkMap::draw() {
     chunk->render();
   }
 
-  defaultShader->deactivate();
+  // Deactivate shader
+  defaultShader.deactivate();
 }
 
 Voxel& ChunkMap::getTile(unsigned int x, unsigned int y, unsigned int z) {
