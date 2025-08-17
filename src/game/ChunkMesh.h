@@ -3,6 +3,7 @@
 #define FORAGER_CHUNK_MESH_H
 
 #include <array>
+#include <functional>
 #include <vector>
 
 #include "../constants/globals.h"
@@ -25,9 +26,9 @@ class ChunkMesh {
 
   // Fill a given face
   void fillFace(const std::array<FaceDefenition, 6>& face,
-                const glm::vec3& offset,
+                const glm::ivec3& base,
                 GLuint atlasPos,
-                const VoxelNeighbours& neighbours);
+                const std::function<bool(int, int, int)>& solid);
 
   // Tessellate chunk
   void tessellate(Voxel (&blk)[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH]);

@@ -102,7 +102,6 @@ void ChunkMap::draw() {
   // Light position
   defaultShader->setVec3("light.direction", lightDir);
   defaultShader->setVec3("light.ambient", lightColor);
-  defaultShader->setFloat("skyTime", skyTime);
 
   // Camera position
   defaultShader->setVec3("cameraPos", camera->position);

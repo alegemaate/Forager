@@ -51,15 +51,15 @@ struct AtlasLookup {
 
 class TileType {
  public:
-  TileType(unsigned char type, AtlasLookup atlasId);
+  TileType(TileID type, AtlasLookup atlasId);
 
   // Get type
-  unsigned char getType() const { return type; }
+  TileID getType() const { return type; }
 
   // Get atlas ids
   AtlasLookup getAtlasIds() const { return atlasIds; }
 
  private:
-  unsigned char type;
+  TileID type;
   AtlasLookup atlasIds;
 };

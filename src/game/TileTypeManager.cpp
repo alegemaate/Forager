@@ -42,8 +42,8 @@ void TileTypeManager::load(const std::string& path) {
     Logger::point("Loading Tile:" + name + "  ID:" + std::to_string(id));
 
     // Add the tile
-    tileTypes.emplace(intToTileID(id),
-                      TileType(static_cast<unsigned char>(id), atlasIds));
+    auto tileID = intToTileID(id);
+    tileTypes.emplace(tileID, TileType(tileID, atlasIds));
   }
 
   Logger::log("");

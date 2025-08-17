@@ -16,7 +16,7 @@ class Voxel {
   Voxel();
   explicit Voxel(TileType* type);
 
-  unsigned short getType() { return tileImpl->getType(); }
+  TileID getType() { return tileImpl->getType(); }
   void setType(TileType* type) { tileImpl = type; }
 
   TileType* getTile() { return tileImpl; }
