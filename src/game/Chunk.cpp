@@ -12,8 +12,6 @@
 
 #include <iostream>
 
-SimplexNoise Chunk::noise(0.02f, 0.02f, 2.0f, 0.47f);
-
 // Construct
 Chunk::Chunk(unsigned int x, unsigned int y, unsigned int z)
     : index_x(x), index_y(y), index_z(z) {
@@ -59,29 +57,31 @@ void Chunk::generate(int seed) {
     }
   }
 
-  // // STEP 2:
-  // // Fill with dirt
-  // const auto chunkXOffset = seed + (index_x * CHUNK_WIDTH);
-  // const auto chunkZOffset = seed + (index_z * CHUNK_LENGTH);
-  // const auto chunkYOffset = seed + (index_y * CHUNK_HEIGHT);
+  // STEP 2:
+  // Caves
+  SimplexNoise caveMap = SimplexNoise(0.03f, 0.03f, 2.0f, 0.47f);
 
-  // for (unsigned int i = 0; i < CHUNK_WIDTH; i++) {
-  //   auto noiseX = static_cast<float>(i + chunkXOffset);
+  const auto chunkXOffset = seed + (index_x * CHUNK_WIDTH);
+  const auto chunkZOffset = seed + (index_z * CHUNK_LENGTH);
+  const auto chunkYOffset = seed + (index_y * CHUNK_HEIGHT);
 
-  //   for (unsigned int u = 0; u < CHUNK_LENGTH; u++) {
-  //     auto noiseZ = static_cast<float>(u + chunkZOffset);
+  for (unsigned int i = 0; i < CHUNK_WIDTH; i++) {
+    auto noiseX = static_cast<float>(i + chunkXOffset);
 
-  //     for (unsigned int t = 0; t < CHUNK_HEIGHT; t++) {
-  //       auto noiseY = static_cast<float>(t + chunkYOffset);
+    for (unsigned int u = 0; u < CHUNK_LENGTH; u++) {
+      auto noiseZ = static_cast<float>(u + chunkZOffset);
 
-  //       auto val = Chunk::noise.fractal(10, noiseX, noiseZ, noiseY);
+      for (unsigned int t = 0; t < CHUNK_HEIGHT; t++) {
+        auto noiseY = static_cast<float>(t + chunkYOffset);
 
-  //       if (val < 0.0f) {
-  //         blk[i][t][u].setType(TileTypeManager::getTileByType(TILE_STONE));
-  //       }
-  //     }
-  //   }
-  // }
+        auto val = caveMap.fractal(10, noiseX, noiseZ, noiseY);
+
+        if (val > 0.0f) {
+          blk[i][t][u].setType(TileTypeManager::getTileByType(TILE_AIR));
+        }
+      }
+    }
+  }
 
   mesh.tessellate(blk);
 }

@@ -33,8 +33,6 @@ class Chunk {
   unsigned int getZ() const { return index_z; }
 
  private:
-  static SimplexNoise noise;
-
   unsigned int index_x;
   unsigned int index_y;
   unsigned int index_z;
