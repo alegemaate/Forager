@@ -84,7 +84,9 @@
     "future": "cpp",
     "span": "cpp",
     "stdfloat": "cpp",
-    "text_encoding": "cpp"
+    "text_encoding": "cpp",
+    "queue": "cpp",
+    "stack": "cpp"
   },
   "cmake.configureOnOpen": true
 }

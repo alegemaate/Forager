@@ -3,6 +3,8 @@
 
 #include "../utils/loaders.h"
 
+#include <iostream>
+
 GLuint ChunkMesh::atlas = 0;
 
 // Construct
@@ -115,6 +117,10 @@ void ChunkMesh::tessellate(
   }
 
   glBindVertexArray(chunkVAO);
+
+  if (vertices.empty() || indices.empty()) {
+    return;
+  }
 
   glBindBuffer(GL_ARRAY_BUFFER, chunkVBO);
   glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * vertices.size(), &vertices[0],

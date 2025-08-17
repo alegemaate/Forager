@@ -8,8 +8,11 @@
 #include "Chunk.h"
 
 #include "../constants/ids.h"
-#include "../core/SimplexNoise.h"
 #include "TileTypeManager.h"
+
+#include <iostream>
+
+SimplexNoise Chunk::noise(0.02f, 0.02f, 2.0f, 0.47f);
 
 // Construct
 Chunk::Chunk(unsigned int x, unsigned int y, unsigned int z)
@@ -27,42 +30,58 @@ Chunk::Chunk(unsigned int x, unsigned int y, unsigned int z)
 }
 
 void Chunk::generate(int seed) {
-  // Height
-  SimplexNoise noise(0.02f, 0.02f, 2.0f, 0.47f);
-
   // STEP 1:
-  // Start with air
-  for (auto& i : blk) {
-    for (auto& t : i) {
-      for (auto& u : t) {
-        u.setType(TileTypeManager::getTileByType(TILE_AIR));
-      }
-    }
-  }
-
-  // STEP 2:
-  // Fill with dirt
-  const auto chunkXOffset = seed + index_x * CHUNK_WIDTH;
-  const auto chunkZOffset = seed + index_z * CHUNK_LENGTH;
-  const auto chunkYOffset = seed + index_y * CHUNK_HEIGHT;
+  // 2D Heightmap generation
+  SimplexNoise heightMap = SimplexNoise(0.002f, 0.002f, 2.0f, 0.47f);
 
   for (unsigned int i = 0; i < CHUNK_WIDTH; i++) {
-    auto noiseX = static_cast<float>(i + chunkXOffset);
-
+    auto noiseX = static_cast<float>(i + seed + (index_x * CHUNK_WIDTH));
     for (unsigned int u = 0; u < CHUNK_LENGTH; u++) {
-      auto noiseZ = static_cast<float>(u + chunkZOffset);
+      auto noiseZ = static_cast<float>(u + seed + (index_z * CHUNK_LENGTH));
+      auto val = heightMap.fractal(10, noiseX, noiseZ);
+      auto height =
+          static_cast<unsigned int>((val + 1.0f) * (CHUNK_HEIGHT - 1) / 2.0f);
 
       for (unsigned int t = 0; t < CHUNK_HEIGHT; t++) {
-        auto noiseY = static_cast<float>(t + chunkYOffset);
+        // Air
+        if (t > height) {
+          blk[i][t][u].setType(TileTypeManager::getTileByType(TILE_AIR));
+        }
 
-        auto val = noise.fractal(10, noiseX, noiseZ, noiseY);
-
-        if (val < 0.0f) {
+        else if (t + 1 > height) {  // Grass
+          blk[i][t][u].setType(TileTypeManager::getTileByType(TILE_GRASS));
+        } else if (t + 4 > height) {  // Dirt
+          blk[i][t][u].setType(TileTypeManager::getTileByType(TILE_DIRT));
+        } else {  // Stone
           blk[i][t][u].setType(TileTypeManager::getTileByType(TILE_STONE));
         }
       }
     }
   }
+
+  // // STEP 2:
+  // // Fill with dirt
+  // const auto chunkXOffset = seed + (index_x * CHUNK_WIDTH);
+  // const auto chunkZOffset = seed + (index_z * CHUNK_LENGTH);
+  // const auto chunkYOffset = seed + (index_y * CHUNK_HEIGHT);
+
+  // for (unsigned int i = 0; i < CHUNK_WIDTH; i++) {
+  //   auto noiseX = static_cast<float>(i + chunkXOffset);
+
+  //   for (unsigned int u = 0; u < CHUNK_LENGTH; u++) {
+  //     auto noiseZ = static_cast<float>(u + chunkZOffset);
+
+  //     for (unsigned int t = 0; t < CHUNK_HEIGHT; t++) {
+  //       auto noiseY = static_cast<float>(t + chunkYOffset);
+
+  //       auto val = Chunk::noise.fractal(10, noiseX, noiseZ, noiseY);
+
+  //       if (val < 0.0f) {
+  //         blk[i][t][u].setType(TileTypeManager::getTileByType(TILE_STONE));
+  //       }
+  //     }
+  //   }
+  // }
 
   mesh.tessellate(blk);
 }

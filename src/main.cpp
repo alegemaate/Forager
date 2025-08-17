@@ -47,12 +47,12 @@ void init() {
     asw::util::abortOnError("WINDOW");
   }
 
-  auto glcontext = SDL_GL_CreateContext(asw::display::window);
+  SDL_GLContext glcontext = SDL_GL_CreateContext(asw::display::window);
   if (glcontext == nullptr) {
     asw::util::abortOnError("SDL_GL_CreateContext");
   }
 
-  if (SDL_GL_MakeCurrent(asw::display::window, glcontext) < 0) {
+  if (!SDL_GL_MakeCurrent(asw::display::window, glcontext)) {
     asw::util::abortOnError("SDL_GL_MakeCurrent");
   }
 

@@ -1,9 +1,9 @@
-#ifndef CHUNK_H
-#define CHUNK_H
+#pragma once
 
 #include <glm/glm.hpp>
 
 #include "../constants/globals.h"
+#include "../core/SimplexNoise.h"
 #include "ChunkMesh.h"
 #include "CubeFaces.h"
 #include "Voxel.h"
@@ -28,11 +28,13 @@ class Chunk {
   void render();
 
   // Position
-  unsigned int getX() { return index_x; }
-  unsigned int getY() { return index_y; }
-  unsigned int getZ() { return index_z; }
+  unsigned int getX() const { return index_x; }
+  unsigned int getY() const { return index_y; }
+  unsigned int getZ() const { return index_z; }
 
  private:
+  static SimplexNoise noise;
+
   unsigned int index_x;
   unsigned int index_y;
   unsigned int index_z;
@@ -43,5 +45,3 @@ class Chunk {
   // Data
   ChunkMesh mesh;
 };
-
-#endif  // CHUNK_H

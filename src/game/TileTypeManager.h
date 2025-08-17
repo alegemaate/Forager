@@ -9,7 +9,7 @@
 #define TILE_TYPE_MANAGER_H
 
 #include <string>
-#include <vector>
+#include <unordered_map>
 
 #include "TileType.h"
 
@@ -19,7 +19,7 @@ class TileTypeManager {
   static TileType* getTileByType(int tileID);
 
  private:
-  static std::vector<TileType> tile_defs;
+  static std::unordered_map<int, TileType> tileTypes;
 };
 
 #endif  // TILE_TYPE_MANAGER_H

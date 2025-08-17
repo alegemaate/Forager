@@ -35,20 +35,10 @@ void ChunkMap::generateMap() {
   int currentChunk = 0;
   const int worldSize = WORLD_WIDTH * WORLD_LENGTH * WORLD_HEIGHT;
 
-  for (unsigned int i = 0; i < WORLD_WIDTH; i++) {
-    for (unsigned int t = 0; t < WORLD_HEIGHT; t++) {
-      for (unsigned int j = 0; j < WORLD_LENGTH; j++) {
-      }
-    }
-  }
-
   // Make lots of chunks
   for (unsigned int i = 0; i < WORLD_WIDTH; i++) {
     for (unsigned int t = 0; t < WORLD_HEIGHT; t++) {
       for (unsigned int j = 0; j < WORLD_LENGTH; j++) {
-        std::string currentPhase = "Generating Chunk " +
-                                   std::to_string(currentChunk + 1) + "/" +
-                                   std::to_string(worldSize);
         quickPeek("Generating Chunk " + std::to_string(currentChunk + 1) + "/" +
                   std::to_string(worldSize));
         auto& chunk = chunks.emplace_back(std::make_unique<Chunk>(i, t, j));
@@ -91,11 +81,8 @@ void ChunkMap::quickPeek(const std::string& currentPhase) {
   //                      makecol(0, 0, 0), makecol(255, 255, 255), "%s",
   //                      currentPhase.c_str());
 
-  // // Draw to screen
-  // draw_sprite(screen, buffer, 0, 0);
-
-  // allegro_gl_unset_allegro_mode();
-  // allegro_gl_flip();
+  // Draw to screen
+  SDL_GL_SwapWindow(asw::display::window);
 }
 
 // Draw map

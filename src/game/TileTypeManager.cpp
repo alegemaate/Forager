@@ -2,11 +2,12 @@
 
 #include <fstream>
 #include <nlohmann/json.hpp>
+#include <stdexcept>
 
 #include "../core/Logger.h"
 #include "../utils/utils.h"
 
-std::vector<TileType> TileTypeManager::tile_defs;
+std::unordered_map<int, TileType> TileTypeManager::tileTypes;
 
 // Load tiles
 void TileTypeManager::load(const std::string& path) {
@@ -20,12 +21,12 @@ void TileTypeManager::load(const std::string& path) {
   Logger::heading("TILES");
 
   // Create buffer
-  nlohmann::json doc = nlohmann::json::parse(file);
+  const nlohmann::json doc = nlohmann::json::parse(file);
 
   // Parse data
   for (auto const& tile : doc) {
     // Name of tile
-    std::string name = tile["name"];
+    const std::string name = tile["name"];
     int id = tile["id"];
 
     // Atlas
@@ -41,12 +42,16 @@ void TileTypeManager::load(const std::string& path) {
     Logger::point("Loading Tile:" + name + "  ID:" + std::to_string(id));
 
     // Add the tile
-    tile_defs.emplace_back(id, atlasIds);
+    tileTypes.emplace(id, TileType(static_cast<unsigned char>(id), atlasIds));
   }
 
   Logger::log("");
 }
 
 TileType* TileTypeManager::getTileByType(int tileID) {
-  return &tile_defs.at(tileID);
+  if (tileTypes.find(tileID) == tileTypes.end()) {
+    throw std::runtime_error("Tile type not found: " + std::to_string(tileID));
+  }
+  // Return the tile type
+  return &tileTypes.at(tileID);
 }

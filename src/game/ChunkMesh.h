@@ -38,16 +38,16 @@ class ChunkMesh {
   void render(unsigned int offsetX, unsigned int offsetY, unsigned int offsetZ);
 
  private:
-  GLuint chunkVAO = 0;
-  GLuint chunkVBO = 0;
-  GLuint chunkEBO = 0;
+  GLuint chunkVAO{0};
+  GLuint chunkVBO{0};
+  GLuint chunkEBO{0};
 
-  GLuint numIndices = 0;
+  GLuint numIndices{0};
 
-  std::vector<GLfloat> vertices;
-  std::vector<GLuint> indices;
+  std::vector<GLfloat> vertices{};
+  std::vector<GLuint> indices{};
 
-  static GLuint atlas;
+  static GLuint atlas;  // Texture atlas
 };
 
 #endif  // FORAGER_CHUNK_MESH_H

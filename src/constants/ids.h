@@ -25,6 +25,7 @@
 #define TILE_TREE_PINE 13
 #define TILE_TEMP 14
 #define TILE_JOHNNY 15
+#define TILE_DIRT 16
 
 // Types
 #define ATTRIBUTE_GAS 0
