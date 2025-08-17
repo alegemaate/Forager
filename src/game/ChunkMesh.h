@@ -29,8 +29,6 @@ class ChunkMesh {
                 GLuint atlasPos,
                 const VoxelNeighbours& neighbours);
 
-  unsigned int vertexAO(bool side1, bool side2, bool corner);
-
   // Tessellate chunk
   void tessellate(Voxel (&blk)[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH]);
 
@@ -38,9 +36,9 @@ class ChunkMesh {
   void render(unsigned int offsetX, unsigned int offsetY, unsigned int offsetZ);
 
  private:
-  GLuint chunkVAO{0};
-  GLuint chunkVBO{0};
-  GLuint chunkEBO{0};
+  GLuint vao{0};
+  GLuint vbo{0};
+  GLuint ebo{0};
 
   GLuint numIndices{0};
 

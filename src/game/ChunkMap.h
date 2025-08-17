@@ -30,7 +30,7 @@ class ChunkMap {
 
  private:
   // All chunks
-  std::vector<std::unique_ptr<Chunk>> chunks{};
+  std::vector<std::unique_ptr<Chunk>> chunks;
 
   void quickPeek(const std::string& currentPhase);
 

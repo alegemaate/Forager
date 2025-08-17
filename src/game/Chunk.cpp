@@ -7,7 +7,6 @@
 
 #include "Chunk.h"
 
-#include "../constants/ids.h"
 #include "TileTypeManager.h"
 
 #include <iostream>
@@ -18,7 +17,7 @@ Chunk::Chunk(unsigned int x, unsigned int y, unsigned int z)
   for (unsigned int i = 0; i < CHUNK_WIDTH; i++) {
     for (unsigned int t = 0; t < CHUNK_HEIGHT; t++) {
       for (unsigned int u = 0; u < CHUNK_LENGTH; u++) {
-        blk[i][t][u].setType(TileTypeManager::getTileByType(TILE_AIR));
+        blk[i][t][u].setType(TileTypeManager::getTileByType(TileID::Air));
       }
     }
   }
@@ -30,7 +29,7 @@ Chunk::Chunk(unsigned int x, unsigned int y, unsigned int z)
 void Chunk::generate(int seed) {
   // STEP 1:
   // 2D Heightmap generation
-  SimplexNoise heightMap = SimplexNoise(0.002f, 0.002f, 2.0f, 0.47f);
+  const SimplexNoise heightMap = SimplexNoise(0.002f, 0.002f, 2.0f, 0.47f);
 
   for (unsigned int i = 0; i < CHUNK_WIDTH; i++) {
     auto noiseX = static_cast<float>(i + seed + (index_x * CHUNK_WIDTH));
@@ -43,15 +42,15 @@ void Chunk::generate(int seed) {
       for (unsigned int t = 0; t < CHUNK_HEIGHT; t++) {
         // Air
         if (t > height) {
-          blk[i][t][u].setType(TileTypeManager::getTileByType(TILE_AIR));
+          blk[i][t][u].setType(TileTypeManager::getTileByType(TileID::Air));
         }
 
         else if (t + 1 > height) {  // Grass
-          blk[i][t][u].setType(TileTypeManager::getTileByType(TILE_GRASS));
+          blk[i][t][u].setType(TileTypeManager::getTileByType(TileID::Grass));
         } else if (t + 4 > height) {  // Dirt
-          blk[i][t][u].setType(TileTypeManager::getTileByType(TILE_DIRT));
+          blk[i][t][u].setType(TileTypeManager::getTileByType(TileID::Dirt));
         } else {  // Stone
-          blk[i][t][u].setType(TileTypeManager::getTileByType(TILE_STONE));
+          blk[i][t][u].setType(TileTypeManager::getTileByType(TileID::Stone));
         }
       }
     }
@@ -59,7 +58,7 @@ void Chunk::generate(int seed) {
 
   // STEP 2:
   // Caves
-  SimplexNoise caveMap = SimplexNoise(0.03f, 0.03f, 2.0f, 0.47f);
+  const SimplexNoise caveMap = SimplexNoise(0.03f, 0.03f, 2.0f, 0.47f);
 
   const auto chunkXOffset = seed + (index_x * CHUNK_WIDTH);
   const auto chunkZOffset = seed + (index_z * CHUNK_LENGTH);
@@ -77,7 +76,7 @@ void Chunk::generate(int seed) {
         auto val = caveMap.fractal(10, noiseX, noiseZ, noiseY);
 
         if (val > 0.0f) {
-          blk[i][t][u].setType(TileTypeManager::getTileByType(TILE_AIR));
+          blk[i][t][u].setType(TileTypeManager::getTileByType(TileID::Air));
         }
       }
     }
@@ -90,10 +89,7 @@ Voxel& Chunk::get(unsigned int x, unsigned int y, unsigned int z) {
   return blk[x][y][z];
 }
 
-void Chunk::set(unsigned int x,
-                unsigned int y,
-                unsigned int z,
-                unsigned char type) {
+void Chunk::set(unsigned int x, unsigned int y, unsigned int z, TileID type) {
   blk[x][y][z].setType(TileTypeManager::getTileByType(type));
   changed = true;
 }

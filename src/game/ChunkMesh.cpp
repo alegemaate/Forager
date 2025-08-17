@@ -14,16 +14,16 @@ ChunkMesh::ChunkMesh() {
     atlas = loaders::loadTexture("assets/images/textures/atlas.png");
   }
 
-  // Make vbo
-  glGenVertexArrays(1, &chunkVAO);
-  glGenBuffers(1, &chunkVBO);
-  glGenBuffers(1, &chunkEBO);
+  // Make VAO, VBO, EBO
+  glGenVertexArrays(1, &vao);
+  glGenBuffers(1, &vbo);
+  glGenBuffers(1, &ebo);
 }
 
 ChunkMesh::~ChunkMesh() {
-  glDeleteVertexArrays(1, &chunkVAO);
-  glDeleteBuffers(1, &chunkVBO);
-  glDeleteBuffers(1, &chunkEBO);
+  glDeleteVertexArrays(1, &vao);
+  glDeleteBuffers(1, &vbo);
+  glDeleteBuffers(1, &ebo);
 }
 
 // Fill array with given data
@@ -53,14 +53,6 @@ void ChunkMesh::fillFace(const std::array<FaceDefenition, 6>& face,
 
     indices.push_back(indices.size());
   }
-}
-
-unsigned int ChunkMesh::vertexAO(bool side1, bool side2, bool corner) {
-  if (side1 && side2) {
-    return 0;
-  }
-
-  return 3 - (side1 + side2 + corner);
 }
 
 // Tessellate chunk
@@ -116,35 +108,35 @@ void ChunkMesh::tessellate(
     }
   }
 
-  glBindVertexArray(chunkVAO);
+  glBindVertexArray(vao);
 
   if (vertices.empty() || indices.empty()) {
     return;
   }
 
-  glBindBuffer(GL_ARRAY_BUFFER, chunkVBO);
+  glBindBuffer(GL_ARRAY_BUFFER, vbo);
   glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * vertices.size(), &vertices[0],
                GL_STATIC_DRAW);
 
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, chunkEBO);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(),
                &indices[0], GL_STATIC_DRAW);
 
-  // position attribute
+  // Position attribute
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), nullptr);
   glEnableVertexAttribArray(0);
 
-  // normal attribute
+  // Normal attribute
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat),
                         (void*)(3 * sizeof(GLfloat)));
   glEnableVertexAttribArray(1);
 
-  // texture coord attribute
+  // Texture coord attribute
   glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat),
                         (void*)(6 * sizeof(GLfloat)));
   glEnableVertexAttribArray(2);
 
-  // ao coord attribute
+  // AO coord attribute
   glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat),
                         (void*)(8 * sizeof(GLfloat)));
   glEnableVertexAttribArray(3);
@@ -168,7 +160,7 @@ void ChunkMesh::render(unsigned int offsetX,
   defaultShader->setMat4("model", model);
 
   // Render
-  glBindVertexArray(chunkVAO);
+  glBindVertexArray(vao);
   glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, nullptr);
 
   glBindVertexArray(0);

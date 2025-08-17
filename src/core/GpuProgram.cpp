@@ -29,7 +29,7 @@ static void validateShader(GLuint shader, const std::string& filePath = "") {
   GLint success;
   glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
 
-  if (!success) {
+  if (success == GL_FALSE) {
     const unsigned int BUFFER_SIZE = 1024;
     GLchar infoLog[BUFFER_SIZE];
     glGetShaderInfoLog(shader, BUFFER_SIZE, nullptr, infoLog);
@@ -43,7 +43,7 @@ static void validateProgram(GLuint program) {
   GLint success;
   glGetProgramiv(program, GL_LINK_STATUS, &success);
 
-  if (!success) {
+  if (success == GL_FALSE) {
     const unsigned int BUFFER_SIZE = 1024;
     GLchar infoLog[BUFFER_SIZE];
     glGetProgramInfoLog(program, BUFFER_SIZE, nullptr, infoLog);
@@ -55,14 +55,14 @@ static void validateProgram(GLuint program) {
 
 void GpuProgram::initFromFile(const std::string& vsFile,
                               const std::string& fsFile) {
-  std::string vsText = textFileRead(vsFile);
+  const std::string vsText = textFileRead(vsFile);
 
   if (vsText.empty()) {
     Logger::log("Vertex shader file '" + vsFile + "' not found.");
     return;
   }
 
-  std::string fsText = textFileRead(fsFile);
+  const std::string fsText = textFileRead(fsFile);
 
   if (fsText.empty()) {
     Logger::log("Fragment shader file '" + fsFile + "' not found.");

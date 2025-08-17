@@ -51,8 +51,6 @@ void ChunkMap::generateMap() {
 
 // Quick Peek
 void ChunkMap::quickPeek(const std::string& currentPhase) {
-  const auto screenSize = asw::display::getSize();
-
   // Send to console
   Logger::point(currentPhase);
 

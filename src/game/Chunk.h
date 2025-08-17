@@ -19,7 +19,7 @@ class Chunk {
   Voxel& get(unsigned int x, unsigned int y, unsigned int z);
 
   // Set block
-  void set(unsigned int x, unsigned int y, unsigned int z, unsigned char type);
+  void set(unsigned int x, unsigned int y, unsigned int z, TileID type);
 
   // Tessellate and such
   void update();

@@ -7,7 +7,7 @@
 #include "../core/Logger.h"
 #include "../utils/utils.h"
 
-std::unordered_map<int, TileType> TileTypeManager::tileTypes;
+std::unordered_map<TileID, TileType> TileTypeManager::tileTypes;
 
 // Load tiles
 void TileTypeManager::load(const std::string& path) {
@@ -27,7 +27,7 @@ void TileTypeManager::load(const std::string& path) {
   for (auto const& tile : doc) {
     // Name of tile
     const std::string name = tile["name"];
-    int id = tile["id"];
+    const int id = tile["id"];
 
     // Atlas
     AtlasLookup atlasIds{};
@@ -42,15 +42,17 @@ void TileTypeManager::load(const std::string& path) {
     Logger::point("Loading Tile:" + name + "  ID:" + std::to_string(id));
 
     // Add the tile
-    tileTypes.emplace(id, TileType(static_cast<unsigned char>(id), atlasIds));
+    tileTypes.emplace(intToTileID(id),
+                      TileType(static_cast<unsigned char>(id), atlasIds));
   }
 
   Logger::log("");
 }
 
-TileType* TileTypeManager::getTileByType(int tileID) {
-  if (tileTypes.find(tileID) == tileTypes.end()) {
-    throw std::runtime_error("Tile type not found: " + std::to_string(tileID));
+TileType* TileTypeManager::getTileByType(TileID tileID) {
+  if (tileTypes.contains(tileID) == false) {
+    throw std::runtime_error("Tile type not found: " +
+                             std::to_string(static_cast<int>(tileID)));
   }
   // Return the tile type
   return &tileTypes.at(tileID);
