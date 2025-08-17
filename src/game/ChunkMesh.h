@@ -24,10 +24,10 @@ class ChunkMesh {
   ~ChunkMesh();
 
   // Fill a given face
-  void fillFace(FaceDefenition face[6],
-                glm::vec3 offset,
+  void fillFace(const std::array<FaceDefenition, 6>& face,
+                const glm::vec3& offset,
                 GLuint atlasPos,
-                VoxelNeighbours neighbours);
+                const VoxelNeighbours& neighbours);
 
   unsigned int vertexAO(bool side1, bool side2, bool corner);
 
@@ -44,8 +44,8 @@ class ChunkMesh {
 
   GLuint numIndices{0};
 
-  std::vector<GLfloat> vertices{};
-  std::vector<GLuint> indices{};
+  std::vector<GLfloat> vertices;
+  std::vector<GLuint> indices;
 
   static GLuint atlas;  // Texture atlas
 };

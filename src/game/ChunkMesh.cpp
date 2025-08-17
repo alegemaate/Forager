@@ -27,16 +27,16 @@ ChunkMesh::~ChunkMesh() {
 }
 
 // Fill array with given data
-void ChunkMesh::fillFace(FaceDefenition face[6],
-                         glm::vec3 offset,
+void ChunkMesh::fillFace(const std::array<FaceDefenition, 6>& face,
+                         const glm::vec3& offset,
                          GLuint atlasPos,
-                         VoxelNeighbours neighbours) {
+                         const VoxelNeighbours& neighbours) {
   const unsigned int atlasSize = 8;
   const auto atlasX = static_cast<float>(atlasPos % atlasSize);
   const auto atlasY = floorf(static_cast<float>(atlasPos) / atlasSize);
 
   for (unsigned int i = 0; i < 6; i++) {
-    glm::vec3 pos = face[i].position + offset;
+    const glm::vec3 pos = face[i].position + offset;
 
     vertices.push_back(pos.x);
     vertices.push_back(pos.y);
@@ -170,4 +170,7 @@ void ChunkMesh::render(unsigned int offsetX,
   // Render
   glBindVertexArray(chunkVAO);
   glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, nullptr);
+
+  glBindVertexArray(0);
+  glBindTexture(GL_TEXTURE_2D, 0);
 }

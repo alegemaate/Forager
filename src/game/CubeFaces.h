@@ -1,6 +1,6 @@
-#ifndef FORAGER_CUBEFACES_H
-#define FORAGER_CUBEFACES_H
+#pragma once
 
+#include <array>
 #include <glm/glm.hpp>
 
 struct FaceDefenition {
@@ -9,11 +9,9 @@ struct FaceDefenition {
   glm::vec2 texture;
 };
 
-extern FaceDefenition leftFace[6];
-extern FaceDefenition rightFace[6];
-extern FaceDefenition topFace[6];
-extern FaceDefenition bottomFace[6];
-extern FaceDefenition frontFace[6];
-extern FaceDefenition backFace[6];
-
-#endif  // FORAGER_CUBEFACES_H
+extern std::array<FaceDefenition, 6> leftFace;
+extern std::array<FaceDefenition, 6> rightFace;
+extern std::array<FaceDefenition, 6> topFace;
+extern std::array<FaceDefenition, 6> bottomFace;
+extern std::array<FaceDefenition, 6> frontFace;
+extern std::array<FaceDefenition, 6> backFace;

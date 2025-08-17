@@ -17,7 +17,7 @@ uniform samplerCube skybox;
 uniform sampler2D texture1;
 
 float near = 0.1;
-float far  = 100.0;
+float far  = 500.0;
 
 float LinearizeDepth(float depth) {
     float z = depth * 2.0 - 1.0;// back to NDC
@@ -39,7 +39,6 @@ void main() {
 
     // depth
     float depth = 1.0f - (LinearizeDepth(gl_FragCoord.z) / far);
-
 
     // final color
     vec3 result = texture(texture1, TexCoord).rgb * vec3(depth) * (ambient + diffuse);

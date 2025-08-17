@@ -28,9 +28,9 @@ void Game::update(float dt) {
   // Change time
   skyTime += 0.000005f;
 
-  if (asw::input::wasKeyPressed(asw::input::Key::KP_PLUS)) {
+  if (asw::input::isKeyDown(asw::input::Key::KP_PLUS)) {
     skyTime += 0.005f;
-  } else if (asw::input::wasKeyPressed(asw::input::Key::KP_MINUS)) {
+  } else if (asw::input::isKeyDown(asw::input::Key::KP_MINUS)) {
     skyTime -= 0.005f;
   }
 
