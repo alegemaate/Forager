@@ -18,7 +18,7 @@ void TileTypeManager::load(const std::string& path) {
   }
 
   // Loading
-  Logger::heading("TILES");
+  Logger::heading("Loading Tiles");
 
   // Create buffer
   const nlohmann::json doc = nlohmann::json::parse(file);
@@ -38,19 +38,18 @@ void TileTypeManager::load(const std::string& path) {
     atlasIds.front = tile["atlas"]["front"];
     atlasIds.back = tile["atlas"]["back"];
 
-    // Log
-    Logger::point("Loading Tile:" + name + "  ID:" + std::to_string(id));
-
     // Add the tile
     auto tileID = intToTileID(id);
     tileTypes.emplace(tileID, TileType(tileID, atlasIds));
-  }
 
-  Logger::log("");
+    // Log
+    Logger::progress(name + " ID:" + std::to_string(id),
+                     static_cast<float>(tileTypes.size()) / doc.size());
+  }
 }
 
 TileType* TileTypeManager::getTileByType(TileID tileID) {
-  if (tileTypes.contains(tileID) == false) {
+  if (!tileTypes.contains(tileID)) {
     throw std::runtime_error("Tile type not found: " +
                              std::to_string(static_cast<int>(tileID)));
   }

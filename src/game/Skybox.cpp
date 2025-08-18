@@ -1,14 +1,11 @@
 #include "Skybox.h"
 
-#include <SDL3_image/SDL_image.h>
 #include <asw/asw.h>
-#include <iostream>
 
 #include "../constants/globals.h"
 #include "../utils/gl.h"
-#include "../utils/utils.h"
-
 #include "../utils/loaders.h"
+#include "../utils/utils.h"
 
 // Load the skybox
 void Skybox::loadSkybox(const std::string& pathFront,
@@ -36,8 +33,8 @@ void Skybox::loadSkybox(const std::string& pathFront,
       -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, -1.0f,
       1.0f,  -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,  1.0f,  -1.0f, 1.0f};
 
-  std::vector<std::string> faces{pathRight,  pathLeft,  pathTop,
-                                 pathBottom, pathFront, pathBack};
+  const std::vector<std::string> faces{pathRight,  pathLeft,  pathTop,
+                                       pathBottom, pathFront, pathBack};
   cubemapTexture = loaders::loadCubemap(faces);
 
   glGenVertexArrays(1, &vao);

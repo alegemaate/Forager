@@ -3,8 +3,6 @@
 
 #include "../utils/loaders.h"
 
-#include <iostream>
-
 GLuint ChunkMesh::atlas = 0;
 
 static inline bool isSolidInChunk(

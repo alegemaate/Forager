@@ -11,6 +11,7 @@
 #include <asw/asw.h>
 #include <string>
 
+#include "./core/Logger.h"
 #include "./state/game.h"
 #include "./state/init.h"
 #include "./state/state.h"
@@ -75,15 +76,22 @@ void init() {
     asw::util::abortOnError("Glew init failed.");
   }
 
-  std::cout << "GL Vendor  : " << glGetString(GL_VENDOR) << '\n';
-  std::cout << "GL Renderer: " << glGetString(GL_RENDERER) << '\n';
-  std::cout << "GL Version : " << glGetString(GL_VERSION) << '\n';
-  std::cout << "GLEW       : " << glewGetString(GLEW_VERSION) << '\n';
+  Logger::heading("Forager Initialized");
+  Logger::log("GL Vendor  : " + std::string(reinterpret_cast<const char*>(
+                                    glGetString(GL_VENDOR))));
+  Logger::log("GL Renderer: " + std::string(reinterpret_cast<const char*>(
+                                    glGetString(GL_RENDERER))));
+  Logger::log("GL Version : " + std::string(reinterpret_cast<const char*>(
+                                    glGetString(GL_VERSION))));
+  Logger::log("GLEW       : " + std::string(reinterpret_cast<const char*>(
+                                    glewGetString(GLEW_VERSION))));
+
+  asw::core::print_info();
 
   // Viewport
   glViewport(0, 0, 1280, 960);
   glEnable(GL_DEPTH_TEST);
-  glDepthFunc(GL_LESS);
+  glDepthFunc(GL_LEQUAL);
 
   // Culling
   glEnable(GL_CULL_FACE);

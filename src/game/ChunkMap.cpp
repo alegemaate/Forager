@@ -25,7 +25,7 @@ void ChunkMap::update() {
 // Procedural Generation of map
 void ChunkMap::generateMap() {
   // GENERATE MAP
-  Logger::heading("GENERATING MAP");
+  Logger::heading("Generating Map");
 
   // Clear chunks
   chunks.clear();
@@ -39,21 +39,23 @@ void ChunkMap::generateMap() {
   for (unsigned int i = 0; i < WORLD_WIDTH; i++) {
     for (unsigned int t = 0; t < WORLD_HEIGHT; t++) {
       for (unsigned int j = 0; j < WORLD_LENGTH; j++) {
-        quickPeek("Generating Chunk " + std::to_string(currentChunk + 1) + "/" +
-                  std::to_string(worldSize));
+        quickPeek();
+
         auto& chunk = chunks.emplace_back(std::make_unique<Chunk>(i, t, j));
         chunk->generate(seed);
         currentChunk++;
+
+        // Send to console
+        Logger::progress(
+            std::to_string(currentChunk) + "/" + std::to_string(worldSize),
+            static_cast<float>(currentChunk) / worldSize);
       }
     }
   }
 }
 
 // Quick Peek
-void ChunkMap::quickPeek(const std::string& currentPhase) {
-  // Send to console
-  Logger::point(currentPhase);
-
+void ChunkMap::quickPeek() {
   // Clear screen
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

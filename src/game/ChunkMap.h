@@ -31,7 +31,7 @@ class ChunkMap {
   // All chunks
   std::vector<std::unique_ptr<Chunk>> chunks;
 
-  void quickPeek(const std::string& currentPhase);
+  void quickPeek();
 
   BiomeManager biomes;
 };

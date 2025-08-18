@@ -9,8 +9,6 @@
 
 #include "TileTypeManager.h"
 
-#include <iostream>
-
 // Construct
 Chunk::Chunk(unsigned int x, unsigned int y, unsigned int z)
     : index_x(x), index_y(y), index_z(z) {
