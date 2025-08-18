@@ -19,26 +19,26 @@ void Chunk::generate(TileTypeManager& tileManager, int seed) {
   // 2D Heightmap generation
   const SimplexNoise heightMap = SimplexNoise(0.002f, 0.002f, 2.0f, 0.47f);
 
-  for (unsigned int i = 0; i < CHUNK_WIDTH; i++) {
-    auto noiseX = static_cast<float>(i + seed + (index_x * CHUNK_WIDTH));
-    for (unsigned int u = 0; u < CHUNK_LENGTH; u++) {
-      auto noiseZ = static_cast<float>(u + seed + (index_z * CHUNK_LENGTH));
+  for (unsigned int x = 0; x < CHUNK_WIDTH; x++) {
+    auto noiseX = static_cast<float>(x + seed + (index_x * CHUNK_WIDTH));
+    for (unsigned int z = 0; z < CHUNK_LENGTH; z++) {
+      auto noiseZ = static_cast<float>(z + seed + (index_z * CHUNK_LENGTH));
       auto val = heightMap.fractal(10, noiseX, noiseZ);
       auto height =
           static_cast<unsigned int>((val + 1.0f) * (CHUNK_HEIGHT - 1) / 2.0f);
 
-      for (unsigned int t = 0; t < CHUNK_HEIGHT; t++) {
+      for (unsigned int y = 0; y < CHUNK_HEIGHT; y++) {
         // Air
-        if (t > height) {
-          blk[i][t][u].setType(tileManager.getTileByType(TileID::Air));
+        if (y > height) {
+          blk[x][y][z].setType(tileManager.getTileByType(TileID::Air));
         }
 
-        else if (t + 1 > height) {  // Grass
-          blk[i][t][u].setType(tileManager.getTileByType(TileID::Grass));
-        } else if (t + 4 > height) {  // Dirt
-          blk[i][t][u].setType(tileManager.getTileByType(TileID::Dirt));
+        else if (y + 1 > height) {  // Grass
+          blk[x][y][z].setType(tileManager.getTileByType(TileID::Grass));
+        } else if (y + 4 > height) {  // Dirt
+          blk[x][y][z].setType(tileManager.getTileByType(TileID::Dirt));
         } else {  // Stone
-          blk[i][t][u].setType(tileManager.getTileByType(TileID::Stone));
+          blk[x][y][z].setType(tileManager.getTileByType(TileID::Stone));
         }
       }
     }
@@ -52,19 +52,19 @@ void Chunk::generate(TileTypeManager& tileManager, int seed) {
   const auto chunkZOffset = seed + (index_z * CHUNK_LENGTH);
   const auto chunkYOffset = seed + (index_y * CHUNK_HEIGHT);
 
-  for (unsigned int i = 0; i < CHUNK_WIDTH; i++) {
-    auto noiseX = static_cast<float>(i + chunkXOffset);
+  for (unsigned int x = 0; x < CHUNK_WIDTH; x++) {
+    auto noiseX = static_cast<float>(x + chunkXOffset);
 
-    for (unsigned int u = 0; u < CHUNK_LENGTH; u++) {
-      auto noiseZ = static_cast<float>(u + chunkZOffset);
+    for (unsigned int z = 0; z < CHUNK_LENGTH; z++) {
+      auto noiseZ = static_cast<float>(z + chunkZOffset);
 
-      for (unsigned int t = 0; t < CHUNK_HEIGHT; t++) {
-        auto noiseY = static_cast<float>(t + chunkYOffset);
+      for (unsigned int y = 0; y < CHUNK_HEIGHT; y++) {
+        auto noiseY = static_cast<float>(y + chunkYOffset);
 
         auto val = caveMap.fractal(10, noiseX, noiseZ, noiseY);
 
         if (val > 0.0f) {
-          blk[i][t][u].setType(tileManager.getTileByType(TileID::Air));
+          blk[x][y][z].setType(tileManager.getTileByType(TileID::Air));
         }
       }
     }

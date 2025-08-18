@@ -28,7 +28,15 @@ class ChunkMap {
 
   Voxel& getTile(unsigned int x, unsigned int y, unsigned int z);
 
+  Voxel& getTile(const glm::vec3& pos) {
+    return getTile(static_cast<unsigned int>(pos.x),
+                   static_cast<unsigned int>(pos.y),
+                   static_cast<unsigned int>(pos.z));
+  }
+
  private:
   // All chunks
   std::vector<std::unique_ptr<Chunk>> chunks;
+
+  Voxel emptyTile{};
 };

@@ -24,6 +24,9 @@ void ChunkMap::generate(TileTypeManager& tileManager) {
   // GENERATE MAP
   Logger::heading("Generating Map");
 
+  // Set empty tile
+  emptyTile.setType(tileManager.getTileByType(TileID::Air));
+
   // Clear chunks
   chunks.clear();
 
@@ -36,8 +39,6 @@ void ChunkMap::generate(TileTypeManager& tileManager) {
   for (unsigned int i = 0; i < WORLD_WIDTH; i++) {
     for (unsigned int t = 0; t < WORLD_HEIGHT; t++) {
       for (unsigned int j = 0; j < WORLD_LENGTH; j++) {
-        // quickPeek();
-
         auto& chunk = chunks.emplace_back(std::make_unique<Chunk>(i, t, j));
         chunk->generate(tileManager, seed);
         currentChunk++;
@@ -88,14 +89,11 @@ Voxel& ChunkMap::getTile(unsigned int x, unsigned int y, unsigned int z) {
         chunk->getZ() == chunkZ) {
       auto tileX = x % CHUNK_WIDTH;
       auto tileZ = z % CHUNK_LENGTH;
-      auto tileY = y % CHUNK_LENGTH;
+      auto tileY = y % CHUNK_HEIGHT;
 
       return chunk->get(tileX, tileY, tileZ);
     }
   }
 
-  throw std::runtime_error(
-      "ChunkMap::getTile: Chunk not found for coordinates (" +
-      std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) +
-      ")");
+  return emptyTile;  // Return an empty tile if not found
 }

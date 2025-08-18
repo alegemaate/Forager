@@ -7,8 +7,7 @@ void World::init() {
   defaultShader.initProgramFromFiles({"textured.vert", "textured.frag"});
 
   // Camera
-  camera = Camera(glm::vec3(0.0f, 20.0f, 60.0f), glm::vec3(0.0f, 1.0f, 0.0f),
-                  -22.5f, -45.0f);
+  camera = Camera(glm::vec3(0.0f, 20.0f, 60.0f), -22.5f, -45.0f);
 
   // Load biomes
   biomeManager.load("assets/data/biomes.json");
