@@ -1,13 +1,19 @@
 
 #pragma once
 
+#include <GL/glew.h>
 #include <array>
 #include <functional>
 #include <vector>
 
-#include "../constants/globals.h"
 #include "CubeFaces.h"
 #include "Voxel.h"
+
+constexpr size_t CHUNK_WIDTH = 16;
+constexpr size_t CHUNK_HEIGHT = 128;
+constexpr size_t CHUNK_LENGTH = 16;
+
+class World;
 
 struct VoxelNeighbours {
   bool top;
@@ -33,7 +39,10 @@ class ChunkMesh {
   void tessellate(Voxel (&blk)[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH]);
 
   // Render it all
-  void render(unsigned int offsetX, unsigned int offsetY, unsigned int offsetZ);
+  void render(World& world,
+              unsigned int offsetX,
+              unsigned int offsetY,
+              unsigned int offsetZ);
 
  private:
   GLuint vao{0};

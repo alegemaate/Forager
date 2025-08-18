@@ -4,7 +4,12 @@
 
 #include "../core/Logger.h"
 #include "../utils/utils.h"
-#include "TileTypeManager.h"
+#include "./TileTypeManager.h"
+#include "./World.h"
+
+constexpr size_t WORLD_WIDTH = 4;
+constexpr size_t WORLD_LENGTH = 4;
+constexpr size_t WORLD_HEIGHT = 1;
 
 // Construct
 ChunkMap::ChunkMap() {
@@ -16,14 +21,14 @@ ChunkMap::ChunkMap() {
 }
 
 // Update map
-void ChunkMap::update() {
+void ChunkMap::update(World& world) {
   for (auto& chunk : chunks) {
     chunk->update();
   }
 }
 
 // Procedural Generation of map
-void ChunkMap::generateMap() {
+void ChunkMap::generate() {
   // GENERATE MAP
   Logger::heading("Generating Map");
 
@@ -39,7 +44,7 @@ void ChunkMap::generateMap() {
   for (unsigned int i = 0; i < WORLD_WIDTH; i++) {
     for (unsigned int t = 0; t < WORLD_HEIGHT; t++) {
       for (unsigned int j = 0; j < WORLD_LENGTH; j++) {
-        quickPeek();
+        // quickPeek();
 
         auto& chunk = chunks.emplace_back(std::make_unique<Chunk>(i, t, j));
         chunk->generate(seed);
@@ -54,35 +59,24 @@ void ChunkMap::generateMap() {
   }
 }
 
-// Quick Peek
-void ChunkMap::quickPeek() {
-  // Clear screen
-  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-  // Draw tiles
-  render();
-
-  // Draw to screen
-  SDL_GL_SwapWindow(asw::display::window);
-}
-
 // Draw map
-void ChunkMap::render() {
+void ChunkMap::render(World& world) {
+  auto& defaultShader = world.getShaderManager().getShader("default");
+
   // Activate shader
   defaultShader.activate();
-  defaultShader.setMat4("projection", camera.getProjectionMatrix());
-  defaultShader.setMat4("view", camera.getViewMatrix());
-  defaultShader.setVec3("light.direction", lightDir);
-  defaultShader.setVec3("light.ambient", lightColor);
-  defaultShader.setVec3("light.color", lightColor);
+  defaultShader.setMat4("projection", world.getCamera().getProjectionMatrix());
+  defaultShader.setMat4("view", world.getCamera().getViewMatrix());
+  defaultShader.setVec3("light.direction", world.getLightDir());
+  defaultShader.setVec3("light.ambient", world.getLightColor());
+  defaultShader.setVec3("light.color", world.getLightColor());
 
   // Cube map
   glActiveTexture(GL_TEXTURE1);
   glBindTexture(GL_TEXTURE_CUBE_MAP, 1);
 
   for (auto& chunk : chunks) {
-    chunk->render();
+    chunk->render(world);
   }
 
   // Deactivate shader

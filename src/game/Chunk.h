@@ -2,11 +2,12 @@
 
 #include <glm/glm.hpp>
 
-#include "../constants/globals.h"
 #include "../core/SimplexNoise.h"
 #include "ChunkMesh.h"
 #include "CubeFaces.h"
 #include "Voxel.h"
+
+class World;
 
 class Chunk {
  public:
@@ -25,7 +26,7 @@ class Chunk {
   void update();
 
   // Render it all
-  void render();
+  void render(World& world);
 
   // Position
   unsigned int getX() const { return index_x; }

@@ -7,7 +7,8 @@
 
 #include "Chunk.h"
 
-#include "TileTypeManager.h"
+#include "./TileTypeManager.h"
+#include "./World.h"
 
 // Construct
 Chunk::Chunk(unsigned int x, unsigned int y, unsigned int z)
@@ -100,6 +101,6 @@ void Chunk::update() {
   changed = false;
 }
 
-void Chunk::render() {
-  mesh.render(index_x, index_y, index_z);
+void Chunk::render(World& world) {
+  mesh.render(world, index_x, index_y, index_z);
 }

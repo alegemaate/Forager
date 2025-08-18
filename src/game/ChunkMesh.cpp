@@ -1,7 +1,10 @@
 
 #include "ChunkMesh.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 #include "../utils/loaders.h"
+#include "./World.h"
 
 GLuint ChunkMesh::atlas = 0;
 
@@ -202,9 +205,12 @@ void ChunkMesh::tessellate(
   indices.clear();
 }
 
-void ChunkMesh::render(unsigned int offsetX,
+void ChunkMesh::render(World& world,
+                       unsigned int offsetX,
                        unsigned int offsetY,
                        unsigned int offsetZ) {
+  auto& defaultShader = world.getShaderManager().getShader("default");
+
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, atlas);
 

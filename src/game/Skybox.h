@@ -13,6 +13,8 @@
 #include <string>
 #include "../core/GpuProgram.h"
 
+class World;
+
 class Skybox {
  public:
   void loadSkybox(const std::string& pathFront,
@@ -21,7 +23,7 @@ class Skybox {
                   const std::string& pathRight,
                   const std::string& pathTop,
                   const std::string& pathBottom);
-  void render() const;
+  void render(World& world) const;
 
  private:
   GLuint cubemapTexture{0};

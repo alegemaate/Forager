@@ -15,23 +15,23 @@
 #include "Chunk.h"
 #include "Voxel.h"
 
+class World;
+
 class ChunkMap {
  public:
   explicit ChunkMap();
 
-  void update();
+  void update(World& world);
 
-  void generateMap();
+  void generate();
 
-  void render();
+  void render(World& world);
 
   Voxel& getTile(unsigned int x, unsigned int y, unsigned int z);
 
  private:
   // All chunks
   std::vector<std::unique_ptr<Chunk>> chunks;
-
-  void quickPeek();
 
   BiomeManager biomes;
 };

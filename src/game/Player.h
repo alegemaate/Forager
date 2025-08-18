@@ -7,7 +7,12 @@
 
 #pragma once
 
+class World;
+
 class Player {
  public:
-  void update();
+  void update(World& world);
+
+ private:
+  bool flying = true;
 };

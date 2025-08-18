@@ -23,6 +23,10 @@ class Camera {
     updateCameraVectors();
   }
 
+  const glm::vec3& getPosition() const { return position; }
+
+  void setPosition(const glm::vec3& pos) { position = pos; }
+
   // Returns the view matrix calculated using Euler Angles and the LookAt Matrix
   const glm::mat4 getViewMatrix() const {
     return glm::lookAt(position, position + front, up);

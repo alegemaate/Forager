@@ -2,10 +2,10 @@
 
 #include <asw/asw.h>
 
-#include "../constants/globals.h"
 #include "../utils/gl.h"
 #include "../utils/loaders.h"
 #include "../utils/utils.h"
+#include "./World.h"
 
 // Load the skybox
 void Skybox::loadSkybox(const std::string& pathFront,
@@ -51,7 +51,10 @@ void Skybox::loadSkybox(const std::string& pathFront,
 }
 
 // Render skybox
-void Skybox::render() const {
+void Skybox::render(World& world) const {
+  auto& camera = world.getCamera();
+  auto& lightColor = world.getLightColor();
+
   // Shader activation
   glDepthFunc(GL_LEQUAL);
   skyShader.activate();
