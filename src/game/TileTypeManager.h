@@ -15,11 +15,11 @@
 
 class TileTypeManager {
  public:
-  static void load(const std::string& path);
-  static TileType* getTileByType(TileID tileID);
+  void load(const std::string& path);
+  TileType* getTileByType(TileID tileID);
 
  private:
-  static std::unordered_map<TileID, TileType> tileTypes;
+  std::unordered_map<TileID, TileType> tileTypes;
 };
 
 #endif  // TILE_TYPE_MANAGER_H

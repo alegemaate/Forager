@@ -3,9 +3,10 @@
 #include <glm/glm.hpp>
 
 #include "../core/SimplexNoise.h"
-#include "ChunkMesh.h"
-#include "CubeFaces.h"
-#include "Voxel.h"
+#include "./ChunkMesh.h"
+#include "./CubeFaces.h"
+#include "./TileTypeManager.h"
+#include "./Voxel.h"
 
 class World;
 
@@ -14,13 +15,10 @@ class Chunk {
   Chunk(unsigned int x, unsigned int y, unsigned int z);
 
   // Generate chunk voxels
-  void generate(int seed);
+  void generate(TileTypeManager& tileManager, int seed);
 
   // Get block
   Voxel& get(unsigned int x, unsigned int y, unsigned int z);
-
-  // Set block
-  void set(unsigned int x, unsigned int y, unsigned int z, TileID type);
 
   // Tessellate and such
   void update();

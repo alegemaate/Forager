@@ -7,8 +7,6 @@
 #include "../core/Logger.h"
 #include "../utils/utils.h"
 
-std::unordered_map<TileID, TileType> TileTypeManager::tileTypes;
-
 // Load tiles
 void TileTypeManager::load(const std::string& path) {
   std::ifstream file(path);

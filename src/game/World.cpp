@@ -10,6 +10,12 @@ void World::init() {
   camera = Camera(glm::vec3(0.0f, 20.0f, 60.0f), glm::vec3(0.0f, 1.0f, 0.0f),
                   -22.5f, -45.0f);
 
+  // Load biomes
+  biomeManager.load("assets/data/biomes.json");
+
+  // Load tiles
+  tileManager.load("assets/data/tiles.json");
+
   // Load sky
   skybox.loadSkybox(
       "assets/images/skybox/front.png", "assets/images/skybox/back.png",
@@ -17,7 +23,7 @@ void World::init() {
       "assets/images/skybox/top.png", "assets/images/skybox/bottom.png");
 
   // Generate map
-  chunks.generate();
+  chunks.generate(tileManager);
 }
 
 void World::update(float dt) {
@@ -26,7 +32,7 @@ void World::update(float dt) {
 
   // Gen
   if (asw::input::wasKeyPressed(asw::input::Key::R)) {
-    chunks.generate();
+    chunks.generate(tileManager);
   }
 
   // Change time

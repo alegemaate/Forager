@@ -1,6 +1,7 @@
 #include "ChunkMap.h"
 
 #include <asw/asw.h>
+#include <stdexcept>
 
 #include "../core/Logger.h"
 #include "../utils/utils.h"
@@ -11,15 +12,6 @@ constexpr size_t WORLD_WIDTH = 4;
 constexpr size_t WORLD_LENGTH = 4;
 constexpr size_t WORLD_HEIGHT = 1;
 
-// Construct
-ChunkMap::ChunkMap() {
-  // Load biomes
-  biomes.load("assets/data/biomes.json");
-
-  // Load tiles
-  TileTypeManager::load("assets/data/tiles.json");
-}
-
 // Update map
 void ChunkMap::update(World& world) {
   for (auto& chunk : chunks) {
@@ -28,7 +20,7 @@ void ChunkMap::update(World& world) {
 }
 
 // Procedural Generation of map
-void ChunkMap::generate() {
+void ChunkMap::generate(TileTypeManager& tileManager) {
   // GENERATE MAP
   Logger::heading("Generating Map");
 
@@ -47,7 +39,7 @@ void ChunkMap::generate() {
         // quickPeek();
 
         auto& chunk = chunks.emplace_back(std::make_unique<Chunk>(i, t, j));
-        chunk->generate(seed);
+        chunk->generate(tileManager, seed);
         currentChunk++;
 
         // Send to console
@@ -61,15 +53,18 @@ void ChunkMap::generate() {
 
 // Draw map
 void ChunkMap::render(World& world) {
-  auto& defaultShader = world.getShaderManager().getShader("default");
+  const auto& defaultShader = world.getShaderManager().getShader("default");
+  const auto& camera = world.getCamera();
+  const auto& lightDir = world.getLightDir();
+  const auto& lightColor = world.getLightColor();
 
   // Activate shader
   defaultShader.activate();
-  defaultShader.setMat4("projection", world.getCamera().getProjectionMatrix());
-  defaultShader.setMat4("view", world.getCamera().getViewMatrix());
-  defaultShader.setVec3("light.direction", world.getLightDir());
-  defaultShader.setVec3("light.ambient", world.getLightColor());
-  defaultShader.setVec3("light.color", world.getLightColor());
+  defaultShader.setMat4("projection", camera.getProjectionMatrix());
+  defaultShader.setMat4("view", camera.getViewMatrix());
+  defaultShader.setVec3("light.direction", lightDir);
+  defaultShader.setVec3("light.ambient", lightColor);
+  defaultShader.setVec3("light.color", lightColor);
 
   // Cube map
   glActiveTexture(GL_TEXTURE1);
@@ -98,4 +93,9 @@ Voxel& ChunkMap::getTile(unsigned int x, unsigned int y, unsigned int z) {
       return chunk->get(tileX, tileY, tileZ);
     }
   }
+
+  throw std::runtime_error(
+      "ChunkMap::getTile: Chunk not found for coordinates (" +
+      std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) +
+      ")");
 }

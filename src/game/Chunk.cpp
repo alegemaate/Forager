@@ -12,20 +12,9 @@
 
 // Construct
 Chunk::Chunk(unsigned int x, unsigned int y, unsigned int z)
-    : index_x(x), index_y(y), index_z(z) {
-  for (unsigned int i = 0; i < CHUNK_WIDTH; i++) {
-    for (unsigned int t = 0; t < CHUNK_HEIGHT; t++) {
-      for (unsigned int u = 0; u < CHUNK_LENGTH; u++) {
-        blk[i][t][u].setType(TileTypeManager::getTileByType(TileID::Air));
-      }
-    }
-  }
+    : index_x(x), index_y(y), index_z(z) {}
 
-  // Init VAO
-  mesh.tessellate(blk);
-}
-
-void Chunk::generate(int seed) {
+void Chunk::generate(TileTypeManager& tileManager, int seed) {
   // STEP 1:
   // 2D Heightmap generation
   const SimplexNoise heightMap = SimplexNoise(0.002f, 0.002f, 2.0f, 0.47f);
@@ -41,15 +30,15 @@ void Chunk::generate(int seed) {
       for (unsigned int t = 0; t < CHUNK_HEIGHT; t++) {
         // Air
         if (t > height) {
-          blk[i][t][u].setType(TileTypeManager::getTileByType(TileID::Air));
+          blk[i][t][u].setType(tileManager.getTileByType(TileID::Air));
         }
 
         else if (t + 1 > height) {  // Grass
-          blk[i][t][u].setType(TileTypeManager::getTileByType(TileID::Grass));
+          blk[i][t][u].setType(tileManager.getTileByType(TileID::Grass));
         } else if (t + 4 > height) {  // Dirt
-          blk[i][t][u].setType(TileTypeManager::getTileByType(TileID::Dirt));
+          blk[i][t][u].setType(tileManager.getTileByType(TileID::Dirt));
         } else {  // Stone
-          blk[i][t][u].setType(TileTypeManager::getTileByType(TileID::Stone));
+          blk[i][t][u].setType(tileManager.getTileByType(TileID::Stone));
         }
       }
     }
@@ -75,7 +64,7 @@ void Chunk::generate(int seed) {
         auto val = caveMap.fractal(10, noiseX, noiseZ, noiseY);
 
         if (val > 0.0f) {
-          blk[i][t][u].setType(TileTypeManager::getTileByType(TileID::Air));
+          blk[i][t][u].setType(tileManager.getTileByType(TileID::Air));
         }
       }
     }
@@ -86,11 +75,6 @@ void Chunk::generate(int seed) {
 
 Voxel& Chunk::get(unsigned int x, unsigned int y, unsigned int z) {
   return blk[x][y][z];
-}
-
-void Chunk::set(unsigned int x, unsigned int y, unsigned int z, TileID type) {
-  blk[x][y][z].setType(TileTypeManager::getTileByType(type));
-  changed = true;
 }
 
 void Chunk::update() {

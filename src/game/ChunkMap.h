@@ -11,19 +11,18 @@
 #include <string>
 #include <vector>
 
-#include "BiomeManager.h"
-#include "Chunk.h"
-#include "Voxel.h"
+#include "./BiomeManager.h"
+#include "./Chunk.h"
+#include "./TileTypeManager.h"
+#include "./Voxel.h"
 
 class World;
 
 class ChunkMap {
  public:
-  explicit ChunkMap();
-
   void update(World& world);
 
-  void generate();
+  void generate(TileTypeManager& tileManager);
 
   void render(World& world);
 
@@ -32,6 +31,4 @@ class ChunkMap {
  private:
   // All chunks
   std::vector<std::unique_ptr<Chunk>> chunks;
-
-  BiomeManager biomes;
 };

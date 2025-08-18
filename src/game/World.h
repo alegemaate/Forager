@@ -2,9 +2,11 @@
 
 #include "../core/Camera.h"
 #include "../core/ShaderManager.h"
+#include "./BiomeManager.h"
 #include "./ChunkMap.h"
 #include "./Player.h"
 #include "./Skybox.h"
+#include "./TileTypeManager.h"
 
 // World
 class World {
@@ -19,8 +21,13 @@ class World {
   Camera& getCamera() { return camera; }
   ChunkMap& getChunks() { return chunks; }
   Player& getPlayer() { return player; }
-  const ShaderManager& getShaderManager() const { return shaderManager; }
 
+  // Managers
+  TileTypeManager& getTileManager() { return tileManager; }
+  const ShaderManager& getShaderManager() const { return shaderManager; }
+  const BiomeManager& getBiomeManager() const { return biomeManager; }
+
+  // Lighting
   const glm::vec3& getLightDir() const { return lightDir; }
   const glm::vec3& getLightColor() const { return lightColor; }
 
@@ -35,4 +42,6 @@ class World {
   glm::vec3 lightDir{0.0f, 0.0f, 0.0f};
   glm::vec3 lightColor{0.0f, 0.0f, 0.0f};
   ShaderManager shaderManager;
+  TileTypeManager tileManager;
+  BiomeManager biomeManager;
 };
