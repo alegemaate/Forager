@@ -7,58 +7,68 @@
 
 #include "Chunk.h"
 
-#include "../constants/ids.h"
-#include "../core/SimplexNoise.h"
-#include "TileTypeManager.h"
+#include "./TileTypeManager.h"
+#include "./World.h"
 
 // Construct
 Chunk::Chunk(unsigned int x, unsigned int y, unsigned int z)
-    : index_x(x), index_y(y), index_z(z) {
-  for (unsigned int i = 0; i < CHUNK_WIDTH; i++) {
-    for (unsigned int t = 0; t < CHUNK_HEIGHT; t++) {
-      for (unsigned int u = 0; u < CHUNK_LENGTH; u++) {
-        blk[i][t][u].setType(TileTypeManager::getTileByType(TILE_AIR));
-      }
-    }
-  }
+    : index_x(x), index_y(y), index_z(z) {}
 
-  // Init VAO
-  mesh.tessellate(blk);
-}
-
-void Chunk::generate(int seed) {
-  // Height
-  SimplexNoise noise(0.02f, 0.02f, 2.0f, 0.47f);
-
+void Chunk::generate(TileTypeManager& tileManager, int seed) {
   // STEP 1:
-  // Start with air
-  for (auto& i : blk) {
-    for (auto& t : i) {
-      for (auto& u : t) {
-        u.setType(TileTypeManager::getTileByType(TILE_AIR));
+  // 2D Heightmap generation
+  const SimplexNoise heightMap = SimplexNoise(0.002f, 0.002f, 2.0f, 0.47f);
+
+  for (unsigned int x = 0; x < CHUNK_WIDTH; x++) {
+    auto noiseX = static_cast<float>(x + seed + (index_x * CHUNK_WIDTH));
+    for (unsigned int z = 0; z < CHUNK_LENGTH; z++) {
+      auto noiseZ = static_cast<float>(z + seed + (index_z * CHUNK_LENGTH));
+      auto val = heightMap.fractal(10, noiseX, noiseZ);
+
+      // Height of terrain at this (x,z) position
+      // Cache for future steps
+      auto height =
+          static_cast<unsigned int>((val + 1.0f) * (CHUNK_HEIGHT - 1) / 2.0f);
+      height_map[x][z] = height;
+
+      for (unsigned int y = 0; y < CHUNK_HEIGHT; y++) {
+        // Air
+        if (y > height) {
+          blk[x][y][z].setType(tileManager.getTileByType(TileID::Air));
+        }
+
+        else if (y + 1 > height) {  // Grass
+          blk[x][y][z].setType(tileManager.getTileByType(TileID::Grass));
+        } else if (y + 4 > height) {  // Dirt
+          blk[x][y][z].setType(tileManager.getTileByType(TileID::Dirt));
+        } else {  // Stone
+          blk[x][y][z].setType(tileManager.getTileByType(TileID::Stone));
+        }
       }
     }
   }
 
   // STEP 2:
-  // Fill with dirt
-  const auto chunkXOffset = seed + index_x * CHUNK_WIDTH;
-  const auto chunkZOffset = seed + index_z * CHUNK_LENGTH;
-  const auto chunkYOffset = seed + index_y * CHUNK_HEIGHT;
+  // Caves
+  const SimplexNoise caveMap = SimplexNoise(0.03f, 0.03f, 2.0f, 0.47f);
 
-  for (unsigned int i = 0; i < CHUNK_WIDTH; i++) {
-    auto noiseX = static_cast<float>(i + chunkXOffset);
+  const auto chunkXOffset = seed + (index_x * CHUNK_WIDTH);
+  const auto chunkZOffset = seed + (index_z * CHUNK_LENGTH);
+  const auto chunkYOffset = seed + (index_y * CHUNK_HEIGHT);
 
-    for (unsigned int u = 0; u < CHUNK_LENGTH; u++) {
-      auto noiseZ = static_cast<float>(u + chunkZOffset);
+  for (unsigned int x = 0; x < CHUNK_WIDTH; x++) {
+    auto noiseX = static_cast<float>(x + chunkXOffset);
 
-      for (unsigned int t = 0; t < CHUNK_HEIGHT; t++) {
-        auto noiseY = static_cast<float>(t + chunkYOffset);
+    for (unsigned int z = 0; z < CHUNK_LENGTH; z++) {
+      auto noiseZ = static_cast<float>(z + chunkZOffset);
+      auto height = height_map[x][z];
 
-        auto val = noise.fractal(10, noiseX, noiseZ, noiseY);
+      for (unsigned int y = 4; y < height - 4; y++) {
+        auto noiseY = static_cast<float>(y + chunkYOffset);
+        auto val = caveMap.fractal(10, noiseX, noiseZ, noiseY);
 
-        if (val < 0.0f) {
-          blk[i][t][u].setType(TileTypeManager::getTileByType(TILE_STONE));
+        if (val > 0.0f) {
+          blk[x][y][z].setType(tileManager.getTileByType(TileID::Air));
         }
       }
     }
@@ -71,14 +81,6 @@ Voxel& Chunk::get(unsigned int x, unsigned int y, unsigned int z) {
   return blk[x][y][z];
 }
 
-void Chunk::set(unsigned int x,
-                unsigned int y,
-                unsigned int z,
-                unsigned char type) {
-  blk[x][y][z].setType(TileTypeManager::getTileByType(type));
-  changed = true;
-}
-
 void Chunk::update() {
   if (changed) {
     mesh.tessellate(blk);
@@ -87,6 +89,6 @@ void Chunk::update() {
   changed = false;
 }
 
-void Chunk::render() {
-  mesh.render(index_x, index_y, index_z);
+void Chunk::render(World& world) {
+  mesh.render(world, index_x, index_y, index_z);
 }

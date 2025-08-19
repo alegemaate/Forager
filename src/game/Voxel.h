@@ -5,18 +5,22 @@
   Class for the tile data (for images see TextureLoader.h)
 */
 
-#ifndef TILE_H
-#define TILE_H
+#pragma once
 
+#include <glm/glm.hpp>
 #include "TileType.h"
-#include "glm/glm.hpp"
 
 class Voxel {
  public:
   Voxel();
   explicit Voxel(TileType* type);
 
-  unsigned short getType() { return tileImpl->getType(); }
+  bool isSolid() const {
+    return tileImpl->getType() != TileID::Air &&
+           tileImpl->getType() != TileID::Water;
+  }
+
+  TileID getType() { return tileImpl->getType(); }
   void setType(TileType* type) { tileImpl = type; }
 
   TileType* getTile() { return tileImpl; }
@@ -24,5 +28,3 @@ class Voxel {
  private:
   TileType* tileImpl = nullptr;
 };
-
-#endif  // TILE_H

@@ -1,31 +1,31 @@
 #include "ChunkMap.h"
 
-#include <alleggl.h>
+#include <asw/asw.h>
+#include <stdexcept>
 
 #include "../core/Logger.h"
 #include "../utils/utils.h"
-#include "TileTypeManager.h"
+#include "./TileTypeManager.h"
+#include "./World.h"
 
-// Construct
-ChunkMap::ChunkMap() {
-  // Load biomes
-  biomes.load("assets/data/biomes.json");
-
-  // Load tiles
-  TileTypeManager::load("assets/data/tiles.json");
-}
+constexpr size_t WORLD_WIDTH = 8;
+constexpr size_t WORLD_LENGTH = 8;
+constexpr size_t WORLD_HEIGHT = 1;
 
 // Update map
-void ChunkMap::update() {
+void ChunkMap::update(World& world) {
   for (auto& chunk : chunks) {
     chunk->update();
   }
 }
 
 // Procedural Generation of map
-void ChunkMap::generateMap(BITMAP* buffer) {
+void ChunkMap::generate(TileTypeManager& tileManager) {
   // GENERATE MAP
-  Logger::heading("GENERATING MAP");
+  Logger::heading("Generating Map");
+
+  // Set empty tile
+  emptyTile.setType(tileManager.getTileByType(TileID::Air));
 
   // Clear chunks
   chunks.clear();
@@ -35,93 +35,48 @@ void ChunkMap::generateMap(BITMAP* buffer) {
   int currentChunk = 0;
   const int worldSize = WORLD_WIDTH * WORLD_LENGTH * WORLD_HEIGHT;
 
-  for (unsigned int i = 0; i < WORLD_WIDTH; i++) {
-    for (unsigned int t = 0; t < WORLD_HEIGHT; t++) {
-      for (unsigned int j = 0; j < WORLD_LENGTH; j++) {
-      }
-    }
-  }
-
   // Make lots of chunks
   for (unsigned int i = 0; i < WORLD_WIDTH; i++) {
     for (unsigned int t = 0; t < WORLD_HEIGHT; t++) {
       for (unsigned int j = 0; j < WORLD_LENGTH; j++) {
-        quickPeek(buffer, "Generating Chunk " +
-                              std::to_string(currentChunk + 1) + "/" +
-                              std::to_string(worldSize));
         auto& chunk = chunks.emplace_back(std::make_unique<Chunk>(i, t, j));
-        chunk->generate(seed);
+        chunk->generate(tileManager, seed);
         currentChunk++;
+
+        // Send to console
+        Logger::progress(
+            std::to_string(currentChunk) + "/" + std::to_string(worldSize),
+            static_cast<float>(currentChunk) / worldSize);
       }
     }
   }
 }
 
-// Quick Peek
-void ChunkMap::quickPeek(BITMAP* buffer, const std::string& currentPhase) {
-  // Send to console
-  Logger::point(currentPhase);
-
-  // View matrix
-  glMatrixMode(GL_MODELVIEW);
-
-  // Clear screen
-  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-  // Draw tiles
-  draw();
-
-  // Allegro drawing
-  glUseProgram(0);
-  allegro_gl_set_allegro_mode();
-
-  // Transparent buffer
-  rectfill(buffer, 0, 0, SCREEN_W, SCREEN_H, makecol(255, 0, 255));
-
-  // Info
-  textprintf_centre_ex(buffer, font, SCREEN_W / 2, SCREEN_H / 2,
-                       makecol(0, 0, 0), makecol(255, 255, 255), "%s",
-                       currentPhase.c_str());
-
-  // Draw to screen
-  draw_sprite(screen, buffer, 0, 0);
-
-  allegro_gl_unset_allegro_mode();
-  allegro_gl_flip();
-}
-
 // Draw map
-void ChunkMap::draw() {
-  defaultShader->activate();
+void ChunkMap::render(World& world) {
+  const auto& defaultShader = world.getGpuProgramManager().getShader("default");
+  const auto& camera = world.getCamera();
+  const auto& lightDir = world.getLightDir();
+  const auto& lightColor = world.getLightColor();
 
-  // Pass projection matrix to shader
-  glm::mat4 projection =
-      glm::perspective(glm::radians(camera->zoom),
-                       (float)SCREEN_W / (float)SCREEN_H, 0.1f, 100.0f);
-  defaultShader->setMat4("projection", projection);
-
-  // Pass camera/view transformation
-  glm::mat4 view = camera->getViewMatrix();
-  defaultShader->setMat4("view", view);
-
-  // Light position
-  defaultShader->setVec3("light.direction", lightDir);
-  defaultShader->setVec3("light.ambient", lightColor);
-  defaultShader->setFloat("skyTime", skyTime);
-
-  // Camera position
-  defaultShader->setVec3("cameraPos", camera->position);
+  // Activate shader
+  defaultShader.activate();
+  defaultShader.setMat4("projection", camera.getProjectionMatrix());
+  defaultShader.setMat4("view", camera.getViewMatrix());
+  defaultShader.setVec3("light.direction", lightDir);
+  defaultShader.setVec3("light.ambient", lightColor);
+  defaultShader.setVec3("light.color", lightColor);
 
   // Cube map
   glActiveTexture(GL_TEXTURE1);
   glBindTexture(GL_TEXTURE_CUBE_MAP, 1);
 
   for (auto& chunk : chunks) {
-    chunk->render();
+    chunk->render(world);
   }
 
-  GpuProgram::deactivate();
+  // Deactivate shader
+  defaultShader.deactivate();
 }
 
 Voxel& ChunkMap::getTile(unsigned int x, unsigned int y, unsigned int z) {
@@ -134,9 +89,11 @@ Voxel& ChunkMap::getTile(unsigned int x, unsigned int y, unsigned int z) {
         chunk->getZ() == chunkZ) {
       auto tileX = x % CHUNK_WIDTH;
       auto tileZ = z % CHUNK_LENGTH;
-      auto tileY = y % CHUNK_LENGTH;
+      auto tileY = y % CHUNK_HEIGHT;
 
       return chunk->get(tileX, tileY, tileZ);
     }
   }
+
+  return emptyTile;  // Return an empty tile if not found
 }

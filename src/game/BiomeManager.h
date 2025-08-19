@@ -6,8 +6,7 @@
   reference
 */
 
-#ifndef BIOME_MANAGER_H
-#define BIOME_MANAGER_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -23,9 +22,6 @@ class BiomeManager {
   int getNumberBiomes() { return biomes.size(); };
   Biome getBiome(int biomeID);
 
- protected:
  private:
   std::vector<Biome> biomes;
 };
-
-#endif  // BIOME_MANAGER_H

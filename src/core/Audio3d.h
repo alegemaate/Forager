@@ -5,10 +5,9 @@
   3D Sound object
 */
 
-#ifndef AUDIO_3D_H
-#define AUDIO_3D_H
+#pragma once
 
-#include <allegro.h>
+#include <asw/asw.h>
 #include <string>
 
 class Audio3d {
@@ -17,7 +16,6 @@ class Audio3d {
                    float x = 0,
                    float y = 0,
                    float z = 0);
-  virtual ~Audio3d() = default;
 
   void loadSound(const std::string& newFileName);
 
@@ -32,10 +30,7 @@ class Audio3d {
 
   int volume = 255;
   int pan = 127;
-  int frequency = 1000;
-  bool loop = false;
+  int loop = false;
 
-  SAMPLE* a3d_file = nullptr;
+  asw::Sample sample = nullptr;
 };
-
-#endif  // AUDIO_3D_H

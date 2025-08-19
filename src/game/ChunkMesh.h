@@ -1,13 +1,19 @@
 
-#ifndef FORAGER_CHUNK_MESH_H
-#define FORAGER_CHUNK_MESH_H
+#pragma once
 
+#include <GL/glew.h>
 #include <array>
+#include <functional>
 #include <vector>
 
-#include "../constants/globals.h"
 #include "CubeFaces.h"
 #include "Voxel.h"
+
+constexpr size_t CHUNK_WIDTH = 16;
+constexpr size_t CHUNK_HEIGHT = 128;
+constexpr size_t CHUNK_LENGTH = 16;
+
+class World;
 
 struct VoxelNeighbours {
   bool top;
@@ -24,30 +30,29 @@ class ChunkMesh {
   ~ChunkMesh();
 
   // Fill a given face
-  void fillFace(FaceDefenition face[6],
-                glm::vec3 offset,
+  void fillFace(const std::array<FaceDefenition, 6>& face,
+                const glm::ivec3& base,
                 GLuint atlasPos,
-                VoxelNeighbours neighbours);
-
-  unsigned int vertexAO(bool side1, bool side2, bool corner);
+                const std::function<bool(int, int, int)>& solid);
 
   // Tessellate chunk
   void tessellate(Voxel (&blk)[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH]);
 
   // Render it all
-  void render(unsigned int offsetX, unsigned int offsetY, unsigned int offsetZ);
+  void render(World& world,
+              unsigned int offsetX,
+              unsigned int offsetY,
+              unsigned int offsetZ);
 
  private:
-  GLuint chunkVAO = 0;
-  GLuint chunkVBO = 0;
-  GLuint chunkEBO = 0;
+  GLuint vao{0};
+  GLuint vbo{0};
+  GLuint ebo{0};
 
-  GLuint numIndices = 0;
+  GLuint numIndices{0};
 
   std::vector<GLfloat> vertices;
   std::vector<GLuint> indices;
 
-  static GLuint atlas;
+  static GLuint atlas;  // Texture atlas
 };
-
-#endif  // FORAGER_CHUNK_MESH_H

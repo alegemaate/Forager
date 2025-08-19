@@ -5,14 +5,18 @@
   The controllable player
 */
 
-#ifndef PLAYER_H
-#define PLAYER_H
+#pragma once
 
-#include "ChunkMap.h"
+#include <glm/glm.hpp>
+
+class World;
 
 class Player {
  public:
-  void update();
-};
+  void update(World& world);
 
-#endif  // PLAYER_H
+ private:
+  bool flying = true;
+
+  glm::vec3 velocity{0.0f, 0.0f, 0.0f};
+};

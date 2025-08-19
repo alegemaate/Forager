@@ -30,6 +30,21 @@
     "random": 0
   },
   {
+    "id": 16,
+    "name": "Dirt",
+    "atlas": {
+      "top": 1,
+      "bottom": 1,
+      "left": 1,
+      "right": 1,
+      "front": 1,
+      "back": 1
+    },
+    "model": "MODEL_CUBE",
+    "attribute": "ATTRIBUTE_SOLID",
+    "random": 0
+  },
+  {
     "id": 2,
     "name": "Sand",
     "atlas": {
@@ -255,4 +270,3 @@
     "random": 0
   }
 ]
-

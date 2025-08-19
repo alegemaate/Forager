@@ -5,8 +5,7 @@
   A nice class that stores vertices, uvs and normals of a model
 */
 
-#ifndef MODEL_H
-#define MODEL_H
+#pragma once
 
 #include <GL/glew.h>
 #include <glm/glm.hpp>
@@ -28,5 +27,3 @@ class Model {
 
   bool load(const char* path, const char* uv_path);
 };
-
-#endif  // MODEL_H

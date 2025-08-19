@@ -5,8 +5,7 @@
   Class for the biome data for quick access by tiles
 */
 
-#ifndef BIOME_H
-#define BIOME_H
+#pragma once
 
 #include <string>
 
@@ -63,5 +62,3 @@ class Biome {
 
   int spawnChance = 0;
 };
-
-#endif  // BIOME_H

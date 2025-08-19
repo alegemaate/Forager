@@ -5,14 +5,14 @@
   A neato lil skybox loader
 */
 
-#ifndef SKYBOX_H
-#define SKYBOX_H
+#pragma once
 
 #include <GL/glew.h>
-
-#include <allegro.h>
 #include <string>
-#include <vector>
+
+#include "../render/gpu_program.h"
+
+class World;
 
 class Skybox {
  public:
@@ -22,21 +22,15 @@ class Skybox {
                   const std::string& pathRight,
                   const std::string& pathTop,
                   const std::string& pathBottom);
-  void render() const;
-
-  void setTime(float time) { timeOfDay = time; }
+  void render(World& world) const;
 
  private:
-  static float skyboxVertices[108];
+  GLuint cubemapTexture{0};
 
-  GLuint cubemapTexture;
+  GLuint vao{0};
+  GLuint vbo{0};
 
-  GLuint skyboxVAO;
-  GLuint skyboxVBO;
-
-  float timeOfDay = 0.0f;
+  GpuProgram skyShader;
 
   static GLuint loadCubemap(std::vector<std::string> faces);
 };
-
-#endif  // SKYBOX_H

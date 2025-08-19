@@ -1,6 +1,5 @@
 #include "utils.h"
 
-#include <allegro.h>
 #include <asw/asw.h>
 #include <cmath>
 
@@ -25,11 +24,11 @@ bool collision3d(double x1,
                  double z2,
                  double depth2) {
   // check the X axis
-  if (abs(x1 - x2) < width1 + width2) {
+  if (std::abs(x1 - x2) < width1 + width2) {
     // check the Y axis
-    if (abs(y1 - y2) < height1 + height2) {
+    if (std::abs(y1 - y2) < height1 + height2) {
       // check the Z axis
-      if (abs(z1 - z2) < depth1 + depth2) {
+      if (std::abs(z1 - z2) < depth1 + depth2) {
         return true;
       }
     }
@@ -57,9 +56,5 @@ float distanceTo3D(float x1, float y1, float z1, float x2, float y2, float z2) {
  *  ERROR REPORTING
  */
 void abortOnError(const std::string& message) {
-  if (screen != nullptr) {
-    set_gfx_mode(GFX_TEXT, 0, 0, 0, 0);
-  }
-  allegro_message("%s.\n %s\n", message.c_str(), allegro_error);
-  exit(-1);
+  asw::util::abortOnError(message);
 }

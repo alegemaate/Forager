@@ -5,37 +5,38 @@
   Manages all the tiles
 */
 
-#ifndef TILE_MAP_H
-#define TILE_MAP_H
+#pragma once
 
-#include <allegro.h>
 #include <memory>
 #include <string>
 #include <vector>
 
-#include "BiomeManager.h"
-#include "Chunk.h"
-#include "Voxel.h"
+#include "./BiomeManager.h"
+#include "./Chunk.h"
+#include "./TileTypeManager.h"
+#include "./Voxel.h"
+
+class World;
 
 class ChunkMap {
  public:
-  explicit ChunkMap();
+  void update(World& world);
 
-  void update();
+  void generate(TileTypeManager& tileManager);
 
-  void generateMap(BITMAP* buffer);
-
-  void draw();
+  void render(World& world);
 
   Voxel& getTile(unsigned int x, unsigned int y, unsigned int z);
 
+  Voxel& getTile(const glm::vec3& pos) {
+    return getTile(static_cast<unsigned int>(pos.x),
+                   static_cast<unsigned int>(pos.y),
+                   static_cast<unsigned int>(pos.z));
+  }
+
  private:
   // All chunks
-  std::vector<std::unique_ptr<Chunk>> chunks{};
+  std::vector<std::unique_ptr<Chunk>> chunks;
 
-  void quickPeek(BITMAP* buffer, const std::string& currentPhase);
-
-  BiomeManager biomes;
+  Voxel emptyTile{};
 };
-
-#endif  // TILE_MAP_H

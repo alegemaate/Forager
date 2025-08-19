@@ -1,4 +1,4 @@
 #include "TileType.h"
 
-TileType::TileType(unsigned char type, AtlasLookup atlasIds)
+TileType::TileType(TileID type, AtlasLookup atlasIds)
     : type(type), atlasIds(atlasIds) {}

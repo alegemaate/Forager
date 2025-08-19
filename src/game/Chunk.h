@@ -1,36 +1,35 @@
-#ifndef CHUNK_H
-#define CHUNK_H
+#pragma once
 
 #include <glm/glm.hpp>
 
-#include "../constants/globals.h"
-#include "ChunkMesh.h"
-#include "CubeFaces.h"
-#include "Voxel.h"
+#include "../core/SimplexNoise.h"
+#include "./ChunkMesh.h"
+#include "./CubeFaces.h"
+#include "./TileTypeManager.h"
+#include "./Voxel.h"
+
+class World;
 
 class Chunk {
  public:
   Chunk(unsigned int x, unsigned int y, unsigned int z);
 
   // Generate chunk voxels
-  void generate(int seed);
+  void generate(TileTypeManager& tileManager, int seed);
 
   // Get block
   Voxel& get(unsigned int x, unsigned int y, unsigned int z);
-
-  // Set block
-  void set(unsigned int x, unsigned int y, unsigned int z, unsigned char type);
 
   // Tessellate and such
   void update();
 
   // Render it all
-  void render();
+  void render(World& world);
 
   // Position
-  unsigned int getX() { return index_x; }
-  unsigned int getY() { return index_y; }
-  unsigned int getZ() { return index_z; }
+  unsigned int getX() const { return index_x; }
+  unsigned int getY() const { return index_y; }
+  unsigned int getZ() const { return index_z; }
 
  private:
   unsigned int index_x;
@@ -40,8 +39,8 @@ class Chunk {
   Voxel blk[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH]{};
   bool changed = false;
 
+  unsigned int height_map[CHUNK_WIDTH][CHUNK_LENGTH]{};
+
   // Data
   ChunkMesh mesh;
 };
-
-#endif  // CHUNK_H
