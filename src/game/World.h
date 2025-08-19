@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../core/Camera.h"
-#include "../core/ShaderManager.h"
+#include "../render/gpu_program_manager.h"
 #include "./BiomeManager.h"
 #include "./ChunkMap.h"
 #include "./Player.h"
@@ -24,7 +24,9 @@ class World {
 
   // Managers
   TileTypeManager& getTileManager() { return tileManager; }
-  const ShaderManager& getShaderManager() const { return shaderManager; }
+  const GpuProgramManager& getGpuProgramManager() const {
+    return gpuProgramManager;
+  }
   const BiomeManager& getBiomeManager() const { return biomeManager; }
 
   // Lighting
@@ -41,7 +43,7 @@ class World {
   Camera camera;
   glm::vec3 lightDir{0.0f, 0.0f, 0.0f};
   glm::vec3 lightColor{0.0f, 0.0f, 0.0f};
-  ShaderManager shaderManager;
+  GpuProgramManager gpuProgramManager;
   TileTypeManager tileManager;
   BiomeManager biomeManager;
 };

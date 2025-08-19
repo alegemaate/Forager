@@ -3,7 +3,7 @@
 #include <asw/asw.h>
 
 void World::init() {
-  auto& defaultShader = shaderManager.createShader("default");
+  auto& defaultShader = gpuProgramManager.createShader("default");
   defaultShader.initProgramFromFiles({"textured.vert", "textured.frag"});
 
   // Camera

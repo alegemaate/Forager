@@ -5,13 +5,12 @@
   A neato lil skybox loader
 */
 
-#ifndef SKYBOX_H
-#define SKYBOX_H
+#pragma once
 
 #include <GL/glew.h>
-
 #include <string>
-#include "../core/GpuProgram.h"
+
+#include "../render/gpu_program.h"
 
 class World;
 
@@ -35,5 +34,3 @@ class Skybox {
 
   static GLuint loadCubemap(std::vector<std::string> faces);
 };
-
-#endif  // SKYBOX_H

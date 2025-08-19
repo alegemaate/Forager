@@ -1,8 +1,7 @@
-
-
-#include "GpuProgram.h"
+#include "./gpu_program.h"
 
 #include <fstream>
+
 #include "../core/Logger.h"
 #include "../utils/utils.h"
 

@@ -54,7 +54,7 @@ void ChunkMap::generate(TileTypeManager& tileManager) {
 
 // Draw map
 void ChunkMap::render(World& world) {
-  const auto& defaultShader = world.getShaderManager().getShader("default");
+  const auto& defaultShader = world.getGpuProgramManager().getShader("default");
   const auto& camera = world.getCamera();
   const auto& lightDir = world.getLightDir();
   const auto& lightColor = world.getLightColor();

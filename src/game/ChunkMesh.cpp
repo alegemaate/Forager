@@ -209,7 +209,7 @@ void ChunkMesh::render(World& world,
                        unsigned int offsetX,
                        unsigned int offsetY,
                        unsigned int offsetZ) {
-  auto& defaultShader = world.getShaderManager().getShader("default");
+  auto& defaultShader = world.getGpuProgramManager().getShader("default");
 
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, atlas);
