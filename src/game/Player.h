@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <glm/glm.hpp>
+
 class World;
 
 class Player {
@@ -15,4 +17,6 @@ class Player {
 
  private:
   bool flying = true;
+
+  glm::vec3 velocity{0.0f, 0.0f, 0.0f};
 };

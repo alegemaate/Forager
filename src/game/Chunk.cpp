@@ -24,8 +24,12 @@ void Chunk::generate(TileTypeManager& tileManager, int seed) {
     for (unsigned int z = 0; z < CHUNK_LENGTH; z++) {
       auto noiseZ = static_cast<float>(z + seed + (index_z * CHUNK_LENGTH));
       auto val = heightMap.fractal(10, noiseX, noiseZ);
+
+      // Height of terrain at this (x,z) position
+      // Cache for future steps
       auto height =
           static_cast<unsigned int>((val + 1.0f) * (CHUNK_HEIGHT - 1) / 2.0f);
+      height_map[x][z] = height;
 
       for (unsigned int y = 0; y < CHUNK_HEIGHT; y++) {
         // Air
@@ -57,10 +61,10 @@ void Chunk::generate(TileTypeManager& tileManager, int seed) {
 
     for (unsigned int z = 0; z < CHUNK_LENGTH; z++) {
       auto noiseZ = static_cast<float>(z + chunkZOffset);
+      auto height = height_map[x][z];
 
-      for (unsigned int y = 0; y < CHUNK_HEIGHT; y++) {
+      for (unsigned int y = 4; y < height - 4; y++) {
         auto noiseY = static_cast<float>(y + chunkYOffset);
-
         auto val = caveMap.fractal(10, noiseX, noiseZ, noiseY);
 
         if (val > 0.0f) {

@@ -25,7 +25,7 @@ class Camera {
   Camera() = default;
 
   // Constructor with vectors
-  explicit Camera(glm::vec3 position, float yaw, float pitch)
+  Camera(glm::vec3 position, float yaw, float pitch)
       : position(position), yaw(yaw), pitch(pitch) {
     updateCameraVectors();
   }
@@ -49,30 +49,11 @@ class Camera {
                             Camera::NEAR_PLANE, Camera::FAR_PLANE);
   }
 
-  // Processes input received from any keyboard-like input system
-  void processKeyboard(CameraMovement direction, float deltaTime) {
-    float velocity = Camera::MOVEMENT_SPEED * deltaTime;
-    switch (direction) {
-      case CameraMovement::FORWARD:
-        position += front * velocity;
-        break;
-      case CameraMovement::BACKWARD:
-        position -= front * velocity;
-        break;
-      case CameraMovement::LEFT:
-        position -= right * velocity;
-        break;
-      case CameraMovement::RIGHT:
-        position += right * velocity;
-        break;
-      case CameraMovement::FORWARD_LOCK:
-        position += forward * velocity;
-        break;
-      case CameraMovement::BACKWARD_LOCK:
-        position -= forward * velocity;
-        break;
-    }
-  }
+  const glm::vec3& getForward() const { return forward; }
+
+  const glm::vec3& getRight() const { return right; }
+
+  const glm::vec3& getFront() const { return front; }
 
   // Processes input received from a mouse input system. Expects the offset
   // value in both the x and y direction.
@@ -117,10 +98,10 @@ class Camera {
   }
 
   // Camera Attributes
-  glm::vec3 position;
-  glm::vec3 front{0.0f, 0.0f, -1.0f};
-  glm::vec3 right;
-  glm::vec3 forward{0.0f, 0.0f, -1.0f};
+  glm::vec3 position{0.0f, 0.0f, 0.0f};
+  glm::vec3 front{0.0f, 0.0f, 0.0f};
+  glm::vec3 right{0.0f, 0.0f, 0.0f};
+  glm::vec3 forward{0.0f, 0.0f, 0.0f};
 
   // Euler Angles
   float yaw{-90.0f};

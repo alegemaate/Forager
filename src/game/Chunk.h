@@ -39,6 +39,8 @@ class Chunk {
   Voxel blk[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH]{};
   bool changed = false;
 
+  unsigned int height_map[CHUNK_WIDTH][CHUNK_LENGTH]{};
+
   // Data
   ChunkMesh mesh;
 };

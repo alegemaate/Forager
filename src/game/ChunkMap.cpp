@@ -8,8 +8,8 @@
 #include "./TileTypeManager.h"
 #include "./World.h"
 
-constexpr size_t WORLD_WIDTH = 4;
-constexpr size_t WORLD_LENGTH = 4;
+constexpr size_t WORLD_WIDTH = 8;
+constexpr size_t WORLD_LENGTH = 8;
 constexpr size_t WORLD_HEIGHT = 1;
 
 // Update map
