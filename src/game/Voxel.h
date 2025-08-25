@@ -8,6 +8,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+
 #include "TileType.h"
 
 class Voxel {

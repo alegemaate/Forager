@@ -32,14 +32,14 @@ void init() {
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
   // Initialize SDL_mixer
-  SDL_AudioSpec spec;
-  spec.format = SDL_AUDIO_S16LE;
-  spec.freq = 44100;
-  spec.channels = 2;
+  // SDL_AudioSpec spec;
+  // spec.format = SDL_AUDIO_S16;
+  // spec.freq = 44100;
+  // spec.channels = 2;
 
-  if (!Mix_OpenAudio(0, &spec)) {
-    asw::util::abortOnError("Mix_OpenAudio");
-  }
+  // if (!Mix_OpenAudio(0, &spec)) {
+  //   asw::util::abortOnError("Mix_OpenAudio");
+  // }
 
   asw::display::window =
       SDL_CreateWindow("", 1280, 960, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
@@ -96,6 +96,7 @@ void init() {
   // Culling
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
+  glFrontFace(GL_CCW);
 }
 
 int main() {

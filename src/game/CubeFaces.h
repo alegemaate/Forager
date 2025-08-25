@@ -3,15 +3,17 @@
 #include <array>
 #include <glm/glm.hpp>
 
-struct FaceDefenition {
-  glm::vec3 position;
+struct FaceDefinition {
+  glm::vec3 center;
   glm::vec3 normal;
-  glm::vec2 texture;
+  std::array<glm::vec3, 6> vertices;
 };
 
-extern std::array<FaceDefenition, 6> leftFace;
-extern std::array<FaceDefenition, 6> rightFace;
-extern std::array<FaceDefenition, 6> topFace;
-extern std::array<FaceDefenition, 6> bottomFace;
-extern std::array<FaceDefenition, 6> frontFace;
-extern std::array<FaceDefenition, 6> backFace;
+extern std::array<glm::vec2, 6> faceUVs;
+
+extern FaceDefinition leftFace;
+extern FaceDefinition rightFace;
+extern FaceDefinition topFace;
+extern FaceDefinition bottomFace;
+extern FaceDefinition frontFace;
+extern FaceDefinition backFace;

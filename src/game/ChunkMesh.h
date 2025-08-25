@@ -30,13 +30,16 @@ class ChunkMesh {
   ~ChunkMesh();
 
   // Fill a given face
-  void fillFace(const std::array<FaceDefenition, 6>& face,
+  void fillFace(const FaceDefinition& face,
                 const glm::ivec3& base,
+                const glm::ivec3& worldPos,
                 GLuint atlasPos,
-                const std::function<bool(int, int, int)>& solid);
+                World& world);
 
   // Tessellate chunk
-  void tessellate(Voxel (&blk)[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH]);
+  void tessellate(World& world,
+                  glm::ivec3 position,
+                  Voxel (&blk)[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH]);
 
   // Render it all
   void render(World& world,

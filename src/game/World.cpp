@@ -22,7 +22,7 @@ void World::init() {
       "assets/images/skybox/top.png", "assets/images/skybox/bottom.png");
 
   // Generate map
-  chunks.generate(tileManager);
+  chunks.generate(*this);
 }
 
 void World::update(float dt) {
@@ -31,11 +31,11 @@ void World::update(float dt) {
 
   // Gen
   if (asw::input::wasKeyPressed(asw::input::Key::R)) {
-    chunks.generate(tileManager);
+    chunks.generate(*this);
   }
 
   // Change time
-  time += 0.000005f;
+  time += 0.00005f;
 
   if (asw::input::isKeyDown(asw::input::Key::KP_PLUS)) {
     time += 0.005f;
@@ -58,6 +58,11 @@ void World::update(float dt) {
       -0.6f * (std::cosf(2.0F * std::numbers::pi * time) - 1) + 0.05f;
   lightColor.z =
       -0.6f * (std::cosf(2.0F * std::numbers::pi * time) - 1) + 0.05f;
+
+  // Clamp between 0.1 and 1.0
+  lightAmbient.x = -1.0f * std::powf((2.0F * time) - 1, 2) + 1.15f;
+  lightAmbient.y = -1.0f * std::powf((2.0F * time) - 1, 2) + 1.15f;
+  lightAmbient.z = -1.0f * std::powf((2.0F * time) - 1, 2) + 1.15f;
 }
 
 void World::draw() {

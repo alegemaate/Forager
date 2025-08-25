@@ -22,7 +22,7 @@ class ChunkMap {
  public:
   void update(World& world);
 
-  void generate(TileTypeManager& tileManager);
+  void generate(World& world);
 
   void render(World& world);
 
@@ -34,9 +34,14 @@ class ChunkMap {
                    static_cast<unsigned int>(pos.z));
   }
 
+  bool isSolidAt(const glm::vec3& pos) {
+    auto& tile = getTile(pos);
+    return tile.isSolid();
+  }
+
  private:
   // All chunks
   std::vector<std::unique_ptr<Chunk>> chunks;
 
-  Voxel emptyTile{};
+  Voxel emptyTile;
 };
