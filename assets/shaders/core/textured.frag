@@ -22,25 +22,19 @@ void main() {
 
   vec3 n = normalize(v.normal);
   vec3 l = normalize(-light.direction);
-
   float ndotl = max(dot(n, l), 0.0);
 
-  // Hemisphere fill (cheap skylight), optional:
-  vec3 sky = vec3(0.65, 0.70, 0.90);
-  vec3 ground = vec3(0.35, 0.30, 0.25);
-  vec3 hemi = mix(ground, sky, n.y * 0.5 + 0.5) * 0.4;
-
-  // Ambient modulated by AO (kept in a 0.75–1.0 range)
-  vec3 ambient = light.ambient * mix(0.75, 1.0, clamp(v.ao, 0.0, 1.0));
+  // Ambient modulated by AO (kept in a 0.7.0 range)
+  vec3 ambient = light.ambient * mix(0.5, 1.0, clamp(v.ao, 0.0, 1.0));
 
   // Calculate lighting
-  vec3 lighting = ambient + light.color * ndotl + hemi;
+  vec3 lighting = ambient + light.color * ndotl;
   vec3 colorLinear = texel.rgb * lighting;
 
   // Exponential fog by view distance
-  float fogDensity = 0.01; 
+  float fogDensity = 0.003; 
   float fog = 1.0 - exp(-fogDensity * v.viewZ);
-  colorLinear = mix(colorLinear, vec3(0, 0, 0), clamp(fog, 0.0, 1.0));
+  colorLinear = mix(colorLinear, light.color, clamp(fog, 0.0, 1.0));
 
   FragColor = vec4(colorLinear, 1.0);
 }

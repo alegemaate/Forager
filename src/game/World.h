@@ -32,6 +32,7 @@ class World {
   // Lighting
   const glm::vec3& getLightDir() const { return lightDir; }
   const glm::vec3& getLightColor() const { return lightColor; }
+  const glm::vec3& getLightAmbient() const { return lightAmbient; }
 
  private:
   ChunkMap chunks;
@@ -43,6 +44,8 @@ class World {
   Camera camera;
   glm::vec3 lightDir{0.0f, 0.0f, 0.0f};
   glm::vec3 lightColor{0.0f, 0.0f, 0.0f};
+  glm::vec3 lightAmbient{0.0f, 0.0f, 0.0f};
+
   GpuProgramManager gpuProgramManager;
   TileTypeManager tileManager;
   BiomeManager biomeManager;

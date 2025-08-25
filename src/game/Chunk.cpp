@@ -11,10 +11,11 @@
 #include "./World.h"
 
 // Construct
-Chunk::Chunk(unsigned int x, unsigned int y, unsigned int z)
-    : index_x(x), index_y(y), index_z(z) {}
+Chunk::Chunk(unsigned int x, unsigned int z) : index_x(x), index_z(z) {}
 
-void Chunk::generate(TileTypeManager& tileManager, int seed) {
+void Chunk::generate(World& world, int seed) {
+  auto& tileManager = world.getTileManager();
+
   // STEP 1:
   // 2D Heightmap generation
   const SimplexNoise heightMap = SimplexNoise(0.002f, 0.002f, 2.0f, 0.47f);
@@ -54,7 +55,6 @@ void Chunk::generate(TileTypeManager& tileManager, int seed) {
 
   const auto chunkXOffset = seed + (index_x * CHUNK_WIDTH);
   const auto chunkZOffset = seed + (index_z * CHUNK_LENGTH);
-  const auto chunkYOffset = seed + (index_y * CHUNK_HEIGHT);
 
   for (unsigned int x = 0; x < CHUNK_WIDTH; x++) {
     auto noiseX = static_cast<float>(x + chunkXOffset);
@@ -64,7 +64,7 @@ void Chunk::generate(TileTypeManager& tileManager, int seed) {
       auto height = height_map[x][z];
 
       for (unsigned int y = 4; y < height - 4; y++) {
-        auto noiseY = static_cast<float>(y + chunkYOffset);
+        auto noiseY = static_cast<float>(y);
         auto val = caveMap.fractal(10, noiseX, noiseZ, noiseY);
 
         if (val > 0.0f) {
@@ -74,21 +74,28 @@ void Chunk::generate(TileTypeManager& tileManager, int seed) {
     }
   }
 
-  mesh.tessellate(blk);
+  changed = true;
 }
 
 Voxel& Chunk::get(unsigned int x, unsigned int y, unsigned int z) {
   return blk[x][y][z];
 }
 
-void Chunk::update() {
+void Chunk::update(World& world) {
   if (changed) {
-    mesh.tessellate(blk);
+    mesh.tessellate(
+        world, glm::ivec3(index_x * CHUNK_WIDTH, 0, index_z * CHUNK_LENGTH),
+        blk);
   }
 
   changed = false;
+
+  if (asw::input::wasKeyPressed(asw::input::Key::F) ||
+      asw::input::wasKeyReleased(asw::input::Key::F)) {
+    changed = true;
+  }
 }
 
 void Chunk::render(World& world) {
-  mesh.render(world, index_x, index_y, index_z);
+  mesh.render(world, index_x, 0, index_z);
 }

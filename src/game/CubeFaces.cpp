@@ -1,127 +1,92 @@
 #include "CubeFaces.h"
 
-std::array<FaceDefenition, 6> leftFace = {
-    FaceDefenition(glm::vec3(-0.5, 0.5, -0.5),
-                   glm::vec3(-1, 0, 0),
-                   glm::vec2(1, 0)),
-    FaceDefenition(glm::vec3(-0.5, -0.5, -0.5),
-                   glm::vec3(-1, 0, 0),
-                   glm::vec2(1, 1)),
-    FaceDefenition(glm::vec3(-0.5, -0.5, 0.5),
-                   glm::vec3(-1, 0, 0),
-                   glm::vec2(0, 1)),
-    FaceDefenition(glm::vec3(-0.5, 0.5, -0.5),
-                   glm::vec3(-1, 0, 0),
-                   glm::vec2(1, 0)),
-    FaceDefenition(glm::vec3(-0.5, -0.5, 0.5),
-                   glm::vec3(-1, 0, 0),
-                   glm::vec2(0, 1)),
-    FaceDefenition(glm::vec3(-0.5, 0.5, 0.5),
-                   glm::vec3(-1, 0, 0),
-                   glm::vec2(0, 0)),
+static constexpr float H = 0.5f;
+
+// Helper: same UVs for all faces
+std::array<glm::vec2, 6> faceUVs = {glm::vec2{0.f, 1.f}, glm::vec2{1.f, 1.f},
+                                    glm::vec2{1.f, 0.f}, glm::vec2{0.f, 1.f},
+                                    glm::vec2{1.f, 0.f}, glm::vec2{0.f, 0.f}};
+
+FaceDefinition frontFace = {
+    .center = glm::vec3(0, 0, H),
+    .normal = glm::vec3(0, 0, 1),
+    .vertices =
+        {
+            glm::vec3(-H, -H, H),
+            glm::vec3(H, -H, H),
+            glm::vec3(H, H, H),
+            glm::vec3(-H, -H, H),
+            glm::vec3(H, H, H),
+            glm::vec3(-H, H, H),
+        },
 };
 
-std::array<FaceDefenition, 6> rightFace = {
-    FaceDefenition(glm::vec3(0.5, 0.5, 0.5),
-                   glm::vec3(1, 0, 0),
-                   glm::vec2(1, 0)),
-    FaceDefenition(glm::vec3(0.5, -0.5, 0.5),
-                   glm::vec3(1, 0, 0),
-                   glm::vec2(1, 1)),
-    FaceDefenition(glm::vec3(0.5, -0.5, -0.5),
-                   glm::vec3(1, 0, 0),
-                   glm::vec2(0, 1)),
-    FaceDefenition(glm::vec3(0.5, 0.5, 0.5),
-                   glm::vec3(1, 0, 0),
-                   glm::vec2(1, 0)),
-    FaceDefenition(glm::vec3(0.5, -0.5, -0.5),
-                   glm::vec3(1, 0, 0),
-                   glm::vec2(0, 1)),
-    FaceDefenition(glm::vec3(0.5, 0.5, -0.5),
-                   glm::vec3(1, 0, 0),
-                   glm::vec2(0, 0)),
+FaceDefinition backFace = {
+    .center = glm::vec3(0, 0, -H),
+    .normal = glm::vec3(0, 0, -1),
+    .vertices =
+        {
+            glm::vec3(H, -H, -H),
+            glm::vec3(-H, -H, -H),
+            glm::vec3(-H, H, -H),
+            glm::vec3(H, -H, -H),
+            glm::vec3(-H, H, -H),
+            glm::vec3(H, H, -H),
+        },
 };
 
-std::array<FaceDefenition, 6> bottomFace = {
-    FaceDefenition(glm::vec3(-0.5, -0.5, 0.5),
-                   glm::vec3(0, -1, 0),
-                   glm::vec2(1, 0)),
-    FaceDefenition(glm::vec3(-0.5, -0.5, -0.5),
-                   glm::vec3(0, -1, 0),
-                   glm::vec2(1, 1)),
-    FaceDefenition(glm::vec3(0.5, -0.5, -0.5),
-                   glm::vec3(0, -1, 0),
-                   glm::vec2(0, 1)),
-    FaceDefenition(glm::vec3(-0.5, -0.5, 0.5),
-                   glm::vec3(0, -1, 0),
-                   glm::vec2(1, 0)),
-    FaceDefenition(glm::vec3(0.5, -0.5, -0.5),
-                   glm::vec3(0, -1, 0),
-                   glm::vec2(0, 1)),
-    FaceDefenition(glm::vec3(0.5, -0.5, 0.5),
-                   glm::vec3(0, -1, 0),
-                   glm::vec2(0, 0)),
+FaceDefinition leftFace = {
+    .center = glm::vec3(-H, 0, 0),
+    .normal = glm::vec3(-1, 0, 0),
+    .vertices =
+        {
+            glm::vec3(-H, -H, -H),
+            glm::vec3(-H, -H, H),
+            glm::vec3(-H, H, H),
+            glm::vec3(-H, -H, -H),
+            glm::vec3(-H, H, H),
+            glm::vec3(-H, H, -H),
+        },
 };
 
-std::array<FaceDefenition, 6> topFace = {
-    FaceDefenition(glm::vec3(-0.5, 0.5, -0.5),
-                   glm::vec3(0, 1, 0),
-                   glm::vec2(1, 0)),
-    FaceDefenition(glm::vec3(-0.5, 0.5, 0.5),
-                   glm::vec3(0, 1, 0),
-                   glm::vec2(1, 1)),
-    FaceDefenition(glm::vec3(0.5, 0.5, 0.5),
-                   glm::vec3(0, 1, 0),
-                   glm::vec2(0, 1)),
-    FaceDefenition(glm::vec3(-0.5, 0.5, -0.5),
-                   glm::vec3(0, 1, 0),
-                   glm::vec2(1, 0)),
-    FaceDefenition(glm::vec3(0.5, 0.5, 0.5),
-                   glm::vec3(0, 1, 0),
-                   glm::vec2(0, 1)),
-    FaceDefenition(glm::vec3(0.5, 0.5, -0.5),
-                   glm::vec3(0, 1, 0),
-                   glm::vec2(0, 0)),
+FaceDefinition rightFace = {
+    .center = glm::vec3(H, 0, 0),
+    .normal = glm::vec3(1, 0, 0),
+    .vertices =
+        {
+            glm::vec3(H, -H, H),
+            glm::vec3(H, -H, -H),
+            glm::vec3(H, H, -H),
+            glm::vec3(H, -H, H),
+            glm::vec3(H, H, -H),
+            glm::vec3(H, H, H),
+        },
 };
 
-std::array<FaceDefenition, 6> backFace = {
-    FaceDefenition(glm::vec3(0.5, 0.5, -0.5),
-                   glm::vec3(0, 0, -1),
-                   glm::vec2(1, 0)),
-    FaceDefenition(glm::vec3(0.5, -0.5, -0.5),
-                   glm::vec3(0, 0, -1),
-                   glm::vec2(1, 1)),
-    FaceDefenition(glm::vec3(-0.5, -0.5, -0.5),
-                   glm::vec3(0, 0, -1),
-                   glm::vec2(0, 1)),
-    FaceDefenition(glm::vec3(0.5, 0.5, -0.5),
-                   glm::vec3(0, 0, -1),
-                   glm::vec2(1, 0)),
-    FaceDefenition(glm::vec3(-0.5, -0.5, -0.5),
-                   glm::vec3(0, 0, -1),
-                   glm::vec2(0, 1)),
-    FaceDefenition(glm::vec3(-0.5, 0.5, -0.5),
-                   glm::vec3(0, 0, -1),
-                   glm::vec2(0, 0)),
+FaceDefinition topFace = {
+    .center = glm::vec3(0, H, 0),
+    .normal = glm::vec3(0, 1, 0),
+    .vertices =
+        {
+            glm::vec3(-H, H, H),
+            glm::vec3(H, H, H),
+            glm::vec3(H, H, -H),
+            glm::vec3(-H, H, H),
+            glm::vec3(H, H, -H),
+            glm::vec3(-H, H, -H),
+        },
 };
 
-std::array<FaceDefenition, 6> frontFace = {
-    FaceDefenition(glm::vec3(-0.5, 0.5, 0.5),
-                   glm::vec3(0, 0, 1),
-                   glm::vec2(1, 0)),
-    FaceDefenition(glm::vec3(-0.5, -0.5, 0.5),
-                   glm::vec3(0, 0, 1),
-                   glm::vec2(1, 1)),
-    FaceDefenition(glm::vec3(0.5, -0.5, 0.5),
-                   glm::vec3(0, 0, 1),
-                   glm::vec2(0, 1)),
-    FaceDefenition(glm::vec3(-0.5, 0.5, 0.5),
-                   glm::vec3(0, 0, 1),
-                   glm::vec2(1, 0)),
-    FaceDefenition(glm::vec3(0.5, -0.5, 0.5),
-                   glm::vec3(0, 0, 1),
-                   glm::vec2(0, 1)),
-    FaceDefenition(glm::vec3(0.5, 0.5, 0.5),
-                   glm::vec3(0, 0, 1),
-                   glm::vec2(0, 0)),
+FaceDefinition bottomFace = {
+    .center = glm::vec3(0, -H, 0),
+    .normal = glm::vec3(0, -1, 0),
+    .vertices =
+        {
+            glm::vec3(-H, -H, -H),
+            glm::vec3(H, -H, -H),
+            glm::vec3(H, -H, H),
+            glm::vec3(-H, -H, -H),
+            glm::vec3(H, -H, H),
+            glm::vec3(-H, -H, H),
+        },
 };
