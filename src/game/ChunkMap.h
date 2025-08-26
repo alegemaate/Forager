@@ -11,6 +11,7 @@
 #include <string>
 #include <vector>
 
+#include "../core/ThreadPool.h"
 #include "../core/Types.h"
 #include "./BiomeManager.h"
 #include "./Chunk.h"
@@ -47,5 +48,6 @@ class ChunkMap
     // All chunks
     std::vector<Chunk> chunks;
 
+    // Default tile
     Voxel emptyTile;
 };

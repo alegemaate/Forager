@@ -5,12 +5,12 @@
 
 struct FaceDefinition
 {
-    glm::vec3                center;
     glm::vec3                normal;
-    std::array<glm::vec3, 6> vertices;
+    std::array<glm::vec3, 4> vertices;
+    std::array<glm::vec3, 8> neighbours;
 };
 
-extern std::array<glm::vec2, 6> faceUVs;
+extern std::array<glm::vec2, 4> faceUVs;
 
 extern FaceDefinition leftFace;
 extern FaceDefinition rightFace;

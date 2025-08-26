@@ -38,48 +38,28 @@ ChunkMesh::~ChunkMesh()
 void ChunkMesh::fillFace(const FaceDefinition& face, const glm::vec3& base, const glm::vec3& worldPos, u32 atlasPos,
                          World& world)
 {
-    const auto atlasX = static_cast<float>(atlasPos % ATLAS_WIDTH);
-    const auto atlasY = floorf(static_cast<float>(atlasPos) * ATLAS_WIDTH_INV);
-    auto&      chunks = world.getChunks();
+    const u32 atlasX = atlasPos % ATLAS_WIDTH;
+    const u32 atlasY = atlasPos / ATLAS_WIDTH;
+    auto&     chunks = world.getChunks();
 
-    for (u32 i = 0; i < 6; i++)
+    // Reserve space
+    const u32 baseIndex = static_cast<u32>(vertices.size() / 9);
+
+    // Calculate neighbours
+    std::array<bool, 8> neighbours{};
+    for (u32 i = 0; i < face.neighbours.size(); i++)
     {
-        // Get neighbours
-        // Corner
-        glm::vec3 corner = 2.0f * face.vertices[i];
+        // const glm::vec3 offset = worldPos + face.neighbours[i];
+        neighbours[i] = chunks.isSolidAt(face.neighbours[i].x + worldPos.x, face.neighbours[i].y + worldPos.y,
+                                         face.neighbours[i].z + worldPos.z);
+    }
 
-        // Sides
-        glm::vec3 sideA = corner;
-        glm::vec3 sideB = corner;
-
-        // Move sides
-        if (face.normal.x != 0.0F)
-        {
-            sideA.y = 0;
-            sideB.z = 0;
-        }
-
-        if (face.normal.y != 0.0F)
-        {
-            sideA.x = 0;
-            sideB.z = 0;
-        }
-
-        if (face.normal.z != 0.0F)
-        {
-            sideA.x = 0;
-            sideB.y = 0;
-        }
-
-        // Translate to world
-        corner += worldPos;
-        sideA += worldPos;
-        sideB += worldPos;
-
+    for (u32 i = 0; i < 4; i++)
+    {
         // Sample neighbors adjacent to this face’s outside cell
-        const bool solidSideA  = chunks.isSolidAt(sideA.x, sideA.y, sideA.z);
-        const bool solidSideB  = chunks.isSolidAt(sideB.x, sideB.y, sideB.z);
-        const bool solidCorner = chunks.isSolidAt(corner.x, corner.y, corner.z);
+        const bool solidCorner = neighbours[(2 * i) % 8];
+        const bool solidSideA  = neighbours[(2 * i + 1) % 8];
+        const bool solidSideB  = neighbours[(2 * i + 7) % 8];
 
         // "Hard corner" rule: if both sides are filled, corner doesn't matter
         const int occ = (solidSideA && solidSideB) ? 3 : (int)solidSideA + (int)solidSideB + (int)solidCorner;
@@ -102,8 +82,13 @@ void ChunkMesh::fillFace(const FaceDefinition& face, const glm::vec3& base, cons
         vertices.push_back((faceUVs[i].y + atlasY) * ATLAS_WIDTH_INV);
 
         vertices.push_back(ao);
+    }
 
-        indices.push_back(indices.size());
+    // two tris
+    static const u32 quadIdx[6] = {0, 1, 2, 0, 2, 3};
+    for (int i = 0; i < 6; i++)
+    {
+        indices.push_back(baseIndex + quadIdx[i]);
     }
 }
 

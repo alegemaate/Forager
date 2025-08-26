@@ -10,8 +10,8 @@
 
 using namespace std;
 
-constexpr size_t WORLD_WIDTH  = 8;
-constexpr size_t WORLD_LENGTH = 8;
+constexpr size_t WORLD_WIDTH  = 16;
+constexpr size_t WORLD_LENGTH = 16;
 
 // Update map
 void ChunkMap::update(World& world)
@@ -41,19 +41,34 @@ void ChunkMap::generate(World& world)
     // Reserve space for chunks
     chunks.reserve(worldSize);
 
+    // Thread pool for chunk generation
+    ThreadPool threadPool;
+
     // Make lots of chunks
     for (u32 i = 0; i < WORLD_WIDTH; i++)
     {
         for (u32 j = 0; j < WORLD_LENGTH; j++)
         {
             auto& chunk = chunks.emplace_back(i, j);
-            chunk.generate(world, seed);
+
+            threadPool.enqueue([&chunk, &world, seed]() { chunk.generate(world, seed); });
             currentChunk++;
 
             // Send to console
             Logger::progress(to_string(currentChunk) + "/" + to_string(worldSize),
                              static_cast<float>(currentChunk) / worldSize);
         }
+    }
+
+    // Wait for all tasks to finish
+    threadPool.wait();
+
+    Logger::log("Map generation complete!");
+
+    // Initial update
+    for (auto& chunk : chunks)
+    {
+        chunk.update(world);
     }
 }
 

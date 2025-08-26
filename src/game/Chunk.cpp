@@ -109,11 +109,6 @@ void Chunk::update(World& world)
         mesh.tessellate(world, glm::vec3(index_x * CHUNK_WIDTH, 0, index_z * CHUNK_LENGTH), blk);
         changed = false;
     }
-
-    if (asw::input::wasKeyPressed(asw::input::Key::F) || asw::input::wasKeyReleased(asw::input::Key::F))
-    {
-        changed = true;
-    }
 }
 
 void Chunk::render(World& world)
