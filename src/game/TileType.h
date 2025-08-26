@@ -11,6 +11,8 @@
 #include <stdexcept>
 #include <string>
 
+#include "../core/Types.h"
+
 // Tiles
 enum class TileID
 {
@@ -31,19 +33,11 @@ enum class TileID
     Temp      = 14, // Temporary tile for testing
     Johnny    = 15, // Special tile for Johnny
     Dirt      = 16,
+    Leaves    = 17,
 
     // Terminator
-    Max = 128,
+    Max = 18,
 };
-
-inline TileID intToTileID(int id)
-{
-    if (id < static_cast<int>(TileID::Air) || id > static_cast<int>(TileID::Dirt))
-    {
-        throw std::runtime_error("Invalid TileID: " + std::to_string(id));
-    }
-    return static_cast<TileID>(id);
-}
 
 struct AtlasLookup
 {
@@ -55,12 +49,17 @@ struct AtlasLookup
     unsigned int back;
 };
 
+/// @brief Represents an abstracted type of tile in the game
 class TileType
 {
   public:
+    TileType() = default;
+
     TileType(TileID type, AtlasLookup atlasId);
 
-    // Get type
+    /// @brief Get underlying tile ID
+    ///
+    /// @return TileID
     TileID getType() const
     {
         return type;
@@ -70,6 +69,19 @@ class TileType
     const AtlasLookup& getAtlasIds() const
     {
         return atlasIds;
+    }
+
+    /// @brief Get TileID from int representation
+    ///
+    /// @param id Integer representation of TileID
+    /// @return TileID
+    static TileID fromInt(core::u32 id)
+    {
+        if (id < static_cast<core::u32>(TileID::Air) || id > static_cast<core::u32>(TileID::Max))
+        {
+            throw std::runtime_error("Invalid TileID: " + std::to_string(id));
+        }
+        return static_cast<TileID>(id);
     }
 
   private:
