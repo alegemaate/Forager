@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 
 #include "../core/SimplexNoise.h"
+#include "../core/Types.h"
 #include "./ChunkMesh.h"
 #include "./CubeFaces.h"
 #include "./TileTypeManager.h"
@@ -13,13 +14,13 @@ class World;
 class Chunk
 {
   public:
-    Chunk(unsigned int x, unsigned int z);
+    Chunk(u32 x, u32 z);
 
     // Generate chunk voxels
-    void generate(World& world, int seed);
+    void generate(World& world, u32 seed);
 
     // Get block
-    Voxel& get(unsigned int x, unsigned int y, unsigned int z);
+    Voxel& get(u32 x, u32 y, u32 z);
 
     // Tessellate and such
     void update(World& world);
@@ -28,24 +29,24 @@ class Chunk
     void render(World& world);
 
     // Position
-    unsigned int getX() const
+    u32 getX() const
     {
         return index_x;
     }
 
-    unsigned int getZ() const
+    u32 getZ() const
     {
         return index_z;
     }
 
   private:
-    unsigned int index_x;
-    unsigned int index_z;
+    u32 index_x;
+    u32 index_z;
 
     Voxel blk[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH]{};
     bool  changed = false;
 
-    unsigned int height_map[CHUNK_WIDTH][CHUNK_LENGTH]{};
+    u32 height_map[CHUNK_WIDTH][CHUNK_LENGTH]{};
 
     // Data
     ChunkMesh mesh;

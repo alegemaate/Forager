@@ -6,12 +6,18 @@
 #include <functional>
 #include <vector>
 
+#include "../core/Types.h"
 #include "CubeFaces.h"
 #include "Voxel.h"
 
-constexpr size_t CHUNK_WIDTH  = 16;
-constexpr size_t CHUNK_HEIGHT = 128;
-constexpr size_t CHUNK_LENGTH = 16;
+using namespace core;
+
+constexpr size_t CHUNK_WIDTH      = 16;
+constexpr float  CHUNK_WIDTH_INV  = 1.0f / CHUNK_WIDTH;
+constexpr size_t CHUNK_HEIGHT     = 128;
+constexpr float  CHUNK_HEIGHT_INV = 1.0f / CHUNK_HEIGHT;
+constexpr size_t CHUNK_LENGTH     = 16;
+constexpr float  CHUNK_LENGTH_INV = 1.0f / CHUNK_LENGTH;
 
 class World;
 
@@ -32,24 +38,24 @@ class ChunkMesh
     ~ChunkMesh();
 
     // Fill a given face
-    void fillFace(const FaceDefinition& face, const glm::ivec3& base, const glm::ivec3& worldPos, GLuint atlasPos,
+    void fillFace(const FaceDefinition& face, const glm::vec3& base, const glm::vec3& worldPos, GLuint atlasPos,
                   World& world);
 
     // Tessellate chunk
-    void tessellate(World& world, glm::ivec3 position, Voxel (&blk)[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH]);
+    void tessellate(World& world, glm::vec3 position, Voxel (&blk)[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH]);
 
     // Render it all
-    void render(World& world, unsigned int offsetX, unsigned int offsetY, unsigned int offsetZ);
+    void render(World& world, u32 offsetX, u32 offsetY, u32 offsetZ);
 
   private:
-    GLuint vao{0};
-    GLuint vbo{0};
-    GLuint ebo{0};
+    u32 vao{0};
+    u32 vbo{0};
+    u32 ebo{0};
 
-    GLuint numIndices{0};
+    u32 numIndices{0};
 
-    std::vector<GLfloat> vertices;
-    std::vector<GLuint>  indices;
+    std::vector<f32> vertices;
+    std::vector<u32> indices;
 
-    static GLuint atlas; // Texture atlas
+    static u32 atlas; // Texture atlas
 };

@@ -65,6 +65,13 @@ class TileType
         return type;
     }
 
+    /// @brief Check if tile is solid
+    /// @return true if solid, false otherwise
+    bool isSolid() const
+    {
+        return type != TileID::Air;
+    }
+
     // Get atlas ids
     const AtlasLookup& getAtlasIds() const
     {

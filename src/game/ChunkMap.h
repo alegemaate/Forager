@@ -11,10 +11,13 @@
 #include <string>
 #include <vector>
 
+#include "../core/Types.h"
 #include "./BiomeManager.h"
 #include "./Chunk.h"
 #include "./TileTypeManager.h"
 #include "./Voxel.h"
+
+using namespace core;
 
 class World;
 
@@ -27,23 +30,22 @@ class ChunkMap
 
     void render(World& world);
 
-    Voxel& getTile(unsigned int x, unsigned int y, unsigned int z);
+    Voxel& getTile(u32 x, u32 y, u32 z);
 
     Voxel& getTile(const glm::vec3& pos)
     {
-        return getTile(static_cast<unsigned int>(pos.x), static_cast<unsigned int>(pos.y),
-                       static_cast<unsigned int>(pos.z));
+        return getTile(static_cast<u32>(pos.x), static_cast<u32>(pos.y), static_cast<u32>(pos.z));
     }
 
-    bool isSolidAt(const glm::vec3& pos)
+    bool isSolidAt(u32 x, u32 y, u32 z)
     {
-        auto& tile = getTile(pos);
+        auto& tile = getTile(x, y, z);
         return tile.isSolid();
     }
 
   private:
     // All chunks
-    std::vector<std::unique_ptr<Chunk>> chunks;
+    std::vector<Chunk> chunks;
 
     Voxel emptyTile;
 };

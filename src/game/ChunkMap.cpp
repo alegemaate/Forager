@@ -8,6 +8,8 @@
 #include "./TileTypeManager.h"
 #include "./World.h"
 
+using namespace std;
+
 constexpr size_t WORLD_WIDTH  = 8;
 constexpr size_t WORLD_LENGTH = 8;
 
@@ -16,7 +18,7 @@ void ChunkMap::update(World& world)
 {
     for (auto& chunk : chunks)
     {
-        chunk->update(world);
+        chunk.update(world);
     }
 }
 
@@ -32,21 +34,24 @@ void ChunkMap::generate(World& world)
     // Clear chunks
     chunks.clear();
 
-    auto      seed         = random(0, 10000);
-    int       currentChunk = 0;
-    const int worldSize    = WORLD_WIDTH * WORLD_LENGTH;
+    const u32 seed         = asw::random::between(0, 10000);
+    const i32 worldSize    = WORLD_WIDTH * WORLD_LENGTH;
+    i32       currentChunk = 0;
+
+    // Reserve space for chunks
+    chunks.reserve(worldSize);
 
     // Make lots of chunks
-    for (unsigned int i = 0; i < WORLD_WIDTH; i++)
+    for (u32 i = 0; i < WORLD_WIDTH; i++)
     {
-        for (unsigned int j = 0; j < WORLD_LENGTH; j++)
+        for (u32 j = 0; j < WORLD_LENGTH; j++)
         {
-            auto& chunk = chunks.emplace_back(std::make_unique<Chunk>(i, j));
-            chunk->generate(world, seed);
+            auto& chunk = chunks.emplace_back(i, j);
+            chunk.generate(world, seed);
             currentChunk++;
 
             // Send to console
-            Logger::progress(std::to_string(currentChunk) + "/" + std::to_string(worldSize),
+            Logger::progress(to_string(currentChunk) + "/" + to_string(worldSize),
                              static_cast<float>(currentChunk) / worldSize);
         }
     }
@@ -75,17 +80,17 @@ void ChunkMap::render(World& world)
 
     for (auto& chunk : chunks)
     {
-        chunk->render(world);
+        chunk.render(world);
     }
 
     // Deactivate shader
     defaultShader.deactivate();
 }
 
-Voxel& ChunkMap::getTile(unsigned int x, unsigned int y, unsigned int z)
+Voxel& ChunkMap::getTile(u32 x, u32 y, u32 z)
 {
-    const auto chunkX = x / CHUNK_WIDTH;
-    const auto chunkZ = z / CHUNK_LENGTH;
+    const u32 chunkX = x * CHUNK_WIDTH_INV;
+    const u32 chunkZ = z * CHUNK_LENGTH_INV;
 
     if (chunkX >= WORLD_WIDTH || chunkZ >= WORLD_LENGTH)
     {
@@ -93,15 +98,5 @@ Voxel& ChunkMap::getTile(unsigned int x, unsigned int y, unsigned int z)
     }
 
     auto index = chunkX * WORLD_LENGTH + chunkZ;
-
-    if (index < chunks.size())
-    {
-        return chunks[index]->get(x % CHUNK_WIDTH, y % CHUNK_HEIGHT, z % CHUNK_LENGTH);
-    }
-    else
-    {
-        throw std::out_of_range("Chunk index out of range");
-    }
-
-    return emptyTile; // Return an empty tile if not found
+    return chunks[index].get(x % CHUNK_WIDTH, y % CHUNK_HEIGHT, z % CHUNK_LENGTH);
 }

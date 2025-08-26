@@ -19,13 +19,14 @@ class Voxel
 
     bool isSolid() const
     {
-        return tileImpl->getType() != TileID::Air && tileImpl->getType() != TileID::Water;
+        return tileImpl->isSolid();
     }
 
     TileID getType()
     {
         return tileImpl->getType();
     }
+
     void setType(TileType* type)
     {
         tileImpl = type;
