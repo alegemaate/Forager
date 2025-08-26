@@ -5,8 +5,7 @@
   This loads all the types of tiles into a container for access by tile objects.
 */
 
-#ifndef TILE_TYPE_MANAGER_H
-#define TILE_TYPE_MANAGER_H
+#pragma once
 
 #include <array>
 #include <string>
@@ -22,5 +21,3 @@ class TileTypeManager
   private:
     std::array<TileType, static_cast<size_t>(TileID::Max)> tileTypes;
 };
-
-#endif // TILE_TYPE_MANAGER_H

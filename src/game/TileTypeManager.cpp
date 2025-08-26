@@ -5,15 +5,19 @@
 #include <stdexcept>
 
 #include "../core/Logger.h"
+#include "../core/Types.h"
 #include "../utils/utils.h"
 
+using namespace core;
+using namespace std;
+
 // Load tiles
-void TileTypeManager::load(const std::string& path)
+void TileTypeManager::load(const string& path)
 {
-    std::ifstream file(path);
+    ifstream file(path);
     if (!file.is_open())
     {
-        abortOnError("Cannot find file " + path + " \n Please check your files and try again");
+        abortOnError("Cannot find file '" + path + "'.\nPlease check your files and try again");
     }
 
     // Loading
@@ -26,33 +30,41 @@ void TileTypeManager::load(const std::string& path)
     for (auto const& tile : doc)
     {
         // Name of tile
-        const std::string name = tile["name"];
-        const int         id   = tile["id"];
+        const string name = tile["name"];
+        const u32    id   = tile["id"];
 
         // Atlas
-        AtlasLookup atlasIds{};
-        atlasIds.top    = tile["atlas"]["top"];
-        atlasIds.bottom = tile["atlas"]["bottom"];
-        atlasIds.left   = tile["atlas"]["left"];
-        atlasIds.right  = tile["atlas"]["right"];
-        atlasIds.front  = tile["atlas"]["front"];
-        atlasIds.back   = tile["atlas"]["back"];
+        const AtlasLookup atlasIds{
+            .top    = tile["atlas"]["top"],
+            .bottom = tile["atlas"]["bottom"],
+            .left   = tile["atlas"]["left"],
+            .right  = tile["atlas"]["right"],
+            .front  = tile["atlas"]["front"],
+            .back   = tile["atlas"]["back"],
+        };
+
+        // Check index validity
+        if (id >= tileTypes.size())
+        {
+            abortOnError("Invalid tile ID: " + to_string(id));
+            continue;
+        }
 
         // Add the tile
-        auto tileID = intToTileID(id);
-        tileTypes.emplace(tileID, TileType(tileID, atlasIds));
+        tileTypes[id] = TileType(TileType::fromInt(id), atlasIds);
 
-        // Log
-        Logger::progress(name + " ID:" + std::to_string(id), static_cast<float>(tileTypes.size()) / doc.size());
+        // Log current progress
+        Logger::progress(name + " ID:" + to_string(id), static_cast<float>(tileTypes.size()) / doc.size());
     }
 }
 
 TileType* TileTypeManager::getTileByType(TileID tileID)
 {
-    if (!tileTypes.contains(tileID))
+    auto tileIdx = static_cast<u32>(tileID);
+    if (tileIdx >= tileTypes.size())
     {
-        throw std::runtime_error("Tile type not found: " + std::to_string(static_cast<int>(tileID)));
+        throw out_of_range("Tile type not found: " + to_string(static_cast<int>(tileID)));
     }
-    // Return the tile type
-    return &tileTypes.at(tileID);
+
+    return &tileTypes.at(tileIdx);
 }
