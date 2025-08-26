@@ -16,97 +16,100 @@
 #include "./state/init.h"
 #include "./state/state.h"
 
-void init() {
-  if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMEPAD)) {
-    asw::util::abortOnError("SDL_Init");
-  }
+void init()
+{
+    if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMEPAD))
+    {
+        asw::util::abortOnError("SDL_Init");
+    }
 
-  if (!TTF_Init()) {
-    asw::util::abortOnError("TTF_Init");
-  }
+    if (!TTF_Init())
+    {
+        asw::util::abortOnError("TTF_Init");
+    }
 
-  // --- Set GL attributes before creating the window ---
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);  // Request OpenGL 3.x
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    // --- Set GL attributes before creating the window ---
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3); // Request OpenGL 3.x
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-  // Initialize SDL_mixer
-  // SDL_AudioSpec spec;
-  // spec.format = SDL_AUDIO_S16;
-  // spec.freq = 44100;
-  // spec.channels = 2;
+    // Initialize SDL_mixer
+    // SDL_AudioSpec spec;
+    // spec.format = SDL_AUDIO_S16;
+    // spec.freq = 44100;
+    // spec.channels = 2;
 
-  // if (!Mix_OpenAudio(0, &spec)) {
-  //   asw::util::abortOnError("Mix_OpenAudio");
-  // }
+    // if (!Mix_OpenAudio(0, &spec)) {
+    //   asw::util::abortOnError("Mix_OpenAudio");
+    // }
 
-  asw::display::window =
-      SDL_CreateWindow("", 1280, 960, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+    asw::display::window = SDL_CreateWindow("", 1280, 960, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 
-  if (asw::display::window == nullptr) {
-    asw::util::abortOnError("WINDOW");
-  }
+    if (asw::display::window == nullptr)
+    {
+        asw::util::abortOnError("WINDOW");
+    }
 
-  SDL_GLContext glcontext = SDL_GL_CreateContext(asw::display::window);
-  if (glcontext == nullptr) {
-    asw::util::abortOnError("SDL_GL_CreateContext");
-  }
+    SDL_GLContext glcontext = SDL_GL_CreateContext(asw::display::window);
+    if (glcontext == nullptr)
+    {
+        asw::util::abortOnError("SDL_GL_CreateContext");
+    }
 
-  if (!SDL_GL_MakeCurrent(asw::display::window, glcontext)) {
-    asw::util::abortOnError("SDL_GL_MakeCurrent");
-  }
+    if (!SDL_GL_MakeCurrent(asw::display::window, glcontext))
+    {
+        asw::util::abortOnError("SDL_GL_MakeCurrent");
+    }
 
-  asw::display::setTitle("Forager");
-  asw::display::setIcon("assets/images/Forager.ico");
+    asw::display::setTitle("Forager");
+    asw::display::setIcon("assets/images/Forager.ico");
 
-  // Hints
-  SDL_GL_SetSwapInterval(1);
-  // // Mouse sensitivity
-  // set_mouse_speed(3, 3);
+    // Hints
+    SDL_GL_SetSwapInterval(1);
+    // // Mouse sensitivity
+    // set_mouse_speed(3, 3);
 
-  glewExperimental = GL_TRUE;
+    glewExperimental = GL_TRUE;
 
-  // Glew
-  GLenum err = glewInit();
-  // GLEW can generate a benign GL_INVALID_ENUM right after init; clear it:
-  glGetError();
+    // Glew
+    GLenum err = glewInit();
+    // GLEW can generate a benign GL_INVALID_ENUM right after init; clear it:
+    glGetError();
 
-  if (err != GLEW_OK) {
-    asw::util::abortOnError("Glew init failed.");
-  }
+    if (err != GLEW_OK)
+    {
+        asw::util::abortOnError("Glew init failed.");
+    }
 
-  Logger::heading("Forager Initialized");
-  Logger::log("GL Vendor  : " + std::string(reinterpret_cast<const char*>(
-                                    glGetString(GL_VENDOR))));
-  Logger::log("GL Renderer: " + std::string(reinterpret_cast<const char*>(
-                                    glGetString(GL_RENDERER))));
-  Logger::log("GL Version : " + std::string(reinterpret_cast<const char*>(
-                                    glGetString(GL_VERSION))));
-  Logger::log("GLEW       : " + std::string(reinterpret_cast<const char*>(
-                                    glewGetString(GLEW_VERSION))));
+    Logger::heading("Forager Initialized");
+    Logger::log("GL Vendor  : " + std::string(reinterpret_cast<const char*>(glGetString(GL_VENDOR))));
+    Logger::log("GL Renderer: " + std::string(reinterpret_cast<const char*>(glGetString(GL_RENDERER))));
+    Logger::log("GL Version : " + std::string(reinterpret_cast<const char*>(glGetString(GL_VERSION))));
+    Logger::log("GLEW       : " + std::string(reinterpret_cast<const char*>(glewGetString(GLEW_VERSION))));
 
-  asw::core::print_info();
+    asw::core::print_info();
 
-  // Viewport
-  glViewport(0, 0, 1280, 960);
-  glEnable(GL_DEPTH_TEST);
-  glDepthFunc(GL_LEQUAL);
+    // Viewport
+    glViewport(0, 0, 1280, 960);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
 
-  // Culling
-  glEnable(GL_CULL_FACE);
-  glCullFace(GL_BACK);
-  glFrontFace(GL_CCW);
+    // Culling
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CCW);
 }
 
-int main() {
-  init();
+int main()
+{
+    init();
 
-  auto app = asw::scene::SceneManager<ProgramState>();
-  app.registerScene<Game>(ProgramState::Game, app);
-  app.setNextScene(ProgramState::Game);
+    auto app = asw::scene::SceneManager<ProgramState>();
+    app.registerScene<Game>(ProgramState::Game, app);
+    app.setNextScene(ProgramState::Game);
 
-  app.start();
+    app.start();
 
-  return 0;
+    return 0;
 }

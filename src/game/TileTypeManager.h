@@ -8,18 +8,19 @@
 #ifndef TILE_TYPE_MANAGER_H
 #define TILE_TYPE_MANAGER_H
 
+#include <array>
 #include <string>
-#include <unordered_map>
 
 #include "TileType.h"
 
-class TileTypeManager {
- public:
-  void load(const std::string& path);
-  TileType* getTileByType(TileID tileID);
+class TileTypeManager
+{
+  public:
+    void      load(const std::string& path);
+    TileType* getTileByType(TileID tileID);
 
- private:
-  std::unordered_map<TileID, TileType> tileTypes;
+  private:
+    std::array<TileType, static_cast<size_t>(TileID::Max)> tileTypes;
 };
 
-#endif  // TILE_TYPE_MANAGER_H
+#endif // TILE_TYPE_MANAGER_H

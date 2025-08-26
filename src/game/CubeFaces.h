@@ -3,10 +3,11 @@
 #include <array>
 #include <glm/glm.hpp>
 
-struct FaceDefinition {
-  glm::vec3 center;
-  glm::vec3 normal;
-  std::array<glm::vec3, 6> vertices;
+struct FaceDefinition
+{
+    glm::vec3                center;
+    glm::vec3                normal;
+    std::array<glm::vec3, 6> vertices;
 };
 
 extern std::array<glm::vec2, 6> faceUVs;

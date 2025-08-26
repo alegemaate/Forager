@@ -11,11 +11,10 @@
 #include <string>
 #include <vector>
 
-namespace loaders {
-bool load_model(const std::string& path,
-                std::vector<glm::vec3>& out_vertices,
-                std::vector<glm::vec2>& out_uvs,
+namespace loaders
+{
+bool load_model(const std::string& path, std::vector<glm::vec3>& out_vertices, std::vector<glm::vec2>& out_uvs,
                 std::vector<glm::vec3>& out_normals);
 }
 
-#endif  // MODEL_LOADER_H
+#endif // MODEL_LOADER_H

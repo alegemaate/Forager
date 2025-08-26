@@ -18,30 +18,32 @@
 
 class World;
 
-class ChunkMap {
- public:
-  void update(World& world);
+class ChunkMap
+{
+  public:
+    void update(World& world);
 
-  void generate(World& world);
+    void generate(World& world);
 
-  void render(World& world);
+    void render(World& world);
 
-  Voxel& getTile(unsigned int x, unsigned int y, unsigned int z);
+    Voxel& getTile(unsigned int x, unsigned int y, unsigned int z);
 
-  Voxel& getTile(const glm::vec3& pos) {
-    return getTile(static_cast<unsigned int>(pos.x),
-                   static_cast<unsigned int>(pos.y),
-                   static_cast<unsigned int>(pos.z));
-  }
+    Voxel& getTile(const glm::vec3& pos)
+    {
+        return getTile(static_cast<unsigned int>(pos.x), static_cast<unsigned int>(pos.y),
+                       static_cast<unsigned int>(pos.z));
+    }
 
-  bool isSolidAt(const glm::vec3& pos) {
-    auto& tile = getTile(pos);
-    return tile.isSolid();
-  }
+    bool isSolidAt(const glm::vec3& pos)
+    {
+        auto& tile = getTile(pos);
+        return tile.isSolid();
+    }
 
- private:
-  // All chunks
-  std::vector<std::unique_ptr<Chunk>> chunks;
+  private:
+    // All chunks
+    std::vector<std::unique_ptr<Chunk>> chunks;
 
-  Voxel emptyTile;
+    Voxel emptyTile;
 };

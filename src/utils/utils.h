@@ -13,31 +13,16 @@
 extern bool collisionOverlap(double x1, double width, double x2, double width2);
 
 // 3D Collision
-extern bool collision3d(double x1,
-                        double width1,
-                        double x2,
-                        double width2,
-                        double y1,
-                        double height1,
-                        double y2,
-                        double height2,
-                        double z1,
-                        double depth1,
-                        double z2,
-                        double depth2);
+extern bool collision3d(double x1, double width1, double x2, double width2, double y1, double height1, double y2,
+                        double height2, double z1, double depth1, double z2, double depth2);
 
 // Random number generator
 extern int random(int newLowest, int newHighest);
 
 extern float distanceTo2D(float x1, float y1, float x2, float y2);
-extern float distanceTo3D(float x1,
-                          float y1,
-                          float z1,
-                          float x2,
-                          float y2,
-                          float z2);
+extern float distanceTo3D(float x1, float y1, float z1, float x2, float y2, float z2);
 
 // Error reporting
 extern void abortOnError(const std::string& message);
 
-#endif  // TOOLS_H
+#endif // TOOLS_H

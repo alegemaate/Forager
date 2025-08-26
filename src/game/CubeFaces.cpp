@@ -3,9 +3,8 @@
 static constexpr float H = 0.5f;
 
 // Helper: same UVs for all faces
-std::array<glm::vec2, 6> faceUVs = {glm::vec2{0.f, 1.f}, glm::vec2{1.f, 1.f},
-                                    glm::vec2{1.f, 0.f}, glm::vec2{0.f, 1.f},
-                                    glm::vec2{1.f, 0.f}, glm::vec2{0.f, 0.f}};
+std::array<glm::vec2, 6> faceUVs = {glm::vec2{0.f, 1.f}, glm::vec2{1.f, 1.f}, glm::vec2{1.f, 0.f},
+                                    glm::vec2{0.f, 1.f}, glm::vec2{1.f, 0.f}, glm::vec2{0.f, 0.f}};
 
 FaceDefinition frontFace = {
     .center = glm::vec3(0, 0, H),

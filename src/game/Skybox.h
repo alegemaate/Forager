@@ -14,23 +14,20 @@
 
 class World;
 
-class Skybox {
- public:
-  void loadSkybox(const std::string& pathFront,
-                  const std::string& pathBack,
-                  const std::string& pathLeft,
-                  const std::string& pathRight,
-                  const std::string& pathTop,
-                  const std::string& pathBottom);
-  void render(World& world) const;
+class Skybox
+{
+  public:
+    void loadSkybox(const std::string& pathFront, const std::string& pathBack, const std::string& pathLeft,
+                    const std::string& pathRight, const std::string& pathTop, const std::string& pathBottom);
+    void render(World& world) const;
 
- private:
-  GLuint cubemapTexture{0};
+  private:
+    GLuint cubemapTexture{0};
 
-  GLuint vao{0};
-  GLuint vbo{0};
+    GLuint vao{0};
+    GLuint vbo{0};
 
-  GpuProgram skyShader;
+    GpuProgram skyShader;
 
-  static GLuint loadCubemap(std::vector<std::string> faces);
+    static GLuint loadCubemap(std::vector<std::string> faces);
 };

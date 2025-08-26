@@ -7,7 +7,8 @@
 #include <string>
 #include <vector>
 
-namespace loaders {
+namespace loaders
+{
 
 extern void convertSurface(SDL_Surface* surf, GLenum target);
 
@@ -15,4 +16,4 @@ extern GLuint loadTexture(const std::string& path);
 
 extern GLuint loadCubemap(std::vector<std::string> faces);
 
-}  // namespace loaders
+} // namespace loaders

@@ -25,7 +25,7 @@ void main() {
   float ndotl = max(dot(n, l), 0.0);
 
   // Ambient modulated by AO (kept in a 0.7.0 range)
-  vec3 ambient = light.ambient * mix(0.5, 1.0, clamp(v.ao, 0.0, 1.0));
+  vec3 ambient = light.ambient * mix(0.7, 1.0, clamp(v.ao, 0.0, 1.0));
 
   // Calculate lighting
   vec3 lighting = ambient + light.color * ndotl;

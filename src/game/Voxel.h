@@ -11,21 +11,31 @@
 
 #include "TileType.h"
 
-class Voxel {
- public:
-  Voxel();
-  explicit Voxel(TileType* type);
+class Voxel
+{
+  public:
+    Voxel();
+    explicit Voxel(TileType* type);
 
-  bool isSolid() const {
-    return tileImpl->getType() != TileID::Air &&
-           tileImpl->getType() != TileID::Water;
-  }
+    bool isSolid() const
+    {
+        return tileImpl->getType() != TileID::Air && tileImpl->getType() != TileID::Water;
+    }
 
-  TileID getType() { return tileImpl->getType(); }
-  void setType(TileType* type) { tileImpl = type; }
+    TileID getType()
+    {
+        return tileImpl->getType();
+    }
+    void setType(TileType* type)
+    {
+        tileImpl = type;
+    }
 
-  TileType* getTile() { return tileImpl; }
+    TileType* getTile()
+    {
+        return tileImpl;
+    }
 
- private:
-  TileType* tileImpl = nullptr;
+  private:
+    TileType* tileImpl = nullptr;
 };

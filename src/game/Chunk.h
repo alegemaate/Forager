@@ -10,35 +10,43 @@
 
 class World;
 
-class Chunk {
- public:
-  Chunk(unsigned int x, unsigned int z);
+class Chunk
+{
+  public:
+    Chunk(unsigned int x, unsigned int z);
 
-  // Generate chunk voxels
-  void generate(World& world, int seed);
+    // Generate chunk voxels
+    void generate(World& world, int seed);
 
-  // Get block
-  Voxel& get(unsigned int x, unsigned int y, unsigned int z);
+    // Get block
+    Voxel& get(unsigned int x, unsigned int y, unsigned int z);
 
-  // Tessellate and such
-  void update(World& world);
+    // Tessellate and such
+    void update(World& world);
 
-  // Render it all
-  void render(World& world);
+    // Render it all
+    void render(World& world);
 
-  // Position
-  unsigned int getX() const { return index_x; }
-  unsigned int getZ() const { return index_z; }
+    // Position
+    unsigned int getX() const
+    {
+        return index_x;
+    }
 
- private:
-  unsigned int index_x;
-  unsigned int index_z;
+    unsigned int getZ() const
+    {
+        return index_z;
+    }
 
-  Voxel blk[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH]{};
-  bool changed = false;
+  private:
+    unsigned int index_x;
+    unsigned int index_z;
 
-  unsigned int height_map[CHUNK_WIDTH][CHUNK_LENGTH]{};
+    Voxel blk[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH]{};
+    bool  changed = false;
 
-  // Data
-  ChunkMesh mesh;
+    unsigned int height_map[CHUNK_WIDTH][CHUNK_LENGTH]{};
+
+    // Data
+    ChunkMesh mesh;
 };
