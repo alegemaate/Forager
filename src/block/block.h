@@ -9,34 +9,34 @@
 
 #include <glm/glm.hpp>
 
-#include "TileType.h"
+#include "./block_type.h"
 
-class Voxel
+class Block
 {
   public:
-    Voxel();
-    explicit Voxel(TileType* type);
+    Block();
+    explicit Block(BlockType* type);
 
     bool isSolid() const
     {
         return tileImpl->isSolid();
     }
 
-    TileID getType()
+    BlockID getType()
     {
         return tileImpl->getType();
     }
 
-    void setType(TileType* type)
+    void setType(BlockType* type)
     {
         tileImpl = type;
     }
 
-    TileType* getTile()
+    BlockType* getTile()
     {
         return tileImpl;
     }
 
   private:
-    TileType* tileImpl = nullptr;
+    BlockType* tileImpl = nullptr;
 };

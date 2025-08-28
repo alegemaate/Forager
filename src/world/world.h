@@ -1,12 +1,12 @@
 #pragma once
 
+#include "../block/block_registry.h"
 #include "../core/Camera.h"
+#include "../game/Player.h"
 #include "../render/gpu_program_manager.h"
-#include "./BiomeManager.h"
-#include "./ChunkMap.h"
-#include "./Player.h"
-#include "./Skybox.h"
-#include "./TileTypeManager.h"
+#include "../render/skybox.h"
+#include "./biome/biome_registry.h"
+#include "./chunk/chunk_map.h"
 
 // World
 class World
@@ -33,7 +33,7 @@ class World
     }
 
     // Managers
-    TileTypeManager& getTileManager()
+    BlockRegistry& getTileManager()
     {
         return tileManager;
     }
@@ -41,9 +41,9 @@ class World
     {
         return gpuProgramManager;
     }
-    const BiomeManager& getBiomeManager() const
+    const BiomeRegistry& getBiomeRegistry() const
     {
-        return biomeManager;
+        return BiomeRegistry;
     }
 
     // Lighting
@@ -73,6 +73,6 @@ class World
     glm::vec3 lightAmbient{0.0f, 0.0f, 0.0f};
 
     GpuProgramManager gpuProgramManager;
-    TileTypeManager   tileManager;
-    BiomeManager      biomeManager;
+    BlockRegistry     tileManager;
+    BiomeRegistry     BiomeRegistry;
 };

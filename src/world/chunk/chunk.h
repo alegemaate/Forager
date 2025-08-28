@@ -2,12 +2,12 @@
 
 #include <glm/glm.hpp>
 
-#include "../core/SimplexNoise.h"
-#include "../core/Types.h"
-#include "./ChunkMesh.h"
-#include "./CubeFaces.h"
-#include "./TileTypeManager.h"
-#include "./Voxel.h"
+#include "../../block/block.h"
+#include "../../block/block_registry.h"
+#include "../../core/SimplexNoise.h"
+#include "../../core/Types.h"
+#include "../../render/chunk_mesh.h"
+#include "../../render/cube_faces.h"
 
 class World;
 
@@ -20,7 +20,13 @@ class Chunk
     void generate(World& world, u32 seed);
 
     // Get block
-    Voxel& get(u32 x, u32 y, u32 z);
+    Block& get(u32 x, u32 y, u32 z);
+
+    // Check if solid at
+    bool isSolidAt(u32 x, u32 y, u32 z) const
+    {
+        return blk[x][y][z].isSolid();
+    }
 
     // Tessellate and such
     void update(World& world);
@@ -43,7 +49,7 @@ class Chunk
     u32 index_x;
     u32 index_z;
 
-    Voxel blk[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH]{};
+    Block blk[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH]{};
     bool  changed = false;
 
     u32 height_map[CHUNK_WIDTH][CHUNK_LENGTH]{};

@@ -1,4 +1,4 @@
-#include "./World.h"
+#include "./world.h"
 
 #include <asw/asw.h>
 
@@ -11,7 +11,7 @@ void World::init()
     camera = Camera(glm::vec3(0.0f, 20.0f, 60.0f), -22.5f, -45.0f);
 
     // Load biomes
-    biomeManager.load("assets/data/biomes.json");
+    BiomeRegistry.load("assets/data/biomes.json");
 
     // Load tiles
     tileManager.load("assets/data/tiles.json");

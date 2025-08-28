@@ -35,9 +35,9 @@ class Biome
     }
 
     // Get spawn rate
-    int getSpawnRate(int tileID)
+    int getSpawnRate(int blockID)
     {
-        return tileSpawnRates[tileID];
+        return tileSpawnRates[blockID];
     }
 
     // Get name
@@ -66,7 +66,7 @@ class Biome
     void setMountainRates(int frequency, int height, int radius, int steepness);
 
     // Adds tile (by id) to the creation list
-    void addTileFrequency(int tileID, int frequency);
+    void addTileFrequency(int blockID, int frequency);
 
     // Get random resource spawn
     int spawnResource();

@@ -14,7 +14,7 @@
 #include "../core/Types.h"
 
 // Tiles
-enum class TileID
+enum class BlockID
 {
     Air       = 0,
     Grass     = 1,
@@ -49,18 +49,18 @@ struct AtlasLookup
     unsigned int back;
 };
 
-/// @brief Represents an abstracted type of tile in the game
-class TileType
+/// @brief Represents an abstracted type of block in the game
+class BlockType
 {
   public:
-    TileType() = default;
+    BlockType() = default;
 
-    TileType(TileID type, AtlasLookup atlasId);
+    BlockType(BlockID type, AtlasLookup atlasId);
 
     /// @brief Get underlying tile ID
     ///
-    /// @return TileID
-    TileID getType() const
+    /// @return BlockID
+    BlockID getType() const
     {
         return type;
     }
@@ -69,7 +69,7 @@ class TileType
     /// @return true if solid, false otherwise
     bool isSolid() const
     {
-        return type != TileID::Air;
+        return type != BlockID::Air;
     }
 
     // Get atlas ids
@@ -78,20 +78,20 @@ class TileType
         return atlasIds;
     }
 
-    /// @brief Get TileID from int representation
+    /// @brief Get BlockID from int representation
     ///
-    /// @param id Integer representation of TileID
-    /// @return TileID
-    static TileID fromInt(core::u32 id)
+    /// @param id Integer representation of BlockID
+    /// @return BlockID
+    static BlockID fromInt(core::u32 id)
     {
-        if (id < static_cast<core::u32>(TileID::Air) || id > static_cast<core::u32>(TileID::Max))
+        if (id < static_cast<core::u32>(BlockID::Air) || id > static_cast<core::u32>(BlockID::Max))
         {
-            throw std::runtime_error("Invalid TileID: " + std::to_string(id));
+            throw std::runtime_error("Invalid BlockID: " + std::to_string(id));
         }
-        return static_cast<TileID>(id);
+        return static_cast<BlockID>(id);
     }
 
   private:
-    TileID      type;
+    BlockID     type;
     AtlasLookup atlasIds;
 };

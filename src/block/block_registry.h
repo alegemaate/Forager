@@ -10,14 +10,14 @@
 #include <array>
 #include <string>
 
-#include "TileType.h"
+#include "./block_type.h"
 
-class TileTypeManager
+class BlockRegistry
 {
   public:
-    void      load(const std::string& path);
-    TileType* getTileByType(TileID tileID);
+    void       load(const std::string& path);
+    BlockType* getTileByType(BlockID blockID);
 
   private:
-    std::array<TileType, static_cast<size_t>(TileID::Max)> tileTypes;
+    std::array<BlockType, static_cast<size_t>(BlockID::Max)> blocks;
 };

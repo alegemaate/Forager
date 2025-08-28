@@ -1,4 +1,4 @@
-#include "CubeFaces.h"
+#include "./cube_faces.h"
 
 static constexpr float H  = 0.5f;
 static constexpr float H2 = 2 * H;

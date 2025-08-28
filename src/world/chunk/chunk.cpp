@@ -5,11 +5,11 @@
   Block of blocks!
 */
 
-#include "Chunk.h"
+#include "./chunk.h"
 
-#include "../core/Types.h"
-#include "./TileTypeManager.h"
-#include "./World.h"
+#include "../../block/block_registry.h"
+#include "../../core/Types.h"
+#include "../world.h"
 
 using namespace core;
 
@@ -48,20 +48,20 @@ void Chunk::generate(World& world, u32 seed)
                 // Air
                 if (y > height)
                 {
-                    blk[x][y][z].setType(tileManager.getTileByType(TileID::Air));
+                    blk[x][y][z].setType(tileManager.getTileByType(BlockID::Air));
                 }
 
                 else if (y + 1 > height)
                 { // Grass
-                    blk[x][y][z].setType(tileManager.getTileByType(TileID::Grass));
+                    blk[x][y][z].setType(tileManager.getTileByType(BlockID::Grass));
                 }
                 else if (y + 4 > height)
                 { // Dirt
-                    blk[x][y][z].setType(tileManager.getTileByType(TileID::Dirt));
+                    blk[x][y][z].setType(tileManager.getTileByType(BlockID::Dirt));
                 }
                 else
                 { // Stone
-                    blk[x][y][z].setType(tileManager.getTileByType(TileID::Stone));
+                    blk[x][y][z].setType(tileManager.getTileByType(BlockID::Stone));
                 }
             }
         }
@@ -88,7 +88,7 @@ void Chunk::generate(World& world, u32 seed)
 
                 if (val > 0.0f)
                 {
-                    blk[x][y][z].setType(tileManager.getTileByType(TileID::Air));
+                    blk[x][y][z].setType(tileManager.getTileByType(BlockID::Air));
                 }
             }
         }
@@ -97,7 +97,7 @@ void Chunk::generate(World& world, u32 seed)
     changed = true;
 }
 
-Voxel& Chunk::get(u32 x, u32 y, u32 z)
+Block& Chunk::get(u32 x, u32 y, u32 z)
 {
     return blk[x][y][z];
 }

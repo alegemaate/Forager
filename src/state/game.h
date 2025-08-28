@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../core/Types.h"
-#include "../game/World.h"
+#include "../world/world.h"
 #include "state.h"
 
 using namespace core;

@@ -1,4 +1,4 @@
-#include "TileTypeManager.h"
+#include "./block_registry.h"
 
 #include <fstream>
 #include <nlohmann/json.hpp>
@@ -12,7 +12,7 @@ using namespace core;
 using namespace std;
 
 // Load tiles
-void TileTypeManager::load(const string& path)
+void BlockRegistry::load(const string& path)
 {
     ifstream file(path);
     if (!file.is_open())
@@ -44,27 +44,27 @@ void TileTypeManager::load(const string& path)
         };
 
         // Check index validity
-        if (id >= tileTypes.size())
+        if (id >= blocks.size())
         {
             abortOnError("Invalid tile ID: " + to_string(id));
             continue;
         }
 
         // Add the tile
-        tileTypes[id] = TileType(TileType::fromInt(id), atlasIds);
+        blocks[id] = BlockType(BlockType::fromInt(id), atlasIds);
 
         // Log current progress
-        Logger::progress(name + " ID:" + to_string(id), static_cast<float>(tileTypes.size()) / doc.size());
+        Logger::progress(name + " ID:" + to_string(id), static_cast<float>(blocks.size()) / doc.size());
     }
 }
 
-TileType* TileTypeManager::getTileByType(TileID tileID)
+BlockType* BlockRegistry::getTileByType(BlockID blockID)
 {
-    auto tileIdx = static_cast<u32>(tileID);
-    if (tileIdx >= tileTypes.size())
+    auto blockIdx = static_cast<u32>(blockID);
+    if (blockIdx >= blocks.size())
     {
-        throw out_of_range("Tile type not found: " + to_string(static_cast<int>(tileID)));
+        throw out_of_range("Block type not found: " + to_string(static_cast<int>(blockID)));
     }
 
-    return &tileTypes.at(tileIdx);
+    return &blocks.at(blockIdx);
 }

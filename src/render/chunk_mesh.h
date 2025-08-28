@@ -6,18 +6,17 @@
 #include <functional>
 #include <vector>
 
+#include "../block/block.h"
 #include "../core/Types.h"
-#include "CubeFaces.h"
-#include "Voxel.h"
+#include "./cube_faces.h"
 
 using namespace core;
 
-constexpr size_t CHUNK_WIDTH      = 16;
-constexpr float  CHUNK_WIDTH_INV  = 1.0f / CHUNK_WIDTH;
-constexpr size_t CHUNK_HEIGHT     = 128;
-constexpr float  CHUNK_HEIGHT_INV = 1.0f / CHUNK_HEIGHT;
-constexpr size_t CHUNK_LENGTH     = 16;
-constexpr float  CHUNK_LENGTH_INV = 1.0f / CHUNK_LENGTH;
+constexpr u32 CHUNK_WIDTH       = 16;
+constexpr u32 CHUNK_HEIGHT      = 128;
+constexpr u32 CHUNK_LENGTH      = 16;
+constexpr u32 CHUNK_WIDTH_LOG2  = 4;
+constexpr u32 CHUNK_LENGTH_LOG2 = 4;
 
 class World;
 
@@ -42,7 +41,7 @@ class ChunkMesh
                   World& world);
 
     // Tessellate chunk
-    void tessellate(World& world, glm::vec3 position, Voxel (&blk)[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH]);
+    void tessellate(World& world, glm::vec3 position, Block (&blk)[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH]);
 
     // Render it all
     void render(World& world, u32 offsetX, u32 offsetY, u32 offsetZ);
@@ -56,6 +55,9 @@ class ChunkMesh
 
     std::vector<f32> vertices;
     std::vector<u32> indices;
+
+    /// @brief Neighbour cache
+    std::array<bool, 8> neighbours;
 
     static u32 atlas; // Texture atlas
 };

@@ -1,17 +1,14 @@
-#include "ChunkMap.h"
+#include "./chunk_map.h"
 
 #include <asw/asw.h>
 #include <stdexcept>
 
-#include "../core/Logger.h"
-#include "../utils/utils.h"
-#include "./TileTypeManager.h"
-#include "./World.h"
+#include "../../block/block_registry.h"
+#include "../../core/Logger.h"
+#include "../../utils/utils.h"
+#include "../world.h"
 
 using namespace std;
-
-constexpr size_t WORLD_WIDTH  = 16;
-constexpr size_t WORLD_LENGTH = 16;
 
 // Update map
 void ChunkMap::update(World& world)
@@ -29,12 +26,12 @@ void ChunkMap::generate(World& world)
     Logger::heading("Generating Map");
 
     // Set empty tile
-    emptyTile.setType(world.getTileManager().getTileByType(TileID::Air));
+    emptyTile.setType(world.getTileManager().getTileByType(BlockID::Air));
 
     // Clear chunks
     chunks.clear();
 
-    const u32 seed         = asw::random::between(0, 10000);
+    const u32 seed         = 100; // asw::random::between(0, 10000);
     const i32 worldSize    = WORLD_WIDTH * WORLD_LENGTH;
     i32       currentChunk = 0;
 
@@ -51,7 +48,7 @@ void ChunkMap::generate(World& world)
         {
             auto& chunk = chunks.emplace_back(i, j);
 
-            threadPool.enqueue([&chunk, &world, seed]() { chunk.generate(world, seed); });
+            threadPool.enqueue([&chunk, &world]() { chunk.generate(world, seed); });
             currentChunk++;
 
             // Send to console
@@ -70,6 +67,8 @@ void ChunkMap::generate(World& world)
     {
         chunk.update(world);
     }
+
+    Logger::log("Chunk update complete!");
 }
 
 // Draw map
@@ -100,18 +99,4 @@ void ChunkMap::render(World& world)
 
     // Deactivate shader
     defaultShader.deactivate();
-}
-
-Voxel& ChunkMap::getTile(u32 x, u32 y, u32 z)
-{
-    const u32 chunkX = x * CHUNK_WIDTH_INV;
-    const u32 chunkZ = z * CHUNK_LENGTH_INV;
-
-    if (chunkX >= WORLD_WIDTH || chunkZ >= WORLD_LENGTH)
-    {
-        return emptyTile;
-    }
-
-    auto index = chunkX * WORLD_LENGTH + chunkZ;
-    return chunks[index].get(x % CHUNK_WIDTH, y % CHUNK_HEIGHT, z % CHUNK_LENGTH);
 }

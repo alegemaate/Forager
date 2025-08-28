@@ -1,11 +1,11 @@
-#include "Skybox.h"
+#include "./skybox.h"
 
 #include <asw/asw.h>
 
 #include "../utils/gl.h"
 #include "../utils/loaders.h"
 #include "../utils/utils.h"
-#include "./World.h"
+#include "../world/world.h"
 
 // Load the skybox
 void Skybox::loadSkybox(const std::string& pathFront, const std::string& pathBack, const std::string& pathLeft,

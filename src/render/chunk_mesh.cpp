@@ -1,11 +1,11 @@
 
-#include "ChunkMesh.h"
+#include "./chunk_mesh.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 
 #include "../utils/loaders.h"
-#include "./World.h"
+#include "../world/world.h"
 
 u32 ChunkMesh::atlas = 0;
 
@@ -46,14 +46,13 @@ void ChunkMesh::fillFace(const FaceDefinition& face, const glm::vec3& base, cons
     const u32 baseIndex = static_cast<u32>(vertices.size() / 9);
 
     // Calculate neighbours
-    std::array<bool, 8> neighbours{};
     for (u32 i = 0; i < face.neighbours.size(); i++)
     {
-        // const glm::vec3 offset = worldPos + face.neighbours[i];
         neighbours[i] = chunks.isSolidAt(face.neighbours[i].x + worldPos.x, face.neighbours[i].y + worldPos.y,
                                          face.neighbours[i].z + worldPos.z);
     }
 
+    // Push back vertices
     for (u32 i = 0; i < 4; i++)
     {
         // Sample neighbors adjacent to this face’s outside cell
@@ -93,7 +92,7 @@ void ChunkMesh::fillFace(const FaceDefinition& face, const glm::vec3& base, cons
 }
 
 // Tessellate chunk
-void ChunkMesh::tessellate(World& world, glm::vec3 position, Voxel (&blk)[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH])
+void ChunkMesh::tessellate(World& world, glm::vec3 position, Block (&blk)[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH])
 {
     auto& chunks = world.getChunks();
 
@@ -107,7 +106,7 @@ void ChunkMesh::tessellate(World& world, glm::vec3 position, Voxel (&blk)[CHUNK_
                 auto  type   = parent->getType();
 
                 // Empty block?
-                if (type == TileID::Air)
+                if (type == BlockID::Air)
                 {
                     continue;
                 }
@@ -152,33 +151,33 @@ void ChunkMesh::tessellate(World& world, glm::vec3 position, Voxel (&blk)[CHUNK_
         }
     }
 
-    glBindVertexArray(vao);
-
     if (vertices.empty() || indices.empty())
     {
         return;
     }
 
+    glBindVertexArray(vao);
+
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(f32) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(u32) * indices.size(), &indices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(u32) * indices.size(), indices.data(), GL_STATIC_DRAW);
 
     // Position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), nullptr);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(f32), nullptr);
     glEnableVertexAttribArray(0);
 
     // Normal attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(f32), (void*)(3 * sizeof(f32)));
     glEnableVertexAttribArray(1);
 
     // Texture coord attribute
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (void*)(6 * sizeof(GLfloat)));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 9 * sizeof(f32), (void*)(6 * sizeof(f32)));
     glEnableVertexAttribArray(2);
 
     // AO coord attribute
-    glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (void*)(8 * sizeof(GLfloat)));
+    glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, 9 * sizeof(f32), (void*)(8 * sizeof(f32)));
     glEnableVertexAttribArray(3);
 
     // Clear mesh

@@ -1,13 +1,13 @@
-#include "BiomeManager.h"
+#include "./biome_registry.h"
 
 #include <fstream>
 #include <nlohmann/json.hpp>
 
-#include "../core/Logger.h"
-#include "../utils/utils.h"
+#include "../../core/Logger.h"
+#include "../../utils/utils.h"
 
 // Load biomes from file
-void BiomeManager::load(std::string path)
+void BiomeRegistry::load(std::string path)
 {
     std::ifstream file(path);
     if (!file.is_open())
@@ -64,7 +64,7 @@ void BiomeManager::load(std::string path)
     }
 }
 
-Biome BiomeManager::getBiome(int biomeID)
+Biome BiomeRegistry::getBiome(int biomeID)
 {
     return biomes.at(biomeID);
 }

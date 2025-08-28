@@ -1,11 +1,9 @@
 #include "Player.h"
-#define GLM_ENABLE_EXPERIMENTAL
 
 #include <asw/asw.h>
-#include <glm/ext.hpp>
 
 #include "../utils/utils.h"
-#include "./World.h"
+#include "../world/world.h"
 
 // Move character and such
 void Player::update(World& world)
