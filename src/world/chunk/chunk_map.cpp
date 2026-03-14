@@ -4,7 +4,6 @@
 #include <stdexcept>
 
 #include "../../block/block_registry.h"
-#include "../../core/Logger.h"
 #include "../../utils/utils.h"
 #include "../world.h"
 
@@ -23,7 +22,7 @@ void ChunkMap::update(World& world)
 void ChunkMap::generate(World& world)
 {
     // GENERATE MAP
-    Logger::heading("Generating Map");
+    asw::log::info("Generating Map");
 
     // Set empty tile
     emptyTile.setType(world.getTileManager().getTileByType(BlockID::Air));
@@ -52,15 +51,14 @@ void ChunkMap::generate(World& world)
             currentChunk++;
 
             // Send to console
-            Logger::progress(to_string(currentChunk) + "/" + to_string(worldSize),
-                             static_cast<float>(currentChunk) / worldSize);
+            asw::log::progress(static_cast<float>(currentChunk) / worldSize, "{} / {}", currentChunk, worldSize);
         }
     }
 
     // Wait for all tasks to finish
     threadPool.wait();
 
-    Logger::log("Map generation complete!");
+    asw::log::info("Map generation complete!");
 
     // Initial update
     for (auto& chunk : chunks)
@@ -68,7 +66,7 @@ void ChunkMap::generate(World& world)
         chunk.update(world);
     }
 
-    Logger::log("Chunk update complete!");
+    asw::log::info("Chunk update complete!");
 }
 
 // Draw map

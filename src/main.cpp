@@ -11,7 +11,6 @@
 #include <asw/asw.h>
 #include <string>
 
-#include "./core/Logger.h"
 #include "./state/game.h"
 #include "./state/init.h"
 #include "./state/state.h"
@@ -20,12 +19,12 @@ void init()
 {
     if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_GAMEPAD))
     {
-        asw::util::abortOnError("SDL_Init");
+        asw::util::abort_on_error("SDL_Init");
     }
 
     if (!TTF_Init())
     {
-        asw::util::abortOnError("TTF_Init");
+        asw::util::abort_on_error("TTF_Init");
     }
 
     // --- Set GL attributes before creating the window ---
@@ -41,29 +40,29 @@ void init()
     // spec.channels = 2;
 
     // if (!Mix_OpenAudio(0, &spec)) {
-    //   asw::util::abortOnError("Mix_OpenAudio");
+    //   asw::util::abort_on_error("Mix_OpenAudio");
     // }
 
     asw::display::window = SDL_CreateWindow("", 1280, 960, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 
     if (asw::display::window == nullptr)
     {
-        asw::util::abortOnError("WINDOW");
+        asw::util::abort_on_error("WINDOW");
     }
 
     SDL_GLContext glcontext = SDL_GL_CreateContext(asw::display::window);
     if (glcontext == nullptr)
     {
-        asw::util::abortOnError("SDL_GL_CreateContext");
+        asw::util::abort_on_error("SDL_GL_CreateContext");
     }
 
     if (!SDL_GL_MakeCurrent(asw::display::window, glcontext))
     {
-        asw::util::abortOnError("SDL_GL_MakeCurrent");
+        asw::util::abort_on_error("SDL_GL_MakeCurrent");
     }
 
-    asw::display::setTitle("Forager");
-    asw::display::setIcon("assets/images/Forager.ico");
+    asw::display::set_title("Forager");
+    asw::display::set_icon("assets/images/Forager.ico");
 
     // Hints
     SDL_GL_SetSwapInterval(1);
@@ -79,14 +78,14 @@ void init()
 
     if (err != GLEW_OK)
     {
-        asw::util::abortOnError("Glew init failed.");
+        asw::util::abort_on_error("Glew init failed.");
     }
 
-    Logger::heading("Forager Initialized");
-    Logger::log("GL Vendor  : " + std::string(reinterpret_cast<const char*>(glGetString(GL_VENDOR))));
-    Logger::log("GL Renderer: " + std::string(reinterpret_cast<const char*>(glGetString(GL_RENDERER))));
-    Logger::log("GL Version : " + std::string(reinterpret_cast<const char*>(glGetString(GL_VERSION))));
-    Logger::log("GLEW       : " + std::string(reinterpret_cast<const char*>(glewGetString(GLEW_VERSION))));
+    asw::log::info("Forager Initialized");
+    asw::log::info("GL Vendor  : {}", reinterpret_cast<const char*>(glGetString(GL_VENDOR)));
+    asw::log::info("GL Renderer: {}", reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
+    asw::log::info("GL Version : {}", reinterpret_cast<const char*>(glGetString(GL_VERSION)));
+    asw::log::info("GLEW       : {}", reinterpret_cast<const char*>(glewGetString(GLEW_VERSION)));
 
     asw::core::print_info();
 
@@ -106,8 +105,8 @@ int main()
     init();
 
     auto app = asw::scene::SceneManager<ProgramState>();
-    app.registerScene<Game>(ProgramState::Game, app);
-    app.setNextScene(ProgramState::Game);
+    app.register_scene<Game>(ProgramState::Game, app);
+    app.set_next_scene(ProgramState::Game);
 
     app.start();
 

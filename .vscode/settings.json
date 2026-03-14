@@ -87,7 +87,8 @@
     "text_encoding": "cpp",
     "queue": "cpp",
     "stack": "cpp",
-    "*.def": "cpp"
+    "*.def": "cpp",
+    "hash_map": "cpp"
   },
   "cmake.configureOnOpen": true
 }

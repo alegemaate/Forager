@@ -1,6 +1,7 @@
 #include "model-loader.h"
 
 #include "utils.h"
+#include <asw/asw.h>
 #include <cstdio>
 #include <cstring>
 
@@ -15,7 +16,7 @@ bool loaders::load_model(const std::string& path, std::vector<glm::vec3>& vertic
     FILE* file = fopen(path.c_str(), "r");
     if (file == nullptr)
     {
-        abortOnError("Cannot find file " + path + " \n Please check your files and try again");
+        asw::util::abort_on_error("Cannot find file " + path + " \n Please check your files and try again");
 
         return false;
     }

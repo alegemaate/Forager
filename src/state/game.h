@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../core/Types.h"
+#include "../gui/gui.h"
 #include "../world/world.h"
 #include "state.h"
 
@@ -19,4 +20,5 @@ class Game : public asw::scene::Scene<ProgramState>
   private:
     World world;
     bool  fullscreen{false};
+    Gui   gui;
 };

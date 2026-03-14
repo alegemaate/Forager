@@ -7,6 +7,9 @@ void World::init()
     auto& defaultShader = gpuProgramManager.createShader("default");
     defaultShader.initProgramFromFiles({"textured.vert", "textured.frag"});
 
+    auto& guiShader = gpuProgramManager.createShader("gui");
+    guiShader.initProgramFromFiles({"gui.vert", "gui.frag"});
+
     // Camera
     camera = Camera(glm::vec3(0.0f, 20.0f, 60.0f), -22.5f, -45.0f);
 
@@ -31,7 +34,7 @@ void World::update(float dt)
     player.update(*this);
 
     // Gen
-    if (asw::input::wasKeyPressed(asw::input::Key::R))
+    if (asw::input::get_key_down(asw::input::Key::R))
     {
         chunks.generate(*this);
     }
@@ -39,11 +42,11 @@ void World::update(float dt)
     // Change time
     time += 0.00005f;
 
-    if (asw::input::isKeyDown(asw::input::Key::KP_PLUS))
+    if (asw::input::get_key(asw::input::Key::KpPlus))
     {
         time += 0.005f;
     }
-    else if (asw::input::isKeyDown(asw::input::Key::KP_MINUS))
+    else if (asw::input::get_key(asw::input::Key::KpMinus))
     {
         time -= 0.005f;
     }

@@ -1,9 +1,9 @@
 #include "./biome_registry.h"
 
+#include <asw/asw.h>
 #include <fstream>
 #include <nlohmann/json.hpp>
 
-#include "../../core/Logger.h"
 #include "../../utils/utils.h"
 
 // Load biomes from file
@@ -12,11 +12,11 @@ void BiomeRegistry::load(std::string path)
     std::ifstream file(path);
     if (!file.is_open())
     {
-        abortOnError("Cannot find file " + path + " \n Please check your files and try again");
+        asw::util::abort_on_error("Cannot find file " + path + " \n Please check your files and try again");
     }
 
     // Load biomes from xml
-    Logger::heading("Loading Biomes");
+    asw::log::info("Loading Biomes");
 
     // Create buffer
     nlohmann::json doc = nlohmann::json::parse(file);
@@ -60,7 +60,7 @@ void BiomeRegistry::load(std::string path)
         biomes.push_back(newBiome);
 
         // Draw to screen (debug)
-        Logger::progress(name + " ID:" + std::to_string(biomeID), static_cast<float>(biomes.size()) / doc.size());
+        asw::log::progress(static_cast<float>(biomes.size()) / doc.size(), "{} ID: {}", name, biomeID);
     }
 }
 

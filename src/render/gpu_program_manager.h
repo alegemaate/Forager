@@ -4,7 +4,6 @@
 #include <string>
 #include <unordered_map>
 
-#include "../core/Logger.h"
 #include "./gpu_program.h"
 
 class GpuProgramManager
@@ -23,7 +22,7 @@ class GpuProgramManager
         auto it = shaders.find(name);
         if (it == shaders.end())
         {
-            Logger::warn("GpuProgramManager::getShader: Shader not found: " + name);
+            asw::log::warn("GpuProgramManager::getShader: Shader not found: {}", name);
             throw std::runtime_error("Shader not found: " + name);
         }
         return it->second;

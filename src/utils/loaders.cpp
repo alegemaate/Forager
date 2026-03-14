@@ -10,7 +10,7 @@ void loaders::convertSurface(SDL_Surface* surf, GLenum target)
     SDL_DestroySurface(surf);
     if (!data)
     {
-        asw::util::abortOnError("SDL_ConvertSurfaceFormat failed");
+        asw::util::abort_on_error("SDL_ConvertSurfaceFormat failed");
     }
 
     const int bpp = 4; // ABGR8888 = 4 bytes/px
@@ -37,7 +37,7 @@ GLuint loaders::loadTexture(const std::string& path)
     SDL_Surface* surf = IMG_Load(path.c_str());
     if (surf == nullptr)
     {
-        asw::util::abortOnError("Failed to load texture at " + path);
+        asw::util::abort_on_error("Failed to load texture at " + path);
     }
 
     // Convert to openGL format
@@ -64,7 +64,7 @@ GLuint loaders::loadCubemap(std::vector<std::string> faces)
         SDL_Surface* surf = IMG_Load(faces[i].c_str());
         if (surf == nullptr)
         {
-            asw::util::abortOnError("Failed to load cubemap texture at " + faces[i]);
+            asw::util::abort_on_error("Failed to load cubemap texture at " + faces[i]);
         }
         loaders::convertSurface(surf, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i);
     }

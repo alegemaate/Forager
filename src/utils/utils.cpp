@@ -49,11 +49,3 @@ float distanceTo3D(float x1, float y1, float z1, float x2, float y2, float z2)
 {
     return sqrtf((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) + (z2 - z1) * (z2 - z1));
 }
-
-/*
- *  ERROR REPORTING
- */
-void abortOnError(const std::string& message)
-{
-    asw::util::abortOnError(message);
-}

@@ -85,9 +85,9 @@ void ChunkMesh::fillFace(const FaceDefinition& face, const glm::vec3& base, cons
 
     // two tris
     static const u32 quadIdx[6] = {0, 1, 2, 0, 2, 3};
-    for (int i = 0; i < 6; i++)
+    for (unsigned int i : quadIdx)
     {
-        indices.push_back(baseIndex + quadIdx[i]);
+        indices.push_back(baseIndex + i);
     }
 }
 

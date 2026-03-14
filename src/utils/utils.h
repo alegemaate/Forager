@@ -22,7 +22,4 @@ extern int random(int newLowest, int newHighest);
 extern float distanceTo2D(float x1, float y1, float x2, float y2);
 extern float distanceTo3D(float x1, float y1, float z1, float x2, float y2, float z2);
 
-// Error reporting
-extern void abortOnError(const std::string& message);
-
 #endif // TOOLS_H

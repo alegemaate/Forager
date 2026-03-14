@@ -1,10 +1,10 @@
 #include "./block_registry.h"
 
+#include <asw/asw.h>
 #include <fstream>
 #include <nlohmann/json.hpp>
 #include <stdexcept>
 
-#include "../core/Logger.h"
 #include "../core/Types.h"
 #include "../utils/utils.h"
 
@@ -17,11 +17,11 @@ void BlockRegistry::load(const string& path)
     ifstream file(path);
     if (!file.is_open())
     {
-        abortOnError("Cannot find file '" + path + "'.\nPlease check your files and try again");
+        asw::util::abort_on_error("Cannot find file '" + path + "'.\nPlease check your files and try again");
     }
 
     // Loading
-    Logger::heading("Loading Tiles");
+    asw::log::info("Loading Tiles");
 
     // Create buffer
     const nlohmann::json doc = nlohmann::json::parse(file);
@@ -46,7 +46,7 @@ void BlockRegistry::load(const string& path)
         // Check index validity
         if (id >= blocks.size())
         {
-            abortOnError("Invalid tile ID: " + to_string(id));
+            asw::util::abort_on_error("Invalid tile ID: " + to_string(id));
             continue;
         }
 
@@ -54,7 +54,7 @@ void BlockRegistry::load(const string& path)
         blocks[id] = BlockType(BlockType::fromInt(id), atlasIds);
 
         // Log current progress
-        Logger::progress(name + " ID:" + to_string(id), static_cast<float>(blocks.size()) / doc.size());
+        asw::log::progress(static_cast<float>(blocks.size()) / doc.size(), "{} ID: {}", name, id);
     }
 }
 

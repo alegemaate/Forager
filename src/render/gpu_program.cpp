@@ -1,8 +1,8 @@
 #include "./gpu_program.h"
 
+#include <asw/asw.h>
 #include <fstream>
 
-#include "../core/Logger.h"
 #include "../utils/utils.h"
 
 void GpuProgram::initProgramFromFiles(const std::vector<std::string>& paths)
@@ -20,7 +20,7 @@ void GpuProgram::initProgramFromFiles(const std::vector<std::string>& paths)
         const std::string content = readFromFile(filename);
         if (content.empty())
         {
-            Logger::log("Shader file '" + filename + "' not found.");
+            asw::log::info("Shader file '{}' not found.", filename);
             return;
         }
         shaders.push_back(content);
@@ -62,7 +62,7 @@ std::string GpuProgram::readFromFile(const std::string& path)
     std::ifstream file(path);
     if (!file.is_open())
     {
-        abortOnError("Cannot find file " + path + " \n Please check your files and try again");
+        asw::util::abort_on_error("Cannot find file " + path + " \n Please check your files and try again");
     }
 
     std::string str;
@@ -87,7 +87,7 @@ void GpuProgram::validateShader(GLuint shader)
         GLchar             infoLog[BUFFER_SIZE];
         glGetShaderInfoLog(shader, BUFFER_SIZE, nullptr, infoLog);
 
-        Logger::log("Shader " + std::to_string(shader) + " compile log: \n" + infoLog);
+        asw::log::info("Shader {} compile log: \n{}", shader, infoLog);
     }
 }
 
@@ -102,6 +102,6 @@ void GpuProgram::validateProgram(GLuint program)
         GLchar             infoLog[BUFFER_SIZE];
         glGetProgramInfoLog(program, BUFFER_SIZE, nullptr, infoLog);
 
-        Logger::log("Program " + std::to_string(program) + " compile log: \n" + infoLog);
+        asw::log::info("Program {} compile log: \n{}", program, infoLog);
     }
 }

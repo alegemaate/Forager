@@ -53,9 +53,14 @@ class Camera
     // and the aspect ratio of the display
     const glm::mat4 getProjectionMatrix() const
     {
-        const auto screenSize = asw::display::getSize();
-        return glm::perspective(glm::radians(zoom), (float)screenSize.x / (float)screenSize.y, Camera::NEAR_PLANE,
-                                Camera::FAR_PLANE);
+        const auto ss = asw::display::get_size();
+        return glm::perspective(glm::radians(zoom), (float)ss.x / (float)ss.y, Camera::NEAR_PLANE, Camera::FAR_PLANE);
+    }
+
+    const glm::mat4 getOrthoMatrix() const
+    {
+        const auto ss = asw::display::get_size();
+        return glm::ortho(0.0f, (float)ss.x, 0.0f, (float)ss.y, -1.0f, 1.0f);
     }
 
     const glm::vec3& getForward() const
@@ -77,8 +82,8 @@ class Camera
     // value in both the x and y direction.
     void processMouseMovement(bool constrainPitch = true)
     {
-        const auto xOffset = asw::input::mouse.xChange * Camera::MOUSE_SENSITIVITY;
-        const auto yOffset = -asw::input::mouse.yChange * Camera::MOUSE_SENSITIVITY;
+        const auto xOffset = asw::input::mouse.change.x * Camera::MOUSE_SENSITIVITY;
+        const auto yOffset = -asw::input::mouse.change.y * Camera::MOUSE_SENSITIVITY;
 
         yaw += xOffset;
         pitch += yOffset;
