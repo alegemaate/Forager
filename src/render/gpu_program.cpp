@@ -46,7 +46,8 @@ void GpuProgram::initProgram(const std::vector<std::string>& shaders)
         {
             shaderId = glCreateShader(GL_FRAGMENT_SHADER);
         }
-        glShaderSource(shaderId, 1, (const char**)&content, nullptr);
+        const char* source = content.c_str();
+        glShaderSource(shaderId, 1, &source, nullptr);
         glCompileShader(shaderId);
         validateShader(shaderId);
         glAttachShader(programId, shaderId);

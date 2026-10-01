@@ -86,10 +86,6 @@ void ChunkMap::render(World& world)
     defaultShader.setVec3("light.ambient", lightAmbient);
     defaultShader.setVec3("light.color", lightColor);
 
-    // Cube map
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, 1);
-
     for (auto& chunk : chunks)
     {
         chunk.render(world);

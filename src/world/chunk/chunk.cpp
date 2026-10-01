@@ -81,7 +81,8 @@ void Chunk::generate(World& world, u32 seed)
             auto noiseZ = static_cast<float>(z + Z_OFFSET);
             auto height = height_map[x][z];
 
-            for (u32 y = 4; y < height - 4; y++)
+            // y + 4 < height, not y < height - 4, which wraps when height < 4
+            for (u32 y = 4; y + 4 < height; y++)
             {
                 auto noiseY = static_cast<float>(y);
                 auto val    = caveMap.fractal(CAVE_OCTAVES, noiseX, noiseZ, noiseY);
@@ -106,7 +107,7 @@ void Chunk::update(World& world)
 {
     if (changed)
     {
-        mesh.tessellate(world, glm::vec3(index_x * CHUNK_WIDTH, 0, index_z * CHUNK_LENGTH), blk);
+        mesh.tessellate(world, glm::ivec3(index_x * CHUNK_WIDTH, 0, index_z * CHUNK_LENGTH), blk);
         changed = false;
     }
 }

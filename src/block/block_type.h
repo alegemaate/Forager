@@ -84,7 +84,7 @@ class BlockType
     /// @return BlockID
     static BlockID fromInt(core::u32 id)
     {
-        if (id < static_cast<core::u32>(BlockID::Air) || id > static_cast<core::u32>(BlockID::Max))
+        if (id >= static_cast<core::u32>(BlockID::Max))
         {
             throw std::runtime_error("Invalid BlockID: " + std::to_string(id));
         }

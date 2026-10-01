@@ -12,8 +12,13 @@ class GpuProgramManager
     // Load shader from file
     GpuProgram& createShader(const std::string& name)
     {
-        shaders[name] = GpuProgram();
-        return shaders[name];
+        // Construct in place, GpuProgram owns GL handles and cannot be copied
+        auto [it, inserted] = shaders.try_emplace(name);
+        if (!inserted)
+        {
+            throw std::runtime_error("Shader already exists: " + name);
+        }
+        return it->second;
     }
 
     // Get shader by name

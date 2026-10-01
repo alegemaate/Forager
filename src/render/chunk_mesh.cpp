@@ -3,6 +3,7 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
+#include <utility>
 
 #include "../utils/loaders.h"
 #include "../world/world.h"
@@ -34,8 +35,34 @@ ChunkMesh::~ChunkMesh()
     glDeleteBuffers(1, &ebo);
 }
 
+ChunkMesh::ChunkMesh(ChunkMesh&& other) noexcept
+    : vao(std::exchange(other.vao, 0)), vbo(std::exchange(other.vbo, 0)), ebo(std::exchange(other.ebo, 0)),
+      numIndices(std::exchange(other.numIndices, 0)), vertices(std::move(other.vertices)),
+      indices(std::move(other.indices)), neighbours(other.neighbours)
+{
+}
+
+ChunkMesh& ChunkMesh::operator=(ChunkMesh&& other) noexcept
+{
+    if (this != &other)
+    {
+        glDeleteVertexArrays(1, &vao);
+        glDeleteBuffers(1, &vbo);
+        glDeleteBuffers(1, &ebo);
+
+        vao        = std::exchange(other.vao, 0);
+        vbo        = std::exchange(other.vbo, 0);
+        ebo        = std::exchange(other.ebo, 0);
+        numIndices = std::exchange(other.numIndices, 0);
+        vertices   = std::move(other.vertices);
+        indices    = std::move(other.indices);
+        neighbours = other.neighbours;
+    }
+    return *this;
+}
+
 // Fill array with given data
-void ChunkMesh::fillFace(const FaceDefinition& face, const glm::vec3& base, const glm::vec3& worldPos, u32 atlasPos,
+void ChunkMesh::fillFace(const FaceDefinition& face, const glm::vec3& base, const glm::ivec3& worldPos, u32 atlasPos,
                          World& world)
 {
     const u32 atlasX = atlasPos % ATLAS_WIDTH;
@@ -48,8 +75,8 @@ void ChunkMesh::fillFace(const FaceDefinition& face, const glm::vec3& base, cons
     // Calculate neighbours
     for (u32 i = 0; i < face.neighbours.size(); i++)
     {
-        neighbours[i] = chunks.isSolidAt(face.neighbours[i].x + worldPos.x, face.neighbours[i].y + worldPos.y,
-                                         face.neighbours[i].z + worldPos.z);
+        const glm::ivec3 n = worldPos + glm::ivec3(face.neighbours[i]);
+        neighbours[i]      = chunks.isSolidAt(n.x, n.y, n.z);
     }
 
     // Push back vertices
@@ -92,7 +119,7 @@ void ChunkMesh::fillFace(const FaceDefinition& face, const glm::vec3& base, cons
 }
 
 // Tessellate chunk
-void ChunkMesh::tessellate(World& world, glm::vec3 position, Block (&blk)[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH])
+void ChunkMesh::tessellate(World& world, glm::ivec3 position, Block (&blk)[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH])
 {
     auto& chunks = world.getChunks();
 
@@ -111,9 +138,9 @@ void ChunkMesh::tessellate(World& world, glm::vec3 position, Block (&blk)[CHUNK_
                     continue;
                 }
 
-                const auto&     atlasIds = parent->getAtlasIds();
-                const glm::vec3 base     = glm::vec3(i, t, k);
-                const glm::vec3 wPos     = glm::vec3(position) + base;
+                const auto&      atlasIds = parent->getAtlasIds();
+                const glm::vec3  base     = glm::vec3(i, t, k);
+                const glm::ivec3 wPos     = position + glm::ivec3(i, t, k);
 
                 VoxelNeighbours neighbours{};
                 neighbours.top    = chunks.isSolidAt(wPos.x, wPos.y + 1, wPos.z);

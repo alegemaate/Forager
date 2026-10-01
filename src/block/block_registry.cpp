@@ -27,6 +27,7 @@ void BlockRegistry::load(const string& path)
     const nlohmann::json doc = nlohmann::json::parse(file);
 
     // Parse data
+    size_t loaded = 0;
     for (auto const& tile : doc)
     {
         // Name of tile
@@ -54,7 +55,8 @@ void BlockRegistry::load(const string& path)
         blocks[id] = BlockType(BlockType::fromInt(id), atlasIds);
 
         // Log current progress
-        asw::log::progress(static_cast<float>(blocks.size()) / doc.size(), "{} ID: {}", name, id);
+        loaded++;
+        asw::log::progress(static_cast<float>(loaded) / doc.size(), "{} ID: {}", name, id);
     }
 }
 

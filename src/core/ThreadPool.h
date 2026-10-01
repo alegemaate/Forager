@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <condition_variable>
 #include <functional>
 #include <iostream>
@@ -15,6 +16,9 @@ class ThreadPool
     // number of threads
     ThreadPool(size_t num_threads = std::thread::hardware_concurrency())
     {
+
+        // hardware_concurrency() can return 0, and wait() never returns with no workers
+        num_threads = std::max<size_t>(num_threads, 1);
 
         // Creating worker threads
         for (size_t i = 0; i < num_threads; ++i)

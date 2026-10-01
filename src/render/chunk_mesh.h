@@ -36,12 +36,18 @@ class ChunkMesh
     ChunkMesh();
     ~ChunkMesh();
 
+    // Owns GL handles. Move takes them, so a vector<Chunk> reallocation cannot delete them twice
+    ChunkMesh(const ChunkMesh&)            = delete;
+    ChunkMesh& operator=(const ChunkMesh&) = delete;
+    ChunkMesh(ChunkMesh&& other) noexcept;
+    ChunkMesh& operator=(ChunkMesh&& other) noexcept;
+
     // Fill a given face
-    void fillFace(const FaceDefinition& face, const glm::vec3& base, const glm::vec3& worldPos, GLuint atlasPos,
+    void fillFace(const FaceDefinition& face, const glm::vec3& base, const glm::ivec3& worldPos, GLuint atlasPos,
                   World& world);
 
     // Tessellate chunk
-    void tessellate(World& world, glm::vec3 position, Block (&blk)[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH]);
+    void tessellate(World& world, glm::ivec3 position, Block (&blk)[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH]);
 
     // Render it all
     void render(World& world, u32 offsetX, u32 offsetY, u32 offsetZ);

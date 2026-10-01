@@ -12,6 +12,12 @@ class GpuProgram
   public:
     GpuProgram() = default;
 
+    // Owns GL handles
+    GpuProgram(const GpuProgram&)            = delete;
+    GpuProgram& operator=(const GpuProgram&) = delete;
+    GpuProgram(GpuProgram&&)                 = delete;
+    GpuProgram& operator=(GpuProgram&&)      = delete;
+
     ~GpuProgram()
     {
         for (const auto& shaderId : shaderIds)

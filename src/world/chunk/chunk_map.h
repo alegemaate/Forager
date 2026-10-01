@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <cmath>
 #include <memory>
 #include <string>
 #include <vector>
@@ -34,53 +35,31 @@ class ChunkMap
 
     void render(World& world);
 
-    Block& getTile(u32 x, u32 y, u32 z)
+    Block& getTile(i32 x, i32 y, i32 z)
     {
-        if (y >= CHUNK_HEIGHT)
+        if (!inBounds(x, y, z))
         {
             return emptyTile;
         }
 
-        const u32 cx = x >> CHUNK_WIDTH_LOG2;
-        const u32 cz = z >> CHUNK_LENGTH_LOG2;
-        if (cx >= WORLD_WIDTH || cz >= WORLD_LENGTH)
-        {
-            return emptyTile;
-        }
-
-        Chunk&    c  = chunks[(cx * WORLD_LENGTH) + cz];
-        const u32 lx = x & (CHUNK_WIDTH - 1);
-        const u32 ly = y;
-        const u32 lz = z & (CHUNK_LENGTH - 1);
-
-        return c.get(lx, ly, lz);
+        return chunkAt(x, z).get(localX(x), static_cast<u32>(y), localZ(z));
     }
 
     Block& getTile(const glm::vec3& pos)
     {
-        return getTile(static_cast<u32>(pos.x), static_cast<u32>(pos.y), static_cast<u32>(pos.z));
+        // Floor, so -0.5 maps to tile -1 and not 0
+        return getTile(static_cast<i32>(std::floor(pos.x)), static_cast<i32>(std::floor(pos.y)),
+                       static_cast<i32>(std::floor(pos.z)));
     }
 
-    bool isSolidAt(u32 x, u32 y, u32 z) const noexcept
+    bool isSolidAt(i32 x, i32 y, i32 z) const noexcept
     {
-        if (y >= CHUNK_HEIGHT)
+        if (!inBounds(x, y, z))
         {
             return false;
         }
 
-        const u32 cx = x >> CHUNK_WIDTH_LOG2;
-        const u32 cz = z >> CHUNK_LENGTH_LOG2;
-        if (cx >= WORLD_WIDTH || cz >= WORLD_LENGTH)
-        {
-            return false;
-        }
-
-        const Chunk& c  = chunks[(cx * WORLD_LENGTH) + cz];
-        const u32    lx = x & (CHUNK_WIDTH - 1);
-        const u32    ly = y;
-        const u32    lz = z & (CHUNK_LENGTH - 1);
-
-        return c.isSolidAt(lx, ly, lz);
+        return chunkAt(x, z).isSolidAt(localX(x), static_cast<u32>(y), localZ(z));
     }
 
   private:
@@ -89,4 +68,34 @@ class ChunkMap
 
     // Default tile
     Block emptyTile;
+
+    static bool inBounds(i32 x, i32 y, i32 z) noexcept
+    {
+        return x >= 0 && y >= 0 && z >= 0 && static_cast<u32>(y) < CHUNK_HEIGHT &&
+               (static_cast<u32>(x) >> CHUNK_WIDTH_LOG2) < WORLD_WIDTH &&
+               (static_cast<u32>(z) >> CHUNK_LENGTH_LOG2) < WORLD_LENGTH;
+    }
+
+    static u32 localX(i32 x) noexcept
+    {
+        return static_cast<u32>(x) & (CHUNK_WIDTH - 1);
+    }
+
+    static u32 localZ(i32 z) noexcept
+    {
+        return static_cast<u32>(z) & (CHUNK_LENGTH - 1);
+    }
+
+    // Caller checks inBounds first
+    Chunk& chunkAt(i32 x, i32 z)
+    {
+        return chunks[((static_cast<u32>(x) >> CHUNK_WIDTH_LOG2) * WORLD_LENGTH) +
+                      (static_cast<u32>(z) >> CHUNK_LENGTH_LOG2)];
+    }
+
+    const Chunk& chunkAt(i32 x, i32 z) const
+    {
+        return chunks[((static_cast<u32>(x) >> CHUNK_WIDTH_LOG2) * WORLD_LENGTH) +
+                      (static_cast<u32>(z) >> CHUNK_LENGTH_LOG2)];
+    }
 };

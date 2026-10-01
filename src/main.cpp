@@ -69,11 +69,14 @@ int main()
 {
     init();
 
-    auto app = asw::scene::SceneManager<ProgramState>();
-    app.register_scene<Game>(ProgramState::Game, app);
-    app.set_next_scene(ProgramState::Game);
+    // Scope the scenes so their GL objects are deleted while the context still exists
+    {
+        auto app = asw::scene::SceneManager<ProgramState>();
+        app.register_scene<Game>(ProgramState::Game, app);
+        app.set_next_scene(ProgramState::Game);
 
-    app.start();
+        app.start();
+    }
 
     asw::core::shutdown();
 
