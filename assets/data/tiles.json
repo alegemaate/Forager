@@ -30,30 +30,15 @@
     "random": 0
   },
   {
-    "id": 16,
-    "name": "Dirt",
-    "atlas": {
-      "top": 1,
-      "bottom": 1,
-      "left": 1,
-      "right": 1,
-      "front": 1,
-      "back": 1
-    },
-    "model": "MODEL_CUBE",
-    "attribute": "ATTRIBUTE_SOLID",
-    "random": 0
-  },
-  {
     "id": 2,
     "name": "Sand",
     "atlas": {
-      "top": 0,
-      "bottom": 0,
-      "left": 0,
-      "right": 0,
-      "front": 0,
-      "back": 0
+      "top": 4,
+      "bottom": 4,
+      "left": 4,
+      "right": 4,
+      "front": 4,
+      "back": 4
     },
     "model": "MODEL_CUBE",
     "attribute": "ATTRIBUTE_SOLID",
@@ -123,12 +108,12 @@
     "id": 7,
     "name": "Water",
     "atlas": {
-      "top": 0,
-      "bottom": 0,
-      "left": 0,
-      "right": 0,
-      "front": 0,
-      "back": 0
+      "top": 5,
+      "bottom": 5,
+      "left": 5,
+      "right": 5,
+      "front": 5,
+      "back": 5
     },
     "model": "MODEL_CUBE",
     "attribute": "ATTRIBUTE_LIQUID",
@@ -243,12 +228,27 @@
     "id": 15,
     "name": "Wood",
     "atlas": {
-      "top": 0,
-      "bottom": 0,
-      "left": 0,
-      "right": 0,
-      "front": 0,
-      "back": 0
+      "top": 9,
+      "bottom": 9,
+      "left": 8,
+      "right": 8,
+      "front": 8,
+      "back": 8
+    },
+    "model": "MODEL_CUBE",
+    "attribute": "ATTRIBUTE_SOLID",
+    "random": 0
+  },
+  {
+    "id": 16,
+    "name": "Dirt",
+    "atlas": {
+      "top": 1,
+      "bottom": 1,
+      "left": 1,
+      "right": 1,
+      "front": 1,
+      "back": 1
     },
     "model": "MODEL_CUBE",
     "attribute": "ATTRIBUTE_SOLID",
@@ -268,5 +268,21 @@
     "model": "MODEL_CUBE",
     "attribute": "ATTRIBUTE_SOLID",
     "random": 0
+  },
+  {
+    "id": 18,
+    "name": "Torch",
+    "atlas": {
+      "top": 7,
+      "bottom": 6,
+      "left": 6,
+      "right": 6,
+      "front": 6,
+      "back": 6
+    },
+    "model": "MODEL_TORCH",
+    "attribute": "ATTRIBUTE_GAS",
+    "random": 0,
+    "light": 14
   }
 ]

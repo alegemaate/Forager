@@ -12,12 +12,17 @@
 
 #include "./block_type.h"
 
+/// @brief Block types, loaded once at start up. Read only after load, so safe to read from worker threads.
 class BlockRegistry
 {
   public:
-    void       load(const std::string& path);
-    BlockType* getTileByType(BlockID blockID);
+    static void load(const std::string& path);
+
+    static const BlockType& get(BlockID blockID)
+    {
+        return blocks[static_cast<size_t>(blockID)];
+    }
 
   private:
-    std::array<BlockType, static_cast<size_t>(BlockID::Max)> blocks;
+    static std::array<BlockType, static_cast<size_t>(BlockID::Max)> blocks;
 };

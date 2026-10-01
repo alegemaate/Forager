@@ -21,7 +21,7 @@ void World::init()
     BiomeRegistry.load("assets/data/biomes.json");
 
     // Load tiles
-    tileManager.load("assets/data/tiles.json");
+    BlockRegistry::load("assets/data/tiles.json");
 
     // Load sky
     skybox.loadSkybox("assets/images/skybox/front.png", "assets/images/skybox/back.png",

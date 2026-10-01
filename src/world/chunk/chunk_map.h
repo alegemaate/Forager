@@ -12,7 +12,6 @@
 #include <string>
 #include <vector>
 
-#include "../../block/block.h"
 #include "../../block/block_registry.h"
 #include "../../core/ThreadPool.h"
 #include "../../core/Types.h"
@@ -35,17 +34,17 @@ class ChunkMap
 
     void render(World& world);
 
-    Block& getTile(i32 x, i32 y, i32 z)
+    const BlockType& getTile(i32 x, i32 y, i32 z)
     {
         if (!inBounds(x, y, z))
         {
-            return emptyTile;
+            return BlockRegistry::get(BlockID::Air);
         }
 
-        return chunkAt(x, z).get(localX(x), static_cast<u32>(y), localZ(z));
+        return BlockRegistry::get(chunkAt(x, z).get(localX(x), static_cast<u32>(y), localZ(z)));
     }
 
-    Block& getTile(const glm::vec3& pos)
+    const BlockType& getTile(const glm::vec3& pos)
     {
         // Floor, so -0.5 maps to tile -1 and not 0
         return getTile(static_cast<i32>(std::floor(pos.x)), static_cast<i32>(std::floor(pos.y)),
@@ -65,9 +64,6 @@ class ChunkMap
   private:
     // All chunks
     std::vector<Chunk> chunks;
-
-    // Default tile
-    Block emptyTile;
 
     static bool inBounds(i32 x, i32 y, i32 z) noexcept
     {

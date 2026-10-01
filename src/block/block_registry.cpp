@@ -11,6 +11,26 @@
 using namespace core;
 using namespace std;
 
+std::array<BlockType, static_cast<size_t>(BlockID::Max)> BlockRegistry::blocks{};
+
+namespace
+{
+BlockModel parseModel(const string& model)
+{
+    if (model == "MODEL_NONE")
+    {
+        return BlockModel::None;
+    }
+    if (model == "MODEL_TORCH")
+    {
+        return BlockModel::Torch;
+    }
+
+    // Plant models are not drawn yet, so they are cubes
+    return BlockModel::Cube;
+}
+} // namespace
+
 // Load tiles
 void BlockRegistry::load(const string& path)
 {
@@ -51,22 +71,20 @@ void BlockRegistry::load(const string& path)
             continue;
         }
 
+        const string attribute = tile["attribute"];
+        const bool   liquid    = attribute == "ATTRIBUTE_LIQUID";
+        const bool   solid     = attribute == "ATTRIBUTE_SOLID";
+        const auto   model     = parseModel(tile["model"]);
+
+        // Only full solid blocks hide what is behind them
+        const bool opaque = solid && model == BlockModel::Cube;
+        const u8   light  = tile.value("light", 0);
+
         // Add the tile
-        blocks[id] = BlockType(BlockType::fromInt(id), atlasIds);
+        blocks[id] = BlockType(BlockType::fromInt(id), name, atlasIds, model, solid, opaque, liquid, light);
 
         // Log current progress
         loaded++;
         asw::log::progress(static_cast<float>(loaded) / doc.size(), "{} ID: {}", name, id);
     }
-}
-
-BlockType* BlockRegistry::getTileByType(BlockID blockID)
-{
-    auto blockIdx = static_cast<u32>(blockID);
-    if (blockIdx >= blocks.size())
-    {
-        throw out_of_range("Block type not found: " + to_string(static_cast<int>(blockID)));
-    }
-
-    return &blocks.at(blockIdx);
 }

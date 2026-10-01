@@ -5,6 +5,7 @@
 #include <iostream>
 #include <utility>
 
+#include "../block/block_registry.h"
 #include "../utils/loaders.h"
 #include "../world/world.h"
 
@@ -124,7 +125,7 @@ void ChunkMesh::fillFace(const FaceDefinition& face, const glm::vec3& base, cons
 }
 
 // Tessellate chunk
-void ChunkMesh::tessellate(World& world, glm::ivec3 position, Block (&blk)[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH])
+void ChunkMesh::tessellate(World& world, glm::ivec3 position, BlockID (&blk)[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH])
 {
     auto& chunks = world.getChunks();
 
@@ -134,8 +135,8 @@ void ChunkMesh::tessellate(World& world, glm::ivec3 position, Block (&blk)[CHUNK
         {
             for (u32 k = 0; k < CHUNK_LENGTH; k++)
             {
-                auto* parent = blk[i][t][k].getTile();
-                auto  type   = parent->getType();
+                const auto& parent = BlockRegistry::get(blk[i][t][k]);
+                auto        type   = parent.getType();
 
                 // Empty block?
                 if (type == BlockID::Air)
@@ -143,7 +144,7 @@ void ChunkMesh::tessellate(World& world, glm::ivec3 position, Block (&blk)[CHUNK
                     continue;
                 }
 
-                const auto&      atlasIds = parent->getAtlasIds();
+                const auto&      atlasIds = parent.getAtlasIds();
                 const glm::vec3  base     = glm::vec3(i, t, k);
                 const glm::ivec3 wPos     = position + glm::ivec3(i, t, k);
 
