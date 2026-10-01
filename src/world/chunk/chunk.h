@@ -31,8 +31,25 @@ class Chunk
     // Tessellate and such
     void update(World& world);
 
-    // Render it all
-    void render(World& world);
+    // Render it all. The caller activates the shader and binds the atlas.
+    void render(GLint modelLocation) const;
+
+    // True when the mesh has nothing to draw
+    bool empty() const
+    {
+        return mesh.empty();
+    }
+
+    // World space bounds, for culling. Cubes are centred on their block position.
+    glm::vec3 getMin() const
+    {
+        return getOrigin() - glm::vec3(0.5f);
+    }
+
+    glm::vec3 getMax() const
+    {
+        return getOrigin() + glm::vec3(CHUNK_WIDTH, static_cast<f32>(maxHeight) + 1.0f, CHUNK_LENGTH) - glm::vec3(0.5f);
+    }
 
     // Position
     u32 getX() const
@@ -53,6 +70,14 @@ class Chunk
     bool  changed = false;
 
     u32 height_map[CHUNK_WIDTH][CHUNK_LENGTH]{};
+
+    // Highest terrain block, nothing is placed above it
+    u32 maxHeight = CHUNK_HEIGHT - 1;
+
+    glm::vec3 getOrigin() const
+    {
+        return {static_cast<f32>(index_x * CHUNK_WIDTH), 0.0f, static_cast<f32>(index_z * CHUNK_LENGTH)};
+    }
 
     // Data
     ChunkMesh mesh;

@@ -7,6 +7,8 @@
 
 #include "./chunk.h"
 
+#include <algorithm>
+
 #include "../../block/block_registry.h"
 #include "../../core/Types.h"
 #include "../world.h"
@@ -29,6 +31,8 @@ void Chunk::generate(World& world, u32 seed)
     const i32 Z_OFFSET       = seed + (index_z * CHUNK_LENGTH);
     const i32 HALF_HEIGHT    = CHUNK_HEIGHT / 2;
 
+    maxHeight = 0;
+
     for (u32 x = 0; x < CHUNK_WIDTH; x++)
     {
         auto noiseX = static_cast<float>(x + X_OFFSET);
@@ -42,6 +46,7 @@ void Chunk::generate(World& world, u32 seed)
             // Cache for future steps
             const u32 height = static_cast<u32>((val + 1) * HALF_HEIGHT);
             height_map[x][z] = height;
+            maxHeight        = std::max(maxHeight, std::min(height, CHUNK_HEIGHT - 1));
 
             for (u32 y = 0; y < CHUNK_HEIGHT; y++)
             {
@@ -112,7 +117,7 @@ void Chunk::update(World& world)
     }
 }
 
-void Chunk::render(World& world)
+void Chunk::render(GLint modelLocation) const
 {
-    mesh.render(world, index_x, 0, index_z);
+    mesh.render(modelLocation, getOrigin());
 }

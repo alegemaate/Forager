@@ -45,6 +45,12 @@ class GpuProgram
         glUseProgram(0);
     }
 
+    /// Look up a uniform once, to set it many times
+    GLint getUniformLocation(const std::string& name) const
+    {
+        return glGetUniformLocation(programId, name.c_str());
+    }
+
     /// Value setters
     void setMat4(const std::string& name, const glm::mat4& M) const
     {

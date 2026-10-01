@@ -49,8 +49,17 @@ class ChunkMesh
     // Tessellate chunk
     void tessellate(World& world, glm::ivec3 position, Block (&blk)[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH]);
 
-    // Render it all
-    void render(World& world, u32 offsetX, u32 offsetY, u32 offsetZ);
+    // Render it all. The caller activates the shader and binds the atlas.
+    void render(GLint modelLocation, const glm::vec3& offset) const;
+
+    // True when there is nothing to draw
+    bool empty() const
+    {
+        return numIndices == 0;
+    }
+
+    // Bind the shared texture atlas to texture unit 0
+    static void bindAtlas();
 
   private:
     u32 vao{0};
@@ -58,12 +67,6 @@ class ChunkMesh
     u32 ebo{0};
 
     u32 numIndices{0};
-
-    std::vector<f32> vertices;
-    std::vector<u32> indices;
-
-    /// @brief Neighbour cache
-    std::array<bool, 8> neighbours;
 
     static u32 atlas; // Texture atlas
 };

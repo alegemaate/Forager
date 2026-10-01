@@ -4,6 +4,7 @@
 #include <stdexcept>
 
 #include "../../block/block_registry.h"
+#include "../../render/frustum.h"
 #include "../../utils/utils.h"
 #include "../world.h"
 
@@ -80,16 +81,33 @@ void ChunkMap::render(World& world)
 
     // Activate shader
     defaultShader.activate();
-    defaultShader.setMat4("projection", camera.getProjectionMatrix());
-    defaultShader.setMat4("view", camera.getViewMatrix());
+    const glm::mat4 projection = camera.getProjectionMatrix();
+    const glm::mat4 view       = camera.getViewMatrix();
+
+    defaultShader.setMat4("projection", projection);
+    defaultShader.setMat4("view", view);
     defaultShader.setVec3("light.direction", lightDir);
     defaultShader.setVec3("light.ambient", lightAmbient);
     defaultShader.setVec3("light.color", lightColor);
 
-    for (auto& chunk : chunks)
+    // State shared by every chunk, set once
+    const GLint modelLocation = defaultShader.getUniformLocation("model");
+    ChunkMesh::bindAtlas();
+
+    const Frustum frustum(projection * view);
+
+    for (const auto& chunk : chunks)
     {
-        chunk.render(world);
+        if (chunk.empty() || !frustum.intersects(chunk.getMin(), chunk.getMax()))
+        {
+            continue;
+        }
+
+        chunk.render(modelLocation);
     }
+
+    glBindVertexArray(0);
+    glBindTexture(GL_TEXTURE_2D, 0);
 
     // Deactivate shader
     defaultShader.deactivate();

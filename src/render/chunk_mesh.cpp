@@ -13,6 +13,14 @@ u32 ChunkMesh::atlas = 0;
 constexpr u32 ATLAS_WIDTH     = 8;
 constexpr f32 ATLAS_WIDTH_INV = 1.0f / ATLAS_WIDTH;
 
+namespace
+{
+// Scratch buffers, shared by all meshes. Tessellation runs on the GL thread only.
+// The data lives on the GPU after upload, so meshes do not keep a CPU copy.
+std::vector<f32> vertices;
+std::vector<u32> indices;
+} // namespace
+
 // Construct
 ChunkMesh::ChunkMesh()
 {
@@ -37,8 +45,7 @@ ChunkMesh::~ChunkMesh()
 
 ChunkMesh::ChunkMesh(ChunkMesh&& other) noexcept
     : vao(std::exchange(other.vao, 0)), vbo(std::exchange(other.vbo, 0)), ebo(std::exchange(other.ebo, 0)),
-      numIndices(std::exchange(other.numIndices, 0)), vertices(std::move(other.vertices)),
-      indices(std::move(other.indices)), neighbours(other.neighbours)
+      numIndices(std::exchange(other.numIndices, 0))
 {
 }
 
@@ -54,9 +61,6 @@ ChunkMesh& ChunkMesh::operator=(ChunkMesh&& other) noexcept
         vbo        = std::exchange(other.vbo, 0);
         ebo        = std::exchange(other.ebo, 0);
         numIndices = std::exchange(other.numIndices, 0);
-        vertices   = std::move(other.vertices);
-        indices    = std::move(other.indices);
-        neighbours = other.neighbours;
     }
     return *this;
 }
@@ -73,6 +77,7 @@ void ChunkMesh::fillFace(const FaceDefinition& face, const glm::vec3& base, cons
     const u32 baseIndex = static_cast<u32>(vertices.size() / 9);
 
     // Calculate neighbours
+    std::array<bool, 8> neighbours{};
     for (u32 i = 0; i < face.neighbours.size(); i++)
     {
         const glm::ivec3 n = worldPos + glm::ivec3(face.neighbours[i]);
@@ -180,6 +185,7 @@ void ChunkMesh::tessellate(World& world, glm::ivec3 position, Block (&blk)[CHUNK
 
     if (vertices.empty() || indices.empty())
     {
+        numIndices = 0;
         return;
     }
 
@@ -213,22 +219,17 @@ void ChunkMesh::tessellate(World& world, glm::ivec3 position, Block (&blk)[CHUNK
     indices.clear();
 }
 
-void ChunkMesh::render(World& world, u32 offsetX, u32 offsetY, u32 offsetZ)
+void ChunkMesh::bindAtlas()
 {
-    auto& defaultShader = world.getGpuProgramManager().getShader("default");
-
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, atlas);
+}
 
-    glm::mat4 model = glm::translate(glm::mat4(1.0f),
-                                     glm::vec3(offsetX * CHUNK_WIDTH, offsetY * CHUNK_HEIGHT, offsetZ * CHUNK_LENGTH));
+void ChunkMesh::render(GLint modelLocation, const glm::vec3& offset) const
+{
+    const glm::mat4 model = glm::translate(glm::mat4(1.0f), offset);
+    glUniformMatrix4fv(modelLocation, 1, GL_FALSE, &model[0][0]);
 
-    defaultShader.setMat4("model", model);
-
-    // Render
     glBindVertexArray(vao);
-    glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, nullptr);
-
-    glBindVertexArray(0);
-    glBindTexture(GL_TEXTURE_2D, 0);
+    glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(numIndices), GL_UNSIGNED_INT, nullptr);
 }
