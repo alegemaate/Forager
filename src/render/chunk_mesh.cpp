@@ -220,10 +220,19 @@ void ChunkMesh::tessellate(World& world, glm::ivec3 position, BlockID (&blk)[CHU
     indices.clear();
 }
 
+GLuint ChunkMesh::getAtlas()
+{
+    if (atlas == 0)
+    {
+        atlas = loaders::loadTexture("assets/images/textures/atlas.png");
+    }
+    return atlas;
+}
+
 void ChunkMesh::bindAtlas()
 {
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, atlas);
+    glBindTexture(GL_TEXTURE_2D, getAtlas());
 }
 
 void ChunkMesh::render(GLint modelLocation, const glm::vec3& offset) const

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../core/Types.h"
-#include "../gui/gui.h"
+#include "../gui/gui_renderer.h"
 #include "../world/world.h"
 #include "state.h"
 
@@ -19,7 +19,7 @@ class Game : public asw::scene::Scene<ProgramState>
 
   private:
     World       world;
-    Gui         gui;
+    GuiRenderer gui;
     bool        takeScreenshot{false};
     asw::Sample shutterSound;
 };

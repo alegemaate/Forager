@@ -11,9 +11,6 @@ void World::init()
     auto& defaultShader = gpuProgramManager.createShader("default");
     defaultShader.initProgramFromFiles({"textured.vert", "textured.frag"});
 
-    auto& guiShader = gpuProgramManager.createShader("gui");
-    guiShader.initProgramFromFiles({"gui.vert", "gui.frag"});
-
     // Camera
     camera = Camera(glm::vec3(0.0f, 20.0f, 60.0f), -22.5f, -45.0f);
 

@@ -61,6 +61,9 @@ class ChunkMesh
     // Bind the shared texture atlas to texture unit 0
     static void bindAtlas();
 
+    // Shared texture atlas, loaded on first use
+    static GLuint getAtlas();
+
   private:
     u32 vao{0};
     u32 vbo{0};

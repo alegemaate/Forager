@@ -3,7 +3,7 @@
 #include <GL/glew.h>
 
 #include "../game/controls.h"
-#include "../gui/toolbar.h"
+#include "../gui/hud.h"
 #include "../utils/screenshot.h"
 
 using namespace std;
@@ -12,8 +12,7 @@ void Game::init()
 {
     world.init();
     shutterSound = asw::assets::load_sample("assets/sounds/shutter.ogg");
-
-    gui.addElement(make_shared<Toolbar>());
+    gui.init();
 }
 
 void Game::update(f32 dt)
@@ -50,19 +49,9 @@ void Game::draw()
 
     world.draw();
 
-    auto&       camera    = world.getCamera();
-    const auto& guiShader = world.getGpuProgramManager().getShader("gui");
-
-    guiShader.activate();
-    guiShader.setMat4("projection", camera.getOrthoMatrix());
-    guiShader.setVec4("uColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)); // white tint
-
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glDisable(GL_DEPTH_TEST);
-    gui.render();
-    glEnable(GL_DEPTH_TEST);
-    glDisable(GL_BLEND);
+    gui.begin();
+    hud::draw(gui);
+    gui.end();
 
     if (takeScreenshot)
     {
