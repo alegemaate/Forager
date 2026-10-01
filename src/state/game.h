@@ -23,6 +23,7 @@ class Game : public asw::scene::Scene<ProgramState>
     void cleanup() override;
 
   private:
+    void drawLoading(GuiRenderer& gui) const;
     void updateMouse();
 
     AppContext&  context;

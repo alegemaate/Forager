@@ -11,8 +11,10 @@
 #include <asw/asw.h>
 #include <string>
 
+#include "./block/block_registry.h"
 #include "./game/app_context.h"
 #include "./game/controls.h"
+#include "./render/chunk_mesh.h"
 #include "./state/game.h"
 #include "./state/state.h"
 #include "./state/title.h"
@@ -58,6 +60,9 @@ void init()
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
+
+    // Block types, read by every chunk
+    BlockRegistry::load("assets/data/tiles.json");
 }
 
 int main()
@@ -78,6 +83,8 @@ int main()
         app.set_next_scene(ProgramState::Title);
 
         app.start();
+
+        ChunkMesh::releaseAtlas();
     }
 
     asw::core::shutdown();

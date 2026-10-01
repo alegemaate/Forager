@@ -16,7 +16,6 @@ constexpr std::string_view MOVE_RIGHT   = "move_right";
 constexpr std::string_view JUMP         = "jump";
 constexpr std::string_view SNEAK        = "sneak";
 constexpr std::string_view TOGGLE_FLY   = "toggle_fly";
-constexpr std::string_view REGENERATE   = "regenerate";
 constexpr std::string_view TIME_FORWARD = "time_forward";
 constexpr std::string_view TIME_BACK    = "time_back";
 constexpr std::string_view FULLSCREEN   = "fullscreen";

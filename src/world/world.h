@@ -1,12 +1,12 @@
 #pragma once
 
-#include "../block/block_registry.h"
+#include <asw/asw.h>
+
 #include "../core/Camera.h"
 #include "../game/Player.h"
 #include "../game/settings.h"
-#include "../render/gpu_program_manager.h"
+#include "../render/gpu_program.h"
 #include "../render/skybox.h"
-#include "./biome/biome_registry.h"
 #include "./chunk/chunk_map.h"
 
 // World
@@ -14,6 +14,9 @@ class World
 {
   public:
     World() = default;
+
+    World(const World&)            = delete;
+    World& operator=(const World&) = delete;
 
     /// @brief Load shaders and textures. Call once the GL context exists.
     void init();
@@ -24,18 +27,39 @@ class World
     /// @brief Drop the world's chunks
     void stop();
 
+    /// @brief Game logic, at a fixed time step
     void update(float dt);
+
+    /// @brief Load and mesh chunks. Call once per frame.
+    void stream();
+
     void draw();
 
-    /// @brief Put the player on the ground in the middle of the map
-    void spawnPlayer();
+    /// @brief The player is placed and the chunks around them are drawn
+    bool isReady() const
+    {
+        return spawned && getLoadProgress() >= 1.0f;
+    }
+
+    /// @brief Share of the starting area that is loaded, 0 to 1
+    float getLoadProgress() const;
+
+    /// @brief The camera is under water
+    bool isUnderwater() const;
+
+    /// @brief Set the time of day, 0 to 1, noon at 0.5
+    void setTime(float newTime)
+    {
+        time = newTime;
+        updateLight();
+    }
 
     // Getters
     Camera& getCamera()
     {
         return camera;
     }
-    ChunkMap& getChunks()
+    const ChunkMap& getChunks() const
     {
         return chunks;
     }
@@ -44,45 +68,30 @@ class World
         return player;
     }
 
-    // Managers
-    const GpuProgramManager& getGpuProgramManager() const
-    {
-        return gpuProgramManager;
-    }
-    const BiomeRegistry& getBiomeRegistry() const
-    {
-        return BiomeRegistry;
-    }
-
-    // Lighting
-    const glm::vec3& getLightDir() const
-    {
-        return lightDir;
-    }
-    const glm::vec3& getLightColor() const
-    {
-        return lightColor;
-    }
-    const glm::vec3& getLightAmbient() const
-    {
-        return lightAmbient;
-    }
-
   private:
-    ChunkMap chunks;
-    Player   player{};
-    Skybox   skybox{};
+    void trySpawn();
+    void updateLight();
 
-    float time{0.4f};
-    u32   seed{0};
+    ChunkMap  chunks;
+    Player    player{};
+    Skybox    skybox{};
+    Camera    camera;
 
     const Settings* settings{nullptr};
 
-    Camera    camera;
+    bool spawned{false};
+
+    // Time of day, 0 to 1, noon at 0.5
+    float time{0.4f};
+
+    // Seconds since the world started, for animation
+    float clock{0.0f};
+
     glm::vec3 lightDir{0.0f, 0.0f, 0.0f};
     glm::vec3 lightColor{0.0f, 0.0f, 0.0f};
     glm::vec3 lightAmbient{0.0f, 0.0f, 0.0f};
+    glm::vec3 fogColor{0.0f, 0.0f, 0.0f};
+    glm::vec3 skyTint{1.0f, 1.0f, 1.0f};
 
-    GpuProgramManager gpuProgramManager;
-    BiomeRegistry     BiomeRegistry;
+    GpuProgram worldShader;
 };
