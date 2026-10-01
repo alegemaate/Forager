@@ -2,10 +2,10 @@
 
 #include <asw/asw.h>
 
+#include "../core/Camera.h"
 #include "../utils/gl.h"
 #include "../utils/loaders.h"
 #include "../utils/utils.h"
-#include "../world/world.h"
 
 // Load the skybox
 void Skybox::loadSkybox(const std::string& pathFront, const std::string& pathBack, const std::string& pathLeft,
@@ -45,19 +45,23 @@ void Skybox::loadSkybox(const std::string& pathFront, const std::string& pathBac
     skyShader.initProgramFromFiles({"sky.vert", "sky.frag"});
 }
 
-// Render skybox
-void Skybox::render(World& world) const
+Skybox::~Skybox()
 {
-    auto& camera     = world.getCamera();
-    auto& lightColor = world.getLightColor();
+    glDeleteVertexArrays(1, &vao);
+    glDeleteBuffers(1, &vbo);
+    glDeleteTextures(1, &cubemapTexture);
+}
 
+// Render skybox
+void Skybox::render(const Camera& camera, const glm::vec3& tint) const
+{
     // Shader activation
     glDepthFunc(GL_LEQUAL);
     skyShader.activate();
     skyShader.setInt("skybox", 0);
     skyShader.setMat4("view", glm::mat4(glm::mat3(camera.getViewMatrix())));
     skyShader.setMat4("projection", camera.getProjectionMatrix());
-    skyShader.setVec3("ambient", lightColor);
+    skyShader.setVec3("ambient", tint);
 
     // Render the skybox
     glBindVertexArray(vao);

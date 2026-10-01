@@ -81,7 +81,7 @@ void World::update(float dt)
 void World::draw()
 {
     // Draw skybox
-    skybox.render(*this);
+    skybox.render(camera, lightColor);
 
     // Draw map
     chunks.render(*this);
