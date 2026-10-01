@@ -1,16 +1,11 @@
 #version 330 core
 
 in vec2 vUV;
+in vec4 vColor;
 out vec4 FragColor;
 
 uniform sampler2D uTexture;
-uniform vec4 uColor;   // tint color (RGBA)
 
 void main() {
-    vec4 texColor = texture(uTexture, vUV);
-    FragColor = texColor * uColor;
-
-    // optional: discard transparent pixels
-    // if (FragColor.a < 0.1)
-    //     discard;
+    FragColor = texture(uTexture, vUV) * vColor;
 }
