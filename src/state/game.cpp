@@ -1,6 +1,7 @@
 #include "game.h"
 
 #include <GL/glew.h>
+#include <format>
 
 #include "../game/controls.h"
 #include "../gui/hud.h"
@@ -34,7 +35,7 @@ void Game::cleanup()
 void Game::updateMouse()
 {
     // Look with the mouse while playing, point and click in menus
-    const bool want    = !paused;
+    const bool want    = world.isReady() && !paused;
     const bool current = SDL_GetWindowRelativeMouseMode(asw::display::get_window());
 
     // Browsers only lock the pointer after a click, so ask again on each one
@@ -77,7 +78,7 @@ void Game::update(f32 dt)
     }
     else
     {
-        if (asw::input::get_action_down(controls::PAUSE))
+        if (asw::input::get_action_down(controls::PAUSE) && world.isReady())
         {
             paused = true;
             pauseMenu.resetFocus();
@@ -91,6 +92,25 @@ void Game::update(f32 dt)
     updateMouse();
 }
 
+void Game::drawLoading(GuiRenderer& gui) const
+{
+    const glm::vec2 screen = gui.getSize();
+    gui.rect(0.0f, 0.0f, screen.x, screen.y, glm::vec4(0.08f, 0.1f, 0.12f, 1.0f));
+
+    gui.textShadow("Generating world", screen.x / 2.0f, screen.y * 0.4f, 4.0f, glm::vec4(1.0f), TextAlign::Center);
+    gui.text(std::format("Seed {}", context.seed), screen.x / 2.0f, (screen.y * 0.4f) + 44.0f, 2.0f,
+             glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), TextAlign::Center);
+
+    constexpr f32 BAR_WIDTH  = 320.0f;
+    constexpr f32 BAR_HEIGHT = 16.0f;
+    const f32     x          = (screen.x - BAR_WIDTH) / 2.0f;
+    const f32     y          = (screen.y * 0.4f) + 80.0f;
+
+    gui.rect(x, y, BAR_WIDTH, BAR_HEIGHT, glm::vec4(0.0f, 0.0f, 0.0f, 0.6f));
+    gui.rect(x, y, BAR_WIDTH * world.getLoadProgress(), BAR_HEIGHT, glm::vec4(0.45f, 0.8f, 0.35f, 1.0f));
+    gui.rectOutline(x, y, BAR_WIDTH, BAR_HEIGHT, 2.0f, glm::vec4(1.0f, 1.0f, 1.0f, 0.8f));
+}
+
 void Game::draw()
 {
     // Follow the window, which changes size on resize, fullscreen and high density displays
@@ -100,26 +120,38 @@ void Game::draw()
     glViewport(0, 0, width, height);
 
     // Clear screen
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    world.draw();
+    world.stream();
 
     auto& gui = context.gui;
-    gui.begin();
-    hud::draw(gui);
 
-    if (settingsMenu.isOpen())
+    if (world.isReady())
     {
-        settingsMenu.draw(gui);
+        world.draw();
+
+        gui.begin();
+        hud::draw(gui);
+
+        if (settingsMenu.isOpen())
+        {
+            settingsMenu.draw(gui);
+        }
+        else if (paused)
+        {
+            const glm::vec2 screen = gui.getSize();
+            gui.rect(0.0f, 0.0f, screen.x, screen.y, glm::vec4(0.0f, 0.0f, 0.0f, 0.5f));
+            pauseMenu.draw(gui);
+        }
+        gui.end();
     }
-    else if (paused)
+    else
     {
-        const glm::vec2 screen = gui.getSize();
-        gui.rect(0.0f, 0.0f, screen.x, screen.y, glm::vec4(0.0f, 0.0f, 0.0f, 0.5f));
-        pauseMenu.draw(gui);
+        gui.begin();
+        drawLoading(gui);
+        gui.end();
     }
-    gui.end();
 
     if (takeScreenshot)
     {

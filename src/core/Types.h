@@ -11,6 +11,9 @@ namespace core
 
 // Unsigned integers
 
+/// @brief 64-bit unsigned integer
+using u64 = uint64_t;
+
 /// @brief 32-bit unsigned integer
 using u32 = uint32_t;
 

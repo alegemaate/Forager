@@ -40,7 +40,6 @@ void controls::bind()
     bindButton(JUMP, Key::Space, ControllerButton::A);
     bindButton(SNEAK, Key::LShift, ControllerButton::LeftStick);
     bindButton(TOGGLE_FLY, Key::Q, ControllerButton::Y);
-    bindButton(REGENERATE, Key::R, ControllerButton::Back);
     bindButton(TIME_FORWARD, Key::KpPlus, ControllerButton::RightShoulder);
     bindButton(TIME_BACK, Key::KpMinus, ControllerButton::LeftShoulder);
     bindButton(FULLSCREEN, Key::F11, ControllerButton::Guide);

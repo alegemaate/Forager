@@ -7,125 +7,126 @@
 
 #pragma once
 
-#include <cmath>
+#include <glm/glm.hpp>
 #include <memory>
-#include <string>
+#include <mutex>
+#include <unordered_map>
 #include <vector>
 
-#include "../../block/block_registry.h"
 #include "../../core/JobQueue.h"
 #include "../../core/Types.h"
-#include "../biome/biome_registry.h"
+#include "../../render/gpu_program.h"
+#include "../../render/mesher.h"
 #include "./chunk.h"
 
 using namespace core;
 
-constexpr size_t WORLD_WIDTH  = 8;
-constexpr size_t WORLD_LENGTH = 8;
-
-class World;
-
+/// @brief Endless world of chunks. Chunks around the player are generated and meshed in the background, and chunks
+/// far away are dropped. Player edits are kept, so a dropped chunk comes back as the player left it.
 class ChunkMap
 {
   public:
-    void update(World& world);
+    ChunkMap() = default;
+    ~ChunkMap();
 
-    void generate(World& world, u32 seed);
+    ChunkMap(const ChunkMap&)            = delete;
+    ChunkMap& operator=(const ChunkMap&) = delete;
 
-    // Drop every chunk
-    void clear()
+    /// @brief Drop every chunk and edit and start a new world
+    void reset(u32 newSeed);
+
+    /// @brief Drop every chunk and edit
+    void clear();
+
+    /// @brief Load, mesh and drop chunks around a point. Call once per frame on the GL thread.
+    ///
+    /// @param center Point to load around, in blocks
+    /// @param radius View distance, in chunks
+    void stream(const glm::vec3& center, i32 radius);
+
+    /// @brief Draw solid chunks, then water. The caller activates the shader and sets the shared uniforms.
+    void render(const GpuProgram& shader, const glm::mat4& viewProjection, const glm::vec3& cameraPos) const;
+
+    /// @brief Block at a position. Air when the chunk is not loaded, stone below the world.
+    BlockID getBlock(i32 x, i32 y, i32 z) const;
+
+    BlockID getBlock(const glm::ivec3& pos) const
     {
-        chunks.clear();
+        return getBlock(pos.x, pos.y, pos.z);
     }
 
-    void render(World& world);
+    /// @brief Check if a block stops the player. Chunks that are not loaded are solid, so nothing falls out.
+    bool isSolidAt(i32 x, i32 y, i32 z) const;
 
-    /// @brief Block at a position. Air outside the map, stone below the world.
-    BlockID getBlock(i32 x, i32 y, i32 z) const
+    /// @brief Check if the chunk holding a position is generated
+    bool isLoadedAt(i32 x, i32 z) const;
+
+    /// @brief Change a block. Fails when the chunk is not loaded or the height is out of the world.
+    bool setBlock(const glm::ivec3& pos, BlockID id);
+
+    /// @brief Highest solid block in a column, or -1 when not loaded
+    i32 getSurfaceY(i32 x, i32 z) const;
+
+    /// @brief Share of chunks within a radius that have a mesh, 0 to 1
+    f32 getReadiness(const glm::vec3& center, i32 radius) const;
+
+    u32 getSeed() const
     {
-        if (y < 0)
-        {
-            return BlockID::Stone;
-        }
-        if (!inBounds(x, y, z))
-        {
-            return BlockID::Air;
-        }
-
-        return chunkAt(x, z).get(localX(x), static_cast<u32>(y), localZ(z));
+        return seed;
     }
 
-    /// @brief Check if a block stops the player. Outside the map and below the world are solid, so the edge is a
-    /// wall and nothing falls out.
-    bool isSolidAt(i32 x, i32 y, i32 z) const noexcept
+    /// @brief Chunks held in memory
+    size_t getChunkCount() const
     {
-        if (y >= static_cast<i32>(CHUNK_HEIGHT))
-        {
-            return false;
-        }
-        if (!inBounds(x, y, z))
-        {
-            return true;
-        }
-
-        return chunkAt(x, z).isSolidAt(localX(x), static_cast<u32>(y), localZ(z));
-    }
-
-    /// @brief Check if a column is inside the map
-    bool isLoadedAt(i32 x, i32 z) const noexcept
-    {
-        return inBounds(x, 0, z);
-    }
-
-    /// @brief Highest solid block in a column, or -1 outside the map
-    i32 getSurfaceY(i32 x, i32 z) const
-    {
-        if (!isLoadedAt(x, z))
-        {
-            return -1;
-        }
-
-        for (i32 y = CHUNK_HEIGHT - 1; y >= 0; y--)
-        {
-            if (isSolidAt(x, y, z))
-            {
-                return y;
-            }
-        }
-        return -1;
+        return chunks.size();
     }
 
   private:
-    // All chunks
-    std::vector<Chunk> chunks;
+    using ChunkTable = std::unordered_map<ChunkKey, std::unique_ptr<Chunk>, ChunkKeyHash>;
+    using EditTable  = std::unordered_map<ChunkKey, std::unordered_map<u32, BlockID>, ChunkKeyHash>;
 
-    static bool inBounds(i32 x, i32 y, i32 z) noexcept
+    struct GenResult
     {
-        return x >= 0 && y >= 0 && z >= 0 && static_cast<u32>(y) < CHUNK_HEIGHT &&
-               (static_cast<u32>(x) >> CHUNK_WIDTH_LOG2) < WORLD_WIDTH &&
-               (static_cast<u32>(z) >> CHUNK_LENGTH_LOG2) < WORLD_LENGTH;
-    }
+        ChunkKey                   key;
+        u64                        world;
+        std::unique_ptr<ChunkData> data;
+    };
 
-    static u32 localX(i32 x) noexcept
+    struct MeshResult
     {
-        return static_cast<u32>(x) & (CHUNK_WIDTH - 1);
-    }
+        ChunkKey key;
+        u64      world;
+        u32      version;
+        MeshData data;
+    };
 
-    static u32 localZ(i32 z) noexcept
-    {
-        return static_cast<u32>(z) & (CHUNK_LENGTH - 1);
-    }
+    Chunk*       find(ChunkKey key);
+    const Chunk* find(ChunkKey key) const;
 
-    // Caller checks inBounds first
-    Chunk& chunkAt(i32 x, i32 z)
-    {
-        return chunks[((static_cast<u32>(x) >> CHUNK_WIDTH_LOG2) * WORLD_LENGTH) +
-                      (static_cast<u32>(z) >> CHUNK_LENGTH_LOG2)];
-    }
+    void      collectResults();
+    void      unloadFar(ChunkKey center, i32 radius);
+    void      queueGeneration(ChunkKey center, i32 radius);
+    void      queueMeshes(ChunkKey center, i32 radius);
+    bool      neighboursGenerated(ChunkKey key) const;
+    MeshInput buildMeshInput(const Chunk& chunk) const;
 
-    const Chunk& chunkAt(i32 x, i32 z) const
-    {
-        return chunks[((static_cast<u32>(x) >> CHUNK_WIDTH_LOG2) * WORLD_LENGTH) +
-                      (static_cast<u32>(z) >> CHUNK_LENGTH_LOG2)];
-    }
+    u32 seed{0};
+
+    /// @brief Bumped on reset, so jobs from the old world are thrown away
+    u64 world{0};
+
+    ChunkTable chunks;
+    EditTable  edits;
+
+    // Jobs running, counted on the main thread
+    size_t gensInFlight{0};
+    size_t meshesInFlight{0};
+
+    // Finished jobs, filled by workers
+    std::mutex              resultMutex;
+    std::vector<GenResult>  genResults;
+    std::vector<MeshResult> meshResults;
+
+    // Last, so it is destroyed first and no job outlives the results it writes to
+    JobQueue jobs;
 };

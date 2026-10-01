@@ -1,75 +1,63 @@
-
 #pragma once
 
 #include <GL/glew.h>
-#include <array>
-#include <functional>
-#include <vector>
+#include <glm/glm.hpp>
 
-#include "../block/block_type.h"
 #include "../core/Types.h"
-#include "./cube_faces.h"
+#include "./mesher.h"
 
 using namespace core;
 
-constexpr u32 CHUNK_WIDTH       = 16;
-constexpr u32 CHUNK_HEIGHT      = 128;
-constexpr u32 CHUNK_LENGTH      = 16;
-constexpr u32 CHUNK_WIDTH_LOG2  = 4;
-constexpr u32 CHUNK_LENGTH_LOG2 = 4;
-
-class World;
-
-struct VoxelNeighbours
-{
-    bool top;
-    bool bottom;
-    bool left;
-    bool right;
-    bool front;
-    bool back;
-};
-
+/// @brief GPU copy of a chunk's geometry. Built by the mesher, uploaded on the GL thread.
 class ChunkMesh
 {
   public:
-    ChunkMesh();
+    ChunkMesh() = default;
     ~ChunkMesh();
 
-    // Owns GL handles. Move takes them, so a vector<Chunk> reallocation cannot delete them twice
+    // Owns GL handles
     ChunkMesh(const ChunkMesh&)            = delete;
     ChunkMesh& operator=(const ChunkMesh&) = delete;
-    ChunkMesh(ChunkMesh&& other) noexcept;
-    ChunkMesh& operator=(ChunkMesh&& other) noexcept;
+    ChunkMesh(ChunkMesh&&)                 = delete;
+    ChunkMesh& operator=(ChunkMesh&&)      = delete;
 
-    // Fill a given face
-    void fillFace(const FaceDefinition& face, const glm::vec3& base, const glm::ivec3& worldPos, GLuint atlasPos,
-                  World& world);
+    /// @brief Replace the geometry
+    void upload(const MeshData& data);
 
-    // Tessellate chunk
-    void tessellate(World& world, glm::ivec3 position, BlockID (&blk)[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH]);
+    /// @brief Draw solid geometry. The caller activates the shader and binds the atlas.
+    void renderOpaque(GLint modelLocation, const glm::vec3& offset) const;
 
-    // Render it all. The caller activates the shader and binds the atlas.
-    void render(GLint modelLocation, const glm::vec3& offset) const;
+    /// @brief Draw water. The caller sets up blending.
+    void renderWater(GLint modelLocation, const glm::vec3& offset) const;
 
-    // True when there is nothing to draw
-    bool empty() const
+    bool hasWater() const
     {
-        return numIndices == 0;
+        return waterIndices > 0;
     }
 
-    // Bind the shared texture atlas to texture unit 0
+    bool empty() const
+    {
+        return opaqueIndices == 0 && waterIndices == 0;
+    }
+
+    /// @brief Bind the shared texture atlas to texture unit 0
     static void bindAtlas();
 
-    // Shared texture atlas, loaded on first use
+    /// @brief Shared texture atlas, loaded on first use
     static GLuint getAtlas();
 
+    /// @brief Free the shared texture atlas. Call before the GL context goes away.
+    static void releaseAtlas();
+
   private:
+    void draw(GLint modelLocation, const glm::vec3& offset, u32 first, u32 count) const;
+
     u32 vao{0};
     u32 vbo{0};
     u32 ebo{0};
 
-    u32 numIndices{0};
+    u32 opaqueIndices{0};
+    u32 waterIndices{0};
 
     static u32 atlas; // Texture atlas
 };
