@@ -11,19 +11,20 @@
 #include <glm/glm.hpp>
 #include <vector>
 
-class Model {
- public:
-  Model();
+class Model
+{
+  public:
+    Model();
 
-  std::vector<glm::vec3> vertices;
-  std::vector<glm::vec2> uvs;
-  std::vector<glm::vec3> normals;
+    std::vector<glm::vec3> vertices;
+    std::vector<glm::vec2> uvs;
+    std::vector<glm::vec3> normals;
 
-  GLuint vertex_buffer;
-  GLuint normal_buffer;
-  GLuint texture_buffer;
+    GLuint vertex_buffer;
+    GLuint normal_buffer;
+    GLuint texture_buffer;
 
-  GLuint texture_id;
+    GLuint texture_id;
 
-  bool load(const char* path, const char* uv_path);
+    bool load(const char* path, const char* uv_path);
 };

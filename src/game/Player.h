@@ -11,12 +11,13 @@
 
 class World;
 
-class Player {
- public:
-  void update(World& world);
+class Player
+{
+  public:
+    void update(World& world);
 
- private:
-  bool flying = true;
+  private:
+    bool flying = true;
 
-  glm::vec3 velocity{0.0f, 0.0f, 0.0f};
+    glm::vec3 velocity{0.0f, 0.0f, 0.0f};
 };
