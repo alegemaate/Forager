@@ -13,7 +13,7 @@
 #include <vector>
 
 #include "../../block/block_registry.h"
-#include "../../core/ThreadPool.h"
+#include "../../core/JobQueue.h"
 #include "../../core/Types.h"
 #include "../biome/biome_registry.h"
 #include "./chunk.h"
