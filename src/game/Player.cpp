@@ -4,6 +4,7 @@
 
 #include "../utils/utils.h"
 #include "../world/world.h"
+#include "controls.h"
 
 // Move character and such
 void Player::update(World& world)
@@ -19,22 +20,22 @@ void Player::update(World& world)
     if (flying)
     {
         // Forward
-        if (asw::input::get_key(asw::input::Key::W) || asw::input::get_key(asw::input::Key::Up))
+        if (asw::input::get_action(controls::MOVE_FORWARD))
         {
             velocity += camera.getFront() * 1.0f;
         }
         // Backward
-        if (asw::input::get_key(asw::input::Key::S) || asw::input::get_key(asw::input::Key::Down))
+        if (asw::input::get_action(controls::MOVE_BACK))
         {
             velocity += -camera.getFront() * 1.0f;
         }
         // Left
-        if (asw::input::get_key(asw::input::Key::A) || asw::input::get_key(asw::input::Key::Left))
+        if (asw::input::get_action(controls::MOVE_LEFT))
         {
             velocity += -camera.getRight() * 1.0f;
         }
         // Right
-        if (asw::input::get_key(asw::input::Key::D) || asw::input::get_key(asw::input::Key::Right))
+        if (asw::input::get_action(controls::MOVE_RIGHT))
         {
             velocity += camera.getRight() * 1.0f;
         }
@@ -61,7 +62,7 @@ void Player::update(World& world)
         }
 
         auto movementModifier = 0.1f;
-        if (!isFalling && asw::input::get_key(asw::input::Key::LShift))
+        if (!isFalling && asw::input::get_action(controls::SNEAK))
         {
             movementModifier = 0.05f;
         }
@@ -70,27 +71,27 @@ void Player::update(World& world)
             movementModifier = 0.05f;
         }
 
-        if ((asw::input::get_key(asw::input::Key::W) || asw::input::get_key(asw::input::Key::Up)) && canMoveForward)
+        if (asw::input::get_action(controls::MOVE_FORWARD) && canMoveForward)
         {
             velocity += camera.getForward() * movementModifier;
         }
 
-        if ((asw::input::get_key(asw::input::Key::S) || asw::input::get_key(asw::input::Key::Down)) && canMoveBackward)
+        if (asw::input::get_action(controls::MOVE_BACK) && canMoveBackward)
         {
             velocity += -camera.getForward() * movementModifier;
         }
 
-        if ((asw::input::get_key(asw::input::Key::A) || asw::input::get_key(asw::input::Key::Left)) && canMoveLeft)
+        if (asw::input::get_action(controls::MOVE_LEFT) && canMoveLeft)
         {
             velocity += -camera.getRight() * movementModifier;
         }
 
-        if ((asw::input::get_key(asw::input::Key::D) || asw::input::get_key(asw::input::Key::Right)) && canMoveRight)
+        if (asw::input::get_action(controls::MOVE_RIGHT) && canMoveRight)
         {
             velocity += camera.getRight() * movementModifier;
         }
 
-        if (asw::input::get_key(asw::input::Key::Space) && !isFalling)
+        if (asw::input::get_action(controls::JUMP) && !isFalling)
         {
             velocity.y = 0.2f; // Jump
         }
@@ -111,11 +112,11 @@ void Player::update(World& world)
     }
 
     // Toggle flying mode
-    if (asw::input::get_key_down(asw::input::Key::Q))
+    if (asw::input::get_action_down(controls::TOGGLE_FLY))
     {
         flying = !flying;
     }
 
     // Reset mouse pos
-    SDL_WarpMouseInWindow(asw::display::window, ss.x / 2, ss.y / 2);
+    asw::display::warp_mouse(ss.x / 2.0f, ss.y / 2.0f);
 }

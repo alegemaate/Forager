@@ -11,7 +11,7 @@ void GpuProgram::initProgramFromFiles(const std::vector<std::string>& paths)
 
     for (const auto& path : paths)
     {
-#ifdef EMSCRIPTEN
+#ifdef __EMSCRIPTEN__
         const std::string filename = "assets/shaders/es/" + path;
 #else
         const std::string filename = "assets/shaders/core/" + path;

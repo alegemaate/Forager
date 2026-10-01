@@ -38,9 +38,9 @@ jobs:
           path: "./build/release/_deps"
           key: deps-${{ runner.os }}
 
-      - uses: mymindstorm/setup-emsdk@v14
+      - uses: mymindstorm/setup-emsdk@v16
         with:
-          version: 4.0.6
+          version: 6.0.10
           actions-cache-folder: "emsdk-cache"
 
       - name: Download ports

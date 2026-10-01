@@ -82,8 +82,12 @@ class Camera
     // value in both the x and y direction.
     void processMouseMovement(bool constrainPitch = true)
     {
-        const auto xOffset = asw::input::mouse.change.x * Camera::MOUSE_SENSITIVITY;
-        const auto yOffset = -asw::input::mouse.change.y * Camera::MOUSE_SENSITIVITY;
+        const auto& mouse = asw::input::get_mouse();
+        const auto  stick =
+            asw::input::get_controller_stick(asw::input::ANY_CONTROLLER, asw::input::ControllerStick::Right);
+
+        const auto xOffset = (mouse.change.x * Camera::MOUSE_SENSITIVITY) + (stick.x * Camera::STICK_SENSITIVITY);
+        const auto yOffset = -((mouse.change.y * Camera::MOUSE_SENSITIVITY) + (stick.y * Camera::STICK_SENSITIVITY));
 
         yaw += xOffset;
         pitch += yOffset;
@@ -94,7 +98,7 @@ class Camera
             pitch = std::clamp(pitch, -89.0f, 89.0f);
         }
 
-        const auto zOffset = asw::input::mouse.z * Camera::ZOOM_SENSITIVITY;
+        const auto zOffset = mouse.z * Camera::ZOOM_SENSITIVITY;
         zoom -= zOffset;
         zoom = std::clamp(zoom, 1.0f, 120.0f); // Clamp zoom between 1.0f and 120.0f
 
@@ -137,6 +141,7 @@ class Camera
     static constexpr float MOVEMENT_SPEED    = 0.5f;
     static constexpr float MOUSE_SENSITIVITY = 0.3f;
     static constexpr float ZOOM_SENSITIVITY  = 5.0f;
+    static constexpr float STICK_SENSITIVITY = 2.0f;
 
     static constexpr glm::vec3 WORLD_UP{0.0f, 1.0f, 0.0f};
     static constexpr float     NEAR_PLANE = 0.1f;

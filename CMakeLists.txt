@@ -9,7 +9,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/target)
 
 # Find libs
 include(cmake/get_cpm.cmake)
-CPMAddPackage("gh:adsgames/asw#d18f4cf96da58fa541ac679a707dac28ea7cc7d6")
+CPMAddPackage("gh:adsgames/asw#v0.13.0")
 CPMAddPackage("gh:nlohmann/json@3.11.3")
 CPMAddPackage("gh:g-truc/glm#1.0.1")
 
@@ -29,23 +29,19 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   glm::glm
 )
 
-if(EMSCRIPTEN)
-  set_target_properties(${PROJECT_NAME} PROPERTIES
-    OUTPUT_NAME "index"
-    SUFFIX ".html"
-  )
+# Web page with asw's shell, loading progress and preloaded assets
+asw_add_web_target(${PROJECT_NAME}
+  TITLE "Forager"
+  ASSETS ${CMAKE_CURRENT_LIST_DIR}/assets
+)
 
+if(EMSCRIPTEN)
   target_link_options(${PROJECT_NAME} PRIVATE
     -sWASM=1
-    -sALLOW_MEMORY_GROWTH=1
     -sMAXIMUM_MEMORY=1gb
     -sSTACK_SIZE=32mb
     -sINITIAL_MEMORY=64mb
     -sFULL_ES3
-  )
-
-  set_target_properties(${PROJECT_NAME} PROPERTIES
-    LINK_FLAGS "--preload-file ${CMAKE_CURRENT_LIST_DIR}/assets@/assets --use-preload-plugins --shell-file ${CMAKE_CURRENT_LIST_DIR}/index.html"
   )
 else()
   find_package(OpenGL REQUIRED COMPONENTS OpenGL)

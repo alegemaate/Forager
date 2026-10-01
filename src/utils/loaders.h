@@ -2,7 +2,6 @@
 
 #include <GL/glew.h>
 
-#include <GL/gl.h>
 #include <SDL3_image/SDL_image.h>
 #include <string>
 #include <vector>

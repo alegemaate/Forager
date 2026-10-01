@@ -1,7 +1,8 @@
 #include "game.h"
 
-#include <GL/gl.h>
+#include <GL/glew.h>
 
+#include "../game/controls.h"
 #include "../gui/toolbar.h"
 
 using namespace std;
@@ -15,30 +16,14 @@ void Game::init()
 
 void Game::update(f32 dt)
 {
-    if (asw::input::get_key_down(asw::input::Key::Escape))
+    if (asw::input::get_action_down(controls::QUIT))
     {
-        asw::core::exit = true;
+        asw::core::exit();
     }
 
-    if (asw::input::get_key_down(asw::input::Key::F11))
+    if (asw::input::get_action_down(controls::FULLSCREEN))
     {
-        fullscreen = !fullscreen;
-
-        asw::display::set_fullscreen(fullscreen);
-        SDL_SyncWindow(asw::display::window);
-
-        auto screenSize = asw::display::get_size();
-
-        if (fullscreen)
-        {
-            asw::display::set_resolution(screenSize.x, screenSize.y);
-            glViewport(0, 0, screenSize.x, screenSize.y);
-        }
-        else
-        {
-            asw::display::set_resolution(1280, 960);
-            glViewport(0, 0, 1280, 960);
-        }
+        asw::display::set_fullscreen(!asw::display::is_fullscreen());
     }
 
     world.update(dt);
@@ -46,6 +31,12 @@ void Game::update(f32 dt)
 
 void Game::draw()
 {
+    // Follow the window, which changes size on resize, fullscreen and high density displays
+    int width  = 0;
+    int height = 0;
+    SDL_GetWindowSizeInPixels(asw::display::get_window(), &width, &height);
+    glViewport(0, 0, width, height);
+
     // Clear screen
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -66,5 +57,5 @@ void Game::draw()
     glEnable(GL_DEPTH_TEST);
     glDisable(GL_BLEND);
 
-    SDL_GL_SwapWindow(asw::display::window);
+    asw::display::swap_window();
 }

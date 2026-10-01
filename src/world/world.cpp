@@ -1,6 +1,10 @@
 #include "./world.h"
 
 #include <asw/asw.h>
+#include <cmath>
+#include <numbers>
+
+#include "../game/controls.h"
 
 void World::init()
 {
@@ -34,7 +38,7 @@ void World::update(float dt)
     player.update(*this);
 
     // Gen
-    if (asw::input::get_key_down(asw::input::Key::R))
+    if (asw::input::get_action_down(controls::REGENERATE))
     {
         chunks.generate(*this);
     }
@@ -42,11 +46,11 @@ void World::update(float dt)
     // Change time
     time += 0.00005f;
 
-    if (asw::input::get_key(asw::input::Key::KpPlus))
+    if (asw::input::get_action(controls::TIME_FORWARD))
     {
         time += 0.005f;
     }
-    else if (asw::input::get_key(asw::input::Key::KpMinus))
+    else if (asw::input::get_action(controls::TIME_BACK))
     {
         time -= 0.005f;
     }
