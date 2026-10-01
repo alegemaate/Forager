@@ -29,11 +29,20 @@ void World::start(u32 newSeed, const Settings& newSettings)
     settings = &newSettings;
     time     = 0.4f;
 
-    // Camera
-    camera = Camera(glm::vec3(0.0f, 20.0f, 60.0f), -22.5f, -45.0f);
-
     // Generate map
     chunks.generate(*this, seed);
+    spawnPlayer();
+}
+
+void World::spawnPlayer()
+{
+    const auto x       = static_cast<i32>(WORLD_WIDTH * CHUNK_WIDTH / 2);
+    const auto z       = static_cast<i32>(WORLD_LENGTH * CHUNK_LENGTH / 2);
+    const i32  surface = chunks.getSurfaceY(x, z);
+
+    // Feet just above the top face of the ground. Blocks are centred on whole numbers.
+    player.spawn(glm::vec3(static_cast<float>(x), static_cast<float>(surface) + 0.5f + 0.01f, static_cast<float>(z)));
+    camera = Camera(player.getEyePosition(), -90.0f, -10.0f);
 }
 
 void World::stop()
@@ -47,12 +56,13 @@ void World::update(float dt)
 
     // The mouse only turns the camera while it is captured, not while it points at menus
     camera.processLook(*settings, SDL_GetWindowRelativeMouseMode(asw::display::get_window()));
-    player.update(*this);
+    player.update(*this, dt);
 
     // Gen
     if (asw::input::get_action_down(controls::REGENERATE))
     {
         chunks.generate(*this, seed);
+        spawnPlayer();
     }
 
     // Change time

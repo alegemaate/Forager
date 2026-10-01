@@ -21,6 +21,11 @@ class Chunk
     // Get block
     BlockID& get(u32 x, u32 y, u32 z);
 
+    BlockID get(u32 x, u32 y, u32 z) const
+    {
+        return blk[x][y][z];
+    }
+
     // Check if solid at
     bool isSolidAt(u32 x, u32 y, u32 z) const
     {

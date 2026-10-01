@@ -27,6 +27,9 @@ class World
     void update(float dt);
     void draw();
 
+    /// @brief Put the player on the ground in the middle of the map
+    void spawnPlayer();
+
     // Getters
     Camera& getCamera()
     {

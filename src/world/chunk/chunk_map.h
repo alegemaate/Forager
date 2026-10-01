@@ -40,31 +40,59 @@ class ChunkMap
 
     void render(World& world);
 
-    const BlockType& getTile(i32 x, i32 y, i32 z)
+    /// @brief Block at a position. Air outside the map, stone below the world.
+    BlockID getBlock(i32 x, i32 y, i32 z) const
     {
+        if (y < 0)
+        {
+            return BlockID::Stone;
+        }
         if (!inBounds(x, y, z))
         {
-            return BlockRegistry::get(BlockID::Air);
+            return BlockID::Air;
         }
 
-        return BlockRegistry::get(chunkAt(x, z).get(localX(x), static_cast<u32>(y), localZ(z)));
+        return chunkAt(x, z).get(localX(x), static_cast<u32>(y), localZ(z));
     }
 
-    const BlockType& getTile(const glm::vec3& pos)
-    {
-        // Floor, so -0.5 maps to tile -1 and not 0
-        return getTile(static_cast<i32>(std::floor(pos.x)), static_cast<i32>(std::floor(pos.y)),
-                       static_cast<i32>(std::floor(pos.z)));
-    }
-
+    /// @brief Check if a block stops the player. Outside the map and below the world are solid, so the edge is a
+    /// wall and nothing falls out.
     bool isSolidAt(i32 x, i32 y, i32 z) const noexcept
     {
-        if (!inBounds(x, y, z))
+        if (y >= static_cast<i32>(CHUNK_HEIGHT))
         {
             return false;
         }
+        if (!inBounds(x, y, z))
+        {
+            return true;
+        }
 
         return chunkAt(x, z).isSolidAt(localX(x), static_cast<u32>(y), localZ(z));
+    }
+
+    /// @brief Check if a column is inside the map
+    bool isLoadedAt(i32 x, i32 z) const noexcept
+    {
+        return inBounds(x, 0, z);
+    }
+
+    /// @brief Highest solid block in a column, or -1 outside the map
+    i32 getSurfaceY(i32 x, i32 z) const
+    {
+        if (!isLoadedAt(x, z))
+        {
+            return -1;
+        }
+
+        for (i32 y = CHUNK_HEIGHT - 1; y >= 0; y--)
+        {
+            if (isSolidAt(x, y, z))
+            {
+                return y;
+            }
+        }
+        return -1;
     }
 
   private:
