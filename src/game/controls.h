@@ -20,8 +20,16 @@ constexpr std::string_view REGENERATE   = "regenerate";
 constexpr std::string_view TIME_FORWARD = "time_forward";
 constexpr std::string_view TIME_BACK    = "time_back";
 constexpr std::string_view FULLSCREEN   = "fullscreen";
-constexpr std::string_view QUIT         = "quit";
+constexpr std::string_view PAUSE        = "pause";
 constexpr std::string_view SCREENSHOT   = "screenshot";
+
+// Menus
+constexpr std::string_view UI_UP     = "ui_up";
+constexpr std::string_view UI_DOWN   = "ui_down";
+constexpr std::string_view UI_LEFT   = "ui_left";
+constexpr std::string_view UI_RIGHT  = "ui_right";
+constexpr std::string_view UI_ACCEPT = "ui_accept";
+constexpr std::string_view UI_BACK   = "ui_back";
 
 /// @brief Bind every action. Call once after asw is initialized.
 void bind();

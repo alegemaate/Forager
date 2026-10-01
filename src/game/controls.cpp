@@ -13,7 +13,7 @@ using asw::input::ControllerButtonBinding;
 using asw::input::Key;
 using asw::input::KeyBinding;
 
-// Key, arrow key, D-pad and left stick direction for one movement action
+// Key, arrow key, D-pad and left stick direction for one direction action
 void bindMove(std::string_view name, Key key, Key arrow, ControllerButton dpad, ControllerAxis axis, bool positive)
 {
     bind_action(name, KeyBinding{key});
@@ -44,6 +44,15 @@ void controls::bind()
     bindButton(TIME_FORWARD, Key::KpPlus, ControllerButton::RightShoulder);
     bindButton(TIME_BACK, Key::KpMinus, ControllerButton::LeftShoulder);
     bindButton(FULLSCREEN, Key::F11, ControllerButton::Guide);
-    bindButton(QUIT, Key::Escape, ControllerButton::Start);
+    bindButton(PAUSE, Key::Escape, ControllerButton::Start);
     bind_action(SCREENSHOT, KeyBinding{Key::F2});
+
+    // Menus
+    bindMove(UI_UP, Key::W, Key::Up, ControllerButton::DPadUp, ControllerAxis::LeftY, false);
+    bindMove(UI_DOWN, Key::S, Key::Down, ControllerButton::DPadDown, ControllerAxis::LeftY, true);
+    bindMove(UI_LEFT, Key::A, Key::Left, ControllerButton::DPadLeft, ControllerAxis::LeftX, false);
+    bindMove(UI_RIGHT, Key::D, Key::Right, ControllerButton::DPadRight, ControllerAxis::LeftX, true);
+    bindButton(UI_ACCEPT, Key::Return, ControllerButton::A);
+    bind_action(UI_ACCEPT, KeyBinding{Key::KpEnter});
+    bindButton(UI_BACK, Key::Escape, ControllerButton::B);
 }

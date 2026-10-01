@@ -20,15 +20,14 @@ void ChunkMap::update(World& world)
 }
 
 // Procedural Generation of map
-void ChunkMap::generate(World& world)
+void ChunkMap::generate(World& world, u32 seed)
 {
     // GENERATE MAP
-    asw::log::info("Generating Map");
+    asw::log::info("Generating Map, seed {}", seed);
 
     // Clear chunks
     chunks.clear();
 
-    const u32 seed         = 100; // asw::random::between(0, 10000);
     const i32 worldSize    = WORLD_WIDTH * WORLD_LENGTH;
     i32       currentChunk = 0;
 
@@ -45,7 +44,7 @@ void ChunkMap::generate(World& world)
         {
             auto& chunk = chunks.emplace_back(i, j);
 
-            jobs.submit([&chunk, &world]() { chunk.generate(world, seed); });
+            jobs.submit([&chunk, &world, seed]() { chunk.generate(world, seed); });
             currentChunk++;
 
             // Send to console

@@ -3,6 +3,7 @@
 #include "../block/block_registry.h"
 #include "../core/Camera.h"
 #include "../game/Player.h"
+#include "../game/settings.h"
 #include "../render/gpu_program_manager.h"
 #include "../render/skybox.h"
 #include "./biome/biome_registry.h"
@@ -14,7 +15,15 @@ class World
   public:
     World() = default;
 
+    /// @brief Load shaders and textures. Call once the GL context exists.
     void init();
+
+    /// @brief Start a new world
+    void start(u32 seed, const Settings& settings);
+
+    /// @brief Drop the world's chunks
+    void stop();
+
     void update(float dt);
     void draw();
 
@@ -62,6 +71,9 @@ class World
     Skybox   skybox{};
 
     float time{0.4f};
+    u32   seed{0};
+
+    const Settings* settings{nullptr};
 
     Camera    camera;
     glm::vec3 lightDir{0.0f, 0.0f, 0.0f};
