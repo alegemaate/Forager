@@ -18,6 +18,8 @@ class Game : public asw::scene::Scene<ProgramState>
     void draw() override;
 
   private:
-    World world;
-    Gui   gui;
+    World       world;
+    Gui         gui;
+    bool        takeScreenshot{false};
+    asw::Sample shutterSound;
 };

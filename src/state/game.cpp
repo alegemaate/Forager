@@ -4,12 +4,14 @@
 
 #include "../game/controls.h"
 #include "../gui/toolbar.h"
+#include "../utils/screenshot.h"
 
 using namespace std;
 
 void Game::init()
 {
     world.init();
+    shutterSound = asw::assets::load_sample("assets/sounds/shutter.ogg");
 
     gui.addElement(make_shared<Toolbar>());
 }
@@ -24,6 +26,11 @@ void Game::update(f32 dt)
     if (asw::input::get_action_down(controls::FULLSCREEN))
     {
         asw::display::set_fullscreen(!asw::display::is_fullscreen());
+    }
+
+    if (asw::input::get_action_down(controls::SCREENSHOT))
+    {
+        takeScreenshot = true;
     }
 
     world.update(dt);
@@ -56,6 +63,17 @@ void Game::draw()
     gui.render();
     glEnable(GL_DEPTH_TEST);
     glDisable(GL_BLEND);
+
+    if (takeScreenshot)
+    {
+        takeScreenshot          = false;
+        const std::string saved = screenshot::saveTimestamped();
+        asw::log::info("Screenshot {}", saved.empty() ? "failed" : saved);
+        if (!saved.empty())
+        {
+            asw::sound::play(shutterSound, asw::sound::PlayOptions{.volume = 0.8f, .bus = asw::sound::Bus::Ui});
+        }
+    }
 
     asw::display::swap_window();
 }

@@ -45,4 +45,5 @@ void controls::bind()
     bindButton(TIME_BACK, Key::KpMinus, ControllerButton::LeftShoulder);
     bindButton(FULLSCREEN, Key::F11, ControllerButton::Guide);
     bindButton(QUIT, Key::Escape, ControllerButton::Start);
+    bind_action(SCREENSHOT, KeyBinding{Key::F2});
 }

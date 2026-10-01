@@ -21,6 +21,7 @@ constexpr std::string_view TIME_FORWARD = "time_forward";
 constexpr std::string_view TIME_BACK    = "time_back";
 constexpr std::string_view FULLSCREEN   = "fullscreen";
 constexpr std::string_view QUIT         = "quit";
+constexpr std::string_view SCREENSHOT   = "screenshot";
 
 /// @brief Bind every action. Call once after asw is initialized.
 void bind();
