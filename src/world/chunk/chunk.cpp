@@ -18,10 +18,8 @@ using namespace core;
 // Construct
 Chunk::Chunk(u32 x, u32 z) : index_x(x), index_z(z) {}
 
-void Chunk::generate(World& world, u32 seed)
+void Chunk::generate(World& /*world*/, u32 seed)
 {
-    auto& tileManager = world.getTileManager();
-
     // STEP 1:
     // 2D Heightmap generation
     const SimplexNoise heightMap = SimplexNoise(0.002f, 0.002f, 2.0f, 0.47f);
@@ -53,20 +51,20 @@ void Chunk::generate(World& world, u32 seed)
                 // Air
                 if (y > height)
                 {
-                    blk[x][y][z].setType(tileManager.getTileByType(BlockID::Air));
+                    blk[x][y][z] = BlockID::Air;
                 }
 
                 else if (y + 1 > height)
                 { // Grass
-                    blk[x][y][z].setType(tileManager.getTileByType(BlockID::Grass));
+                    blk[x][y][z] = BlockID::Grass;
                 }
                 else if (y + 4 > height)
                 { // Dirt
-                    blk[x][y][z].setType(tileManager.getTileByType(BlockID::Dirt));
+                    blk[x][y][z] = BlockID::Dirt;
                 }
                 else
                 { // Stone
-                    blk[x][y][z].setType(tileManager.getTileByType(BlockID::Stone));
+                    blk[x][y][z] = BlockID::Stone;
                 }
             }
         }
@@ -94,7 +92,7 @@ void Chunk::generate(World& world, u32 seed)
 
                 if (val > 0.0f)
                 {
-                    blk[x][y][z].setType(tileManager.getTileByType(BlockID::Air));
+                    blk[x][y][z] = BlockID::Air;
                 }
             }
         }
@@ -103,7 +101,7 @@ void Chunk::generate(World& world, u32 seed)
     changed = true;
 }
 
-Block& Chunk::get(u32 x, u32 y, u32 z)
+BlockID& Chunk::get(u32 x, u32 y, u32 z)
 {
     return blk[x][y][z];
 }

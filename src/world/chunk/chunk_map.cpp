@@ -25,9 +25,6 @@ void ChunkMap::generate(World& world)
     // GENERATE MAP
     asw::log::info("Generating Map");
 
-    // Set empty tile
-    emptyTile.setType(world.getTileManager().getTileByType(BlockID::Air));
-
     // Clear chunks
     chunks.clear();
 

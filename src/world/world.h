@@ -33,10 +33,6 @@ class World
     }
 
     // Managers
-    BlockRegistry& getTileManager()
-    {
-        return tileManager;
-    }
     const GpuProgramManager& getGpuProgramManager() const
     {
         return gpuProgramManager;
@@ -73,6 +69,5 @@ class World
     glm::vec3 lightAmbient{0.0f, 0.0f, 0.0f};
 
     GpuProgramManager gpuProgramManager;
-    BlockRegistry     tileManager;
     BiomeRegistry     BiomeRegistry;
 };

@@ -7,14 +7,13 @@
 
 #pragma once
 
-#include <array>
 #include <stdexcept>
 #include <string>
 
 #include "../core/Types.h"
 
-// Tiles
-enum class BlockID
+// Tiles. Stored as one byte per block in chunks.
+enum class BlockID : core::u8
 {
     Air       = 0,
     Grass     = 1,
@@ -31,12 +30,21 @@ enum class BlockID
     GrassSnow = 12,
     TreePine  = 13,
     Temp      = 14, // Temporary tile for testing
-    Johnny    = 15, // Special tile for Johnny
+    Wood      = 15,
     Dirt      = 16,
     Leaves    = 17,
+    Torch     = 18,
 
     // Terminator
-    Max = 18,
+    Max = 19,
+};
+
+// How a block is drawn
+enum class BlockModel : core::u8
+{
+    None,  // Not drawn
+    Cube,  // Full block
+    Torch, // Thin stick
 };
 
 struct AtlasLookup
@@ -55,21 +63,46 @@ class BlockType
   public:
     BlockType() = default;
 
-    BlockType(BlockID type, AtlasLookup atlasId);
+    BlockType(BlockID type, std::string name, AtlasLookup atlasId, BlockModel model, bool solid, bool opaque,
+              bool liquid, core::u8 light);
 
     /// @brief Get underlying tile ID
-    ///
-    /// @return BlockID
     BlockID getType() const
     {
         return type;
     }
 
-    /// @brief Check if tile is solid
-    /// @return true if solid, false otherwise
+    const std::string& getName() const
+    {
+        return name;
+    }
+
+    /// @brief Check if tile stops the player
     bool isSolid() const
     {
-        return type != BlockID::Air;
+        return solid;
+    }
+
+    /// @brief Check if tile hides the faces behind it and blocks light
+    bool isOpaque() const
+    {
+        return opaque;
+    }
+
+    bool isLiquid() const
+    {
+        return liquid;
+    }
+
+    /// @brief Light the block gives off, 0 to 15
+    core::u8 getLight() const
+    {
+        return light;
+    }
+
+    BlockModel getModel() const
+    {
+        return model;
     }
 
     // Get atlas ids
@@ -92,6 +125,12 @@ class BlockType
     }
 
   private:
-    BlockID     type;
-    AtlasLookup atlasIds;
+    BlockID     type{BlockID::Air};
+    std::string name{"Air"};
+    AtlasLookup atlasIds{};
+    BlockModel  model{BlockModel::None};
+    bool        solid{false};
+    bool        opaque{false};
+    bool        liquid{false};
+    core::u8    light{0};
 };

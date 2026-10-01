@@ -6,7 +6,7 @@
 #include <functional>
 #include <vector>
 
-#include "../block/block.h"
+#include "../block/block_type.h"
 #include "../core/Types.h"
 #include "./cube_faces.h"
 
@@ -47,7 +47,7 @@ class ChunkMesh
                   World& world);
 
     // Tessellate chunk
-    void tessellate(World& world, glm::ivec3 position, Block (&blk)[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH]);
+    void tessellate(World& world, glm::ivec3 position, BlockID (&blk)[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_LENGTH]);
 
     // Render it all. The caller activates the shader and binds the atlas.
     void render(GLint modelLocation, const glm::vec3& offset) const;
