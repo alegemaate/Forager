@@ -97,6 +97,16 @@ class ThreadPool
         finished_cv_.wait(lock, [this] { return tasks_.empty() && active_tasks_ == 0; });
     }
 
+    /// Drops tasks that have not started. Running tasks finish.
+    void clear()
+    {
+        {
+            std::unique_lock<std::mutex> lock(queue_mutex_);
+            std::queue<std::function<void()>>().swap(tasks_);
+        }
+        finished_cv_.notify_all();
+    }
+
     // Enqueue task for execution by the thread pool
     void enqueue(std::function<void()> task)
     {

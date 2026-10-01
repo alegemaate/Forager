@@ -35,8 +35,8 @@ void ChunkMap::generate(World& world)
     // Reserve space for chunks
     chunks.reserve(worldSize);
 
-    // Thread pool for chunk generation
-    ThreadPool threadPool;
+    // Job queue for chunk generation. Web builds run the jobs on the main thread
+    JobQueue jobs;
 
     // Make lots of chunks
     for (u32 i = 0; i < WORLD_WIDTH; i++)
@@ -45,7 +45,7 @@ void ChunkMap::generate(World& world)
         {
             auto& chunk = chunks.emplace_back(i, j);
 
-            threadPool.enqueue([&chunk, &world]() { chunk.generate(world, seed); });
+            jobs.submit([&chunk, &world]() { chunk.generate(world, seed); });
             currentChunk++;
 
             // Send to console
@@ -54,7 +54,7 @@ void ChunkMap::generate(World& world)
     }
 
     // Wait for all tasks to finish
-    threadPool.wait();
+    jobs.wait();
 
     asw::log::info("Map generation complete!");
 
