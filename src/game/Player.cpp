@@ -9,12 +9,8 @@
 // Move character and such
 void Player::update(World& world)
 {
-    auto  ss     = asw::display::get_size();
     auto& camera = world.getCamera();
     auto& chunks = world.getChunks();
-
-    // Update camera
-    camera.processMouseMovement();
 
     // "Creative" flying mode
     if (flying)
@@ -116,7 +112,4 @@ void Player::update(World& world)
     {
         flying = !flying;
     }
-
-    // Reset mouse pos
-    asw::display::warp_mouse(ss.x / 2.0f, ss.y / 2.0f);
 }

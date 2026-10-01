@@ -11,9 +11,6 @@ void World::init()
     auto& defaultShader = gpuProgramManager.createShader("default");
     defaultShader.initProgramFromFiles({"textured.vert", "textured.frag"});
 
-    // Camera
-    camera = Camera(glm::vec3(0.0f, 20.0f, 60.0f), -22.5f, -45.0f);
-
     // Load biomes
     BiomeRegistry.load("assets/data/biomes.json");
 
@@ -24,20 +21,38 @@ void World::init()
     skybox.loadSkybox("assets/images/skybox/front.png", "assets/images/skybox/back.png",
                       "assets/images/skybox/left.png", "assets/images/skybox/right.png", "assets/images/skybox/top.png",
                       "assets/images/skybox/bottom.png");
+}
+
+void World::start(u32 newSeed, const Settings& newSettings)
+{
+    seed     = newSeed;
+    settings = &newSettings;
+    time     = 0.4f;
+
+    // Camera
+    camera = Camera(glm::vec3(0.0f, 20.0f, 60.0f), -22.5f, -45.0f);
 
     // Generate map
-    chunks.generate(*this);
+    chunks.generate(*this, seed);
+}
+
+void World::stop()
+{
+    chunks.clear();
 }
 
 void World::update(float dt)
 {
     chunks.update(*this);
+
+    // The mouse only turns the camera while it is captured, not while it points at menus
+    camera.processLook(*settings, SDL_GetWindowRelativeMouseMode(asw::display::get_window()));
     player.update(*this);
 
     // Gen
     if (asw::input::get_action_down(controls::REGENERATE))
     {
-        chunks.generate(*this);
+        chunks.generate(*this, seed);
     }
 
     // Change time
@@ -77,6 +92,8 @@ void World::update(float dt)
 
 void World::draw()
 {
+    camera.setFieldOfView(static_cast<float>(settings->fieldOfView));
+
     // Draw skybox
     skybox.render(camera, lightColor);
 

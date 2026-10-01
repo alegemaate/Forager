@@ -1,25 +1,14 @@
-
-
 #pragma once
 
+#include <algorithm>
 #include <asw/asw.h>
+#include <cmath>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include <vector>
+#include "../game/settings.h"
 
-// Defines several possible options for camera movement
-enum class CameraMovement
-{
-    FORWARD,
-    BACKWARD,
-    LEFT,
-    RIGHT,
-    FORWARD_LOCK,
-    BACKWARD_LOCK
-};
-
-// An abstract camera class that processes input and calculates the
+// A first person camera that processes look input and calculates the
 // corresponding Euler Angles, Vectors and Matrices for use in OpenGL
 class Camera
 {
@@ -42,27 +31,46 @@ class Camera
         position = pos;
     }
 
+    void setRotation(float newYaw, float newPitch)
+    {
+        yaw   = newYaw;
+        pitch = std::clamp(newPitch, -89.0f, 89.0f);
+        updateCameraVectors();
+    }
+
+    void setFieldOfView(float degrees)
+    {
+        fieldOfView = degrees;
+    }
+
+    void setFarPlane(float distance)
+    {
+        farPlane = distance;
+    }
+
     // Returns the view matrix calculated using Euler Angles and the LookAt Matrix
-    const glm::mat4 getViewMatrix() const
+    glm::mat4 getViewMatrix() const
     {
         auto up = glm::normalize(glm::cross(right, front));
         return glm::lookAt(position, position + front, up);
     }
 
-    // Returns the projection matrix calculated using the camera's zoom level
+    // Returns the projection matrix calculated using the field of view
     // and the aspect ratio of the display
-    const glm::mat4 getProjectionMatrix() const
+    glm::mat4 getProjectionMatrix() const
     {
-        const auto ss = asw::display::get_size();
-        return glm::perspective(glm::radians(zoom), (float)ss.x / (float)ss.y, Camera::NEAR_PLANE, Camera::FAR_PLANE);
+        const auto ss     = asw::display::get_size();
+        const auto aspect = ss.y > 0 ? static_cast<float>(ss.x) / static_cast<float>(ss.y) : 1.0f;
+        return glm::perspective(glm::radians(fieldOfView), aspect, Camera::NEAR_PLANE, farPlane);
     }
 
-    const glm::mat4 getOrthoMatrix() const
+    // Looking direction
+    const glm::vec3& getFront() const
     {
-        const auto ss = asw::display::get_size();
-        return glm::ortho(0.0f, (float)ss.x, 0.0f, (float)ss.y, -1.0f, 1.0f);
+        return front;
     }
 
+    // Looking direction, flat on the ground
     const glm::vec3& getForward() const
     {
         return forward;
@@ -73,36 +81,24 @@ class Camera
         return right;
     }
 
-    const glm::vec3& getFront() const
+    // Turn the camera from mouse movement and the right stick. The mouse only counts while it is captured.
+    void processLook(const Settings& settings, bool useMouse)
     {
-        return front;
-    }
-
-    // Processes input received from a mouse input system. Expects the offset
-    // value in both the x and y direction.
-    void processMouseMovement(bool constrainPitch = true)
-    {
-        const auto& mouse = asw::input::get_mouse();
-        const auto  stick =
+        const auto&     mouse       = asw::input::get_mouse();
+        const glm::vec2 mouseChange = useMouse ? glm::vec2(mouse.change.x, mouse.change.y) : glm::vec2(0.0f, 0.0f);
+        const auto      stick =
             asw::input::get_controller_stick(asw::input::ANY_CONTROLLER, asw::input::ControllerStick::Right);
 
-        const auto xOffset = (mouse.change.x * Camera::MOUSE_SENSITIVITY) + (stick.x * Camera::STICK_SENSITIVITY);
-        const auto yOffset = -((mouse.change.y * Camera::MOUSE_SENSITIVITY) + (stick.y * Camera::STICK_SENSITIVITY));
+        const float mouseScale = Camera::MOUSE_SENSITIVITY * settings.mouseSensitivity;
+        const float stickScale = Camera::STICK_SENSITIVITY * settings.stickSensitivity;
+        const float invert     = settings.invertY ? -1.0f : 1.0f;
 
-        yaw += xOffset;
-        pitch += yOffset;
+        yaw += (mouseChange.x * mouseScale) + (stick.x * stickScale);
+        pitch -= ((mouseChange.y * mouseScale) + (stick.y * stickScale)) * invert;
 
         // Make sure that when pitch is out of bounds, screen doesn't get flipped
-        if (constrainPitch)
-        {
-            pitch = std::clamp(pitch, -89.0f, 89.0f);
-        }
+        pitch = std::clamp(pitch, -89.0f, 89.0f);
 
-        const auto zOffset = mouse.z * Camera::ZOOM_SENSITIVITY;
-        zoom -= zOffset;
-        zoom = std::clamp(zoom, 1.0f, 120.0f); // Clamp zoom between 1.0f and 120.0f
-
-        // Update front, right and Up Vectors using the updated Euler angles
         updateCameraVectors();
     }
 
@@ -119,31 +115,27 @@ class Camera
         // Re-calculate the right and Up vector
         right = glm::normalize(glm::cross(front, WORLD_UP));
 
-        // Calculate forward for non-flying mode
-        forward.x = cosf(glm::radians(yaw)) * cosf(glm::radians(pitch));
-        forward.y = 0.0f; // No vertical movement in forward direction
-        forward.z = sinf(glm::radians(yaw)) * cosf(glm::radians(pitch));
-        forward   = glm::normalize(forward);
+        // Forward for walking, with no vertical part
+        forward = glm::normalize(glm::vec3(cosf(glm::radians(yaw)), 0.0f, sinf(glm::radians(yaw))));
     }
 
     // Camera Attributes
     glm::vec3 position{0.0f, 0.0f, 0.0f};
-    glm::vec3 front{0.0f, 0.0f, 0.0f};
-    glm::vec3 right{0.0f, 0.0f, 0.0f};
-    glm::vec3 forward{0.0f, 0.0f, 0.0f};
+    glm::vec3 front{0.0f, 0.0f, -1.0f};
+    glm::vec3 right{1.0f, 0.0f, 0.0f};
+    glm::vec3 forward{0.0f, 0.0f, -1.0f};
 
     // Euler Angles
     float yaw{-90.0f};
     float pitch{0.0f};
-    float zoom{90.0f};
 
-    // Camera options
-    static constexpr float MOVEMENT_SPEED    = 0.5f;
-    static constexpr float MOUSE_SENSITIVITY = 0.3f;
-    static constexpr float ZOOM_SENSITIVITY  = 5.0f;
+    float fieldOfView{75.0f};
+    float farPlane{1000.0f};
+
+    // Camera options, in degrees per point of mouse movement and per update at full stick
+    static constexpr float MOUSE_SENSITIVITY = 0.15f;
     static constexpr float STICK_SENSITIVITY = 2.0f;
 
     static constexpr glm::vec3 WORLD_UP{0.0f, 1.0f, 0.0f};
-    static constexpr float     NEAR_PLANE = 0.1f;
-    static constexpr float     FAR_PLANE  = 1000.0f;
+    static constexpr float     NEAR_PLANE = 0.05f;
 };

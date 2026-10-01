@@ -2,6 +2,6 @@
 
 enum class ProgramState
 {
+    Title,
     Game,
-    Init
 };

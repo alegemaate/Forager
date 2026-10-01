@@ -30,7 +30,13 @@ class ChunkMap
   public:
     void update(World& world);
 
-    void generate(World& world);
+    void generate(World& world, u32 seed);
+
+    // Drop every chunk
+    void clear()
+    {
+        chunks.clear();
+    }
 
     void render(World& world);
 

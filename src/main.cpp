@@ -11,10 +11,11 @@
 #include <asw/asw.h>
 #include <string>
 
+#include "./game/app_context.h"
 #include "./game/controls.h"
 #include "./state/game.h"
-#include "./state/init.h"
 #include "./state/state.h"
+#include "./state/title.h"
 
 void init()
 {
@@ -27,12 +28,6 @@ void init()
     // On macOS 14+ SDL no longer pulls a launched app to the front, so the
     // window opens behind the terminal or editor that started it
     SDL_RaiseWindow(asw::display::get_window());
-
-    // Vsync, unless an ASW_CONFIG file sets display.vsync
-    if (!asw::config::has("display.vsync"))
-    {
-        SDL_GL_SetSwapInterval(1);
-    }
 
     controls::bind();
 
@@ -71,9 +66,16 @@ int main()
 
     // Scope the scenes so their GL objects are deleted while the context still exists
     {
+        // Settings also set vsync, unless an ASW_CONFIG file sets display.vsync
+        AppContext context;
+        context.settings.load();
+        context.settings.apply();
+        context.gui.init();
+
         auto app = asw::scene::SceneManager<ProgramState>();
-        app.register_scene<Game>(ProgramState::Game, app);
-        app.set_next_scene(ProgramState::Game);
+        app.register_scene<Title>(ProgramState::Title, app, context);
+        app.register_scene<Game>(ProgramState::Game, app, context);
+        app.set_next_scene(ProgramState::Title);
 
         app.start();
     }
